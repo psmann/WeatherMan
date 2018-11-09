@@ -1,0 +1,38 @@
+package one.mann.weatherman.data;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+
+public final class WeatherData {
+
+    public static final String CURRENT_TEMP = "CURRENT_TEMP";
+    public static final String MAX_TEMP = "MAX_TEMP";
+    public static final String MIN_TEMP = "MIN_TEMP";
+    public static final String PRESSURE = "PRESSURE";
+    public static final String HUMIDITY = "HUMIDITY";
+    public static final String LOCATION = "LOCATION";
+    private static final String PROGRESS_BAR = "PROGRESS_BAR";
+    private SharedPreferences preferences;
+
+    public WeatherData(Context context) {
+        preferences = context.getSharedPreferences("WEATHER_DATA", Context.MODE_PRIVATE);
+    }
+
+    public SharedPreferences getPreferences() {
+        return preferences;
+    }
+
+    public String getWeatherData(String key) {
+        return preferences.getString(key, "");
+    }
+
+    public void saveProgressBar(boolean value) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(PROGRESS_BAR, value);
+        editor.apply();
+    }
+
+    public boolean getProgressBar() {
+        return preferences.getBoolean(PROGRESS_BAR, false);
+    }
+}

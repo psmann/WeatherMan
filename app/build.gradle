@@ -16,25 +16,39 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
 }
 
 dependencies {
+    def lifecycle_version = "1.1.1"
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'
-    // Added from idea/libraries to make the version same as appcompat
-    implementation 'com.android.support:support-v4:27.1.1'
-    implementation 'com.android.support:support-media-compat:27.1.1'
     // Constraint Layout
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    // Google Play Services
-    implementation 'com.google.android.gms:play-services-location:16.0.0'
     // CardView
     implementation 'com.android.support:cardview-v7:27.1.1'
+    // Added from idea/libraries to update their versions
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.android.support:support-media-compat:27.1.1'
+    // ViewModel and LiveData
+    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+    implementation "android.arch.lifecycle:runtime:$lifecycle_version"
+    annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
+    // Google Play Services
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     // Gson
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+
+    // jUnit
+    testImplementation 'junit:junit:4.12'
+    // Runner
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    // Espresso
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
