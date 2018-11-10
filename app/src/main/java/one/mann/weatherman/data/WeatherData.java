@@ -11,6 +11,9 @@ public final class WeatherData {
     public static final String PRESSURE = "PRESSURE";
     public static final String HUMIDITY = "HUMIDITY";
     public static final String LOCATION = "LOCATION";
+    public static final String CITY_NAME = "CITY_NAME";
+    public static final String LAST_CHECKED = "LAST_CHECKED";
+    public static final String LAST_UPDATED = "LAST_UPDATED";
     private static final String PROGRESS_BAR = "PROGRESS_BAR";
     private SharedPreferences preferences;
 

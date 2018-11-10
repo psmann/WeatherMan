@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name">WeatherMan</string>
-    <string name="current_temp">Temperature: </string>
-    <string name="max_temp">Max: </string>
-    <string name="min_temp">Min: </string>
-    <string name="pressure">Pressure: </string>
-    <string name="humidity">Humidity: </string>
-    <string name="geo_coordinates">Location: </string>
+    <string name="current_temp">Temperature:</string>
+    <string name="max_temp">Max:</string>
+    <string name="min_temp">Min:</string>
+    <string name="pressure">Pressure:</string>
+    <string name="humidity">Humidity:</string>
+    <string name="last_updated">Last Updated:</string>
+    <string name="last_checked">Last Checked:</string>
+    <string name="location_left">(</string>
+    <string name="location_right">)</string>
 </resources>

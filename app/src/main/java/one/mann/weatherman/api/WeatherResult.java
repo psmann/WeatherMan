@@ -5,6 +5,11 @@ import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import one.mann.weatherman.data.WeatherData;
 import one.mann.weatherman.model.Main;
 import one.mann.weatherman.model.Weather;
@@ -19,12 +24,15 @@ public class WeatherResult {
     private static final String BASE_URL = "http://api.openweathermap.org/data/2.5/";
     private static final String APP_ID = "bd7173aa3aec6c2d8f88b500666a116e";
     private static final String UNITS = "metric";
+    private static final String DATE_PATTERN = "d MMM, h:mm aa";
     private WeatherData weatherData;
     private Context context;
+    private DateFormat dateFormat;
 
     public WeatherResult(Context context) {
         weatherData = new WeatherData(context);
         this.context = context;
+        dateFormat = new SimpleDateFormat(DATE_PATTERN, Locale.getDefault());
     }
 
     public void getWeatherInfo(final Double[] geoCoordinates) {
@@ -45,7 +53,7 @@ public class WeatherResult {
                 Weather weather = response.body();
                 if (weather == null)
                     return;
-                saveWeather(weather.getMain(), geoCoordinates);
+                saveWeather(weather.getMain(), geoCoordinates, weather.getName(), weather.getDt());
             }
 
             @Override
@@ -56,7 +64,7 @@ public class WeatherResult {
         });
     }
 
-    private void saveWeather(Main main, Double[] location) {
+    private void saveWeather(Main main, Double[] location, String name, long dt) {
         String coordinates = location[0].toString() + ", " + location[1].toString();
         SharedPreferences.Editor editor = weatherData.getPreferences().edit();
         editor.putString(WeatherData.CURRENT_TEMP, String.valueOf(main.getTemp()));
@@ -65,6 +73,9 @@ public class WeatherResult {
         editor.putString(WeatherData.PRESSURE, String.valueOf(main.getPressure()));
         editor.putString(WeatherData.HUMIDITY, String.valueOf(main.getHumidity()));
         editor.putString(WeatherData.LOCATION, coordinates);
+        editor.putString(WeatherData.CITY_NAME, name);
+        editor.putString(WeatherData.LAST_UPDATED, String.valueOf(dateFormat.format(new Date(dt * 1000)))); // Change to nanosecond
+        editor.putString(WeatherData.LAST_CHECKED, String.valueOf(dateFormat.format(new Date(System.currentTimeMillis()))));
         editor.apply();
     }
 }

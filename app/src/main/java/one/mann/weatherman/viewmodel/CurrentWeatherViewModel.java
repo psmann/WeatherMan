@@ -20,7 +20,7 @@ import one.mann.weatherman.data.WeatherData;
 public class CurrentWeatherViewModel extends AndroidViewModel implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private MutableLiveData<String> currentTemperature, maxTemperature, minTemperature, pressure,
-            humidity, location;
+            humidity, location, lastChecked, lastUpdated, cityName;
     private MutableLiveData<Boolean> displayProgressBar;
     private final Double[] geoCoordinates = new Double[2];
     private LocationCallback locationCallback;
@@ -39,6 +39,9 @@ public class CurrentWeatherViewModel extends AndroidViewModel implements SharedP
         pressure = new MutableLiveData<>();
         humidity = new MutableLiveData<>();
         location = new MutableLiveData<>();
+        lastChecked = new MutableLiveData<>();
+        lastUpdated = new MutableLiveData<>();
+        cityName = new MutableLiveData<>();
         displayProgressBar = new MutableLiveData<>();
         weatherData.getPreferences().registerOnSharedPreferenceChangeListener(this);
         updateWeatherUi();
@@ -52,6 +55,9 @@ public class CurrentWeatherViewModel extends AndroidViewModel implements SharedP
         humidity.setValue(weatherData.getWeatherData(WeatherData.HUMIDITY));
         location.setValue(weatherData.getWeatherData(WeatherData.LOCATION));
         displayProgressBar.setValue(weatherData.getProgressBar());
+        lastChecked.setValue(weatherData.getWeatherData(WeatherData.LAST_CHECKED));
+        lastUpdated.setValue(weatherData.getWeatherData(WeatherData.LAST_UPDATED));
+        cityName.setValue(weatherData.getWeatherData(WeatherData.CITY_NAME));
     }
 
     @SuppressLint("MissingPermission") // locationProviderClient is being checked for permissions before this method is called
@@ -109,6 +115,18 @@ public class CurrentWeatherViewModel extends AndroidViewModel implements SharedP
 
     public MutableLiveData<Boolean> getDisplayProgressBar() {
         return displayProgressBar;
+    }
+
+    public MutableLiveData<String> getLastChecked() {
+        return lastChecked;
+    }
+
+    public MutableLiveData<String> getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public MutableLiveData<String> getCityName() {
+        return cityName;
     }
 
     @Override

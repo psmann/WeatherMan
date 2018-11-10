@@ -9,12 +9,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,20 +32,27 @@ import one.mann.weatherman.viewmodel.CurrentWeatherViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView currentTemp, maxTemp, minTemp, humidity, pressure, geoLocation;
+    private TextView currentTemp, maxTemp, minTemp, humidity, pressure, geoLocation, lastUpdated, cityName, lastChecked;
     private final int LOCATION_REQUEST_CODE = 1011;
     private CurrentWeatherViewModel weatherViewModel;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private ConstraintLayout constraintLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+        constraintLayout = findViewById(R.id.weather_layout);
         currentTemp = findViewById(R.id.current_temp_result);
         maxTemp = findViewById(R.id.max_temp_result);
         minTemp = findViewById(R.id.min_temp_result);
         humidity = findViewById(R.id.humidity_result);
         pressure = findViewById(R.id.pressure_result);
-        geoLocation = findViewById(R.id.geo_location_result);
+        geoLocation = findViewById(R.id.location_result);
+        lastChecked = findViewById(R.id.last_checked_result);
+        lastUpdated = findViewById(R.id.last_updated_result);
+        cityName = findViewById(R.id.city_name);
 
         weatherViewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
         weatherViewModel.getCurrentTemperature().observe(this, s -> currentTemp.setText(s));
@@ -54,7 +61,23 @@ public class MainActivity extends AppCompatActivity {
         weatherViewModel.getPressure().observe(this, s -> pressure.setText(s));
         weatherViewModel.getHumidity().observe(this, s -> humidity.setText(s));
         weatherViewModel.getLocation().observe(this, s -> geoLocation.setText(s));
-        weatherViewModel.getDisplayProgressBar().observe(this, this::loadingProgressDialog);
+        weatherViewModel.getDisplayProgressBar().observe(this, result -> {
+            if(result == null)
+                swipeRefreshLayout.setRefreshing(false);
+            else
+                swipeRefreshLayout.setRefreshing(result);
+        });
+        weatherViewModel.getLastChecked().observe(this, s -> lastChecked.setText(s));
+        weatherViewModel.getLastUpdated().observe(this, s -> lastUpdated.setText(s));
+        weatherViewModel.getCityName().observe(this, s -> {
+            cityName.setText(s);
+            if(cityName.getText().toString().equals("")) {
+                constraintLayout.setVisibility(View.INVISIBLE);
+                checkLocationSettings();
+            }
+            else
+                constraintLayout.setVisibility(View.VISIBLE);
+        });
 
         // gives permissions for both NETWORK_PROVIDER (COARSE_LOCATION) and GPS_PROVIDER
         if (ActivityCompat.checkSelfPermission(this,
@@ -64,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                         LOCATION_REQUEST_CODE);
             return;
         }
-        checkLocationSettings();
+        swipeRefreshLayout.setOnRefreshListener(this::checkLocationSettings);
     }
 
     @Override
@@ -73,8 +96,10 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == LOCATION_REQUEST_CODE)
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 checkLocationSettings();
-            else
+            else {
+                finish();
                 Toast.makeText(this, "Permission is required for location detection.", Toast.LENGTH_SHORT).show();
+            }
     }
 
     @Override
@@ -87,22 +112,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case MainActivity.RESULT_CANCELED:
                     Toast.makeText(this, "GPS is needed for current location detection.", Toast.LENGTH_SHORT).show();
+                    swipeRefreshLayout.setRefreshing(false);
                     break;
             }
-    }
-
-    private void loadingProgressDialog(boolean show) {
-        ProgressBar progressBar = findViewById(R.id.loading_progressBar);
-        if(show) {
-            progressBar.setVisibility(View.VISIBLE);
-            progressBar.setElevation(50);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        }
-        else {
-            progressBar.setVisibility(View.GONE);
-            progressBar.setElevation(0);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        }
     }
 
     private boolean checkNetworkConnection() {
@@ -115,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
     private void checkLocationSettings() {
         if(!checkNetworkConnection()) {
             Toast.makeText(this, "No active internet connection found.", Toast.LENGTH_SHORT).show();
+            swipeRefreshLayout.setRefreshing(false);
             return;
         }
         LocationRequest locationRequest = LocationRequest.create()
@@ -144,4 +157,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+/*  // Not required with swipe refresh layout
+    private void loadingProgressBar(boolean show) {
+        ProgressBar progressBar = findViewById(R.id.loading_progressBar);
+        if(show) {
+            progressBar.setVisibility(View.VISIBLE);
+            progressBar.setElevation(50);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
+        else {
+            progressBar.setVisibility(View.GONE);
+            progressBar.setElevation(0);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        }
+    }
+*/
 }
