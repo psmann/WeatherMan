@@ -12,8 +12,11 @@ import java.util.Locale;
 
 import one.mann.weatherman.R;
 import one.mann.weatherman.data.WeatherData;
+import one.mann.weatherman.model.openWeatherMap.Clouds;
 import one.mann.weatherman.model.openWeatherMap.Main;
+import one.mann.weatherman.model.openWeatherMap.Sys;
 import one.mann.weatherman.model.openWeatherMap.Weather;
+import one.mann.weatherman.model.openWeatherMap.Wind;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -54,7 +57,8 @@ public class WeatherResult {
                 Weather weather = response.body();
                 if (weather == null)
                     return;
-                saveWeather(weather.getMain(), geoCoordinates, weather.getName(), weather.getDt());
+                saveWeather(weather.getMain(), weather.getSys(), weather.getWind(), weather.getClouds(),
+                        geoCoordinates, weather.getName(), weather.getDt(), weather.getVisibility());
             }
 
             @Override
@@ -65,7 +69,8 @@ public class WeatherResult {
         });
     }
 
-    private void saveWeather(Main main, Double[] location, String name, long dt) {
+    private void saveWeather(Main main, Sys sys, Wind wind, Clouds clouds, Double[] location,
+                             String name, long dt, long visibility) {
         String coordinates = location[0].toString() + ", " + location[1].toString();
         SharedPreferences.Editor editor = weatherData.getPreferences().edit();
         editor.putString(WeatherData.CURRENT_TEMP, String.valueOf(main.getTemp()));
@@ -77,6 +82,12 @@ public class WeatherResult {
         editor.putString(WeatherData.CITY_NAME, name);
         editor.putString(WeatherData.LAST_UPDATED, String.valueOf(dateFormat.format(new Date(dt * 1000)))); // Convert to nanosecond
         editor.putString(WeatherData.LAST_CHECKED, String.valueOf(dateFormat.format(new Date(System.currentTimeMillis()))));
+        editor.putString(WeatherData.SUNRISE, String.valueOf(dateFormat.format(new Date(sys.getSunrise() * 1000))));
+        editor.putString(WeatherData.SUNSET, String.valueOf(dateFormat.format(new Date(sys.getSunset() * 1000))));
+        editor.putString(WeatherData.CLOUDS, String.valueOf(clouds.getAll()));
+        editor.putString(WeatherData.WIND_SPEED, String.valueOf(wind.getSpeed()));
+        editor.putString(WeatherData.WIND_DIRECTION, String.valueOf(wind.getDeg()));
+        editor.putString(WeatherData.VISIBILITY, String.valueOf(visibility));
         editor.apply();
     }
 }

@@ -2,28 +2,28 @@ package one.mann.weatherman.model.openWeatherMap;
 
 public class Main {
     private float temp;
-    private float pressure;
-    private float humidity;
-    private float temp_min;
-    private float temp_max;
+    private int pressure;
+    private int humidity;
+    private int temp_min;
+    private int temp_max;
 
     public float getTemp() {
         return temp;
     }
 
-    public float getPressure() {
+    public int getPressure() {
         return pressure;
     }
 
-    public float getHumidity() {
+    public int getHumidity() {
         return humidity;
     }
 
-    public float getTemp_min() {
+    public int getTemp_min() {
         return temp_min;
     }
 
-    public float getTemp_max() {
+    public int getTemp_max() {
         return temp_max;
     }
 }

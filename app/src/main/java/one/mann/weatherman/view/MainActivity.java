@@ -32,7 +32,8 @@ import one.mann.weatherman.viewmodel.CurrentWeatherViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView currentTemp, maxTemp, minTemp, humidity, pressure, geoLocation, lastUpdated, cityName, lastChecked;
+    private TextView currentTemp, maxTemp, minTemp, humidity, pressure, geoLocation, lastUpdated,
+            cityName, lastChecked, sunrise, sunset, clouds, windSpeed, windDirection, visibility;
     private final int LOCATION_REQUEST_CODE = 1011;
     private CurrentWeatherViewModel weatherViewModel;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -94,6 +95,12 @@ public class MainActivity extends AppCompatActivity {
         lastChecked = findViewById(R.id.last_checked_result);
         lastUpdated = findViewById(R.id.last_updated_result);
         cityName = findViewById(R.id.city_name);
+        sunrise = findViewById(R.id.sunrise_result);
+        sunset = findViewById(R.id.sunset_result);
+        clouds = findViewById(R.id.clouds_result);
+        windSpeed = findViewById(R.id.wind_speed_result);
+        windDirection = findViewById(R.id.wind_direction_result);
+        visibility = findViewById(R.id.visibility_result);
         uiVisible = false;
 
         weatherViewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
@@ -107,6 +114,12 @@ public class MainActivity extends AppCompatActivity {
                 swipeRefreshLayout.setRefreshing(result == null ? false : result));
         weatherViewModel.getLastChecked().observe(this, s -> lastChecked.setText(s));
         weatherViewModel.getLastUpdated().observe(this, s -> lastUpdated.setText(s));
+        weatherViewModel.getSunrise().observe(this, s -> sunrise.setText(s));
+        weatherViewModel.getSunset().observe(this, s -> sunset.setText(s));
+        weatherViewModel.getClouds().observe(this, s -> clouds.setText(s));
+        weatherViewModel.getWindSpeed().observe(this, s -> windSpeed.setText(s));
+        weatherViewModel.getWindDirection().observe(this, s -> windDirection.setText(s));
+        weatherViewModel.getVisibility().observe(this, s -> visibility.setText(s));
         weatherViewModel.getCityName().observe(this, s -> {
             cityName.setText(s);
             if (!uiVisible)

@@ -9,6 +9,12 @@
     <string name="last_checked">Last Checked:</string>
     <string name="location_left">(</string>
     <string name="location_right">)</string>
+    <string name="clouds">Clouds:</string>
+    <string name="wind_speed">Wind Speed:</string>
+    <string name="wind_dir">Wind Direction:</string>
+    <string name="visibility">Visibility:</string>
+    <string name="sunrise">Sunrise:</string>
+    <string name="sunset">Sunset:</string>
     <string name="gps_needed_for_location">GPS is needed for current location detection.</string>
     <string name="permission_required">Permission is required for location detection.</string>
     <string name="server_not_found">Could not connect to the server.</string>

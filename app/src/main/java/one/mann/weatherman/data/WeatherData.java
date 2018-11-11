@@ -15,6 +15,12 @@ public final class WeatherData {
     public static final String LAST_CHECKED = "LAST_CHECKED";
     public static final String LAST_UPDATED = "LAST_UPDATED";
     private static final String PROGRESS_BAR = "PROGRESS_BAR";
+    public static final String SUNRISE = "SUNRISE";
+    public static final String SUNSET = "SUNSET";
+    public static final String CLOUDS = "CLOUDS";
+    public static final String WIND_SPEED = "WIND_SPEED";
+    public static final String WIND_DIRECTION = "WIND_DIRECTION";
+    public static final String VISIBILITY = "VISIBILITY";
     private SharedPreferences preferences;
 
     public WeatherData(Context context) {

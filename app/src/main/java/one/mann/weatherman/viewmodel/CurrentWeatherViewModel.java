@@ -14,7 +14,8 @@ public class CurrentWeatherViewModel extends AndroidViewModel implements GpsLoca
         SharedPreferences.OnSharedPreferenceChangeListener {
 
     private MutableLiveData<String> currentTemperature, maxTemperature, minTemperature, pressure,
-            humidity, location, lastChecked, lastUpdated, cityName;
+            humidity, location, lastChecked, lastUpdated, cityName, sunrise, sunset, clouds, windSpeed,
+            windDirection, visibility;
     private MutableLiveData<Boolean> displayProgressBar;
     private WeatherResult weatherResult;
     private WeatherData weatherData;
@@ -34,6 +35,12 @@ public class CurrentWeatherViewModel extends AndroidViewModel implements GpsLoca
         lastChecked = new MutableLiveData<>();
         lastUpdated = new MutableLiveData<>();
         cityName = new MutableLiveData<>();
+        sunrise = new MutableLiveData<>();
+        sunset = new MutableLiveData<>();
+        clouds = new MutableLiveData<>();
+        windSpeed = new MutableLiveData<>();
+        windDirection = new MutableLiveData<>();
+        visibility = new MutableLiveData<>();
         displayProgressBar = new MutableLiveData<>();
         weatherData.getPreferences().registerOnSharedPreferenceChangeListener(this);
         updateWeatherUi();
@@ -50,6 +57,12 @@ public class CurrentWeatherViewModel extends AndroidViewModel implements GpsLoca
         lastChecked.setValue(weatherData.getWeatherData(WeatherData.LAST_CHECKED));
         lastUpdated.setValue(weatherData.getWeatherData(WeatherData.LAST_UPDATED));
         cityName.setValue(weatherData.getWeatherData(WeatherData.CITY_NAME));
+        sunrise.setValue(weatherData.getWeatherData(WeatherData.SUNRISE));
+        sunset.setValue(weatherData.getWeatherData(WeatherData.SUNSET));
+        clouds.setValue(weatherData.getWeatherData(WeatherData.CLOUDS));
+        windSpeed.setValue(weatherData.getWeatherData(WeatherData.WIND_SPEED));
+        windDirection.setValue(weatherData.getWeatherData(WeatherData.WIND_DIRECTION));
+        visibility.setValue(weatherData.getWeatherData(WeatherData.VISIBILITY));
     }
 
     public void getWeather() {
@@ -95,6 +108,30 @@ public class CurrentWeatherViewModel extends AndroidViewModel implements GpsLoca
 
     public MutableLiveData<String> getCityName() {
         return cityName;
+    }
+
+    public MutableLiveData<String> getSunrise() {
+        return sunrise;
+    }
+
+    public MutableLiveData<String> getSunset() {
+        return sunset;
+    }
+
+    public MutableLiveData<String> getClouds() {
+        return clouds;
+    }
+
+    public MutableLiveData<String> getWindSpeed() {
+        return windSpeed;
+    }
+
+    public MutableLiveData<String> getWindDirection() {
+        return windDirection;
+    }
+
+    public MutableLiveData<String> getVisibility() {
+        return visibility;
     }
 
     @Override
