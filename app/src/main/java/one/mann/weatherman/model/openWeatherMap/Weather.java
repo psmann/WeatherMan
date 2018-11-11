@@ -1,4 +1,4 @@
-package one.mann.weatherman.model;
+package one.mann.weatherman.model.openWeatherMap;
 
 public class Weather {
     private Main main;

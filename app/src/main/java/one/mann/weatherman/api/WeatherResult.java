@@ -10,9 +10,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import one.mann.weatherman.R;
 import one.mann.weatherman.data.WeatherData;
-import one.mann.weatherman.model.Main;
-import one.mann.weatherman.model.Weather;
+import one.mann.weatherman.model.openWeatherMap.Main;
+import one.mann.weatherman.model.openWeatherMap.Weather;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,7 +36,7 @@ public class WeatherResult {
         dateFormat = new SimpleDateFormat(DATE_PATTERN, Locale.getDefault());
     }
 
-    public void getWeatherInfo(final Double[] geoCoordinates) {
+    public void weatherCall(final Double[] geoCoordinates) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create()).build();
@@ -47,7 +48,7 @@ public class WeatherResult {
             public void onResponse(@NonNull Call<Weather> call, @NonNull Response<Weather> response) {
                 weatherData.saveProgressBar(false);
                 if (!response.isSuccessful()) {
-                    Toast.makeText(context, "404", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.server_not_found, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Weather weather = response.body();
@@ -59,7 +60,7 @@ public class WeatherResult {
             @Override
             public void onFailure(@NonNull Call<Weather> call, @NonNull Throwable t) {
                 weatherData.saveProgressBar(false);
-                Toast.makeText(context, "Could not connect to the server.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.server_not_found, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -74,7 +75,7 @@ public class WeatherResult {
         editor.putString(WeatherData.HUMIDITY, String.valueOf(main.getHumidity()));
         editor.putString(WeatherData.LOCATION, coordinates);
         editor.putString(WeatherData.CITY_NAME, name);
-        editor.putString(WeatherData.LAST_UPDATED, String.valueOf(dateFormat.format(new Date(dt * 1000)))); // Change to nanosecond
+        editor.putString(WeatherData.LAST_UPDATED, String.valueOf(dateFormat.format(new Date(dt * 1000)))); // Convert to nanosecond
         editor.putString(WeatherData.LAST_CHECKED, String.valueOf(dateFormat.format(new Date(System.currentTimeMillis()))));
         editor.apply();
     }

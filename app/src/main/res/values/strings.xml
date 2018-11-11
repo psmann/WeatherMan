@@ -9,4 +9,8 @@
     <string name="last_checked">Last Checked:</string>
     <string name="location_left">(</string>
     <string name="location_right">)</string>
+    <string name="gps_needed_for_location">GPS is needed for current location detection.</string>
+    <string name="permission_required">Permission is required for location detection.</string>
+    <string name="server_not_found">Could not connect to the server.</string>
+    <string name="no_internet_connection">No active internet connection found.</string>
 </resources>

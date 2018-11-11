@@ -37,47 +37,14 @@ public class MainActivity extends AppCompatActivity {
     private CurrentWeatherViewModel weatherViewModel;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ConstraintLayout constraintLayout;
+    private boolean uiVisible;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         constraintLayout = findViewById(R.id.weather_layout);
-        currentTemp = findViewById(R.id.current_temp_result);
-        maxTemp = findViewById(R.id.max_temp_result);
-        minTemp = findViewById(R.id.min_temp_result);
-        humidity = findViewById(R.id.humidity_result);
-        pressure = findViewById(R.id.pressure_result);
-        geoLocation = findViewById(R.id.location_result);
-        lastChecked = findViewById(R.id.last_checked_result);
-        lastUpdated = findViewById(R.id.last_updated_result);
-        cityName = findViewById(R.id.city_name);
-
-        weatherViewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
-        weatherViewModel.getCurrentTemperature().observe(this, s -> currentTemp.setText(s));
-        weatherViewModel.getMaxTemperature().observe(this, s -> maxTemp.setText(s));
-        weatherViewModel.getMinTemperature().observe(this, s -> minTemp.setText(s));
-        weatherViewModel.getPressure().observe(this, s -> pressure.setText(s));
-        weatherViewModel.getHumidity().observe(this, s -> humidity.setText(s));
-        weatherViewModel.getLocation().observe(this, s -> geoLocation.setText(s));
-        weatherViewModel.getDisplayProgressBar().observe(this, result -> {
-            if(result == null)
-                swipeRefreshLayout.setRefreshing(false);
-            else
-                swipeRefreshLayout.setRefreshing(result);
-        });
-        weatherViewModel.getLastChecked().observe(this, s -> lastChecked.setText(s));
-        weatherViewModel.getLastUpdated().observe(this, s -> lastUpdated.setText(s));
-        weatherViewModel.getCityName().observe(this, s -> {
-            cityName.setText(s);
-            if(cityName.getText().toString().equals("")) {
-                constraintLayout.setVisibility(View.INVISIBLE);
-                checkLocationSettings();
-            }
-            else
-                constraintLayout.setVisibility(View.VISIBLE);
-        });
+        constraintLayout.setVisibility(View.INVISIBLE);
 
         // gives permissions for both NETWORK_PROVIDER (COARSE_LOCATION) and GPS_PROVIDER
         if (ActivityCompat.checkSelfPermission(this,
@@ -85,20 +52,19 @@ public class MainActivity extends AppCompatActivity {
             if (Build.VERSION.SDK_INT >= 23) // check result in onRequestPermissionsResult()
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                         LOCATION_REQUEST_CODE);
-            return;
-        }
-        swipeRefreshLayout.setOnRefreshListener(this::checkLocationSettings);
+        } else
+            initObjects();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == LOCATION_REQUEST_CODE)
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                checkLocationSettings();
-            else {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                initObjects();
+            } else {
                 finish();
-                Toast.makeText(this, "Permission is required for location detection.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.permission_required, Toast.LENGTH_SHORT).show();
             }
     }
 
@@ -108,25 +74,62 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == LOCATION_REQUEST_CODE)
             switch (resultCode) {
                 case MainActivity.RESULT_OK:
-                    weatherViewModel.geoLocation();
+                    weatherViewModel.getWeather();
                     break;
                 case MainActivity.RESULT_CANCELED:
-                    Toast.makeText(this, "GPS is needed for current location detection.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.gps_needed_for_location, Toast.LENGTH_SHORT).show();
                     swipeRefreshLayout.setRefreshing(false);
                     break;
             }
     }
 
+    private void initObjects() {
+        swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
+        currentTemp = findViewById(R.id.current_temp_result);
+        maxTemp = findViewById(R.id.max_temp_result);
+        minTemp = findViewById(R.id.min_temp_result);
+        humidity = findViewById(R.id.humidity_result);
+        pressure = findViewById(R.id.pressure_result);
+        geoLocation = findViewById(R.id.location_result);
+        lastChecked = findViewById(R.id.last_checked_result);
+        lastUpdated = findViewById(R.id.last_updated_result);
+        cityName = findViewById(R.id.city_name);
+        uiVisible = false;
+
+        weatherViewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
+        weatherViewModel.getCurrentTemperature().observe(this, s -> currentTemp.setText(s));
+        weatherViewModel.getMaxTemperature().observe(this, s -> maxTemp.setText(s));
+        weatherViewModel.getMinTemperature().observe(this, s -> minTemp.setText(s));
+        weatherViewModel.getPressure().observe(this, s -> pressure.setText(s));
+        weatherViewModel.getHumidity().observe(this, s -> humidity.setText(s));
+        weatherViewModel.getLocation().observe(this, s -> geoLocation.setText(s));
+        weatherViewModel.getDisplayProgressBar().observe(this, result ->
+                swipeRefreshLayout.setRefreshing(result == null ? false : result));
+        weatherViewModel.getLastChecked().observe(this, s -> lastChecked.setText(s));
+        weatherViewModel.getLastUpdated().observe(this, s -> lastUpdated.setText(s));
+        weatherViewModel.getCityName().observe(this, s -> {
+            cityName.setText(s);
+            if (!uiVisible)
+                if (cityName.getText().toString().equals("")) {
+                    checkLocationSettings();
+                } else {
+                    constraintLayout.setVisibility(View.VISIBLE);
+                    uiVisible = true;
+                }
+        });
+        swipeRefreshLayout.setOnRefreshListener(this::checkLocationSettings);
+    }
+
     private boolean checkNetworkConnection() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         @SuppressWarnings("ConstantConditions") // Suppressed because null is being checked
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
     }
 
     private void checkLocationSettings() {
-        if(!checkNetworkConnection()) {
-            Toast.makeText(this, "No active internet connection found.", Toast.LENGTH_SHORT).show();
+        if (!checkNetworkConnection()) {
+            Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show();
             swipeRefreshLayout.setRefreshing(false);
             return;
         }
@@ -141,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
         result.addOnCompleteListener(task -> {
             try { // Location settings are on
                 task.getResult(ApiException.class);
-                weatherViewModel.geoLocation();
+                weatherViewModel.getWeather();
             } catch (ApiException exception) {
                 switch (exception.getStatusCode()) {
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
@@ -157,19 +160,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-/*  // Not required with swipe refresh layout
-    private void loadingProgressBar(boolean show) {
-        ProgressBar progressBar = findViewById(R.id.loading_progressBar);
-        if(show) {
-            progressBar.setVisibility(View.VISIBLE);
-            progressBar.setElevation(50);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        }
-        else {
-            progressBar.setVisibility(View.GONE);
-            progressBar.setElevation(0);
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-        }
-    }
-*/
 }
