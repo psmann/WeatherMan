@@ -5,7 +5,11 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.widget.Toast;
 
+import java.util.Objects;
+
+import one.mann.weatherman.R;
 import one.mann.weatherman.api.WeatherResult;
 import one.mann.weatherman.data.WeatherData;
 import one.mann.weatherman.model.GpsLocation;
@@ -65,9 +69,19 @@ public class CurrentWeatherViewModel extends AndroidViewModel implements GpsLoca
         visibility.setValue(weatherData.getWeatherData(WeatherData.VISIBILITY));
     }
 
-    public void getWeather() {
-        weatherData.saveProgressBar(true);
-        gpsLocation.getLocation();
+    public void getWeather(boolean gpsOn) {
+        if (gpsOn) {
+            weatherData.saveProgressBar(true);
+            gpsLocation.getLocation();
+        } else if (Objects.equals(location.getValue(), ""))
+            Toast.makeText(getApplication(), R.string.gps_needed_for_location, Toast.LENGTH_SHORT).show();
+        else {
+            Double[] lastLocation = new Double[]{Double.parseDouble(weatherData.getWeatherData(WeatherData.LATITUDE)),
+                    Double.parseDouble(weatherData.getWeatherData(WeatherData.LONGITUDE))};
+            weatherData.saveProgressBar(true);
+            weatherResult.weatherCall(lastLocation);
+            Toast.makeText(getApplication(), R.string.no_gps_updating_previous_location, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public MutableLiveData<String> getCurrentTemperature() {

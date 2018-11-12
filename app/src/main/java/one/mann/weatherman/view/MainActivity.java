@@ -75,11 +75,10 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == LOCATION_REQUEST_CODE)
             switch (resultCode) {
                 case MainActivity.RESULT_OK:
-                    weatherViewModel.getWeather();
+                    weatherViewModel.getWeather(true);
                     break;
                 case MainActivity.RESULT_CANCELED:
-                    Toast.makeText(this, R.string.gps_needed_for_location, Toast.LENGTH_SHORT).show();
-                    swipeRefreshLayout.setRefreshing(false);
+                    weatherViewModel.getWeather(false);
                     break;
             }
     }
@@ -157,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
         result.addOnCompleteListener(task -> {
             try { // Location settings are on
                 task.getResult(ApiException.class);
-                weatherViewModel.getWeather();
+                weatherViewModel.getWeather(true);
             } catch (ApiException exception) {
                 switch (exception.getStatusCode()) {
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:

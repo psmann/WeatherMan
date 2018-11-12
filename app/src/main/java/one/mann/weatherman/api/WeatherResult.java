@@ -29,6 +29,12 @@ public class WeatherResult {
     private static final String APP_ID = "bd7173aa3aec6c2d8f88b500666a116e";
     private static final String UNITS = "metric";
     private static final String DATE_PATTERN = "d MMM, h:mm aa";
+    private static final String CELSIUS = " C";
+    private static final String HECTOPASCAL = " hPa";
+    private static final String PERCENT = " %";
+    private static final String METERS = " m";
+    private static final String METERS_PER_SECOND = " m/s";
+    private static final String DEGREES = " °";
     private WeatherData weatherData;
     private Context context;
     private DateFormat dateFormat;
@@ -73,21 +79,23 @@ public class WeatherResult {
                              String name, long dt, long visibility) {
         String coordinates = location[0].toString() + ", " + location[1].toString();
         SharedPreferences.Editor editor = weatherData.getPreferences().edit();
-        editor.putString(WeatherData.CURRENT_TEMP, String.valueOf(main.getTemp()));
-        editor.putString(WeatherData.MAX_TEMP, String.valueOf(main.getTemp_max()));
-        editor.putString(WeatherData.MIN_TEMP, String.valueOf(main.getTemp_min()));
-        editor.putString(WeatherData.PRESSURE, String.valueOf(main.getPressure()));
-        editor.putString(WeatherData.HUMIDITY, String.valueOf(main.getHumidity()));
+        editor.putString(WeatherData.CURRENT_TEMP, String.valueOf(main.getTemp()) + CELSIUS);
+        editor.putString(WeatherData.MAX_TEMP, String.valueOf(main.getTemp_max()) + CELSIUS);
+        editor.putString(WeatherData.MIN_TEMP, String.valueOf(main.getTemp_min()) + CELSIUS);
+        editor.putString(WeatherData.PRESSURE, String.valueOf(main.getPressure()) + HECTOPASCAL);
+        editor.putString(WeatherData.HUMIDITY, String.valueOf(main.getHumidity()) + PERCENT);
         editor.putString(WeatherData.LOCATION, coordinates);
+        editor.putString(WeatherData.LATITUDE, String.valueOf(location[0]));
+        editor.putString(WeatherData.LONGITUDE, String.valueOf(location[1]));
         editor.putString(WeatherData.CITY_NAME, name);
         editor.putString(WeatherData.LAST_UPDATED, String.valueOf(dateFormat.format(new Date(dt * 1000)))); // Convert to nanosecond
         editor.putString(WeatherData.LAST_CHECKED, String.valueOf(dateFormat.format(new Date(System.currentTimeMillis()))));
         editor.putString(WeatherData.SUNRISE, String.valueOf(dateFormat.format(new Date(sys.getSunrise() * 1000))));
         editor.putString(WeatherData.SUNSET, String.valueOf(dateFormat.format(new Date(sys.getSunset() * 1000))));
-        editor.putString(WeatherData.CLOUDS, String.valueOf(clouds.getAll()));
-        editor.putString(WeatherData.WIND_SPEED, String.valueOf(wind.getSpeed()));
-        editor.putString(WeatherData.WIND_DIRECTION, String.valueOf(wind.getDeg()));
-        editor.putString(WeatherData.VISIBILITY, String.valueOf(visibility));
+        editor.putString(WeatherData.CLOUDS, String.valueOf(clouds.getAll()) + PERCENT);
+        editor.putString(WeatherData.WIND_SPEED, String.valueOf(wind.getSpeed()) + METERS_PER_SECOND);
+        editor.putString(WeatherData.WIND_DIRECTION, String.valueOf(wind.getDeg()) + DEGREES);
+        editor.putString(WeatherData.VISIBILITY, String.valueOf(visibility) + METERS);
         editor.apply();
     }
 }
