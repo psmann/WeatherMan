@@ -19,7 +19,7 @@ public class CurrentWeatherViewModel extends AndroidViewModel implements GpsLoca
 
     private MutableLiveData<String> currentTemperature, maxTemperature, minTemperature, pressure,
             humidity, location, lastChecked, lastUpdated, cityName, sunrise, sunset, clouds, windSpeed,
-            windDirection, visibility;
+            windDirection, visibility, description, iconCode;
     private MutableLiveData<Boolean> displayProgressBar;
     private WeatherResult weatherResult;
     private WeatherData weatherData;
@@ -45,6 +45,8 @@ public class CurrentWeatherViewModel extends AndroidViewModel implements GpsLoca
         windSpeed = new MutableLiveData<>();
         windDirection = new MutableLiveData<>();
         visibility = new MutableLiveData<>();
+        description = new MutableLiveData<>();
+        iconCode = new MutableLiveData<>();
         displayProgressBar = new MutableLiveData<>();
         weatherData.getPreferences().registerOnSharedPreferenceChangeListener(this);
         updateWeatherUi();
@@ -67,6 +69,8 @@ public class CurrentWeatherViewModel extends AndroidViewModel implements GpsLoca
         windSpeed.setValue(weatherData.getWeatherData(WeatherData.WIND_SPEED));
         windDirection.setValue(weatherData.getWeatherData(WeatherData.WIND_DIRECTION));
         visibility.setValue(weatherData.getWeatherData(WeatherData.VISIBILITY));
+        description.setValue(weatherData.getWeatherData(WeatherData.DESCRIPTION));
+        iconCode.setValue(weatherData.getWeatherData(WeatherData.ICON_CODE));
     }
 
     public void getWeather(boolean gpsOn) {
@@ -146,6 +150,14 @@ public class CurrentWeatherViewModel extends AndroidViewModel implements GpsLoca
 
     public MutableLiveData<String> getVisibility() {
         return visibility;
+    }
+
+    public MutableLiveData<String> getDescription() {
+        return description;
+    }
+
+    public MutableLiveData<String> getIconCode() {
+        return iconCode;
     }
 
     @Override

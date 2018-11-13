@@ -1,39 +1,14 @@
 package one.mann.weatherman.model.openWeatherMap;
 
 public class Weather {
-    private Main main;
-    private Sys sys;
-    private Wind wind;
-    private Clouds clouds;
-    private String name;
-    private long dt;
-    private int visibility;
+    private String main;
+    private String icon;
 
-    public Main getMain() {
+    public String getMain() {
         return main;
     }
 
-    public Sys getSys() {
-        return sys;
-    }
-
-    public Wind getWind() {
-        return wind;
-    }
-
-    public Clouds getClouds() {
-        return clouds;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public long getDt() {
-        return dt;
-    }
-
-    public int getVisibility() {
-        return visibility;
+    public String getIcon() {
+        return icon;
     }
 }

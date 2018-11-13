@@ -15,6 +15,7 @@ import one.mann.weatherman.data.WeatherData;
 import one.mann.weatherman.model.openWeatherMap.Clouds;
 import one.mann.weatherman.model.openWeatherMap.Main;
 import one.mann.weatherman.model.openWeatherMap.Sys;
+import one.mann.weatherman.model.openWeatherMap.CurrentWeather;
 import one.mann.weatherman.model.openWeatherMap.Weather;
 import one.mann.weatherman.model.openWeatherMap.Wind;
 import retrofit2.Call;
@@ -26,9 +27,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class WeatherResult {
 
     private static final String BASE_URL = "http://api.openweathermap.org/data/2.5/";
+    private static final String ICON_URL = "http://openweathermap.org/img/w/";
     private static final String APP_ID = "bd7173aa3aec6c2d8f88b500666a116e";
-    private static final String UNITS = "metric";
     private static final String DATE_PATTERN = "d MMM, h:mm aa";
+    private static final String UNITS = "metric";
+    private static final String ICON_EXTENSION = ".png";
     private static final String CELSIUS = " C";
     private static final String HECTOPASCAL = " hPa";
     private static final String PERCENT = " %";
@@ -50,32 +53,33 @@ public class WeatherResult {
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create()).build();
         final OpenWeatherMapApi openWeatherMapApi = retrofit.create(OpenWeatherMapApi.class);
-        Call<Weather> weatherCall = openWeatherMapApi.getWeather(geoCoordinates[0], geoCoordinates[1], UNITS, APP_ID);
+        Call<CurrentWeather> weatherCall = openWeatherMapApi.getWeather(geoCoordinates[0], geoCoordinates[1], UNITS, APP_ID);
 
-        weatherCall.enqueue(new Callback<Weather>() {
+        weatherCall.enqueue(new Callback<CurrentWeather>() {
             @Override
-            public void onResponse(@NonNull Call<Weather> call, @NonNull Response<Weather> response) {
+            public void onResponse(@NonNull Call<CurrentWeather> call, @NonNull Response<CurrentWeather> response) {
                 weatherData.saveProgressBar(false);
                 if (!response.isSuccessful()) {
                     Toast.makeText(context, R.string.server_not_found, Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Weather weather = response.body();
-                if (weather == null)
+                CurrentWeather currentWeather = response.body();
+                if (currentWeather == null)
                     return;
-                saveWeather(weather.getMain(), weather.getSys(), weather.getWind(), weather.getClouds(),
-                        geoCoordinates, weather.getName(), weather.getDt(), weather.getVisibility());
+                saveWeather(currentWeather.getMain(), currentWeather.getSys(), currentWeather.getWind(),
+                        currentWeather.getClouds(), currentWeather.getWeather()[0], geoCoordinates,
+                        currentWeather.getName(), currentWeather.getDt(), currentWeather.getVisibility());
             }
 
             @Override
-            public void onFailure(@NonNull Call<Weather> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<CurrentWeather> call, @NonNull Throwable t) {
                 weatherData.saveProgressBar(false);
                 Toast.makeText(context, R.string.server_not_found, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void saveWeather(Main main, Sys sys, Wind wind, Clouds clouds, Double[] location,
+    private void saveWeather(Main main, Sys sys, Wind wind, Clouds clouds, Weather weather, Double[] location,
                              String name, long dt, long visibility) {
         String coordinates = location[0].toString() + ", " + location[1].toString();
         SharedPreferences.Editor editor = weatherData.getPreferences().edit();
@@ -96,6 +100,8 @@ public class WeatherResult {
         editor.putString(WeatherData.WIND_SPEED, String.valueOf(wind.getSpeed()) + METERS_PER_SECOND);
         editor.putString(WeatherData.WIND_DIRECTION, String.valueOf(wind.getDeg()) + DEGREES);
         editor.putString(WeatherData.VISIBILITY, String.valueOf(visibility) + METERS);
+        editor.putString(WeatherData.DESCRIPTION, String.valueOf(weather.getMain()));
+        editor.putString(WeatherData.ICON_CODE, ICON_URL + String.valueOf(weather.getIcon()) + ICON_EXTENSION);
         editor.apply();
     }
 }

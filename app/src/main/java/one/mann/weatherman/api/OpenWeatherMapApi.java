@@ -1,6 +1,6 @@
 package one.mann.weatherman.api;
 
-import one.mann.weatherman.model.openWeatherMap.Weather;
+import one.mann.weatherman.model.openWeatherMap.CurrentWeather;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -8,6 +8,6 @@ import retrofit2.http.Query;
 public interface OpenWeatherMapApi {
 
     @GET("weather")
-    Call<Weather> getWeather(@Query("lat") Double latitude, @Query("lon") Double longitude,
-                             @Query("units") String units, @Query("appid") String appId);
+    Call<CurrentWeather> getWeather(@Query("lat") Double latitude, @Query("lon") Double longitude,
+                                    @Query("units") String units, @Query("appid") String appId);
 }

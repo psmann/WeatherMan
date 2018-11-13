@@ -178,6 +178,26 @@
                             app:layout_constraintStart_toEndOf="@+id/last_updated"
                             app:layout_constraintTop_toTopOf="@+id/last_updated" />
 
+                        <TextView
+                            android:id="@+id/description"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            app:layout_constraintStart_toStartOf="@+id/weather_icon"
+                            app:layout_constraintTop_toBottomOf="@+id/weather_icon" />
+
+                        <ImageView
+                            android:id="@+id/weather_icon"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:contentDescription="@string/weather_icon"
+                            android:src="@android:drawable/sym_def_app_icon"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
                     </android.support.constraint.ConstraintLayout>
 
                 </android.support.v7.widget.CardView>

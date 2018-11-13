@@ -15,6 +15,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,14 +28,16 @@ import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.Task;
 
+import one.mann.weatherman.GlideApp;
 import one.mann.weatherman.R;
 import one.mann.weatherman.viewmodel.CurrentWeatherViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView currentTemp, maxTemp, minTemp, humidity, pressure, geoLocation, lastUpdated,
-            cityName, lastChecked, sunrise, sunset, clouds, windSpeed, windDirection, visibility;
     private final int LOCATION_REQUEST_CODE = 1011;
+    private TextView currentTemp, maxTemp, minTemp, humidity, pressure, geoLocation, lastUpdated,
+            cityName, lastChecked, sunrise, sunset, clouds, windSpeed, windDirection, visibility, description;
+    private ImageView weatherIcon;
     private CurrentWeatherViewModel weatherViewModel;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ConstraintLayout constraintLayout;
@@ -100,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
         windSpeed = findViewById(R.id.wind_speed_result);
         windDirection = findViewById(R.id.wind_direction_result);
         visibility = findViewById(R.id.visibility_result);
+        description = findViewById(R.id.description);
+        weatherIcon = findViewById((R.id.weather_icon));
         uiVisible = false;
 
         weatherViewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
@@ -119,6 +124,11 @@ public class MainActivity extends AppCompatActivity {
         weatherViewModel.getWindSpeed().observe(this, s -> windSpeed.setText(s));
         weatherViewModel.getWindDirection().observe(this, s -> windDirection.setText(s));
         weatherViewModel.getVisibility().observe(this, s -> visibility.setText(s));
+        weatherViewModel.getDescription().observe(this, s -> description.setText(s));
+        weatherViewModel.getIconCode().observe(this, s -> GlideApp.with(this)
+                .load(s)
+                .skipMemoryCache(true)
+                .into(weatherIcon));
         weatherViewModel.getCityName().observe(this, s -> {
             cityName.setText(s);
             if (!uiVisible)

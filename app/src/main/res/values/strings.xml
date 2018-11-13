@@ -19,5 +19,6 @@
     <string name="permission_required">Permission is required for location detection.</string>
     <string name="server_not_found">Could not connect to the server.</string>
     <string name="no_internet_connection">No active internet connection found.</string>
-    <string name="no_gps_updating_previous_location">Updating weather for previous location.</string>
+    <string name="no_gps_updating_previous_location">Updating currentWeather for previous location.</string>
+    <string name="weather_icon">Weather Icon</string>
 </resources>

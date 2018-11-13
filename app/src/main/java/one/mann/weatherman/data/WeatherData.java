@@ -23,6 +23,8 @@ public final class WeatherData {
     public static final String WIND_SPEED = "WIND_SPEED";
     public static final String WIND_DIRECTION = "WIND_DIRECTION";
     public static final String VISIBILITY = "VISIBILITY";
+    public static final String DESCRIPTION = "DESCRIPTION";
+    public static final String ICON_CODE = "ICON_CODE";
     private SharedPreferences preferences;
 
     public WeatherData(Context context) {
