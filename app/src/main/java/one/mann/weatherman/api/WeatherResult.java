@@ -9,6 +9,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import one.mann.weatherman.R;
 import one.mann.weatherman.data.WeatherData;
@@ -30,6 +31,7 @@ public class WeatherResult {
     private static final String ICON_URL = "http://openweathermap.org/img/w/";
     private static final String APP_ID = "bd7173aa3aec6c2d8f88b500666a116e";
     private static final String DATE_PATTERN = "d MMM, h:mm aa";
+    private static final String HOURS_PATTERN = "H 'Hours and' m 'Minutes'";
     private static final String UNITS = "metric";
     private static final String ICON_EXTENSION = ".png";
     private static final String CELSIUS = " C";
@@ -42,12 +44,14 @@ public class WeatherResult {
     private static final int ASCII_OFFSET = 0x41; // Uppercase letter A
     private WeatherData weatherData;
     private Context context;
-    private DateFormat dateFormat;
+    private DateFormat dateFormat, hoursFormat;
 
     public WeatherResult(Context context) {
         weatherData = new WeatherData(context);
         this.context = context;
         dateFormat = new SimpleDateFormat(DATE_PATTERN, Locale.getDefault());
+        hoursFormat = new SimpleDateFormat(HOURS_PATTERN, Locale.getDefault());
+        hoursFormat.setTimeZone(TimeZone.getTimeZone("UTC")); // Remove time offset
     }
 
     public void weatherCall(final Double[] geoCoordinates) {
@@ -87,6 +91,11 @@ public class WeatherResult {
         return new String(Character.toChars(firstChar)) + new String(Character.toChars(secondChar));
     }
 
+    private String lengthOfDay(long sunrise, long sunset) {
+        long length = sunset - sunrise;
+        return String.valueOf(hoursFormat.format(new Date(length * 1000))); // Convert to nanosecond
+    }
+
     private void saveWeather(Main main, Sys sys, Wind wind, Clouds clouds, Weather weather, Double[] location,
                              String name, long dt, long visibility) {
         String coordinates = location[0].toString() + ", " + location[1].toString();
@@ -100,10 +109,11 @@ public class WeatherResult {
         editor.putString(WeatherData.LATITUDE, String.valueOf(location[0]));
         editor.putString(WeatherData.LONGITUDE, String.valueOf(location[1]));
         editor.putString(WeatherData.CITY_NAME, name);
-        editor.putString(WeatherData.LAST_UPDATED, String.valueOf(dateFormat.format(new Date(dt * 1000)))); // Convert to nanosecond
+        editor.putString(WeatherData.LAST_UPDATED, String.valueOf(dateFormat.format(new Date(dt * 1000))));
         editor.putString(WeatherData.LAST_CHECKED, String.valueOf(dateFormat.format(new Date(System.currentTimeMillis()))));
         editor.putString(WeatherData.SUNRISE, String.valueOf(dateFormat.format(new Date(sys.getSunrise() * 1000))));
         editor.putString(WeatherData.SUNSET, String.valueOf(dateFormat.format(new Date(sys.getSunset() * 1000))));
+        editor.putString(WeatherData.DAY_LENGTH, lengthOfDay(sys.getSunrise(), sys.getSunset()));
         editor.putString(WeatherData.COUNTRY_FLAG, countryCodeToEmoji(String.valueOf(sys.getCountry())));
         editor.putString(WeatherData.CLOUDS, String.valueOf(clouds.getAll()) + PERCENT);
         editor.putString(WeatherData.WIND_SPEED, String.valueOf(wind.getSpeed()) + METERS_PER_SECOND);

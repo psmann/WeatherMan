@@ -243,11 +243,21 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="8dp"
-                            android:layout_marginBottom="16dp"
                             android:text="@string/sunset"
-                            app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/sunrise" />
+
+                        <TextView
+                            android:id="@+id/day_length"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="16dp"
+                            android:text="@string/day_length"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/sunset" />
 
                         <TextView
                             android:id="@+id/sunrise_result"
@@ -264,6 +274,14 @@
                             android:layout_marginStart="8dp"
                             app:layout_constraintStart_toEndOf="@+id/sunset"
                             app:layout_constraintTop_toTopOf="@+id/sunset" />
+
+                        <TextView
+                            android:id="@+id/day_length_result"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            app:layout_constraintStart_toEndOf="@+id/day_length"
+                            app:layout_constraintTop_toTopOf="@+id/day_length" />
 
                     </android.support.constraint.ConstraintLayout>
 

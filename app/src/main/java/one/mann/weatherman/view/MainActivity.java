@@ -37,8 +37,9 @@ import one.mann.weatherman.viewmodel.CurrentWeatherViewModel;
 public class MainActivity extends AppCompatActivity {
 
     private final int LOCATION_REQUEST_CODE = 1011;
-    private TextView currentTemperature, maxTemperature, minTemperature, humidity, pressure, geoLocation, lastUpdated,
-            cityName, lastChecked, sunrise, sunset, clouds, windSpeed, windDirection, visibility, description, flag;
+    private TextView currentTemperature, maxTemperature, minTemperature, humidity, pressure,
+            geoLocation, lastUpdated, cityName, lastChecked, sunrise, sunset, clouds, windSpeed,
+            windDirection, visibility, description, countryflag, dayLength;
     private ImageView weatherIcon;
     private CurrentWeatherViewModel weatherViewModel;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -51,10 +52,10 @@ public class MainActivity extends AppCompatActivity {
         constraintLayout = findViewById(R.id.weather_layout);
         constraintLayout.setVisibility(View.INVISIBLE);
 
-        // gives permissions for both NETWORK_PROVIDER (COARSE_LOCATION) and GPS_PROVIDER
+        // Gives permissions for both NETWORK_PROVIDER (COARSE_LOCATION) and GPS_PROVIDER (FINE_LOCATION)
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (Build.VERSION.SDK_INT >= 23) // check result in onRequestPermissionsResult()
+            if (Build.VERSION.SDK_INT >= 23) // Check result in onRequestPermissionsResult()
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                         LOCATION_REQUEST_CODE);
         } else
@@ -98,9 +99,10 @@ public class MainActivity extends AppCompatActivity {
         lastChecked = findViewById(R.id.last_checked_result);
         lastUpdated = findViewById(R.id.last_updated_result);
         cityName = findViewById(R.id.city_name);
-        flag = findViewById(R.id.country_flag);
+        countryflag = findViewById(R.id.country_flag);
         sunrise = findViewById(R.id.sunrise_result);
         sunset = findViewById(R.id.sunset_result);
+        dayLength = findViewById(R.id.day_length_result);
         clouds = findViewById(R.id.clouds_result);
         windSpeed = findViewById(R.id.wind_speed_result);
         windDirection = findViewById(R.id.wind_direction_result);
@@ -121,9 +123,10 @@ public class MainActivity extends AppCompatActivity {
             lastChecked.setText(weatherData.getWeatherData(WeatherData.LAST_CHECKED));
             lastUpdated.setText(weatherData.getWeatherData(WeatherData.LAST_UPDATED));
             cityName.setText(weatherData.getWeatherData(WeatherData.CITY_NAME));
-            flag.setText(weatherData.getWeatherData(WeatherData.COUNTRY_FLAG));
+            countryflag.setText(weatherData.getWeatherData(WeatherData.COUNTRY_FLAG));
             sunrise.setText(weatherData.getWeatherData(WeatherData.SUNRISE));
             sunset.setText(weatherData.getWeatherData(WeatherData.SUNSET));
+            dayLength.setText(weatherData.getWeatherData(WeatherData.DAY_LENGTH));
             clouds.setText(weatherData.getWeatherData(WeatherData.CLOUDS));
             windSpeed.setText(weatherData.getWeatherData(WeatherData.WIND_SPEED));
             windDirection.setText(weatherData.getWeatherData(WeatherData.WIND_DIRECTION));
