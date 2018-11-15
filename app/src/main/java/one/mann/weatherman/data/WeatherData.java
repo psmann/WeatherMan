@@ -16,7 +16,7 @@ public final class WeatherData {
     public static final String CITY_NAME = "CITY_NAME";
     public static final String LAST_CHECKED = "LAST_CHECKED";
     public static final String LAST_UPDATED = "LAST_UPDATED";
-    private static final String PROGRESS_BAR = "PROGRESS_BAR";
+    public static final String LOADING_BAR = "LOADING_BAR";
     public static final String SUNRISE = "SUNRISE";
     public static final String SUNSET = "SUNSET";
     public static final String CLOUDS = "CLOUDS";
@@ -25,6 +25,7 @@ public final class WeatherData {
     public static final String VISIBILITY = "VISIBILITY";
     public static final String DESCRIPTION = "DESCRIPTION";
     public static final String ICON_CODE = "ICON_CODE";
+    public static final String UI_VISIBILITY = "UI_VISIBILITY";
     private SharedPreferences preferences;
 
     public WeatherData(Context context) {
@@ -39,13 +40,17 @@ public final class WeatherData {
         return preferences.getString(key, "");
     }
 
-    public void saveProgressBar(boolean value) {
+    public void saveLoadingBar(boolean value) {
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(PROGRESS_BAR, value);
+        editor.putBoolean(LOADING_BAR, value);
         editor.apply();
     }
 
-    public boolean getProgressBar() {
-        return preferences.getBoolean(PROGRESS_BAR, false);
+    public boolean getLoadingBar() {
+        return preferences.getBoolean(LOADING_BAR, false);
+    }
+
+    public boolean getUiVisibility() {
+        return preferences.getBoolean(UI_VISIBILITY, false);
     }
 }

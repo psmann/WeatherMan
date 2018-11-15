@@ -17,10 +17,8 @@ import one.mann.weatherman.model.GpsLocation;
 public class CurrentWeatherViewModel extends AndroidViewModel implements GpsLocation.GeoCoordinates,
         SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private MutableLiveData<String> currentTemperature, maxTemperature, minTemperature, pressure,
-            humidity, location, lastChecked, lastUpdated, cityName, sunrise, sunset, clouds, windSpeed,
-            windDirection, visibility, description, iconCode;
-    private MutableLiveData<Boolean> displayProgressBar;
+    private MutableLiveData<WeatherData> weatherLiveData;
+    private MutableLiveData<Boolean> displayLoadingBar, displayUi;
     private WeatherResult weatherResult;
     private WeatherData weatherData;
     private GpsLocation gpsLocation;
@@ -30,139 +28,54 @@ public class CurrentWeatherViewModel extends AndroidViewModel implements GpsLoca
         weatherData = new WeatherData(application);
         weatherResult = new WeatherResult(application);
         gpsLocation = new GpsLocation(application, this);
-        currentTemperature = new MutableLiveData<>();
-        maxTemperature = new MutableLiveData<>();
-        minTemperature = new MutableLiveData<>();
-        pressure = new MutableLiveData<>();
-        humidity = new MutableLiveData<>();
-        location = new MutableLiveData<>();
-        lastChecked = new MutableLiveData<>();
-        lastUpdated = new MutableLiveData<>();
-        cityName = new MutableLiveData<>();
-        sunrise = new MutableLiveData<>();
-        sunset = new MutableLiveData<>();
-        clouds = new MutableLiveData<>();
-        windSpeed = new MutableLiveData<>();
-        windDirection = new MutableLiveData<>();
-        visibility = new MutableLiveData<>();
-        description = new MutableLiveData<>();
-        iconCode = new MutableLiveData<>();
-        displayProgressBar = new MutableLiveData<>();
+        weatherLiveData = new MutableLiveData<>();
+        displayLoadingBar = new MutableLiveData<>();
+        displayUi = new MutableLiveData<>();
+        weatherLiveData.setValue(weatherData);
+        displayLoadingBar.setValue(weatherData.getLoadingBar());
+        displayUi.setValue(weatherData.getUiVisibility());
         weatherData.getPreferences().registerOnSharedPreferenceChangeListener(this);
-        updateWeatherUi();
     }
 
-    private void updateWeatherUi() {
-        currentTemperature.setValue(weatherData.getWeatherData(WeatherData.CURRENT_TEMP));
-        maxTemperature.setValue(weatherData.getWeatherData(WeatherData.MAX_TEMP));
-        minTemperature.setValue(weatherData.getWeatherData(WeatherData.MIN_TEMP));
-        pressure.setValue(weatherData.getWeatherData(WeatherData.PRESSURE));
-        humidity.setValue(weatherData.getWeatherData(WeatherData.HUMIDITY));
-        location.setValue(weatherData.getWeatherData(WeatherData.LOCATION));
-        displayProgressBar.setValue(weatherData.getProgressBar());
-        lastChecked.setValue(weatherData.getWeatherData(WeatherData.LAST_CHECKED));
-        lastUpdated.setValue(weatherData.getWeatherData(WeatherData.LAST_UPDATED));
-        cityName.setValue(weatherData.getWeatherData(WeatherData.CITY_NAME));
-        sunrise.setValue(weatherData.getWeatherData(WeatherData.SUNRISE));
-        sunset.setValue(weatherData.getWeatherData(WeatherData.SUNSET));
-        clouds.setValue(weatherData.getWeatherData(WeatherData.CLOUDS));
-        windSpeed.setValue(weatherData.getWeatherData(WeatherData.WIND_SPEED));
-        windDirection.setValue(weatherData.getWeatherData(WeatherData.WIND_DIRECTION));
-        visibility.setValue(weatherData.getWeatherData(WeatherData.VISIBILITY));
-        description.setValue(weatherData.getWeatherData(WeatherData.DESCRIPTION));
-        iconCode.setValue(weatherData.getWeatherData(WeatherData.ICON_CODE));
-    }
-
-    public void getWeather(boolean gpsOn) {
-        if (gpsOn) {
-            weatherData.saveProgressBar(true);
+    public void getWeather(boolean gpsEnabled) {
+        weatherData.saveLoadingBar(true);
+        if (gpsEnabled)
             gpsLocation.getLocation();
-        } else if (Objects.equals(location.getValue(), ""))
+        else if (Objects.equals(weatherData.getWeatherData(WeatherData.LOCATION), "")) {
+            weatherData.saveLoadingBar(false);
             Toast.makeText(getApplication(), R.string.gps_needed_for_location, Toast.LENGTH_SHORT).show();
-        else {
+        } else {
             Double[] lastLocation = new Double[]{Double.parseDouble(weatherData.getWeatherData(WeatherData.LATITUDE)),
                     Double.parseDouble(weatherData.getWeatherData(WeatherData.LONGITUDE))};
-            weatherData.saveProgressBar(true);
             weatherResult.weatherCall(lastLocation);
             Toast.makeText(getApplication(), R.string.no_gps_updating_previous_location, Toast.LENGTH_SHORT).show();
         }
     }
 
-    public MutableLiveData<String> getCurrentTemperature() {
-        return currentTemperature;
+    public MutableLiveData<WeatherData> getWeatherLiveData() {
+        return weatherLiveData;
     }
 
-    public MutableLiveData<String> getMaxTemperature() {
-        return maxTemperature;
+    public MutableLiveData<Boolean> getDisplayLoadingBar() {
+        return displayLoadingBar;
     }
 
-    public MutableLiveData<String> getMinTemperature() {
-        return minTemperature;
-    }
-
-    public MutableLiveData<String> getPressure() {
-        return pressure;
-    }
-
-    public MutableLiveData<String> getHumidity() {
-        return humidity;
-    }
-
-    public MutableLiveData<String> getLocation() {
-        return location;
-    }
-
-    public MutableLiveData<Boolean> getDisplayProgressBar() {
-        return displayProgressBar;
-    }
-
-    public MutableLiveData<String> getLastChecked() {
-        return lastChecked;
-    }
-
-    public MutableLiveData<String> getLastUpdated() {
-        return lastUpdated;
-    }
-
-    public MutableLiveData<String> getCityName() {
-        return cityName;
-    }
-
-    public MutableLiveData<String> getSunrise() {
-        return sunrise;
-    }
-
-    public MutableLiveData<String> getSunset() {
-        return sunset;
-    }
-
-    public MutableLiveData<String> getClouds() {
-        return clouds;
-    }
-
-    public MutableLiveData<String> getWindSpeed() {
-        return windSpeed;
-    }
-
-    public MutableLiveData<String> getWindDirection() {
-        return windDirection;
-    }
-
-    public MutableLiveData<String> getVisibility() {
-        return visibility;
-    }
-
-    public MutableLiveData<String> getDescription() {
-        return description;
-    }
-
-    public MutableLiveData<String> getIconCode() {
-        return iconCode;
+    public MutableLiveData<Boolean> getDisplayUi() {
+        return displayUi;
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        updateWeatherUi();
+        switch (key) {
+            case WeatherData.UI_VISIBILITY:
+                displayUi.setValue(weatherData.getUiVisibility());
+                break;
+            case WeatherData.LOADING_BAR:
+                displayLoadingBar.setValue(weatherData.getLoadingBar());
+                break;
+            default:
+                weatherLiveData.setValue(weatherData);
+        }
     }
 
     @Override

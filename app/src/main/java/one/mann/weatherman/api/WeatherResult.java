@@ -58,7 +58,7 @@ public class WeatherResult {
         weatherCall.enqueue(new Callback<CurrentWeather>() {
             @Override
             public void onResponse(@NonNull Call<CurrentWeather> call, @NonNull Response<CurrentWeather> response) {
-                weatherData.saveProgressBar(false);
+                weatherData.saveLoadingBar(false);
                 if (!response.isSuccessful()) {
                     Toast.makeText(context, R.string.server_not_found, Toast.LENGTH_SHORT).show();
                     return;
@@ -73,7 +73,7 @@ public class WeatherResult {
 
             @Override
             public void onFailure(@NonNull Call<CurrentWeather> call, @NonNull Throwable t) {
-                weatherData.saveProgressBar(false);
+                weatherData.saveLoadingBar(false);
                 Toast.makeText(context, R.string.server_not_found, Toast.LENGTH_SHORT).show();
             }
         });
@@ -102,6 +102,7 @@ public class WeatherResult {
         editor.putString(WeatherData.VISIBILITY, String.valueOf(visibility) + METERS);
         editor.putString(WeatherData.DESCRIPTION, String.valueOf(weather.getMain()));
         editor.putString(WeatherData.ICON_CODE, ICON_URL + String.valueOf(weather.getIcon()) + ICON_EXTENSION);
+        editor.putBoolean(WeatherData.UI_VISIBILITY, true);
         editor.apply();
     }
 }

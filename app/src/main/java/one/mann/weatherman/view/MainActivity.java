@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -30,18 +31,18 @@ import com.google.android.gms.tasks.Task;
 
 import one.mann.weatherman.GlideApp;
 import one.mann.weatherman.R;
+import one.mann.weatherman.data.WeatherData;
 import one.mann.weatherman.viewmodel.CurrentWeatherViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
     private final int LOCATION_REQUEST_CODE = 1011;
-    private TextView currentTemp, maxTemp, minTemp, humidity, pressure, geoLocation, lastUpdated,
+    private TextView currentTemperature, maxTemperature, minTemperature, humidity, pressure, geoLocation, lastUpdated,
             cityName, lastChecked, sunrise, sunset, clouds, windSpeed, windDirection, visibility, description;
     private ImageView weatherIcon;
     private CurrentWeatherViewModel weatherViewModel;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ConstraintLayout constraintLayout;
-    private boolean uiVisible;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,9 +89,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void initObjects() {
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
-        currentTemp = findViewById(R.id.current_temp_result);
-        maxTemp = findViewById(R.id.max_temp_result);
-        minTemp = findViewById(R.id.min_temp_result);
+        currentTemperature = findViewById(R.id.current_temp_result);
+        maxTemperature = findViewById(R.id.max_temp_result);
+        minTemperature = findViewById(R.id.min_temp_result);
         humidity = findViewById(R.id.humidity_result);
         pressure = findViewById(R.id.pressure_result);
         geoLocation = findViewById(R.id.location_result);
@@ -105,39 +106,40 @@ public class MainActivity extends AppCompatActivity {
         visibility = findViewById(R.id.visibility_result);
         description = findViewById(R.id.description);
         weatherIcon = findViewById((R.id.weather_icon));
-        uiVisible = false;
+        swipeRefreshLayout.setColorSchemeColors(Color.RED, Color.BLUE);
 
         weatherViewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel.class);
-        weatherViewModel.getCurrentTemperature().observe(this, s -> currentTemp.setText(s));
-        weatherViewModel.getMaxTemperature().observe(this, s -> maxTemp.setText(s));
-        weatherViewModel.getMinTemperature().observe(this, s -> minTemp.setText(s));
-        weatherViewModel.getPressure().observe(this, s -> pressure.setText(s));
-        weatherViewModel.getHumidity().observe(this, s -> humidity.setText(s));
-        weatherViewModel.getLocation().observe(this, s -> geoLocation.setText(s));
-        weatherViewModel.getDisplayProgressBar().observe(this, result ->
+        weatherViewModel.getWeatherLiveData().observe(this, weatherData -> {
+            if (weatherData == null) return;
+            currentTemperature.setText(weatherData.getWeatherData(WeatherData.CURRENT_TEMP));
+            maxTemperature.setText(weatherData.getWeatherData(WeatherData.MAX_TEMP));
+            minTemperature.setText(weatherData.getWeatherData(WeatherData.MIN_TEMP));
+            pressure.setText(weatherData.getWeatherData(WeatherData.PRESSURE));
+            humidity.setText(weatherData.getWeatherData(WeatherData.HUMIDITY));
+            geoLocation.setText(weatherData.getWeatherData(WeatherData.LOCATION));
+            lastChecked.setText(weatherData.getWeatherData(WeatherData.LAST_CHECKED));
+            lastUpdated.setText(weatherData.getWeatherData(WeatherData.LAST_UPDATED));
+            cityName.setText(weatherData.getWeatherData(WeatherData.CITY_NAME));
+            sunrise.setText(weatherData.getWeatherData(WeatherData.SUNRISE));
+            sunset.setText(weatherData.getWeatherData(WeatherData.SUNSET));
+            clouds.setText(weatherData.getWeatherData(WeatherData.CLOUDS));
+            windSpeed.setText(weatherData.getWeatherData(WeatherData.WIND_SPEED));
+            windDirection.setText(weatherData.getWeatherData(WeatherData.WIND_DIRECTION));
+            visibility.setText(weatherData.getWeatherData(WeatherData.VISIBILITY));
+            description.setText(weatherData.getWeatherData(WeatherData.DESCRIPTION));
+            GlideApp.with(MainActivity.this)
+                    .load(weatherData.getWeatherData(WeatherData.ICON_CODE))
+                    .skipMemoryCache(true)
+                    .into(weatherIcon);
+        });
+        weatherViewModel.getDisplayLoadingBar().observe(this, result ->
                 swipeRefreshLayout.setRefreshing(result == null ? false : result));
-        weatherViewModel.getLastChecked().observe(this, s -> lastChecked.setText(s));
-        weatherViewModel.getLastUpdated().observe(this, s -> lastUpdated.setText(s));
-        weatherViewModel.getSunrise().observe(this, s -> sunrise.setText(s));
-        weatherViewModel.getSunset().observe(this, s -> sunset.setText(s));
-        weatherViewModel.getClouds().observe(this, s -> clouds.setText(s));
-        weatherViewModel.getWindSpeed().observe(this, s -> windSpeed.setText(s));
-        weatherViewModel.getWindDirection().observe(this, s -> windDirection.setText(s));
-        weatherViewModel.getVisibility().observe(this, s -> visibility.setText(s));
-        weatherViewModel.getDescription().observe(this, s -> description.setText(s));
-        weatherViewModel.getIconCode().observe(this, s -> GlideApp.with(this)
-                .load(s)
-                .skipMemoryCache(true)
-                .into(weatherIcon));
-        weatherViewModel.getCityName().observe(this, s -> {
-            cityName.setText(s);
-            if (!uiVisible)
-                if (cityName.getText().toString().equals("")) {
-                    checkLocationSettings();
-                } else {
-                    constraintLayout.setVisibility(View.VISIBLE);
-                    uiVisible = true;
-                }
+        weatherViewModel.getDisplayUi().observe(this, aBoolean -> {
+            if (aBoolean == null) return;
+            if (!aBoolean)
+                checkLocationSettings();
+            else if (constraintLayout.getVisibility() == View.INVISIBLE)
+                constraintLayout.setVisibility(View.VISIBLE);
         });
         swipeRefreshLayout.setOnRefreshListener(this::checkLocationSettings);
     }
