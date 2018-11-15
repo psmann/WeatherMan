@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final int LOCATION_REQUEST_CODE = 1011;
     private TextView currentTemperature, maxTemperature, minTemperature, humidity, pressure, geoLocation, lastUpdated,
-            cityName, lastChecked, sunrise, sunset, clouds, windSpeed, windDirection, visibility, description;
+            cityName, lastChecked, sunrise, sunset, clouds, windSpeed, windDirection, visibility, description, flag;
     private ImageView weatherIcon;
     private CurrentWeatherViewModel weatherViewModel;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
         lastChecked = findViewById(R.id.last_checked_result);
         lastUpdated = findViewById(R.id.last_updated_result);
         cityName = findViewById(R.id.city_name);
+        flag = findViewById(R.id.country_flag);
         sunrise = findViewById(R.id.sunrise_result);
         sunset = findViewById(R.id.sunset_result);
         clouds = findViewById(R.id.clouds_result);
@@ -120,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
             lastChecked.setText(weatherData.getWeatherData(WeatherData.LAST_CHECKED));
             lastUpdated.setText(weatherData.getWeatherData(WeatherData.LAST_UPDATED));
             cityName.setText(weatherData.getWeatherData(WeatherData.CITY_NAME));
+            flag.setText(weatherData.getWeatherData(WeatherData.COUNTRY_FLAG));
             sunrise.setText(weatherData.getWeatherData(WeatherData.SUNRISE));
             sunset.setText(weatherData.getWeatherData(WeatherData.SUNSET));
             clouds.setText(weatherData.getWeatherData(WeatherData.CLOUDS));

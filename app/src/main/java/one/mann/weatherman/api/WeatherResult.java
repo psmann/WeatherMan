@@ -38,6 +38,8 @@ public class WeatherResult {
     private static final String METERS = " m";
     private static final String METERS_PER_SECOND = " m/s";
     private static final String DEGREES = " °";
+    private static final int FLAG_OFFSET = 0x1F1E6; // Regional Indicator Symbol for letter A
+    private static final int ASCII_OFFSET = 0x41; // Uppercase letter A
     private WeatherData weatherData;
     private Context context;
     private DateFormat dateFormat;
@@ -79,6 +81,12 @@ public class WeatherResult {
         });
     }
 
+    private String countryCodeToEmoji(String code) {
+        int firstChar = Character.codePointAt(code, 0) - ASCII_OFFSET + FLAG_OFFSET;
+        int secondChar = Character.codePointAt(code, 1) - ASCII_OFFSET + FLAG_OFFSET;
+        return new String(Character.toChars(firstChar)) + new String(Character.toChars(secondChar));
+    }
+
     private void saveWeather(Main main, Sys sys, Wind wind, Clouds clouds, Weather weather, Double[] location,
                              String name, long dt, long visibility) {
         String coordinates = location[0].toString() + ", " + location[1].toString();
@@ -96,6 +104,7 @@ public class WeatherResult {
         editor.putString(WeatherData.LAST_CHECKED, String.valueOf(dateFormat.format(new Date(System.currentTimeMillis()))));
         editor.putString(WeatherData.SUNRISE, String.valueOf(dateFormat.format(new Date(sys.getSunrise() * 1000))));
         editor.putString(WeatherData.SUNSET, String.valueOf(dateFormat.format(new Date(sys.getSunset() * 1000))));
+        editor.putString(WeatherData.COUNTRY_FLAG, countryCodeToEmoji(String.valueOf(sys.getCountry())));
         editor.putString(WeatherData.CLOUDS, String.valueOf(clouds.getAll()) + PERCENT);
         editor.putString(WeatherData.WIND_SPEED, String.valueOf(wind.getSpeed()) + METERS_PER_SECOND);
         editor.putString(WeatherData.WIND_DIRECTION, String.valueOf(wind.getDeg()) + DEGREES);

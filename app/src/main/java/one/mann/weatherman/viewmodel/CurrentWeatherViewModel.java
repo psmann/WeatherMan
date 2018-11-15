@@ -66,7 +66,7 @@ public class CurrentWeatherViewModel extends AndroidViewModel implements GpsLoca
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        switch (key) {
+        switch (key) { // weatherLiveData can be split up into different objects and handled separately for efficiency
             case WeatherData.UI_VISIBILITY:
                 displayUi.setValue(weatherData.getUiVisibility());
                 break;

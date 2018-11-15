@@ -19,6 +19,7 @@ public final class WeatherData {
     public static final String LOADING_BAR = "LOADING_BAR";
     public static final String SUNRISE = "SUNRISE";
     public static final String SUNSET = "SUNSET";
+    public static final String COUNTRY_FLAG = "COUNTRY_FLAG";
     public static final String CLOUDS = "CLOUDS";
     public static final String WIND_SPEED = "WIND_SPEED";
     public static final String WIND_DIRECTION = "WIND_DIRECTION";
