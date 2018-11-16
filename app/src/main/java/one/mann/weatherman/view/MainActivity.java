@@ -184,7 +184,10 @@ public class MainActivity extends AppCompatActivity {
                         }
                         break;
                     case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        break; // Location settings are not available on the device
+                        Toast.makeText(this, R.string.location_settings_not_available, Toast.LENGTH_SHORT)
+                                .show();
+                        finish(); // Location settings not available on the device, exit app
+                        break;
                 }
             }
         });

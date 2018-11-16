@@ -22,4 +22,5 @@
     <string name="no_internet_connection">No active internet connection found.</string>
     <string name="no_gps_updating_previous_location">Weather updated for previous location.</string>
     <string name="weather_icon">Weather Icon</string>
+    <string name="location_settings_not_available">Location settings are not available on this device.</string>
 </resources>

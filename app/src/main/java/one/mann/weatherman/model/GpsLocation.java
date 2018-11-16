@@ -23,7 +23,7 @@ public class GpsLocation {
         this.geoCoordinates = geoCoordinates;
     }
 
-    @SuppressLint("MissingPermission") // locationProviderClient is being checked for permissions before this method is called
+    @SuppressLint("MissingPermission") // locationProviderClient is being checked before this method is called
     public void getLocation() {
         final LocationRequest locationRequest = LocationRequest.create()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
@@ -40,12 +40,12 @@ public class GpsLocation {
                     }
             }
         };
-        locationProviderClient.getLastLocation().addOnSuccessListener(location -> { // first check for last location if available
-            if (location != null) {
+        locationProviderClient.getLastLocation().addOnSuccessListener(location -> { // Check for last location
+            if (location != null) { // Use if available
                 currentLocation[0] = location.getLatitude();
                 currentLocation[1] = location.getLongitude();
                 geoCoordinates.getCoordinates(currentLocation);
-            } else // otherwise request for a new location (drains battery)
+            } else // Otherwise request for a location update (drains battery)
                 locationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
         });
     }
