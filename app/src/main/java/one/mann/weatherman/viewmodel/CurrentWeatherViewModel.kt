@@ -37,9 +37,8 @@ class CurrentWeatherViewModel(application: Application) : AndroidViewModel(appli
                 Toast.makeText(getApplication(), R.string.gps_needed_for_location, Toast.LENGTH_SHORT).show()
             }
             else -> {
-                val lastLocation: Array<Double?> =
-                        arrayOf(java.lang.Double.parseDouble(weatherData.getWeatherData(WeatherData.LATITUDE)),
-                        java.lang.Double.parseDouble(weatherData.getWeatherData(WeatherData.LONGITUDE)))
+                val lastLocation: Array<Double?> = arrayOf(weatherData.getWeatherData(WeatherData.LATITUDE).toDouble(),
+                        weatherData.getWeatherData(WeatherData.LONGITUDE).toDouble())
                 weatherResult.weatherCall(lastLocation)
                 Toast.makeText(getApplication(), R.string.no_gps_updating_previous_location, Toast.LENGTH_SHORT).show()
             }
@@ -47,8 +46,7 @@ class CurrentWeatherViewModel(application: Application) : AndroidViewModel(appli
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        when (key) {
-            // weatherLiveData can be split up into different objects and handled separately for efficiency
+        when (key) { // weatherLiveData can be split up into different objects and handled separately for efficiency
             WeatherData.UI_VISIBILITY -> displayUi.setValue(weatherData.uiVisibility)
             WeatherData.LOADING_BAR -> displayLoadingBar.setValue(weatherData.loadingBar)
             else -> weatherLiveData.setValue(weatherData)
