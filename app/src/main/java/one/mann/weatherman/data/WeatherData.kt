@@ -4,17 +4,13 @@ import android.content.Context
 import android.content.SharedPreferences
 
 class WeatherData(context: Context) {
-    val preferences: SharedPreferences
+    val preferences: SharedPreferences = context.getSharedPreferences("WEATHER_DATA", Context.MODE_PRIVATE)
 
     val loadingBar: Boolean
         get() = preferences.getBoolean(LOADING_BAR, false)
 
     val uiVisibility: Boolean
         get() = preferences.getBoolean(UI_VISIBILITY, false)
-
-    init {
-        preferences = context.getSharedPreferences("WEATHER_DATA", Context.MODE_PRIVATE)
-    }
 
     fun getWeatherData(key: String): String {
         return preferences.getString(key, "")
@@ -27,29 +23,28 @@ class WeatherData(context: Context) {
     }
 
     companion object {
-
-        val CURRENT_TEMP = "CURRENT_TEMP"
-        val MAX_TEMP = "MAX_TEMP"
-        val MIN_TEMP = "MIN_TEMP"
-        val PRESSURE = "PRESSURE"
-        val HUMIDITY = "HUMIDITY"
-        val LOCATION = "LOCATION"
-        val LATITUDE = "LATITUDE"
-        val LONGITUDE = "LONGITUDE"
-        val CITY_NAME = "CITY_NAME"
-        val LAST_CHECKED = "LAST_CHECKED"
-        val LAST_UPDATED = "LAST_UPDATED"
-        val LOADING_BAR = "LOADING_BAR"
-        val SUNRISE = "SUNRISE"
-        val SUNSET = "SUNSET"
-        val DAY_LENGTH = "DAY_LENGTH"
-        val COUNTRY_FLAG = "COUNTRY_FLAG"
-        val CLOUDS = "CLOUDS"
-        val WIND_SPEED = "WIND_SPEED"
-        val WIND_DIRECTION = "WIND_DIRECTION"
-        val VISIBILITY = "VISIBILITY"
-        val DESCRIPTION = "DESCRIPTION"
-        val ICON_CODE = "ICON_CODE"
-        val UI_VISIBILITY = "UI_VISIBILITY"
+        const val CURRENT_TEMP = "CURRENT_TEMP"
+        const val MAX_TEMP = "MAX_TEMP"
+        const val MIN_TEMP = "MIN_TEMP"
+        const val PRESSURE = "PRESSURE"
+        const val HUMIDITY = "HUMIDITY"
+        const val LOCATION = "LOCATION"
+        const val LATITUDE = "LATITUDE"
+        const val LONGITUDE = "LONGITUDE"
+        const val CITY_NAME = "CITY_NAME"
+        const val LAST_CHECKED = "LAST_CHECKED"
+        const val LAST_UPDATED = "LAST_UPDATED"
+        const val LOADING_BAR = "LOADING_BAR"
+        const val SUNRISE = "SUNRISE"
+        const val SUNSET = "SUNSET"
+        const val DAY_LENGTH = "DAY_LENGTH"
+        const val COUNTRY_FLAG = "COUNTRY_FLAG"
+        const val CLOUDS = "CLOUDS"
+        const val WIND_SPEED = "WIND_SPEED"
+        const val WIND_DIRECTION = "WIND_DIRECTION"
+        const val VISIBILITY = "VISIBILITY"
+        const val DESCRIPTION = "DESCRIPTION"
+        const val ICON_CODE = "ICON_CODE"
+        const val UI_VISIBILITY = "UI_VISIBILITY"
     }
 }

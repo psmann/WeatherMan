@@ -1,5 +1,5 @@
 package one.mann.weatherman.model.openWeatherMap
 
 class Clouds {
-    val all: Int = 0
+    val all: Float = 0.toFloat()
 }

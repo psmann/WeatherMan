@@ -77,10 +77,10 @@ class WeatherResult(private val context: Context) {
         val coordinates = location[0].toString() + ", " + location[1].toString()
         val editor = weatherData.preferences.edit()
         editor.putString(WeatherData.CURRENT_TEMP, main?.temp.toString() + CELSIUS)
-        editor.putString(WeatherData.MAX_TEMP, main?.temp_max.toString() + CELSIUS)
-        editor.putString(WeatherData.MIN_TEMP, main?.temp_min.toString() + CELSIUS)
-        editor.putString(WeatherData.PRESSURE, main?.pressure.toString() + HECTOPASCAL)
-        editor.putString(WeatherData.HUMIDITY, main?.humidity.toString() + PERCENT)
+        editor.putString(WeatherData.MAX_TEMP, main?.temp_max?.toInt().toString() + CELSIUS)
+        editor.putString(WeatherData.MIN_TEMP, main?.temp_min?.toInt().toString() + CELSIUS)
+        editor.putString(WeatherData.PRESSURE, main?.pressure?.toInt().toString() + HECTOPASCAL)
+        editor.putString(WeatherData.HUMIDITY, main?.humidity?.toInt().toString() + PERCENT)
         editor.putString(WeatherData.LOCATION, coordinates)
         editor.putString(WeatherData.LATITUDE, location[0].toString())
         editor.putString(WeatherData.LONGITUDE, location[1].toString())
@@ -91,10 +91,10 @@ class WeatherResult(private val context: Context) {
         editor.putString(WeatherData.SUNSET, dateFormat.format(Date(sys!!.sunset * 1000)).toString())
         editor.putString(WeatherData.DAY_LENGTH, lengthOfDay(sys!!.sunrise, sys.sunset))
         editor.putString(WeatherData.COUNTRY_FLAG, countryCodeToEmoji(sys.country.toString()))
-        editor.putString(WeatherData.CLOUDS, clouds?.all.toString() + PERCENT)
+        editor.putString(WeatherData.CLOUDS, clouds?.all?.toInt().toString() + PERCENT)
         editor.putString(WeatherData.WIND_SPEED, wind?.speed.toString() + METERS_PER_SECOND)
-        editor.putString(WeatherData.WIND_DIRECTION, wind?.deg.toString() + DEGREES)
-        editor.putString(WeatherData.VISIBILITY, visibility.toString() + METERS)
+        editor.putString(WeatherData.WIND_DIRECTION, wind?.deg?.toInt().toString() + DEGREES)
+        editor.putString(WeatherData.VISIBILITY, visibility.toInt().toString() + METERS)
         editor.putString(WeatherData.DESCRIPTION, weather?.main.toString())
         editor.putString(WeatherData.ICON_CODE, ICON_URL + weather?.icon.toString() + ICON_EXTENSION)
         editor.putBoolean(WeatherData.UI_VISIBILITY, true)
@@ -102,7 +102,6 @@ class WeatherResult(private val context: Context) {
     }
 
     companion object {
-
         private const val BASE_URL = "http://api.openweathermap.org/data/2.5/"
         private const val ICON_URL = "http://openweathermap.org/img/w/"
         private const val APP_ID = "bd7173aa3aec6c2d8f88b500666a116e"

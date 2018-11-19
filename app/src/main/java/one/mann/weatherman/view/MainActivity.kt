@@ -110,7 +110,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkNetworkConnection(): Boolean {
         val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connectivityManager.activeNetworkInfo// Suppressed because null is being checked
+        val networkInfo = connectivityManager.activeNetworkInfo
         return networkInfo != null && networkInfo.isConnected
     }
 
@@ -133,18 +133,16 @@ class MainActivity : AppCompatActivity() {
                 task.getResult(ApiException::class.java)
                 weatherViewModel!!.getWeather(true)
             } catch (exception: ApiException) {
-                when (exception.statusCode) {
+                when (exception.statusCode) { // Settings are off. Show a prompt and check result in onActivityResult()
                     LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> try {
-                        // Location settings are off. Show a prompt and check result in onActivityResult()
                         val resolvable = exception as ResolvableApiException
                         resolvable.startResolutionForResult(this@MainActivity, locationRequestCode)
                     } catch (ignored: IntentSender.SendIntentException) {
                     } catch (ignored: ClassCastException) {
-                    }
+                    } // Location settings not available on the device, exit app
                     LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
-                        Toast.makeText(this, R.string.location_settings_not_available, Toast.LENGTH_SHORT)
-                                .show()
-                        finish() // Location settings not available on the device, exit app
+                        Toast.makeText(this, R.string.location_settings_not_available, Toast.LENGTH_SHORT).show()
+                        finish()
                     }
                 }
             }

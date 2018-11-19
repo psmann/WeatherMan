@@ -8,5 +8,5 @@ class CurrentWeather {
     val weather: Array<Weather>? = null
     val name: String? = null
     val dt: Long = 0
-    val visibility: Int = 0
+    val visibility: Float = 0.toFloat()
 }

@@ -37,8 +37,7 @@ class GpsLocation(context: Context, private val geoCoordinates: GeoCoordinates) 
                 currentLocation[0] = location.latitude
                 currentLocation[1] = location.longitude
                 geoCoordinates.getCoordinates(currentLocation)
-            } else
-            // Otherwise request for a location update (drains battery)
+            } else // Otherwise request for a location update (drains battery)
                 locationProviderClient.requestLocationUpdates(locationRequest, locationCallback!!, null)
         }
     }
