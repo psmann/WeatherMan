@@ -73,6 +73,7 @@ class MainActivity : AppCompatActivity() {
         weatherViewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel::class.java)
         weatherViewModel!!.weatherLiveData.observe(this, Observer { weatherData ->
             current_temp_result.text = weatherData!!.getWeatherData(WeatherData.CURRENT_TEMP)
+            feels_like_result.text = weatherData.getWeatherData(WeatherData.FEELS_LIKE)
             max_temp_result.text = weatherData.getWeatherData(WeatherData.MAX_TEMP)
             min_temp_result.text = weatherData.getWeatherData(WeatherData.MIN_TEMP)
             pressure_result.text = weatherData.getWeatherData(WeatherData.PRESSURE)

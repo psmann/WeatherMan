@@ -99,6 +99,16 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
+                            android:id="@+id/feels_like"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/feels_like"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/current_temp" />
+
+                        <TextView
                             android:id="@+id/max_temp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -106,7 +116,7 @@
                             android:layout_marginTop="8dp"
                             android:text="@string/max_temp"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/current_temp" />
+                            app:layout_constraintTop_toBottomOf="@+id/feels_like" />
 
                         <TextView
                             android:id="@+id/min_temp"
@@ -135,6 +145,14 @@
                             android:layout_marginStart="8dp"
                             app:layout_constraintStart_toEndOf="@+id/current_temp"
                             app:layout_constraintTop_toTopOf="@+id/current_temp" />
+
+                        <TextView
+                            android:id="@+id/feels_like_result"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            app:layout_constraintStart_toEndOf="@+id/feels_like"
+                            app:layout_constraintTop_toTopOf="@+id/feels_like" />
 
                         <TextView
                             android:id="@+id/max_temp_result"

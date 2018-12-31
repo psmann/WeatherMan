@@ -22,6 +22,10 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.Math.exp
+import java.lang.Math.pow
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 class WeatherResult(private val context: Context) {
     private val weatherData: WeatherData = WeatherData(context)
@@ -72,15 +76,36 @@ class WeatherResult(private val context: Context) {
         return hoursFormat.format(Date(length * 1000)).toString() // Convert to nanosecond
     }
 
+    private fun feelsLike(temperature: Float, humidity: Int, wind: Float): Float {
+        // Using https://blog.metservice.com/FeelsLikeTemp for reference
+        var feelsLike: Double
+        when {
+            temperature < 14 -> { // = Wind Chill using JAG/TI formula
+                val k = pow(wind.toDouble() * 3.6, 0.16) // Wind speed converted to km/h and raised to the power
+                feelsLike = 13.12 + (0.6215 * temperature) - (11.35 * k) + (0.396 * k)
+                if (temperature > 10) // Roll-over Zone
+                    feelsLike = temperature - (((temperature - feelsLike) * (14 - temperature)) / 4)
+            }
+            else -> { // = Heat Index or Apparent Temperature using Steadman's formula
+                val e = humidity / 100 * 6.105 * exp(17.27 * temperature / (237.7 + temperature)) // Pressure
+                feelsLike = temperature + (0.33 * e) - (0.7 * wind) - 4
+            }
+        }
+        return BigDecimal.valueOf(feelsLike)
+                .setScale(2, RoundingMode.HALF_UP).toFloat() // Set precision to match current temp
+    }
+
     private fun saveWeather(main: Main?, sys: Sys?, wind: Wind?, clouds: Clouds?, weather: Weather?, location: Array<Double?>,
                             name: String?, dt: Long, visibility: Long) {
         val coordinates = location[0].toString() + ", " + location[1].toString()
         val editor = weatherData.preferences.edit()
         editor.putString(WeatherData.CURRENT_TEMP, main?.temp.toString() + CELSIUS)
-        editor.putString(WeatherData.MAX_TEMP, main?.temp_max?.toInt().toString() + CELSIUS)
-        editor.putString(WeatherData.MIN_TEMP, main?.temp_min?.toInt().toString() + CELSIUS)
-        editor.putString(WeatherData.PRESSURE, main?.pressure?.toInt().toString() + HECTOPASCAL)
-        editor.putString(WeatherData.HUMIDITY, main?.humidity?.toInt().toString() + PERCENT)
+        editor.putString(WeatherData.FEELS_LIKE, feelsLike(main?.temp!!, main.humidity.toInt(), wind?.speed!!)
+                .toString() + CELSIUS)
+        editor.putString(WeatherData.MAX_TEMP, main.temp_max.toInt().toString() + CELSIUS)
+        editor.putString(WeatherData.MIN_TEMP, main.temp_min.toInt().toString() + CELSIUS)
+        editor.putString(WeatherData.PRESSURE, main.pressure.toInt().toString() + HECTOPASCAL)
+        editor.putString(WeatherData.HUMIDITY, main.humidity.toInt().toString() + PERCENT)
         editor.putString(WeatherData.LOCATION, coordinates)
         editor.putString(WeatherData.LATITUDE, location[0].toString())
         editor.putString(WeatherData.LONGITUDE, location[1].toString())
@@ -92,8 +117,8 @@ class WeatherResult(private val context: Context) {
         editor.putString(WeatherData.DAY_LENGTH, lengthOfDay(sys!!.sunrise, sys.sunset))
         editor.putString(WeatherData.COUNTRY_FLAG, countryCodeToEmoji(sys.country.toString()))
         editor.putString(WeatherData.CLOUDS, clouds?.all?.toInt().toString() + PERCENT)
-        editor.putString(WeatherData.WIND_SPEED, wind?.speed.toString() + METERS_PER_SECOND)
-        editor.putString(WeatherData.WIND_DIRECTION, wind?.deg?.toInt().toString() + DEGREES)
+        editor.putString(WeatherData.WIND_SPEED, wind.speed.toString() + METERS_PER_SECOND)
+        editor.putString(WeatherData.WIND_DIRECTION, wind.deg.toInt().toString() + DEGREES)
         editor.putString(WeatherData.VISIBILITY, visibility.toInt().toString() + METERS)
         editor.putString(WeatherData.DESCRIPTION, weather?.main.toString())
         editor.putString(WeatherData.ICON_CODE, ICON_URL + weather?.icon.toString() + ICON_EXTENSION)

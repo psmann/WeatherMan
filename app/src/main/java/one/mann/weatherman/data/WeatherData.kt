@@ -24,6 +24,7 @@ class WeatherData(context: Context) {
 
     companion object {
         const val CURRENT_TEMP = "CURRENT_TEMP"
+        const val FEELS_LIKE = "FEELS_LIKE"
         const val MAX_TEMP = "MAX_TEMP"
         const val MIN_TEMP = "MIN_TEMP"
         const val PRESSURE = "PRESSURE"

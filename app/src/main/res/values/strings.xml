@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">WeatherMan</string>
     <string name="current_temp">Temperature:</string>
+    <string name="feels_like">Feels Like:</string>
     <string name="max_temp">Max:</string>
     <string name="min_temp">Min:</string>
     <string name="pressure">Pressure:</string>
