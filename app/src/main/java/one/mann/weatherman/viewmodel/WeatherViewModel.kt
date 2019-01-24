@@ -11,7 +11,7 @@ import one.mann.weatherman.api.WeatherResult
 import one.mann.weatherman.data.WeatherData
 import one.mann.weatherman.model.GpsLocation
 
-class CurrentWeatherViewModel(application: Application) : AndroidViewModel(application),
+class WeatherViewModel(application: Application) : AndroidViewModel(application),
         GpsLocation.GeoCoordinates, SharedPreferences.OnSharedPreferenceChangeListener {
 
     val weatherLiveData: MutableLiveData<WeatherData> = MutableLiveData()
@@ -26,6 +26,11 @@ class CurrentWeatherViewModel(application: Application) : AndroidViewModel(appli
         displayLoadingBar.value = weatherData.loadingBar
         displayUi.value = weatherData.uiVisibility
         weatherData.preferences.registerOnSharedPreferenceChangeListener(this)
+    }
+
+    fun newCityLocation(lat: Double, lon: Double) {
+        val loc: Array<Double?> = arrayOf(lat, lon)
+        weatherResult.weatherCall(loc)
     }
 
     fun getWeather(gpsEnabled: Boolean) {

@@ -11,33 +11,38 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.ConnectivityManager
 import android.os.Build
-import android.support.v4.app.ActivityCompat
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
+import android.support.v4.app.ActivityCompat
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentPagerAdapter
+import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
-
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException
+import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
+import com.google.android.gms.location.places.AutocompleteFilter
+import com.google.android.gms.location.places.ui.PlaceAutocomplete
 import kotlinx.android.synthetic.main.activity_main.*
-
 import one.mann.weatherman.R
-import one.mann.weatherman.data.WeatherData
-import one.mann.weatherman.viewmodel.CurrentWeatherViewModel
+import one.mann.weatherman.viewmodel.WeatherViewModel
 
 class MainActivity : AppCompatActivity() {
 
+    private val numPages = 3
     private val locationRequestCode = 1011
-    private var weatherViewModel: CurrentWeatherViewModel? = null
+    private val placeAutocompleteRequestCode = 1021
+    private lateinit var weatherViewModel: WeatherViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        weather_layout.visibility = View.INVISIBLE
 
         // Gives permissions for both NETWORK_PROVIDER (COARSE_LOCATION) and GPS_PROVIDER (FINE_LOCATION)
         if (ActivityCompat.checkSelfPermission(this,
@@ -45,8 +50,7 @@ class MainActivity : AppCompatActivity() {
             if (Build.VERSION.SDK_INT >= 23) // Check result in onRequestPermissionsResult()
                 ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
                         locationRequestCode)
-        } else
-            initObjects()
+        } else initObjects()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -62,48 +66,47 @@ class MainActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == locationRequestCode)
-            when (resultCode) {
-                Activity.RESULT_OK -> weatherViewModel!!.getWeather(true)
-                Activity.RESULT_CANCELED -> weatherViewModel!!.getWeather(false)
-            }
+        when (requestCode) {
+            locationRequestCode ->
+                when (resultCode) {
+                    Activity.RESULT_OK -> weatherViewModel.getWeather(true)
+                    Activity.RESULT_CANCELED -> weatherViewModel.getWeather(false)
+                }
+            placeAutocompleteRequestCode ->
+                when (resultCode) {
+                    Activity.RESULT_OK -> {
+                        val place = PlaceAutocomplete.getPlace(this, data)
+                        weatherViewModel.newCityLocation(place.latLng.latitude, place.latLng.longitude)
+                        Toast.makeText(this, "${place.name}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_add, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        val id = item!!.itemId
+        when (id) {
+            R.id.menu_add_city -> placeAutocompleteIntent()//Toast.makeText(this, "New City", Toast.LENGTH_SHORT).show()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun initObjects() {
-        weatherViewModel = ViewModelProviders.of(this).get(CurrentWeatherViewModel::class.java)
-        weatherViewModel!!.weatherLiveData.observe(this, Observer { weatherData ->
-            current_temp_result.text = weatherData!!.getWeatherData(WeatherData.CURRENT_TEMP)
-            feels_like_result.text = weatherData.getWeatherData(WeatherData.FEELS_LIKE)
-            max_temp_result.text = weatherData.getWeatherData(WeatherData.MAX_TEMP)
-            min_temp_result.text = weatherData.getWeatherData(WeatherData.MIN_TEMP)
-            pressure_result.text = weatherData.getWeatherData(WeatherData.PRESSURE)
-            humidity_result.text = weatherData.getWeatherData(WeatherData.HUMIDITY)
-            location_result.text = weatherData.getWeatherData(WeatherData.LOCATION)
-            last_checked_result.text = weatherData.getWeatherData(WeatherData.LAST_CHECKED)
-            last_updated_result.text = weatherData.getWeatherData(WeatherData.LAST_UPDATED)
-            city_name.text = weatherData.getWeatherData(WeatherData.CITY_NAME)
-            country_flag.text = weatherData.getWeatherData(WeatherData.COUNTRY_FLAG)
-            sunrise_result.text = weatherData.getWeatherData(WeatherData.SUNRISE)
-            sunset_result.text = weatherData.getWeatherData(WeatherData.SUNSET)
-            day_length_result.text = weatherData.getWeatherData(WeatherData.DAY_LENGTH)
-            clouds_result.text = weatherData.getWeatherData(WeatherData.CLOUDS)
-            wind_speed_result.text = weatherData.getWeatherData(WeatherData.WIND_SPEED)
-            wind_direction_result.text = weatherData.getWeatherData(WeatherData.WIND_DIRECTION)
-            visibility_result.text = weatherData.getWeatherData(WeatherData.VISIBILITY)
-            description.text = weatherData.getWeatherData(WeatherData.DESCRIPTION)
-            GlideApp.with(this@MainActivity)
-                    .load(weatherData.getWeatherData(WeatherData.ICON_CODE))
-                    .skipMemoryCache(true)
-                    .into(weather_icon)
-        })
-        weatherViewModel!!.displayLoadingBar.observe(this, Observer { result ->
+        setSupportActionBar(main_toolbar)
+        main_viewPager.adapter = ViewPagerAdapter(supportFragmentManager)
+        main_tabLayout.setupWithViewPager(main_viewPager)
+
+        weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel::class.java)
+        weatherViewModel.displayLoadingBar.observe(this, Observer { result ->
             swipe_refresh_layout.isRefreshing = result ?: false
         })
-        weatherViewModel!!.displayUi.observe(this, Observer { aBoolean ->
-            if (!aBoolean!!)
-                checkLocationSettings()
-            else if (weather_layout.visibility == View.INVISIBLE)
-                weather_layout.visibility = View.VISIBLE
+        weatherViewModel.displayUi.observe(this, Observer { aBoolean ->
+            if (!aBoolean!!) checkLocationSettings()
         })
         swipe_refresh_layout.setColorSchemeColors(Color.RED, Color.BLUE)
         swipe_refresh_layout.setOnRefreshListener { this.checkLocationSettings() }
@@ -132,7 +135,7 @@ class MainActivity : AppCompatActivity() {
         result.addOnCompleteListener { task ->
             try { // Location settings are on
                 task.getResult(ApiException::class.java)
-                weatherViewModel!!.getWeather(true)
+                weatherViewModel.getWeather(true)
             } catch (exception: ApiException) {
                 when (exception.statusCode) { // Settings are off. Show a prompt and check result in onActivityResult()
                     LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> try {
@@ -148,5 +151,24 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun placeAutocompleteIntent() {
+        try {
+            val filter = AutocompleteFilter.Builder()
+                    .setTypeFilter(AutocompleteFilter.TYPE_FILTER_NONE).build() // Can be changed to desired accuracy
+            val intent = PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
+                    .setFilter(filter).build(this)
+            startActivityForResult(intent, placeAutocompleteRequestCode)
+        } catch (ignored: GooglePlayServicesRepairableException) {
+        } catch (ignored: GooglePlayServicesNotAvailableException) {
+        }
+    }
+
+    private inner class ViewPagerAdapter(fm: android.support.v4.app.FragmentManager) : FragmentPagerAdapter(fm) {
+
+        override fun getItem(position: Int): Fragment = WeatherFragment()
+
+        override fun getCount(): Int = numPages
     }
 }
