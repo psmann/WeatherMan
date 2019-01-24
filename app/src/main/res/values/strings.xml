@@ -25,7 +25,4 @@
     <string name="weather_icon">Weather Icon</string>
     <string name="location_settings_not_available">Location settings are not available on this device.</string>
     <string name="add_city">Add City</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
