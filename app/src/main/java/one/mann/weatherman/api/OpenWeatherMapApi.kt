@@ -10,4 +10,8 @@ interface OpenWeatherMapApi {
     @GET("weather")
     fun getWeather(@Query("lat") latitude: Double?, @Query("lon") longitude: Double?,
                    @Query("units") units: String, @Query("appid") appId: String): Call<CurrentWeather>
+
+    @GET("forecast")
+    fun getForecast(@Query("lat") latitude: Double?, @Query("lon") longitude: Double?,
+                   @Query("units") units: String, @Query("appid") appId: String): Call<CurrentWeather>
 }

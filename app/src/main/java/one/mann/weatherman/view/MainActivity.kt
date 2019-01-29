@@ -35,7 +35,7 @@ import one.mann.weatherman.viewmodel.WeatherViewModel
 
 class MainActivity : AppCompatActivity() {
 
-    private val numPages = 3
+    private var numPages = 1
     private val locationRequestCode = 1011
     private val placeAutocompleteRequestCode = 1021
     private lateinit var weatherViewModel: WeatherViewModel
@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                     Activity.RESULT_CANCELED -> weatherViewModel.getWeather(false)
                 }
             placeAutocompleteRequestCode ->
-                when (resultCode) {
+                when (resultCode) { // Handle other cases
                     Activity.RESULT_OK -> {
                         val place = PlaceAutocomplete.getPlace(this, data)
                         weatherViewModel.newCityLocation(place.latLng.latitude, place.latLng.longitude)
@@ -91,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         val id = item!!.itemId
         when (id) {
-            R.id.menu_add_city -> placeAutocompleteIntent()//Toast.makeText(this, "New City", Toast.LENGTH_SHORT).show()
+            R.id.menu_add_city -> placeAutocompleteIntent()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -100,13 +100,16 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(main_toolbar)
         main_viewPager.adapter = ViewPagerAdapter(supportFragmentManager)
         main_tabLayout.setupWithViewPager(main_viewPager)
-
         weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel::class.java)
         weatherViewModel.displayLoadingBar.observe(this, Observer { result ->
             swipe_refresh_layout.isRefreshing = result ?: false
         })
         weatherViewModel.displayUi.observe(this, Observer { aBoolean ->
             if (!aBoolean!!) checkLocationSettings()
+        })
+        weatherViewModel.cityCount.observe(this, Observer { count ->
+            numPages = count!!
+            (main_viewPager.adapter as ViewPagerAdapter).notifyDataSetChanged()
         })
         swipe_refresh_layout.setColorSchemeColors(Color.RED, Color.BLUE)
         swipe_refresh_layout.setOnRefreshListener { this.checkLocationSettings() }
@@ -166,8 +169,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private inner class ViewPagerAdapter(fm: android.support.v4.app.FragmentManager) : FragmentPagerAdapter(fm) {
-
-        override fun getItem(position: Int): Fragment = WeatherFragment()
+        override fun getItem(position: Int): Fragment = WeatherFragment.newInstance(position + 1)
 
         override fun getCount(): Int = numPages
     }
