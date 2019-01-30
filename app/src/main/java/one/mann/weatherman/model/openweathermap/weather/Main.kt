@@ -1,4 +1,4 @@
-package one.mann.weatherman.model.openWeatherMap
+package one.mann.weatherman.model.openweathermap.weather
 
 class Main {
     val temp: Float = 0.toFloat()

@@ -1,4 +1,4 @@
-package one.mann.weatherman.model.openWeatherMap
+package one.mann.weatherman.model.openweathermap.weather
 
 class Sys {
     val sunrise: Long = 0

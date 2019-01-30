@@ -1,4 +1,4 @@
-package one.mann.weatherman.model.openWeatherMap
+package one.mann.weatherman.model.openweathermap.weather
 
 class Weather {
     val main: String? = null

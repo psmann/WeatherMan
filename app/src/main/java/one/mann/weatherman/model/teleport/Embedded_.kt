@@ -1,4 +1,4 @@
-package one.mann.weatherman.model.Teleport
+package one.mann.weatherman.model.teleport
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName

@@ -1,6 +1,6 @@
 package one.mann.weatherman.api
 
-import one.mann.weatherman.model.Teleport.TimeZone
+import one.mann.weatherman.model.teleport.TimeZone
 import retrofit2.Call
 import retrofit2.http.GET
 
