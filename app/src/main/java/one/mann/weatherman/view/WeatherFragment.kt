@@ -68,31 +68,24 @@ class WeatherFragment : Fragment() {
             forecast_1_max.text = weatherData.getWeatherData(WeatherData.FORECAST_MAX_1, weatherData.cityPref(position.toString()))
             forecast_1_min.text = weatherData.getWeatherData(WeatherData.FORECAST_MIN_1, weatherData.cityPref(position.toString()))
             forecast_1_day.text = weatherData.getWeatherData(WeatherData.FORECAST_DAY_1, weatherData.cityPref(position.toString()))
-
             forecast_2_max.text = weatherData.getWeatherData(WeatherData.FORECAST_MAX_2, weatherData.cityPref(position.toString()))
             forecast_2_min.text = weatherData.getWeatherData(WeatherData.FORECAST_MIN_2, weatherData.cityPref(position.toString()))
             forecast_2_day.text = weatherData.getWeatherData(WeatherData.FORECAST_DAY_2, weatherData.cityPref(position.toString()))
-
             forecast_3_max.text = weatherData.getWeatherData(WeatherData.FORECAST_MAX_3, weatherData.cityPref(position.toString()))
             forecast_3_min.text = weatherData.getWeatherData(WeatherData.FORECAST_MIN_3, weatherData.cityPref(position.toString()))
             forecast_3_day.text = weatherData.getWeatherData(WeatherData.FORECAST_DAY_3, weatherData.cityPref(position.toString()))
-
             forecast_4_max.text = weatherData.getWeatherData(WeatherData.FORECAST_MAX_4, weatherData.cityPref(position.toString()))
             forecast_4_min.text = weatherData.getWeatherData(WeatherData.FORECAST_MIN_4, weatherData.cityPref(position.toString()))
             forecast_4_day.text = weatherData.getWeatherData(WeatherData.FORECAST_DAY_4, weatherData.cityPref(position.toString()))
-
             forecast_5_max.text = weatherData.getWeatherData(WeatherData.FORECAST_MAX_5, weatherData.cityPref(position.toString()))
             forecast_5_min.text = weatherData.getWeatherData(WeatherData.FORECAST_MIN_5, weatherData.cityPref(position.toString()))
             forecast_5_day.text = weatherData.getWeatherData(WeatherData.FORECAST_DAY_5, weatherData.cityPref(position.toString()))
-
             forecast_6_max.text = weatherData.getWeatherData(WeatherData.FORECAST_MAX_6, weatherData.cityPref(position.toString()))
             forecast_6_min.text = weatherData.getWeatherData(WeatherData.FORECAST_MIN_6, weatherData.cityPref(position.toString()))
             forecast_6_day.text = weatherData.getWeatherData(WeatherData.FORECAST_DAY_6, weatherData.cityPref(position.toString()))
-
             forecast_7_max.text = weatherData.getWeatherData(WeatherData.FORECAST_MAX_7, weatherData.cityPref(position.toString()))
             forecast_7_min.text = weatherData.getWeatherData(WeatherData.FORECAST_MIN_7, weatherData.cityPref(position.toString()))
             forecast_7_day.text = weatherData.getWeatherData(WeatherData.FORECAST_DAY_7, weatherData.cityPref(position.toString()))
-
             GlideApp.with(this)
                     .load(weatherData.getWeatherData(WeatherData.ICON_CODE, weatherData.cityPref(position.toString())))
                     .skipMemoryCache(true)
