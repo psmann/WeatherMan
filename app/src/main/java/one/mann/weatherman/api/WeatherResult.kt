@@ -1,7 +1,9 @@
 package one.mann.weatherman.api
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
+import kotlinx.coroutines.*
 import one.mann.weatherman.R
 import one.mann.weatherman.data.WeatherData
 import one.mann.weatherman.model.openweathermap.forecast.DailyForecast
@@ -75,9 +77,11 @@ class WeatherResult(private val context: Context) : TimeZoneResult.TimeZoneListe
                     weatherData.saveLoadingBar(false)
                     return
                 }
-                saveWeather(cityPref, currentWeather.main, currentWeather.sys, currentWeather.wind,
-                        currentWeather.clouds, currentWeather.weather!![0], geoCoordinates,
-                        currentWeather.name, currentWeather.dt, currentWeather.visibility.toLong())
+                GlobalScope.launch {
+                    saveWeather(cityPref, currentWeather.main, currentWeather.sys, currentWeather.wind,
+                            currentWeather.clouds, currentWeather.weather!![0], geoCoordinates,
+                            currentWeather.name, currentWeather.dt, currentWeather.visibility.toLong())
+                }
                 forecastCall(shortCoords, cityPref)
                 tzResult.getTimeZone(shortCoords[0], shortCoords[1], cityPref, currentWeather)
                 weatherData.saveLoadingBar(false)
@@ -101,10 +105,14 @@ class WeatherResult(private val context: Context) : TimeZoneResult.TimeZoneListe
             override fun onResponse(call: Call<DailyForecast>, response: Response<DailyForecast>) {
                 if (!response.isSuccessful) return
                 val dailyForecast = response.body() ?: return
-                saveMaxMin(cityPref, dailyForecast.list!![0].temp!!.min, dailyForecast.list!![0].temp!!.max)
-                if (dailyForecast.list!!.size == 7) for (i in 0..6)
-                    saveForecast(i, cityPref, dailyForecast.list!![i].temp!!.min, dailyForecast.list!![i].temp!!.max,
-                            dailyForecast.list!![i].weather!![0].icon!!, dailyForecast.list!![i].dt)
+                Log.d("FUCK", "WR forecastCall out "+Thread.currentThread())
+                GlobalScope.launch {
+                    Log.d("FUCK", "WR forecastCall in "+Thread.currentThread())
+                    saveMaxMin(cityPref, dailyForecast.list!![0].temp!!.min, dailyForecast.list!![0].temp!!.max)
+                    if (dailyForecast.list!!.size == 7) for (i in 0..6)
+                        saveForecast(i, cityPref, dailyForecast.list!![i].temp!!.min, dailyForecast.list!![i].temp!!.max,
+                                dailyForecast.list!![i].weather!![0].icon!!, dailyForecast.list!![i].dt)
+                }
             }
 
             override fun onFailure(call: Call<DailyForecast>, t: Throwable) {}
@@ -127,7 +135,7 @@ class WeatherResult(private val context: Context) : TimeZoneResult.TimeZoneListe
         var feelsLike: Double
         when {
             temperature < 14 -> { // = Wind Chill using JAG/TI formula
-                val k = pow(wind.toDouble() * 3.6, 0.16) // Wind speed converted to km/h and raised to the power
+                val k = pow(wind.toDouble() * 3.6, 0.16) // Wind windSpeed converted to km/h and raised to the power
                 feelsLike = 13.12 + (0.6215 * temperature) - (11.35 * k) + (0.396 * k)
                 if (temperature > 10) // Roll-over Zone
                     feelsLike = temperature - (((temperature - feelsLike) * (14 - temperature)) / 4)
@@ -141,15 +149,14 @@ class WeatherResult(private val context: Context) : TimeZoneResult.TimeZoneListe
                 .setScale(2, RoundingMode.HALF_UP).toFloat() // Set precision to match current temp
     }
 
-    private fun saveWeather(cityPref: String, main: Main?, sys: Sys?, wind: Wind?, clouds: Clouds?,
-                            weather: Weather?, location: Array<Double?>, name: String?, dt: Long, visibility: Long) {
+    private fun saveWeather(cityPref: String, main: Main?, sys: Sys?, wind: Wind?,
+                                           clouds: Clouds?, weather: Weather?, location: Array<Double?>,
+                                           name: String?, dt: Long, visibility: Long) {
         val coordinates = location[0].toString() + ", " + location[1].toString()
         val cityDataEditor = weatherData.cityPref(cityPref).edit()
         cityDataEditor.putString(WeatherData.CURRENT_TEMP, main?.temp.toString() + CELSIUS)
         cityDataEditor.putString(WeatherData.FEELS_LIKE, feelsLike(main?.temp!!, main.humidity.toInt(), wind?.speed!!)
                 .toString() + CELSIUS)
-//        cityDataEditor.putString(WeatherData.MAX_TEMP, main.temp_max.toInt().toString() + CELSIUS)
-//        cityDataEditor.putString(WeatherData.MIN_TEMP, main.temp_min.toInt().toString() + CELSIUS)
         cityDataEditor.putString(WeatherData.PRESSURE, main.pressure.toInt().toString() + HECTOPASCAL)
         cityDataEditor.putString(WeatherData.HUMIDITY, main.humidity.toInt().toString() + PERCENT)
         cityDataEditor.putString(WeatherData.LOCATION, coordinates)
@@ -181,9 +188,10 @@ class WeatherResult(private val context: Context) : TimeZoneResult.TimeZoneListe
         cityDataEditor.apply()
     }
 
-    private fun saveForecast(dayCount: Int, cityPref: String, min: Float, max: Float, icon: String, date: Long) {
+    private fun saveForecast(dayCount: Int, cityPref: String, min: Float, max: Float,
+                                     icon: String, date: Long) {
         val cityDataEditor = weatherData.cityPref(cityPref).edit()
-        when(dayCount) {
+        when (dayCount) {
             0 -> {
                 cityDataEditor.putString(WeatherData.FORECAST_CODE_1, ICON_URL + icon + ICON_EXTENSION)
                 cityDataEditor.putString(WeatherData.FORECAST_DAY_1, dayFormat.format(Date(date * 1000)).toString())

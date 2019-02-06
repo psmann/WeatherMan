@@ -31,6 +31,9 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    // Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1"
     // Support v7
     implementation "com.android.support:appcompat-v7:$support_version"
     // Design
@@ -39,7 +42,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     // CardView
     implementation "com.android.support:cardview-v7:$support_version"
-    // Added from idea/libraries to update their versions
+    // Added from dir idea/libraries to update their versions
     implementation "com.android.support:support-v4:$support_version"
     implementation "com.android.support:support-media-compat:$support_version"
     // ViewModel and LiveData

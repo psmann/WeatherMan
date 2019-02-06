@@ -2,6 +2,8 @@ package one.mann.weatherman.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class WeatherData(private val context: Context) {
 
@@ -73,8 +75,8 @@ class WeatherData(private val context: Context) {
         return context.getSharedPreferences(name, Context.MODE_PRIVATE)
     }
 
-    fun getWeatherData(key: String, preferences: SharedPreferences): String {
-        return preferences.getString(key, "")
+    suspend fun getWeatherData(key: String, preferences: SharedPreferences): String {
+        return withContext(Dispatchers.IO) { preferences.getString(key, "") }
     }
 
     fun saveLoadingBar(value: Boolean) {

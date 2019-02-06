@@ -14,7 +14,7 @@ import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.app.FragmentStatePagerAdapter
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -168,7 +168,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private inner class ViewPagerAdapter(fm: android.support.v4.app.FragmentManager) : FragmentPagerAdapter(fm) {
+    private inner class ViewPagerAdapter(fm: android.support.v4.app.FragmentManager) : FragmentStatePagerAdapter(fm) {
         override fun getItem(position: Int): Fragment = WeatherFragment.newInstance(position + 1)
 
         override fun getCount(): Int = numPages

@@ -5,6 +5,8 @@ import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
 import android.content.SharedPreferences
 import android.widget.Toast
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 import one.mann.weatherman.R
 import one.mann.weatherman.api.WeatherResult
@@ -28,7 +30,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         displayUi.value = weatherData.uiVisibility
         cityCount.value = weatherData.cityCount
         weatherData.weatherPreferences.registerOnSharedPreferenceChangeListener(this)
-        for(i in 1..weatherData.cityCount) {
+        for (i in 1..weatherData.cityCount) {
             weatherData.cityPref(i.toString()).registerOnSharedPreferenceChangeListener(this)
         }
     }
@@ -38,40 +40,42 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         weatherData.setCityCount(cityCount.value!! + 1)
         val newCity = weatherData.cityCount.toString()
         weatherData.cityPref(newCity).registerOnSharedPreferenceChangeListener(this)
-        makeWeatherCall(loc, newCity)
+        GlobalScope.launch { makeWeatherCall(loc, newCity) }
     }
 
     fun getWeather(gpsEnabled: Boolean) {
         weatherData.saveLoadingBar(true)
-        when {
-            gpsEnabled -> gpsLocation.getLocation()
-            weatherData.getWeatherData(WeatherData.LOCATION, weatherData.cityPref("1")) == "" -> {
-                weatherData.saveLoadingBar(false)
-                Toast.makeText(getApplication(), R.string.gps_needed_for_location, Toast.LENGTH_SHORT).show()
-            }
-            else -> {
-                makeWeatherCall(emptyArray(), "0")
-                Toast.makeText(getApplication(), R.string.no_gps_updating_previous_location, Toast.LENGTH_SHORT).show()
+        GlobalScope.launch {
+            when {
+                gpsEnabled -> gpsLocation.getLocation()
+                weatherData.getWeatherData(WeatherData.LOCATION, weatherData.cityPref("1")) == "" -> {
+                    weatherData.saveLoadingBar(false)
+//                    Toast.makeText(getApplication(), R.string.gps_needed_for_location, Toast.LENGTH_SHORT).show()
+                }
+                else -> {
+                    makeWeatherCall(emptyArray(), "0")
+//                    Toast.makeText(getApplication(), R.string.no_gps_updating_previous_location, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
 
-    private fun makeWeatherCall(location: Array<Double?>, cityPref: String) {
+    private suspend fun makeWeatherCall(location: Array<Double?>, cityPref: String) { // TODO: redo coroutines
         when (cityPref) {
             "0" -> for (i in 1..weatherData.cityCount) {
-                val lastLocation: Array<Double?> = arrayOf(weatherData.getWeatherData(WeatherData.LATITUDE,
-                        weatherData.cityPref(i.toString())).toDouble(), weatherData.getWeatherData(WeatherData.LONGITUDE,
-                        weatherData.cityPref(i.toString())).toDouble())
-                weatherResult.weatherCall(lastLocation, i.toString())
-            }
-            else -> {
-                weatherResult.weatherCall(location, cityPref)
-                for (i in 1..weatherData.cityCount) {
-                    if(i.toString() == cityPref) continue
                     val lastLocation: Array<Double?> = arrayOf(weatherData.getWeatherData(WeatherData.LATITUDE,
                             weatherData.cityPref(i.toString())).toDouble(), weatherData.getWeatherData(WeatherData.LONGITUDE,
                             weatherData.cityPref(i.toString())).toDouble())
                     weatherResult.weatherCall(lastLocation, i.toString())
+            }
+            else -> {
+                weatherResult.weatherCall(location, cityPref)
+                for (i in 1..weatherData.cityCount) {
+                    if (i.toString() == cityPref) continue
+                        val lastLocation: Array<Double?> = arrayOf(weatherData.getWeatherData(WeatherData.LATITUDE,
+                                weatherData.cityPref(i.toString())).toDouble(), weatherData.getWeatherData(WeatherData.LONGITUDE,
+                                weatherData.cityPref(i.toString())).toDouble())
+                        weatherResult.weatherCall(lastLocation, i.toString())
                 }
             }
         }
@@ -87,6 +91,6 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     }
 
     override fun getCoordinates(location: Array<Double?>) {
-        makeWeatherCall(location, "1")
+        GlobalScope.launch { makeWeatherCall(location, "1") }
     }
 }
