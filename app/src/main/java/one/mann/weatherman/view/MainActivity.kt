@@ -13,8 +13,7 @@ import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentStatePagerAdapter
+import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -31,13 +30,14 @@ import com.google.android.gms.location.places.AutocompleteFilter
 import com.google.android.gms.location.places.ui.PlaceAutocomplete
 import kotlinx.android.synthetic.main.activity_main.*
 import one.mann.weatherman.R
+import one.mann.weatherman.view.adapter.ViewPagerAdapter
 import one.mann.weatherman.viewmodel.WeatherViewModel
 
 class MainActivity : AppCompatActivity() {
 
-    private var numPages = 1
     private val locationRequestCode = 1011
     private val placeAutocompleteRequestCode = 1021
+    private val pagesAdapter = ViewPagerAdapter(supportFragmentManager)
     private lateinit var weatherViewModel: WeatherViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,20 +97,24 @@ class MainActivity : AppCompatActivity() {
 
     private fun initObjects() {
         setSupportActionBar(main_toolbar)
-        main_viewPager.adapter = ViewPagerAdapter(supportFragmentManager)
+        main_viewPager.adapter = pagesAdapter
+        main_viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
+                if (!swipe_refresh_layout.isRefreshing)
+                    swipe_refresh_layout.isEnabled = state == ViewPager.SCROLL_STATE_IDLE
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+            override fun onPageSelected(position: Int) {}
+        })
         main_tabLayout.setupWithViewPager(main_viewPager)
         weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel::class.java)
-        weatherViewModel.displayLoadingBar.observe(this, Observer { result ->
-            swipe_refresh_layout.isRefreshing = result ?: false
-        })
-        weatherViewModel.displayUi.observe(this, Observer { aBoolean ->
-            if (!aBoolean!!) checkLocationSettings()
-        })
+        weatherViewModel.displayLoadingBar.observe(this,
+                Observer { result -> swipe_refresh_layout.isRefreshing = result ?: false })
+        weatherViewModel.displayUi.observe(this,
+                Observer { aBoolean -> if (!aBoolean!!) checkLocationSettings() })
         weatherViewModel.displayToast.observe(this, Observer { message -> displayToast(message!!) })
-        weatherViewModel.cityCount.observe(this, Observer { count ->
-            numPages = count!!
-            (main_viewPager.adapter as ViewPagerAdapter).notifyDataSetChanged()
-        })
+        weatherViewModel.cityCount.observe(this, Observer { count -> pagesAdapter.updatePages(count!!) })
         swipe_refresh_layout.setColorSchemeColors(Color.RED, Color.BLUE)
         swipe_refresh_layout.setOnRefreshListener { this.checkLocationSettings() }
     }
@@ -177,11 +181,5 @@ class MainActivity : AppCompatActivity() {
             5 -> Toast.makeText(this, R.string.no_gps_updating_previous_location, Toast.LENGTH_SHORT).show()
             6 -> Toast.makeText(this, R.string.server_not_found, Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private inner class ViewPagerAdapter(fm: android.support.v4.app.FragmentManager) : FragmentStatePagerAdapter(fm) {
-        override fun getItem(position: Int): Fragment = WeatherFragment.newInstance(position + 1)
-
-        override fun getCount(): Int = numPages
     }
 }

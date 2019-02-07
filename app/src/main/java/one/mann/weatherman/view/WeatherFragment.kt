@@ -45,9 +45,8 @@ class WeatherFragment : Fragment() {
         city_recyclerview.layoutManager = LinearLayoutManager(context)
         city_recyclerview.adapter = cityRecyclerAdapter
         weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel::class.java)
-        weatherViewModel.weatherLiveData.observe(this, Observer { weatherData ->
-            cityRecyclerAdapter.bindData(weatherData!!, position)
-        })
+        weatherViewModel.weatherLiveData.observe(this,
+                Observer { weatherData -> cityRecyclerAdapter.bindData(weatherData!!, position) })
         weatherViewModel.displayUi.observe(this, Observer { aBoolean ->
             if (aBoolean!! && city_recyclerview.visibility == View.INVISIBLE)
                 city_recyclerview.visibility = View.VISIBLE
