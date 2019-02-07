@@ -59,8 +59,8 @@ class MainActivity : AppCompatActivity() {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 initObjects()
             } else {
+                displayToast(1)
                 finish()
-                Toast.makeText(this, R.string.permission_required, Toast.LENGTH_SHORT).show()
             }
     }
 
@@ -77,7 +77,6 @@ class MainActivity : AppCompatActivity() {
                     Activity.RESULT_OK -> {
                         val place = PlaceAutocomplete.getPlace(this, data)
                         weatherViewModel.newCityLocation(place.latLng.latitude, place.latLng.longitude)
-                        Toast.makeText(this, "${place.name}", Toast.LENGTH_SHORT).show()
                     }
                 }
         }
@@ -107,6 +106,7 @@ class MainActivity : AppCompatActivity() {
         weatherViewModel.displayUi.observe(this, Observer { aBoolean ->
             if (!aBoolean!!) checkLocationSettings()
         })
+        weatherViewModel.displayToast.observe(this, Observer { message -> displayToast(message!!) })
         weatherViewModel.cityCount.observe(this, Observer { count ->
             numPages = count!!
             (main_viewPager.adapter as ViewPagerAdapter).notifyDataSetChanged()
@@ -123,7 +123,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkLocationSettings() {
         if (!checkNetworkConnection()) {
-            Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show()
+            displayToast(2)
             swipe_refresh_layout.isRefreshing = false
             return
         }
@@ -148,7 +148,7 @@ class MainActivity : AppCompatActivity() {
                     } catch (ignored: ClassCastException) {
                     } // Location settings not available on the device, exit app
                     LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
-                        Toast.makeText(this, R.string.location_settings_not_available, Toast.LENGTH_SHORT).show()
+                        displayToast(3)
                         finish()
                     }
                 }
@@ -165,6 +165,17 @@ class MainActivity : AppCompatActivity() {
             startActivityForResult(intent, placeAutocompleteRequestCode)
         } catch (ignored: GooglePlayServicesRepairableException) {
         } catch (ignored: GooglePlayServicesNotAvailableException) {
+        }
+    }
+
+    private fun displayToast(messageCode: Int) {
+        when (messageCode) {
+            1 -> Toast.makeText(this, R.string.permission_required, Toast.LENGTH_SHORT).show()
+            2 -> Toast.makeText(this, R.string.no_internet_connection, Toast.LENGTH_SHORT).show()
+            3 -> Toast.makeText(this, R.string.location_settings_not_available, Toast.LENGTH_SHORT).show()
+            4 -> Toast.makeText(this, R.string.gps_needed_for_location, Toast.LENGTH_SHORT).show()
+            5 -> Toast.makeText(this, R.string.no_gps_updating_previous_location, Toast.LENGTH_SHORT).show()
+            6 -> Toast.makeText(this, R.string.server_not_found, Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -1,10 +1,7 @@
 package one.mann.weatherman.api
 
 import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import kotlinx.coroutines.*
-import one.mann.weatherman.R
 import one.mann.weatherman.data.WeatherData
 import one.mann.weatherman.model.openweathermap.forecast.DailyForecast
 import one.mann.weatherman.model.openweathermap.weather.*
@@ -22,7 +19,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
-class WeatherResult(private val context: Context) : TimeZoneResult.TimeZoneListerner {
+class WeatherResult(context: Context, private val failedCall: WeatherResultResponse) :
+        TimeZoneResult.TimeZoneListerner {
 
     private val weatherData: WeatherData = WeatherData(context)
     private val dateFormat: DateFormat
@@ -69,7 +67,7 @@ class WeatherResult(private val context: Context) : TimeZoneResult.TimeZoneListe
             override fun onResponse(call: Call<CurrentWeather>, response: Response<CurrentWeather>) {
                 if (!response.isSuccessful) {
                     weatherData.saveLoadingBar(false)
-                    Toast.makeText(context, R.string.server_not_found, Toast.LENGTH_SHORT).show()
+                    failedCall.failedResponse()
                     return
                 }
                 val currentWeather = response.body()
@@ -77,7 +75,7 @@ class WeatherResult(private val context: Context) : TimeZoneResult.TimeZoneListe
                     weatherData.saveLoadingBar(false)
                     return
                 }
-                GlobalScope.launch {
+                GlobalScope.launch(Dispatchers.IO) {
                     saveWeather(cityPref, currentWeather.main, currentWeather.sys, currentWeather.wind,
                             currentWeather.clouds, currentWeather.weather!![0], geoCoordinates,
                             currentWeather.name, currentWeather.dt, currentWeather.visibility.toLong())
@@ -89,7 +87,7 @@ class WeatherResult(private val context: Context) : TimeZoneResult.TimeZoneListe
 
             override fun onFailure(call: Call<CurrentWeather>, t: Throwable) {
                 weatherData.saveLoadingBar(false)
-                Toast.makeText(context, R.string.server_not_found, Toast.LENGTH_SHORT).show()
+                failedCall.failedResponse()
             }
         })
     }
@@ -105,9 +103,7 @@ class WeatherResult(private val context: Context) : TimeZoneResult.TimeZoneListe
             override fun onResponse(call: Call<DailyForecast>, response: Response<DailyForecast>) {
                 if (!response.isSuccessful) return
                 val dailyForecast = response.body() ?: return
-                Log.d("FUCK", "WR forecastCall out "+Thread.currentThread())
-                GlobalScope.launch {
-                    Log.d("FUCK", "WR forecastCall in "+Thread.currentThread())
+                GlobalScope.launch(Dispatchers.IO) {
                     saveMaxMin(cityPref, dailyForecast.list!![0].temp!!.min, dailyForecast.list!![0].temp!!.max)
                     if (dailyForecast.list!!.size == 7) for (i in 0..6)
                         saveForecast(i, cityPref, dailyForecast.list!![i].temp!!.min, dailyForecast.list!![i].temp!!.max,
@@ -130,13 +126,13 @@ class WeatherResult(private val context: Context) : TimeZoneResult.TimeZoneListe
         return hoursFormat.format(Date(length * 1000)).toString() // Convert to nanosecond
     }
 
-    private fun feelsLike(temperature: Float, humidity: Int, wind: Float): Float { // TODO: fix - not working properly
+    private fun feelsLike(temperature: Float, humidity: Int, wind: Float): Float {
         // Using https://blog.metservice.com/FeelsLikeTemp for reference
         var feelsLike: Double
         when {
             temperature < 14 -> { // = Wind Chill using JAG/TI formula
-                val k = pow(wind.toDouble() * 3.6, 0.16) // Wind windSpeed converted to km/h and raised to the power
-                feelsLike = 13.12 + (0.6215 * temperature) - (11.35 * k) + (0.396 * k)
+                val k = pow(wind.toDouble() * 3.6, 0.16) // Wind speed converted to km/h and raised to the power
+                feelsLike = 13.12 + (0.6215 * temperature) - (11.35 * k) + (0.396 * temperature * k)
                 if (temperature > 10) // Roll-over Zone
                     feelsLike = temperature - (((temperature - feelsLike) * (14 - temperature)) / 4)
             }
@@ -152,7 +148,7 @@ class WeatherResult(private val context: Context) : TimeZoneResult.TimeZoneListe
     private fun saveWeather(cityPref: String, main: Main?, sys: Sys?, wind: Wind?,
                                            clouds: Clouds?, weather: Weather?, location: Array<Double?>,
                                            name: String?, dt: Long, visibility: Long) {
-        val coordinates = location[0].toString() + ", " + location[1].toString()
+        val coordinates = String.format("%.4f", location[0]) + ", " + String.format("%.4f", location[1])
         val cityDataEditor = weatherData.cityPref(cityPref).edit()
         cityDataEditor.putString(WeatherData.CURRENT_TEMP, main?.temp.toString() + CELSIUS)
         cityDataEditor.putString(WeatherData.FEELS_LIKE, feelsLike(main?.temp!!, main.humidity.toInt(), wind?.speed!!)
@@ -250,5 +246,9 @@ class WeatherResult(private val context: Context) : TimeZoneResult.TimeZoneListe
     override fun getTimeZoneValue(tz: String, cityPref: String, currentWeather: CurrentWeather) {
         dateFormat.timeZone = TimeZone.getTimeZone(tz)
         saveTimeZone(cityPref, currentWeather.sys, currentWeather.dt)
+    }
+
+    interface WeatherResultResponse {
+        fun failedResponse()
     }
 }
