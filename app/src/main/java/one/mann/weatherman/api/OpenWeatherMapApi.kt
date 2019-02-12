@@ -1,6 +1,6 @@
 package one.mann.weatherman.api
 
-import one.mann.weatherman.model.openweathermap.forecast.DailyForecast
+import one.mann.weatherman.model.openweathermap.forecastdaily.DailyForecast
 import one.mann.weatherman.model.openweathermap.weather.CurrentWeather
 import retrofit2.Call
 import retrofit2.http.GET

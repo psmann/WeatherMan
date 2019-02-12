@@ -1,13 +1,10 @@
 package one.mann.weatherman.viewmodel
 
 import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import android.content.SharedPreferences
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 import one.mann.weatherman.api.WeatherResult
 import one.mann.weatherman.data.WeatherData
@@ -28,12 +25,16 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
     init {
         weatherLiveData.value = weatherData
         displayLoadingBar.value = weatherData.loadingBar
-        displayUi.value = weatherData.uiVisibility
         displayToast.value = 0
         cityCount.value = weatherData.cityCount
         weatherData.weatherPreferences.registerOnSharedPreferenceChangeListener(this)
         for (i in 1..weatherData.cityCount)
             weatherData.cityPref(i.toString()).registerOnSharedPreferenceChangeListener(this)
+        displayUi.value = weatherData.uiVisibility
+//        if(weatherData.uiVisibility)
+//        GlobalScope.launch(Dispatchers.Main) { delay(25L)
+//            displayUi.value = weatherData.uiVisibility}
+//        else displayUi.value = false
     }
 
     fun newCityLocation(lat: Double, lon: Double) {
@@ -58,6 +59,7 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
                     withContext(Dispatchers.Main) { displayToast.value = 5 }
                 }
             }
+            resetDisplayToast()
         }
     }
 
@@ -82,8 +84,16 @@ class WeatherViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
+    private fun resetDisplayToast() {
+        GlobalScope.launch(Dispatchers.Main) {
+            delay(10L)
+            displayToast.value = 0
+        }
+    }
+
     override fun failedResponse() {
         displayToast.value = 6
+        resetDisplayToast()
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {

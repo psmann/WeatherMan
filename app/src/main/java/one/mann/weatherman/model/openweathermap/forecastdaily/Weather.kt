@@ -1,4 +1,4 @@
-package one.mann.weatherman.model.openweathermap.forecast
+package one.mann.weatherman.model.openweathermap.forecastdaily
 
 
 class Weather {

@@ -3,7 +3,7 @@ package one.mann.weatherman.api
 import android.content.Context
 import kotlinx.coroutines.*
 import one.mann.weatherman.data.WeatherData
-import one.mann.weatherman.model.openweathermap.forecast.DailyForecast
+import one.mann.weatherman.model.openweathermap.forecastdaily.DailyForecast
 import one.mann.weatherman.model.openweathermap.weather.*
 import retrofit2.Call
 import retrofit2.Callback
