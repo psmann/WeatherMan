@@ -1,4 +1,4 @@
-package one.mann.weatherman.model
+package one.mann.weatherman.util
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,17 +9,17 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 
-class GpsLocation(context: Context, private val geoCoordinates: GeoCoordinates) {
+class GpsLocation(context: Context) {
 
     private var locationCallback: LocationCallback? = null
     private val locationProviderClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
     private val currentLocation: Array<Double?> = arrayOfNulls(2)
 
     @SuppressLint("MissingPermission") // locationProviderClient is being checked before this method is called
-    fun getLocation() {
-        val locationRequest = LocationRequest.create()
+    fun getLocation(callback: (Array<Double?>) -> Unit) {
+        val locationRequest = LocationRequest()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval((10 * 1000).toLong())
+                .setInterval(10 * 1000L)
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult?) {
                 if (locationResult != null)
@@ -27,7 +27,7 @@ class GpsLocation(context: Context, private val geoCoordinates: GeoCoordinates) 
                         currentLocation[0] = location.latitude
                         currentLocation[1] = location.longitude
                         locationProviderClient.removeLocationUpdates(this)
-                        geoCoordinates.getCoordinates(currentLocation)
+                        callback(currentLocation)
                     }
             }
         }
@@ -36,13 +36,9 @@ class GpsLocation(context: Context, private val geoCoordinates: GeoCoordinates) 
             if (location != null) { // Use if available
                 currentLocation[0] = location.latitude
                 currentLocation[1] = location.longitude
-                geoCoordinates.getCoordinates(currentLocation)
+                callback(currentLocation)
             } else // Otherwise request for a location update (drains battery)
                 locationProviderClient.requestLocationUpdates(locationRequest, locationCallback!!, null)
         }
-    }
-
-    interface GeoCoordinates {
-        fun getCoordinates(location: Array<Double?>)
     }
 }

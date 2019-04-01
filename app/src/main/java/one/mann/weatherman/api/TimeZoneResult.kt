@@ -1,14 +1,14 @@
 package one.mann.weatherman.api
 
-import one.mann.weatherman.model.teleport.TimeZone
 import one.mann.weatherman.model.openweathermap.weather.CurrentWeather
+import one.mann.weatherman.model.teleport.TimeZone
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class TimeZoneResult(private val timeZoneListerner: TimeZoneListerner) {
+class TimeZoneResult(private val timeZoneListener: TimeZoneListener) {
 
     companion object {
         private const val BASE_URL = "https://api.teleport.org/api/locations/"
@@ -29,7 +29,7 @@ class TimeZoneResult(private val timeZoneListerner: TimeZoneListerner) {
                 val timeZone = response.body() ?: return
                 val tz = timeZone.embedded!!.locationNearestCities!![0].embedded!!.locationNearestCity!!
                         .embedded!!.cityTimezone!!.ianaName
-                timeZoneListerner.getTimeZoneValue(tz!!, cityPref, currentWeather)
+                timeZoneListener.saveTimeZoneValue(tz!!, cityPref, currentWeather)
             }
 
             override fun onFailure(call: Call<TimeZone>, t: Throwable) {
@@ -37,7 +37,7 @@ class TimeZoneResult(private val timeZoneListerner: TimeZoneListerner) {
         })
     }
 
-    interface TimeZoneListerner {
-        fun getTimeZoneValue(tz: String, cityPref: String, currentWeather: CurrentWeather)
+    interface TimeZoneListener {
+        fun saveTimeZoneValue(tz: String, cityPref: String, cw: CurrentWeather)
     }
 }

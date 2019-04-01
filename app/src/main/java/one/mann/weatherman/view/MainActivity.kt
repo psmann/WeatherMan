@@ -2,8 +2,6 @@ package one.mann.weatherman.view
 
 import android.Manifest
 import android.app.Activity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
@@ -12,12 +10,14 @@ import android.graphics.Color
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
-import androidx.core.app.ActivityCompat
-import androidx.viewpager.widget.ViewPager
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.common.api.ApiException
@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             locationRequestCode ->
@@ -130,33 +130,29 @@ class MainActivity : AppCompatActivity() {
             swipe_refresh_layout.isRefreshing = false
             return
         }
-        val locationRequest = LocationRequest.create()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval((10 * 1000).toLong())
         val builder = LocationSettingsRequest.Builder()
-                .addLocationRequest(locationRequest)
-        val result = LocationServices.getSettingsClient(this)
+                .addLocationRequest(LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY))
+        LocationServices.getSettingsClient(this)
                 .checkLocationSettings(builder.build())
-
-        result.addOnCompleteListener { task ->
-            try { // Location settings are on
-                task.getResult(ApiException::class.java)
-                weatherViewModel.getWeather(true)
-            } catch (exception: ApiException) {
-                when (exception.statusCode) { // Settings are off. Show a prompt and check result in onActivityResult()
-                    LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> try {
-                        val resolvable = exception as ResolvableApiException
-                        resolvable.startResolutionForResult(this@MainActivity, locationRequestCode)
-                    } catch (ignored: IntentSender.SendIntentException) {
-                    } catch (ignored: ClassCastException) {
-                    } // Location settings not available on the device, exit app
-                    LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
-                        displayToast(3)
-                        finish()
+                .addOnCompleteListener { task ->
+                    try { // Location settings are On
+                        task.getResult(ApiException::class.java)
+                        weatherViewModel.getWeather(true)
+                    } catch (exception: ApiException) {
+                        when (exception.statusCode) { // Settings are Off. Prompt and check result in onActivityResult()
+                            LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> try {
+                                val resolvable = exception as ResolvableApiException
+                                resolvable.startResolutionForResult(this@MainActivity, locationRequestCode)
+                            } catch (ignored: IntentSender.SendIntentException) {
+                            } catch (ignored: ClassCastException) {
+                            } // Location settings not available on the device
+                            LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
+                                displayToast(3)
+                                finish()
+                            }
+                        }
                     }
                 }
-            }
-        }
     }
 
     private fun placeAutocompleteIntent() {

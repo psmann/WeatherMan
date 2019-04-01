@@ -1,10 +1,11 @@
 package one.mann.weatherman.api
 
-import android.content.Context
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import one.mann.weatherman.data.WeatherData
 import one.mann.weatherman.model.openweathermap.forecastdaily.DailyForecast
-import one.mann.weatherman.model.openweathermap.weather.*
+import one.mann.weatherman.model.openweathermap.weather.CurrentWeather
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -19,10 +20,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
-class WeatherResult(context: Context, private val failedCall: WeatherResultResponse) :
-        TimeZoneResult.TimeZoneListerner {
+class WeatherResult(private val weatherData: WeatherData) : TimeZoneResult.TimeZoneListener {
 
-    private val weatherData: WeatherData = WeatherData(context)
+    private var savePrefCounter: Int = 0
     private val dateFormat: DateFormat
     private val dayFormat: DateFormat
     private val hoursFormat: DateFormat
@@ -54,7 +54,7 @@ class WeatherResult(context: Context, private val failedCall: WeatherResultRespo
         hoursFormat.timeZone = TimeZone.getTimeZone("UTC") // Removes time offset
     }
 
-    fun weatherCall(geoCoordinates: Array<Double?>, cityPref: String) {
+    fun weatherCall(geoCoordinates: Array<Double?>, cityPref: String, failedCallback: () -> Unit) {
         val shortCoords: Array<Double> = arrayOf(String.format("%.2f", geoCoordinates[0]).toDouble()
                 , String.format("%.2f", geoCoordinates[1]).toDouble())
         val retrofit = Retrofit.Builder()
@@ -67,7 +67,7 @@ class WeatherResult(context: Context, private val failedCall: WeatherResultRespo
             override fun onResponse(call: Call<CurrentWeather>, response: Response<CurrentWeather>) {
                 if (!response.isSuccessful) {
                     weatherData.saveLoadingBar(false)
-                    failedCall.failedResponse()
+                    failedCallback()
                     return
                 }
                 val currentWeather = response.body()
@@ -76,9 +76,7 @@ class WeatherResult(context: Context, private val failedCall: WeatherResultRespo
                     return
                 }
                 GlobalScope.launch(Dispatchers.IO) {
-                    saveWeather(cityPref, currentWeather.main, currentWeather.sys, currentWeather.wind,
-                            currentWeather.clouds, currentWeather.weather!![0], geoCoordinates,
-                            currentWeather.name, currentWeather.dt, currentWeather.visibility.toLong())
+                    saveWeather(cityPref, currentWeather, geoCoordinates)
                 }
                 forecastCall(shortCoords, cityPref)
                 tzResult.getTimeZone(shortCoords[0], shortCoords[1], cityPref, currentWeather)
@@ -87,7 +85,7 @@ class WeatherResult(context: Context, private val failedCall: WeatherResultRespo
 
             override fun onFailure(call: Call<CurrentWeather>, t: Throwable) {
                 weatherData.saveLoadingBar(false)
-                failedCall.failedResponse()
+                failedCallback()
             }
         })
     }
@@ -145,36 +143,37 @@ class WeatherResult(context: Context, private val failedCall: WeatherResultRespo
                 .setScale(2, RoundingMode.HALF_UP).toFloat() // Set precision to match current temp
     }
 
-    private fun saveWeather(cityPref: String, main: Main?, sys: Sys?, wind: Wind?,
-                                           clouds: Clouds?, weather: Weather?, location: Array<Double?>,
-                                           name: String?, dt: Long, visibility: Long) {
+    private fun saveWeather(cityPref: String, cw: CurrentWeather, location: Array<Double?>) {
         val coordinates = String.format("%.4f", location[0]) + ", " + String.format("%.4f", location[1])
         val cityDataEditor = weatherData.cityPref(cityPref).edit()
-        cityDataEditor.putString(WeatherData.CURRENT_TEMP, main?.temp.toString() + CELSIUS)
-        cityDataEditor.putString(WeatherData.FEELS_LIKE, feelsLike(main?.temp!!, main.humidity.toInt(), wind?.speed!!)
-                .toString() + CELSIUS)
-        cityDataEditor.putString(WeatherData.PRESSURE, main.pressure.toInt().toString() + HECTOPASCAL)
-        cityDataEditor.putString(WeatherData.HUMIDITY, main.humidity.toInt().toString() + PERCENT)
+        cityDataEditor.putString(WeatherData.CURRENT_TEMP, cw.main?.temp.toString() + CELSIUS)
+        cityDataEditor.putString(WeatherData.FEELS_LIKE, feelsLike(cw.main?.temp!!, cw.main.humidity.toInt(),
+                cw.wind?.speed!!).toString() + CELSIUS)
+        cityDataEditor.putString(WeatherData.PRESSURE, cw.main.pressure.toInt().toString() + HECTOPASCAL)
+        cityDataEditor.putString(WeatherData.HUMIDITY, cw.main.humidity.toInt().toString() + PERCENT)
         cityDataEditor.putString(WeatherData.LOCATION, coordinates)
         cityDataEditor.putString(WeatherData.LATITUDE, location[0].toString())
         cityDataEditor.putString(WeatherData.LONGITUDE, location[1].toString())
-        cityDataEditor.putString(WeatherData.CITY_NAME, name)
-        cityDataEditor.putString(WeatherData.LAST_UPDATED, dateFormat.format(Date(dt * 1000)).toString())
+        cityDataEditor.putString(WeatherData.CITY_NAME, cw.name)
+        cityDataEditor.putString(WeatherData.LAST_UPDATED, dateFormat.format(Date(cw.dt * 1000)).toString())
         cityDataEditor.putString(WeatherData.LAST_CHECKED, dateFormat.format(Date(System.currentTimeMillis())).toString())
-        cityDataEditor.putString(WeatherData.SUNRISE, dateFormat.format(Date(sys!!.sunrise * 1000)).toString())
-        cityDataEditor.putString(WeatherData.SUNSET, dateFormat.format(Date(sys!!.sunset * 1000)).toString())
-        cityDataEditor.putString(WeatherData.DAY_LENGTH, lengthOfDay(sys!!.sunrise, sys.sunset))
-        cityDataEditor.putString(WeatherData.COUNTRY_FLAG, countryCodeToEmoji(sys.country.toString()))
-        cityDataEditor.putString(WeatherData.CLOUDS, clouds?.all?.toInt().toString() + PERCENT)
-        cityDataEditor.putString(WeatherData.WIND_SPEED, wind.speed.toString() + METERS_PER_SECOND)
-        cityDataEditor.putString(WeatherData.WIND_DIRECTION, wind.deg.toInt().toString() + DEGREES)
-        cityDataEditor.putString(WeatherData.VISIBILITY, visibility.toInt().toString() + METERS)
-        cityDataEditor.putString(WeatherData.DESCRIPTION, weather?.main.toString())
-        cityDataEditor.putString(WeatherData.ICON_CODE, ICON_URL + weather?.icon.toString() + ICON_EXTENSION)
+        cityDataEditor.putString(WeatherData.SUNRISE, dateFormat.format(Date(cw.sys!!.sunrise * 1000)).toString())
+        cityDataEditor.putString(WeatherData.SUNSET, dateFormat.format(Date(cw.sys!!.sunset * 1000)).toString())
+        cityDataEditor.putString(WeatherData.DAY_LENGTH, lengthOfDay(cw.sys!!.sunrise, cw.sys.sunset))
+        cityDataEditor.putString(WeatherData.COUNTRY_FLAG, countryCodeToEmoji(cw.sys.country.toString()))
+        cityDataEditor.putString(WeatherData.CLOUDS, cw.clouds?.all?.toInt().toString() + PERCENT)
+        cityDataEditor.putString(WeatherData.WIND_SPEED, cw.wind.speed.toString() + METERS_PER_SECOND)
+        cityDataEditor.putString(WeatherData.WIND_DIRECTION, cw.wind.deg.toInt().toString() + DEGREES)
+        cityDataEditor.putString(WeatherData.VISIBILITY, cw.visibility.toInt().toString() + METERS)
+        cityDataEditor.putString(WeatherData.DESCRIPTION, cw.weather!![0].main.toString())
+        cityDataEditor.putString(WeatherData.ICON_CODE, ICON_URL + cw.weather[0].icon.toString() + ICON_EXTENSION)
         cityDataEditor.apply()
-        val uiDataEditor = weatherData.weatherPreferences.edit()
-        uiDataEditor.putBoolean(WeatherData.UI_VISIBILITY, true)
-        uiDataEditor.apply()
+        if (!weatherData.uiVisibility) {
+            val uiDataEditor = weatherData.weatherPreferences.edit()
+            uiDataEditor.putBoolean(WeatherData.UI_VISIBILITY, true)
+            uiDataEditor.apply()
+        }
+        updateSharedPrefListener()
     }
 
     private fun saveMaxMin(cityPref: String, min: Float, max: Float) {
@@ -182,10 +181,11 @@ class WeatherResult(context: Context, private val failedCall: WeatherResultRespo
         cityDataEditor.putString(WeatherData.MIN_TEMP, min.toString() + CELSIUS)
         cityDataEditor.putString(WeatherData.MAX_TEMP, max.toString() + CELSIUS)
         cityDataEditor.apply()
+        updateSharedPrefListener()
     }
 
     private fun saveForecast(dayCount: Int, cityPref: String, min: Float, max: Float,
-                                     icon: String, date: Long) {
+                             icon: String, date: Long) {
         val cityDataEditor = weatherData.cityPref(cityPref).edit()
         when (dayCount) {
             0 -> {
@@ -232,23 +232,26 @@ class WeatherResult(context: Context, private val failedCall: WeatherResultRespo
             }
         }
         cityDataEditor.apply()
+        updateSharedPrefListener()
     }
 
-    private fun saveTimeZone(cityPref: String, sys: Sys?, dt: Long) {
-        val cityDataEditor = weatherData.cityPref(cityPref).edit()
-        cityDataEditor.putString(WeatherData.LAST_UPDATED, dateFormat.format(Date(dt * 1000)).toString())
-        cityDataEditor.putString(WeatherData.LAST_CHECKED, dateFormat.format(Date(System.currentTimeMillis())).toString())
-        cityDataEditor.putString(WeatherData.SUNRISE, dateFormat.format(Date(sys!!.sunrise * 1000)).toString())
-        cityDataEditor.putString(WeatherData.SUNSET, dateFormat.format(Date(sys!!.sunset * 1000)).toString())
-        cityDataEditor.apply()
+    private fun updateSharedPrefListener() { // Update livedata only after all shared preferences have been saved
+        if (savePrefCounter == 9) {
+            val uiDataEditor = weatherData.weatherPreferences.edit()
+            uiDataEditor.putBoolean(WeatherData.UPDATE_ALL, !weatherData.updateAll)
+            uiDataEditor.apply()
+            savePrefCounter = 0
+        } else savePrefCounter++
     }
 
-    override fun getTimeZoneValue(tz: String, cityPref: String, currentWeather: CurrentWeather) {
+    override fun saveTimeZoneValue(tz: String, cityPref: String, cw: CurrentWeather) {
         dateFormat.timeZone = TimeZone.getTimeZone(tz)
-        saveTimeZone(cityPref, currentWeather.sys, currentWeather.dt)
-    }
-
-    interface WeatherResultResponse {
-        fun failedResponse()
+        val cityDataEditor = weatherData.cityPref(cityPref).edit()
+        cityDataEditor.putString(WeatherData.LAST_UPDATED, dateFormat.format(Date(cw.dt * 1000)).toString())
+        cityDataEditor.putString(WeatherData.LAST_CHECKED, dateFormat.format(Date(System.currentTimeMillis())).toString())
+        cityDataEditor.putString(WeatherData.SUNRISE, dateFormat.format(Date(cw.sys!!.sunrise * 1000)).toString())
+        cityDataEditor.putString(WeatherData.SUNSET, dateFormat.format(Date(cw.sys!!.sunset * 1000)).toString())
+        cityDataEditor.apply()
+        updateSharedPrefListener()
     }
 }
