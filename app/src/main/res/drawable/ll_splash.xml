@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:opacity="opaque">
+
+    <item android:drawable="@drawable/background_gradient" />
+
+    <item
+        android:width="250dp"
+        android:height="250dp"
+        android:drawable="@drawable/ic_launcher_foreground"
+        android:gravity="center"
+        tools:ignore="UnusedAttribute" />
+
+</layer-list>

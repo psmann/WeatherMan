@@ -26,6 +26,7 @@ class WeatherResult(private val weatherData: WeatherData) : TimeZoneResult.TimeZ
     private val dateFormat: DateFormat
     private val dayFormat: DateFormat
     private val hoursFormat: DateFormat
+    private val timeFormat: DateFormat
     private val tzResult: TimeZoneResult = TimeZoneResult(this)
 
     companion object {
@@ -34,6 +35,7 @@ class WeatherResult(private val weatherData: WeatherData) : TimeZoneResult.TimeZ
         private const val ICON_URL = "http://openweathermap.org/img/w/"
         private const val DATE_PATTERN = "d MMM, h:mm aa"
         private const val DAY_PATTERN = "E"
+        private const val TIME_PATTERN = "h:mm aa"
         private const val HOURS_PATTERN = "H 'Hours and' m 'Minutes'"
         private const val UNITS = "metric"
         private const val ICON_EXTENSION = ".png"
@@ -50,6 +52,7 @@ class WeatherResult(private val weatherData: WeatherData) : TimeZoneResult.TimeZ
     init {
         dateFormat = SimpleDateFormat(DATE_PATTERN, Locale.getDefault())
         dayFormat = SimpleDateFormat(DAY_PATTERN, Locale.getDefault())
+        timeFormat = SimpleDateFormat(TIME_PATTERN, Locale.getDefault())
         hoursFormat = SimpleDateFormat(HOURS_PATTERN, Locale.getDefault())
         hoursFormat.timeZone = TimeZone.getTimeZone("UTC") // Removes time offset
     }
@@ -119,10 +122,19 @@ class WeatherResult(private val weatherData: WeatherData) : TimeZoneResult.TimeZ
         return String(Character.toChars(firstChar)) + String(Character.toChars(secondChar))
     }
 
-    private fun lengthOfDay(sunrise: Long, sunset: Long): String {
-        val length = sunset - sunrise
-        return hoursFormat.format(Date(length * 1000)).toString() // Convert to nanosecond
+    private fun lengthOfDay(sunrise: Long, sunset: Long): String =
+            hoursFormat.format(Date((sunset - sunrise) * 1000)).toString() // Convert to nanosecond
+
+    private fun timeToMins(time: Long, timeZone: String): Float {
+        val hourFormat = SimpleDateFormat("H", Locale.getDefault())
+        val minuteFormat = SimpleDateFormat("m", Locale.getDefault())
+        hourFormat.timeZone = TimeZone.getTimeZone(timeZone)
+        minuteFormat.timeZone = TimeZone.getTimeZone(timeZone)
+        return (hourFormat.format(Date(time)).toFloat() * 60) + minuteFormat.format(Date(time)).toFloat()
     }
+
+    private fun sunPositionBias(sunrise: Float, sunset: Float, currentTime: Float): Float =
+            (currentTime - sunrise) / (sunset - sunrise)
 
     private fun feelsLike(temperature: Float, humidity: Int, wind: Float): Float {
         // Using https://blog.metservice.com/FeelsLikeTemp for reference
@@ -157,8 +169,8 @@ class WeatherResult(private val weatherData: WeatherData) : TimeZoneResult.TimeZ
         cityDataEditor.putString(WeatherData.CITY_NAME, cw.name)
         cityDataEditor.putString(WeatherData.LAST_UPDATED, dateFormat.format(Date(cw.dt * 1000)).toString())
         cityDataEditor.putString(WeatherData.LAST_CHECKED, dateFormat.format(Date(System.currentTimeMillis())).toString())
-        cityDataEditor.putString(WeatherData.SUNRISE, dateFormat.format(Date(cw.sys!!.sunrise * 1000)).toString())
-        cityDataEditor.putString(WeatherData.SUNSET, dateFormat.format(Date(cw.sys!!.sunset * 1000)).toString())
+        cityDataEditor.putString(WeatherData.SUNRISE, timeFormat.format(Date(cw.sys!!.sunrise * 1000)).toString())
+        cityDataEditor.putString(WeatherData.SUNSET, timeFormat.format(Date(cw.sys!!.sunset * 1000)).toString())
         cityDataEditor.putString(WeatherData.DAY_LENGTH, lengthOfDay(cw.sys!!.sunrise, cw.sys.sunset))
         cityDataEditor.putString(WeatherData.COUNTRY_FLAG, countryCodeToEmoji(cw.sys.country.toString()))
         cityDataEditor.putString(WeatherData.CLOUDS, cw.clouds?.all?.toInt().toString() + PERCENT)
@@ -246,11 +258,14 @@ class WeatherResult(private val weatherData: WeatherData) : TimeZoneResult.TimeZ
 
     override fun saveTimeZoneValue(tz: String, cityPref: String, cw: CurrentWeather) {
         dateFormat.timeZone = TimeZone.getTimeZone(tz)
+        timeFormat.timeZone = TimeZone.getTimeZone(tz)
         val cityDataEditor = weatherData.cityPref(cityPref).edit()
         cityDataEditor.putString(WeatherData.LAST_UPDATED, dateFormat.format(Date(cw.dt * 1000)).toString())
         cityDataEditor.putString(WeatherData.LAST_CHECKED, dateFormat.format(Date(System.currentTimeMillis())).toString())
-        cityDataEditor.putString(WeatherData.SUNRISE, dateFormat.format(Date(cw.sys!!.sunrise * 1000)).toString())
-        cityDataEditor.putString(WeatherData.SUNSET, dateFormat.format(Date(cw.sys!!.sunset * 1000)).toString())
+        cityDataEditor.putString(WeatherData.SUNRISE, timeFormat.format(Date(cw.sys!!.sunrise * 1000)).toString())
+        cityDataEditor.putString(WeatherData.SUNSET, timeFormat.format(Date(cw.sys!!.sunset * 1000)).toString())
+        cityDataEditor.putFloat(WeatherData.SUN_POSITION, sunPositionBias(timeToMins((cw.sys!!.sunrise * 1000), tz),
+                timeToMins((cw.sys!!.sunset * 1000), tz), timeToMins(System.currentTimeMillis(), tz)))
         cityDataEditor.apply()
         updateSharedPrefListener()
     }

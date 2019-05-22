@@ -62,6 +62,7 @@ class WeatherData(private val context: Context) {
         const val FORECAST_MIN_7 = "FORECAST_MIN_7"
         const val UI_VISIBILITY = "UI_VISIBILITY"
         const val UPDATE_ALL = "UPDATE_ALL"
+        const val SUN_POSITION = "SUN_POSITION"
     }
 
     val weatherPreferences: SharedPreferences = context.getSharedPreferences("WEATHER_DATA", Context.MODE_PRIVATE)
@@ -81,6 +82,8 @@ class WeatherData(private val context: Context) {
     suspend fun getWeatherData(key: String, preferences: SharedPreferences): String? {
         return withContext(Dispatchers.IO) { preferences.getString(key, "") }
     }
+
+    fun getSunPosition(preferences: SharedPreferences): Float = preferences.getFloat(SUN_POSITION, 0.00f)
 
     fun saveLoadingBar(value: Boolean) {
         val editor = weatherPreferences.edit()

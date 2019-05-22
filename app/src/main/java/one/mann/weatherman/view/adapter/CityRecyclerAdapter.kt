@@ -1,8 +1,8 @@
 package one.mann.weatherman.view.adapter
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -72,6 +72,8 @@ class CityRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                             , weatherData.cityPref(fragmentPosition.toString()))
                     holder.sunset.text = weatherData.getWeatherData(WeatherData.SUNSET
                             , weatherData.cityPref(fragmentPosition.toString()))
+                    holder.sunGraph.updateView(holder.graphStartPoint, holder.graphEndPoint, holder.sunIcon
+                            , weatherData.getSunPosition(weatherData.cityPref(fragmentPosition.toString())))
                 }
                 is WeatherClouds -> {
                     holder.visibility.text = weatherData.getWeatherData(WeatherData.VISIBILITY

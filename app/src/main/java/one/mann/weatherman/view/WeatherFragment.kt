@@ -45,8 +45,10 @@ class WeatherFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         city_recyclerview.visibility = View.GONE
+        city_recyclerview.setHasFixedSize(true)
         city_recyclerview.layoutManager = LinearLayoutManager(context)
         city_recyclerview.adapter = cityRecyclerAdapter
+
         weatherViewModel = ViewModelProviders.of(this).get(WeatherViewModel::class.java)
         weatherViewModel.weatherLiveData.observe(this,
                 Observer { weatherData -> cityRecyclerAdapter.bindData(weatherData!!, position) })
