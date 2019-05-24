@@ -16,19 +16,17 @@ class CityRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private lateinit var weatherData: WeatherData
     private var fragmentPosition = 1
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return when (viewType) {
-            0 -> WeatherCity(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.cardview_city, parent, false))
-            1 -> WeatherMain(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.cardview_main, parent, false))
-            2 -> WeatherSun(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.cardview_sun, parent, false))
-            3 -> WeatherClouds(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.cardview_clouds, parent, false))
-            else -> WeatherForecast(LayoutInflater.from(parent.context)
-                    .inflate(R.layout.cardview_forecast, parent, false))
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder = when (viewType) {
+        0 -> WeatherCity(LayoutInflater.from(parent.context)
+                .inflate(R.layout.cardview_city, parent, false))
+        1 -> WeatherMain(LayoutInflater.from(parent.context)
+                .inflate(R.layout.cardview_main, parent, false))
+        2 -> WeatherSun(LayoutInflater.from(parent.context)
+                .inflate(R.layout.cardview_sun, parent, false))
+        3 -> WeatherClouds(LayoutInflater.from(parent.context)
+                .inflate(R.layout.cardview_clouds, parent, false))
+        else -> WeatherForecast(LayoutInflater.from(parent.context)
+                .inflate(R.layout.cardview_forecast, parent, false))
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -72,8 +70,8 @@ class CityRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                             , weatherData.cityPref(fragmentPosition.toString()))
                     holder.sunset.text = weatherData.getWeatherData(WeatherData.SUNSET
                             , weatherData.cityPref(fragmentPosition.toString()))
-                    holder.sunGraph.updateView(holder.graphStartPoint, holder.graphEndPoint, holder.sunIcon
-                            , weatherData.getSunPosition(weatherData.cityPref(fragmentPosition.toString())))
+                    holder.sunGraph.updateView(holder.sunIcon,
+                            weatherData.getSunPosition(weatherData.cityPref(fragmentPosition.toString())))
                 }
                 is WeatherClouds -> {
                     holder.visibility.text = weatherData.getWeatherData(WeatherData.VISIBILITY

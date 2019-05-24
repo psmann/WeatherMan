@@ -155,8 +155,7 @@ class MainActivity : AppCompatActivity() {
                 }
     }
 
-    private fun placeAutocompleteIntent() {
-        try {
+    private fun placeAutocompleteIntent() = try {
             val filter = AutocompleteFilter.Builder()
                     .setTypeFilter(AutocompleteFilter.TYPE_FILTER_NONE).build() // Can be changed to desired accuracy
             val intent = PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
@@ -165,7 +164,6 @@ class MainActivity : AppCompatActivity() {
         } catch (ignored: GooglePlayServicesRepairableException) {
         } catch (ignored: GooglePlayServicesNotAvailableException) {
         }
-    }
 
     private fun displayToast(messageCode: Int) {
         when (messageCode) {
