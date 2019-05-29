@@ -1,0 +1,12 @@
+apply plugin: 'java'
+apply plugin: 'org.jetbrains.kotlin.jvm'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+dependencies {
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    // jUnit
+    testImplementation 'junit:junit:4.12'
+}
