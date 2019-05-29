@@ -1,3 +1,3 @@
 # WeatherMan
-A weatherDto app
+A weather app
 Uses Open Weather Map API
