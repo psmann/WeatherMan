@@ -3,10 +3,12 @@ package one.mann.weatherman.api
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import one.mann.weatherman.api.openweathermap.OpenWeatherMapApi
-import one.mann.weatherman.framework.data.SharedPreferenceStorage
+import one.mann.domain.Weather
 import one.mann.weatherman.api.openweathermap.DailyForecastDto
+import one.mann.weatherman.api.openweathermap.OpenWeatherMapApi
 import one.mann.weatherman.api.openweathermap.WeatherDto
+import one.mann.weatherman.framework.data.sharedprefs.BaseSharedPref
+import one.mann.weatherman.framework.data.sharedprefs.WeatherSharedPref
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -21,7 +23,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
-internal class WeatherResult(private val sharedPreferenceStorage: SharedPreferenceStorage) : TimeZoneResult.TimeZoneListener {
+internal class WeatherResult(private val weatherSharedPref: WeatherSharedPref) : TimeZoneResult.TimeZoneListener {
 
     private var savePrefCounter: Int = 0
     private val dateFormat: DateFormat
@@ -63,20 +65,21 @@ internal class WeatherResult(private val sharedPreferenceStorage: SharedPreferen
                 , String.format("%.2f", geoCoordinates[1]).toDouble())
         val retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL_WEATHER)
-                .addConverterFactory(GsonConverterFactory.create()).build()
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
         val openWeatherMapApi = retrofit.create<OpenWeatherMapApi>(OpenWeatherMapApi::class.java)
         val weatherCall = openWeatherMapApi.getWeather(shortCoords[0], shortCoords[1], UNITS, Keys.APP_ID)
 
         weatherCall.enqueue(object : Callback<WeatherDto> {
             override fun onResponse(call: Call<WeatherDto>, response: Response<WeatherDto>) {
                 if (!response.isSuccessful) {
-                    sharedPreferenceStorage.saveLoadingBar(false)
+                    weatherSharedPref.saveLoadingBar(false)
                     failedCallback()
                     return
                 }
                 val currentWeather = response.body()
                 if (currentWeather == null) {
-                    sharedPreferenceStorage.saveLoadingBar(false)
+                    weatherSharedPref.saveLoadingBar(false)
                     return
                 }
                 GlobalScope.launch(Dispatchers.IO) {
@@ -84,11 +87,11 @@ internal class WeatherResult(private val sharedPreferenceStorage: SharedPreferen
                 }
                 forecastCall(shortCoords, cityPref)
                 tzResult.getTimeZone(shortCoords[0], shortCoords[1], cityPref, currentWeather)
-                sharedPreferenceStorage.saveLoadingBar(false)
+                weatherSharedPref.saveLoadingBar(false)
             }
 
             override fun onFailure(call: Call<WeatherDto>, t: Throwable) {
-                sharedPreferenceStorage.saveLoadingBar(false)
+                weatherSharedPref.saveLoadingBar(false)
                 failedCallback()
             }
         })
@@ -97,7 +100,8 @@ internal class WeatherResult(private val sharedPreferenceStorage: SharedPreferen
     private fun forecastCall(geoCoordinates: Array<Double>, cityPref: String) {
         val retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL_FORECAST)
-                .addConverterFactory(GsonConverterFactory.create()).build()
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
         val openWeatherMapApi = retrofit.create<OpenWeatherMapApi>(OpenWeatherMapApi::class.java)
         val forecastCall = openWeatherMapApi.getForecast(geoCoordinates[0], geoCoordinates[1], UNITS, Keys.APP_ID)
 
@@ -126,7 +130,7 @@ internal class WeatherResult(private val sharedPreferenceStorage: SharedPreferen
     private fun lengthOfDay(sunrise: Long, sunset: Long): String =
             hoursFormat.format(Date((sunset - sunrise) * 1000)).toString() // Convert to nanosecond
 
-    private fun timeToMins(time: Long, timeZone: String): Float {
+    private fun timeInMinutes(time: Long, timeZone: String): Float {
         val hourFormat = SimpleDateFormat("H", Locale.getDefault())
         val minuteFormat = SimpleDateFormat("m", Locale.getDefault())
         hourFormat.timeZone = TimeZone.getTimeZone(timeZone)
@@ -156,92 +160,109 @@ internal class WeatherResult(private val sharedPreferenceStorage: SharedPreferen
                 .setScale(2, RoundingMode.HALF_UP).toFloat() // Set precision to match current temp
     }
 
+
     private fun saveWeather(cityPref: String, cw: WeatherDto, location: Array<Double?>) {
         val coordinates = String.format("%.4f", location[0]) + ", " + String.format("%.4f", location[1])
-        val cityDataEditor = sharedPreferenceStorage.cityPref(cityPref).edit()
-        cityDataEditor.putString(SharedPreferenceStorage.CURRENT_TEMP, cw.main?.temp.toString() + CELSIUS)
-        cityDataEditor.putString(SharedPreferenceStorage.FEELS_LIKE, feelsLike(cw.main?.temp!!, cw.main.humidity.toInt(),
+        val cityDataEditor = weatherSharedPref.cityPref(cityPref).edit()
+
+        val bsp: BaseSharedPref<Weather> = BaseSharedPref(weatherSharedPref.mainPref,
+                Weather::class, "dfg")
+        bsp.save(Weather(3, 1, 2))
+
+        cityDataEditor.putString(WeatherSharedPref.CURRENT_TEMP, cw.main?.temp.toString() + CELSIUS)
+        cityDataEditor.putString(WeatherSharedPref.FEELS_LIKE, feelsLike(cw.main?.temp!!, cw.main.humidity.toInt(),
                 cw.wind?.speed!!).toString() + CELSIUS)
-        cityDataEditor.putString(SharedPreferenceStorage.PRESSURE, cw.main.pressure.toInt().toString() + HECTOPASCAL)
-        cityDataEditor.putString(SharedPreferenceStorage.HUMIDITY, cw.main.humidity.toInt().toString() + PERCENT)
-        cityDataEditor.putString(SharedPreferenceStorage.LOCATION, coordinates)
-        cityDataEditor.putString(SharedPreferenceStorage.LATITUDE, location[0].toString())
-        cityDataEditor.putString(SharedPreferenceStorage.LONGITUDE, location[1].toString())
-        cityDataEditor.putString(SharedPreferenceStorage.CITY_NAME, cw.name)
-        cityDataEditor.putString(SharedPreferenceStorage.LAST_UPDATED, dateFormat.format(Date(cw.dt * 1000)).toString())
-        cityDataEditor.putString(SharedPreferenceStorage.LAST_CHECKED, dateFormat.format(Date(System.currentTimeMillis())).toString())
-        cityDataEditor.putString(SharedPreferenceStorage.SUNRISE, timeFormat.format(Date(cw.sys!!.sunrise * 1000)).toString())
-        cityDataEditor.putString(SharedPreferenceStorage.SUNSET, timeFormat.format(Date(cw.sys.sunset * 1000)).toString())
-        cityDataEditor.putString(SharedPreferenceStorage.DAY_LENGTH, lengthOfDay(cw.sys.sunrise, cw.sys.sunset))
-        cityDataEditor.putString(SharedPreferenceStorage.COUNTRY_FLAG, countryCodeToEmoji(cw.sys.country.toString()))
-        cityDataEditor.putString(SharedPreferenceStorage.CLOUDS, cw.clouds?.all?.toInt().toString() + PERCENT)
-        cityDataEditor.putString(SharedPreferenceStorage.WIND_SPEED, cw.wind.speed.toString() + METERS_PER_SECOND)
-        cityDataEditor.putString(SharedPreferenceStorage.WIND_DIRECTION, cw.wind.deg.toInt().toString() + DEGREES)
-        cityDataEditor.putString(SharedPreferenceStorage.VISIBILITY, cw.visibility.toInt().toString() + METERS)
-        cityDataEditor.putString(SharedPreferenceStorage.DESCRIPTION, cw.weather!![0].main.toString())
-        cityDataEditor.putString(SharedPreferenceStorage.ICON_CODE, ICON_URL + cw.weather[0].icon.toString() + ICON_EXTENSION)
+        cityDataEditor.putString(WeatherSharedPref.PRESSURE, cw.main.pressure.toInt().toString() + HECTOPASCAL)
+        cityDataEditor.putString(WeatherSharedPref.HUMIDITY, cw.main.humidity.toInt().toString() + PERCENT)
+        cityDataEditor.putString(WeatherSharedPref.LOCATION, coordinates)
+        cityDataEditor.putString(WeatherSharedPref.LATITUDE, location[0].toString())
+        cityDataEditor.putString(WeatherSharedPref.LONGITUDE, location[1].toString())
+        cityDataEditor.putString(WeatherSharedPref.CITY_NAME, cw.name)
+        cityDataEditor.putString(WeatherSharedPref.LAST_UPDATED,
+                dateFormat.format(Date(cw.dt * 1000)).toString())
+        cityDataEditor.putString(WeatherSharedPref.LAST_CHECKED,
+                dateFormat.format(Date(System.currentTimeMillis())).toString())
+        cityDataEditor.putString(WeatherSharedPref.SUNRISE,
+                timeFormat.format(Date(cw.sys!!.sunrise * 1000)).toString())
+        cityDataEditor.putString(WeatherSharedPref.SUNSET,
+                timeFormat.format(Date(cw.sys.sunset * 1000)).toString())
+        cityDataEditor.putString(WeatherSharedPref.DAY_LENGTH, lengthOfDay(cw.sys.sunrise, cw.sys.sunset))
+        cityDataEditor.putString(WeatherSharedPref.COUNTRY_FLAG, countryCodeToEmoji(cw.sys.country.toString()))
+        cityDataEditor.putString(WeatherSharedPref.CLOUDS, cw.clouds?.all?.toInt().toString() + PERCENT)
+        cityDataEditor.putString(WeatherSharedPref.WIND_SPEED, cw.wind.speed.toString() + METERS_PER_SECOND)
+        cityDataEditor.putString(WeatherSharedPref.WIND_DIRECTION, cw.wind.deg.toInt().toString() + DEGREES)
+        cityDataEditor.putString(WeatherSharedPref.VISIBILITY, cw.visibility.toInt().toString() + METERS)
+        cityDataEditor.putString(WeatherSharedPref.DESCRIPTION, cw.weather!![0].main.toString())
+        cityDataEditor.putString(WeatherSharedPref.ICON_CODE, ICON_URL + cw.weather[0].icon.toString() + ICON_EXTENSION)
         cityDataEditor.apply()
-        if (!sharedPreferenceStorage.uiVisibility) {
-            val uiDataEditor = sharedPreferenceStorage.weatherPreferences.edit()
-            uiDataEditor.putBoolean(SharedPreferenceStorage.UI_VISIBILITY, true)
+        if (!weatherSharedPref.uiVisibility) {
+            val uiDataEditor = weatherSharedPref.mainPref.edit()
+            uiDataEditor.putBoolean(WeatherSharedPref.UI_VISIBILITY, true)
             uiDataEditor.apply()
         }
         updateSharedPrefListener()
     }
 
     private fun saveMaxMin(cityPref: String, min: Float, max: Float) {
-        val cityDataEditor = sharedPreferenceStorage.cityPref(cityPref).edit()
-        cityDataEditor.putString(SharedPreferenceStorage.MIN_TEMP, min.toString() + CELSIUS)
-        cityDataEditor.putString(SharedPreferenceStorage.MAX_TEMP, max.toString() + CELSIUS)
+        val cityDataEditor = weatherSharedPref.cityPref(cityPref).edit()
+        cityDataEditor.putString(WeatherSharedPref.MIN_TEMP, min.toString() + CELSIUS)
+        cityDataEditor.putString(WeatherSharedPref.MAX_TEMP, max.toString() + CELSIUS)
         cityDataEditor.apply()
         updateSharedPrefListener()
     }
 
     private fun saveForecast(dayCount: Int, cityPref: String, min: Float, max: Float,
                              icon: String, date: Long) {
-        val cityDataEditor = sharedPreferenceStorage.cityPref(cityPref).edit()
+        val cityDataEditor = weatherSharedPref.cityPref(cityPref).edit()
         when (dayCount) {
             0 -> {
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_CODE_1, ICON_URL + icon + ICON_EXTENSION)
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_DAY_1, dayFormat.format(Date(date * 1000)).toString())
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_MIN_1, min.roundToInt().toString())
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_MAX_1, max.roundToInt().toString())
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_CODE_1, ICON_URL + icon + ICON_EXTENSION)
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_DAY_1,
+                        dayFormat.format(Date(date * 1000)).toString())
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_MIN_1, min.roundToInt().toString())
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_MAX_1, max.roundToInt().toString())
             }
             1 -> {
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_CODE_2, ICON_URL + icon + ICON_EXTENSION)
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_DAY_2, dayFormat.format(Date(date * 1000)).toString())
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_MIN_2, min.roundToInt().toString())
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_MAX_2, max.roundToInt().toString())
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_CODE_2, ICON_URL + icon + ICON_EXTENSION)
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_DAY_2,
+                        dayFormat.format(Date(date * 1000)).toString())
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_MIN_2, min.roundToInt().toString())
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_MAX_2, max.roundToInt().toString())
             }
             2 -> {
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_CODE_3, ICON_URL + icon + ICON_EXTENSION)
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_DAY_3, dayFormat.format(Date(date * 1000)).toString())
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_MIN_3, min.roundToInt().toString())
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_MAX_3, max.roundToInt().toString())
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_CODE_3, ICON_URL + icon + ICON_EXTENSION)
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_DAY_3,
+                        dayFormat.format(Date(date * 1000)).toString())
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_MIN_3, min.roundToInt().toString())
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_MAX_3, max.roundToInt().toString())
             }
             3 -> {
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_CODE_4, ICON_URL + icon + ICON_EXTENSION)
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_DAY_4, dayFormat.format(Date(date * 1000)).toString())
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_MIN_4, min.roundToInt().toString())
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_MAX_4, max.roundToInt().toString())
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_CODE_4, ICON_URL + icon + ICON_EXTENSION)
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_DAY_4,
+                        dayFormat.format(Date(date * 1000)).toString())
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_MIN_4, min.roundToInt().toString())
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_MAX_4, max.roundToInt().toString())
             }
             4 -> {
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_CODE_5, ICON_URL + icon + ICON_EXTENSION)
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_DAY_5, dayFormat.format(Date(date * 1000)).toString())
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_MIN_5, min.roundToInt().toString())
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_MAX_5, max.roundToInt().toString())
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_CODE_5, ICON_URL + icon + ICON_EXTENSION)
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_DAY_5,
+                        dayFormat.format(Date(date * 1000)).toString())
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_MIN_5, min.roundToInt().toString())
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_MAX_5, max.roundToInt().toString())
             }
             5 -> {
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_CODE_6, ICON_URL + icon + ICON_EXTENSION)
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_DAY_6, dayFormat.format(Date(date * 1000)).toString())
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_MIN_6, min.roundToInt().toString())
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_MAX_6, max.roundToInt().toString())
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_CODE_6, ICON_URL + icon + ICON_EXTENSION)
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_DAY_6,
+                        dayFormat.format(Date(date * 1000)).toString())
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_MIN_6, min.roundToInt().toString())
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_MAX_6, max.roundToInt().toString())
             }
             6 -> {
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_CODE_7, ICON_URL + icon + ICON_EXTENSION)
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_DAY_7, dayFormat.format(Date(date * 1000)).toString())
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_MIN_7, min.roundToInt().toString())
-                cityDataEditor.putString(SharedPreferenceStorage.FORECAST_MAX_7, max.roundToInt().toString())
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_CODE_7, ICON_URL + icon + ICON_EXTENSION)
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_DAY_7,
+                        dayFormat.format(Date(date * 1000)).toString())
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_MIN_7, min.roundToInt().toString())
+                cityDataEditor.putString(WeatherSharedPref.FORECAST_MAX_7, max.roundToInt().toString())
             }
         }
         cityDataEditor.apply()
@@ -250,23 +271,29 @@ internal class WeatherResult(private val sharedPreferenceStorage: SharedPreferen
 
     private fun updateSharedPrefListener() { // Update livedata only after all shared preferences have been saved
         if (savePrefCounter == 9) {
-            val uiDataEditor = sharedPreferenceStorage.weatherPreferences.edit()
-            uiDataEditor.putBoolean(SharedPreferenceStorage.UPDATE_ALL, !sharedPreferenceStorage.updateAll)
+            val uiDataEditor = weatherSharedPref.mainPref.edit()
+            uiDataEditor.putBoolean(WeatherSharedPref.UPDATE_ALL, !weatherSharedPref.updateAll)
             uiDataEditor.apply()
             savePrefCounter = 0
         } else savePrefCounter++
     }
 
-    override fun saveTimeZoneValue(tz: String, cityPref: String, wDto: WeatherDto) {
+    override fun saveTimeZoneValue(tz: String, cityPref: String, dto: WeatherDto) {
         dateFormat.timeZone = TimeZone.getTimeZone(tz)
         timeFormat.timeZone = TimeZone.getTimeZone(tz)
-        val cityDataEditor = sharedPreferenceStorage.cityPref(cityPref).edit()
-        cityDataEditor.putString(SharedPreferenceStorage.LAST_UPDATED, dateFormat.format(Date(wDto.dt * 1000)).toString())
-        cityDataEditor.putString(SharedPreferenceStorage.LAST_CHECKED, dateFormat.format(Date(System.currentTimeMillis())).toString())
-        cityDataEditor.putString(SharedPreferenceStorage.SUNRISE, timeFormat.format(Date(wDto.sys!!.sunrise * 1000)).toString())
-        cityDataEditor.putString(SharedPreferenceStorage.SUNSET, timeFormat.format(Date(wDto.sys.sunset * 1000)).toString())
-        cityDataEditor.putFloat(SharedPreferenceStorage.SUN_POSITION, sunPositionBias(timeToMins((wDto.sys.sunrise * 1000), tz),
-                timeToMins((wDto.sys.sunset * 1000), tz), timeToMins(System.currentTimeMillis(), tz)))
+        val cityDataEditor = weatherSharedPref.cityPref(cityPref).edit()
+        cityDataEditor.putString(WeatherSharedPref.LAST_UPDATED,
+                dateFormat.format(Date(dto.dt * 1000)).toString())
+        cityDataEditor.putString(WeatherSharedPref.LAST_CHECKED,
+                dateFormat.format(Date(System.currentTimeMillis())).toString())
+        cityDataEditor.putString(WeatherSharedPref.SUNRISE,
+                timeFormat.format(Date(dto.sys!!.sunrise * 1000)).toString())
+        cityDataEditor.putString(WeatherSharedPref.SUNSET,
+                timeFormat.format(Date(dto.sys.sunset * 1000)).toString())
+        cityDataEditor.putFloat(WeatherSharedPref.SUN_POSITION,
+                sunPositionBias(timeInMinutes((dto.sys.sunrise * 1000), tz),
+                        timeInMinutes((dto.sys.sunset * 1000), tz),
+                        timeInMinutes(System.currentTimeMillis(), tz)))
         cityDataEditor.apply()
         updateSharedPrefListener()
     }
