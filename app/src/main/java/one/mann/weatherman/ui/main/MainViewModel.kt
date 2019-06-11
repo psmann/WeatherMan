@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.*
-import one.mann.weatherman.api.WeatherResult
+import one.mann.weatherman.api.openweathermap.OwmResult
 import one.mann.weatherman.framework.data.sharedprefs.WeatherSharedPref
 import one.mann.weatherman.framework.data.location.GpsLocation
 
@@ -18,7 +18,7 @@ internal class MainViewModel(application: Application) : AndroidViewModel(applic
     val displayToast: MutableLiveData<Int> = MutableLiveData()
     val cityCount: MutableLiveData<Int> = MutableLiveData()
     private val weatherSharedPref: WeatherSharedPref = WeatherSharedPref(application)
-    private val weatherResult: WeatherResult = WeatherResult(weatherSharedPref)
+    private val owmResult: OwmResult = OwmResult(weatherSharedPref)
     private val gpsLocation: GpsLocation = GpsLocation(application)
 
     init {
@@ -68,10 +68,10 @@ internal class MainViewModel(application: Application) : AndroidViewModel(applic
                         weatherSharedPref.cityPref(i.toString()))?.toDouble(),
                         weatherSharedPref.getWeatherData(WeatherSharedPref.LONGITUDE,
                         weatherSharedPref.cityPref(i.toString()))?.toDouble())
-                weatherResult.weatherCall(lastLocation, i.toString()) { displayToast(6) }
+                owmResult.weatherCall(lastLocation, i.toString()) { displayToast(6) }
             }
             else -> {
-                weatherResult.weatherCall(location, cityPref) { displayToast(6) }
+                owmResult.weatherCall(location, cityPref) { displayToast(6) }
                 for (i in 1..weatherSharedPref.cityCount) {
                     if (i.toString() == cityPref) continue
                     val lastLocation: Array<Double?> = arrayOf(
@@ -79,7 +79,7 @@ internal class MainViewModel(application: Application) : AndroidViewModel(applic
                             weatherSharedPref.cityPref(i.toString()))?.toDouble(),
                             weatherSharedPref.getWeatherData(WeatherSharedPref.LONGITUDE,
                             weatherSharedPref.cityPref(i.toString()))?.toDouble())
-                    weatherResult.weatherCall(lastLocation, i.toString()) { displayToast(6) }
+                    owmResult.weatherCall(lastLocation, i.toString()) { displayToast(6) }
                 }
             }
         }

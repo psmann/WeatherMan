@@ -1,12 +1,12 @@
 package one.mann.weatherman.api.openweathermap
 
-internal class WeatherDto(
-        val main: Main?,
-        val sys: Sys?,
-        val wind: Wind?,
-        val clouds: Clouds?,
-        val weather: Array<Weather>?,
-        val name: String?,
+internal class DtoWeather(
+        val main: Main,
+        val sys: Sys,
+        val wind: Wind,
+        val clouds: Clouds,
+        val weather: Array<Weather>,
+        val name: String,
         val dt: Long,
         val visibility: Float
 ) {
@@ -21,12 +21,12 @@ internal class WeatherDto(
     data class Sys(
             val sunrise: Long,
             val sunset: Long,
-            val country: String?
+            val country: String
     )
 
     data class Weather(
-            val main: String?,
-            val icon: String?
+            val main: String,
+            val icon: String
     )
 
     data class Wind(

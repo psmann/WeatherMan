@@ -3,7 +3,7 @@ package one.mann.weatherman.api.teleport
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-internal class TimeZoneDto(
+internal class DtoTimezone(
         @SerializedName("_embedded")
         @Expose
         var embedded: Embedded? = null

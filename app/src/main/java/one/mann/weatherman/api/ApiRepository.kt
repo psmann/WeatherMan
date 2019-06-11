@@ -1,4 +1,5 @@
 package one.mann.weatherman.api
 
-class ApiRepository {
-}
+import one.mann.interactors.data.source.IApiWeatherSource
+
+class ApiRepository
