@@ -2,10 +2,11 @@ package one.mann.weatherman.ui.main.adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentStatePagerAdapter
 import one.mann.weatherman.ui.main.MainFragment
 
-internal class ViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
+internal class ViewPagerAdapter(fm: FragmentManager
+) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     private var pages = 1
 

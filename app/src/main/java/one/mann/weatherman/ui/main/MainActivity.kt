@@ -26,10 +26,13 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
-import com.google.android.gms.location.places.AutocompleteFilter
-import com.google.android.gms.location.places.ui.PlaceAutocomplete
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import kotlinx.android.synthetic.main.activity_main.*
 import one.mann.weatherman.R
+import one.mann.weatherman.api.Keys
 import one.mann.weatherman.ui.main.adapter.ViewPagerAdapter
 
 internal class MainActivity : AppCompatActivity() {
@@ -71,10 +74,10 @@ internal class MainActivity : AppCompatActivity() {
                     Activity.RESULT_CANCELED -> mainViewModel.getWeather(false)
                 }
             placeAutocompleteRequestCode ->
-                when (resultCode) { // Handle other cases
+                when (resultCode) {
                     Activity.RESULT_OK -> {
-                        val place = PlaceAutocomplete.getPlace(this, data)
-                        mainViewModel.newCityLocation(place.latLng.latitude, place.latLng.longitude)
+                        val place = Autocomplete.getPlaceFromIntent(data!!)
+                        mainViewModel.newCityLocation(place.latLng!!.latitude, place.latLng!!.longitude)
                     }
                 }
         }
@@ -154,10 +157,10 @@ internal class MainActivity : AppCompatActivity() {
     }
 
     private fun placeAutocompleteIntent() = try {
-        val filter = AutocompleteFilter.Builder()
-                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_NONE).build() // Can be changed to desired accuracy
-        val intent = PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY)
-                .setFilter(filter).build(this)
+        if(!Places.isInitialized()) Places.initialize(applicationContext, Keys.Places_APP_KEY)
+        val filter: List<Place.Field> = listOf(Place.Field.LAT_LNG)
+        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, filter)
+                .build(this)
         startActivityForResult(intent, placeAutocompleteRequestCode)
     } catch (ignored: GooglePlayServicesRepairableException) {
     } catch (ignored: GooglePlayServicesNotAvailableException) {

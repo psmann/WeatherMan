@@ -9,14 +9,14 @@ import one.mann.weatherman.api.mapToDomain
 
 internal class OwmDataSource() : IApiWeatherSource {
 
-    override suspend fun getWeather(location: Array<Float>): CurrentWeather =
+    override suspend fun getCurrentWeather(location: Array<Float>): CurrentWeather =
             RetrofitInstance.service
-                    .getWeatherData(location[0], location[1], UNITS, Keys.APP_ID)
+                    .getWeatherData(location[0], location[1], UNITS, Keys.OWM_APP_ID)
                     .mapToDomain()
 
     override suspend fun getDailyForecast(location: Array<Float>): List<DailyForecast> =
             RetrofitInstance.service
-                    .getForecastData(location[0], location[1], UNITS, Keys.APP_ID)
+                    .getForecastData(location[0], location[1], UNITS, Keys.OWM_APP_ID)
                     .list
                     .map { it.mapToDomain() }
 }

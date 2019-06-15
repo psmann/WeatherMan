@@ -1,4 +1,4 @@
 package one.mann.weatherman.framework.data.database
 
-class DbDataSource {
+internal class DbDataSource {
 }

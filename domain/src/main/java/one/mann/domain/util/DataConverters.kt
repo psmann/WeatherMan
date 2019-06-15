@@ -27,7 +27,7 @@ fun Any.addUnits(units: String): String = this.toString() + units
 fun Array<Double?>.coordinatesInStringOLD(): String =
         String.format("%.4f", this[0]) + ", " + String.format("%.4f", this[1])
 
-// get location coordinates and convert then into a truncated comma separated string
+// convert location coordinates into a truncated comma separated string
 fun Array<Float>.coordinatesInString(): String =
         String.format("%.4f", this[0]) + ", " + String.format("%.4f", this[1])
 

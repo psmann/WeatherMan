@@ -3,7 +3,7 @@ package one.mann.weatherman.framework.data.database
 import androidx.room.*
 
 @Dao
-interface WeatherDao {
+internal interface WeatherDao {
 
     @Query("SELECT COUNT(id) FROM Weather")
     fun tableSize(): Int

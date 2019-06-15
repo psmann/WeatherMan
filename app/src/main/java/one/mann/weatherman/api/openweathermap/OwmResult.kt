@@ -32,7 +32,7 @@ internal class OwmResult(private val weatherSharedPref: WeatherSharedPref) : Tel
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         val openWeatherMapApi = retrofit.create<OwmService>(OwmService::class.java)
-        val weatherCall = openWeatherMapApi.getWeather(shortCoords[0], shortCoords[1], UNITS, Keys.APP_ID)
+        val weatherCall = openWeatherMapApi.getWeather(shortCoords[0], shortCoords[1], UNITS, Keys.OWM_APP_ID)
 
         weatherCall.enqueue(object : Callback<DtoCurrentWeather> {
             override fun onResponse(call: Call<DtoCurrentWeather>, response: Response<DtoCurrentWeather>) {
@@ -67,7 +67,7 @@ internal class OwmResult(private val weatherSharedPref: WeatherSharedPref) : Tel
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
         val openWeatherMapApi = retrofit.create<OwmService>(OwmService::class.java)
-        val forecastCall = openWeatherMapApi.getForecast(geoCoordinates[0], geoCoordinates[1], UNITS, Keys.APP_ID)
+        val forecastCall = openWeatherMapApi.getForecast(geoCoordinates[0], geoCoordinates[1], UNITS, Keys.OWM_APP_ID)
 
         forecastCall.enqueue(object : Callback<DtoDailyForecast> {
             override fun onResponse(call: Call<DtoDailyForecast>, response: Response<DtoDailyForecast>) {

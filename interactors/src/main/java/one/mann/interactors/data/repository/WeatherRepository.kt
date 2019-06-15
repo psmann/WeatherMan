@@ -15,7 +15,7 @@ class WeatherRepository(private val apiWeather: IApiWeatherSource,
     suspend fun save(locationType: LocationType) {
         val location = locationRepository.getLocation(locationType)
         dbData.insertWeather(
-                mapToWeather(apiWeather.getWeather(location.coordinates),
+                mapToWeather(apiWeather.getCurrentWeather(location.coordinates),
                         apiWeather.getDailyForecast(location.coordinates),
                         location,
                         apiTimezone.getTimezone(location.coordinates)))
