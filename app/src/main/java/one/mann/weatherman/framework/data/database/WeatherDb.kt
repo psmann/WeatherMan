@@ -1,4 +1,10 @@
 package one.mann.weatherman.framework.data.database
 
-class WeatherDb {
+import androidx.room.Database
+import androidx.room.RoomDatabase
+
+@Database(entities = [Weather::class], version = 1)
+abstract class WeatherDb: RoomDatabase() {
+
+    abstract fun weatherDao(): WeatherDao
 }

@@ -73,7 +73,7 @@ internal class MainViewModel(application: Application) : AndroidViewModel(applic
             else -> {
                 owmResult.weatherCall(location, cityPref) { displayToast(6) }
                 for (i in 1..weatherSharedPref.cityCount) {
-                    if (i.toString() == cityPref) continue
+                    if (i == cityPref.toInt()) continue // skip city already updated
                     val lastLocation: Array<Double?> = arrayOf(
                             weatherSharedPref.getWeatherData(WeatherSharedPref.LATITUDE,
                             weatherSharedPref.cityPref(i.toString()))?.toDouble(),

@@ -14,7 +14,7 @@ internal class DtoDailyForecast(var list: List<List_>) {
     )
 
     data class Weather(
-            var main: String,
+            //var main: String,
             var icon: String
     )
 }

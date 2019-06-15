@@ -11,7 +11,7 @@ internal interface OwmService {
                    @Query("lon") longitude: Double,
                    @Query("units") units: String,
                    @Query("appid") appId: String
-    ): Call<DtoWeather>
+    ): Call<DtoCurrentWeather>
 
     @GET("forecast/daily")
     fun getForecast(@Query("lat") latitude: Double,
@@ -21,15 +21,15 @@ internal interface OwmService {
     ): Call<DtoDailyForecast>
 
     @GET("weather")
-    suspend fun getWeatherData(@Query("lat") latitude: Double,
-                               @Query("lon") longitude: Double,
+    suspend fun getWeatherData(@Query("lat") latitude: Float,
+                               @Query("lon") longitude: Float,
                                @Query("units") units: String,
                                @Query("appid") appId: String
-    ): DtoWeather
+    ): DtoCurrentWeather
 
     @GET("forecast/daily")
-    suspend fun getForecastData(@Query("lat") latitude: Double,
-                                @Query("lon") longitude: Double,
+    suspend fun getForecastData(@Query("lat") latitude: Float,
+                                @Query("lon") longitude: Float,
                                 @Query("units") units: String,
                                 @Query("appid") appId: String
     ): DtoDailyForecast

@@ -1,6 +1,6 @@
 package one.mann.weatherman.api.openweathermap
 
-internal class DtoWeather(
+internal class DtoCurrentWeather(
         val main: Main,
         val sys: Sys,
         val wind: Wind,

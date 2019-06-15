@@ -1,6 +1,6 @@
 package one.mann.weatherman.api.teleport
 
-import one.mann.weatherman.api.openweathermap.DtoWeather
+import one.mann.weatherman.api.openweathermap.DtoCurrentWeather
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -13,7 +13,7 @@ internal class TeleportResult(private val timeZoneListener: TimeZoneListener) {
         private const val BASE_URL = "https://api.teleport.org/api/locations/"
     }
 
-    fun getTimeZone(latitude: Double?, longitude: Double?, cityPref: String, dto: DtoWeather) {
+    fun getTimeZone(latitude: Double?, longitude: Double?, cityPref: String, dto: DtoCurrentWeather) {
         val retrofit = Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create()).build()
@@ -26,9 +26,14 @@ internal class TeleportResult(private val timeZoneListener: TimeZoneListener) {
                     return
                 }
                 val timeZone = response.body() ?: return
-                val tz = timeZone.embedded!!.locationNearestCities!![0].embedded!!.locationNearestCity!!
-                        .embedded!!.cityTimezone!!.ianaName
-                timeZoneListener.saveTimeZoneValue(tz!!, cityPref, dto)
+                val tz = timeZone.embedded
+                        .locationNearestCities[0]
+                        .embedded
+                        .locationNearestCity
+                        .embedded
+                        .cityTimezone
+                        .ianaName
+                timeZoneListener.saveTimeZoneValue(tz, cityPref, dto)
             }
 
             override fun onFailure(call: Call<DtoTimezone>, t: Throwable) {
@@ -37,6 +42,6 @@ internal class TeleportResult(private val timeZoneListener: TimeZoneListener) {
     }
 
     interface TimeZoneListener {
-        fun saveTimeZoneValue(tz: String, cityPref: String, dto: DtoWeather)
+        fun saveTimeZoneValue(tz: String, cityPref: String, dto: DtoCurrentWeather)
     }
 }
