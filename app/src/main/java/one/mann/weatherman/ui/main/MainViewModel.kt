@@ -5,9 +5,10 @@ import android.content.SharedPreferences
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.*
+import one.mann.weatherman.R
 import one.mann.weatherman.api.openweathermap.OwmResult
-import one.mann.weatherman.framework.data.sharedprefs.WeatherSharedPref
 import one.mann.weatherman.framework.data.location.GpsLocation
+import one.mann.weatherman.framework.data.sharedprefs.WeatherSharedPref
 
 internal class MainViewModel(application: Application) : AndroidViewModel(application),
         SharedPreferences.OnSharedPreferenceChangeListener {
@@ -50,11 +51,11 @@ internal class MainViewModel(application: Application) : AndroidViewModel(applic
                 weatherSharedPref.getWeatherData(WeatherSharedPref.LOCATION,
                         weatherSharedPref.cityPref("1")) == "" -> {
                     weatherSharedPref.saveLoadingBar(false)
-                    withContext(Dispatchers.Main) { displayToast(4) }
+                    withContext(Dispatchers.Main) { displayToast(R.string.gps_needed_for_location) }
                 }
                 else -> {
                     makeWeatherCall(emptyArray(), "0")
-                    withContext(Dispatchers.Main) { displayToast(5) }
+                    withContext(Dispatchers.Main) { displayToast(R.string.no_gps_updating_previous_location) }
                 }
             }
         }
@@ -65,21 +66,23 @@ internal class MainViewModel(application: Application) : AndroidViewModel(applic
             "0" -> for (i in 1..weatherSharedPref.cityCount) {
                 val lastLocation: Array<Double?> = arrayOf(
                         weatherSharedPref.getWeatherData(WeatherSharedPref.LATITUDE,
-                        weatherSharedPref.cityPref(i.toString()))?.toDouble(),
+                                weatherSharedPref.cityPref(i.toString()))?.toDouble(),
                         weatherSharedPref.getWeatherData(WeatherSharedPref.LONGITUDE,
-                        weatherSharedPref.cityPref(i.toString()))?.toDouble())
-                owmResult.weatherCall(lastLocation, i.toString()) { displayToast(6) }
+                                weatherSharedPref.cityPref(i.toString()))?.toDouble())
+                owmResult.weatherCall(lastLocation, i.toString())
+                { displayToast(R.string.server_not_found) }
             }
             else -> {
-                owmResult.weatherCall(location, cityPref) { displayToast(6) }
+                owmResult.weatherCall(location, cityPref) { displayToast(R.string.server_not_found) }
                 for (i in 1..weatherSharedPref.cityCount) {
                     if (i == cityPref.toInt()) continue // skip city already updated
                     val lastLocation: Array<Double?> = arrayOf(
                             weatherSharedPref.getWeatherData(WeatherSharedPref.LATITUDE,
-                            weatherSharedPref.cityPref(i.toString()))?.toDouble(),
+                                    weatherSharedPref.cityPref(i.toString()))?.toDouble(),
                             weatherSharedPref.getWeatherData(WeatherSharedPref.LONGITUDE,
-                            weatherSharedPref.cityPref(i.toString()))?.toDouble())
-                    owmResult.weatherCall(lastLocation, i.toString()) { displayToast(6) }
+                                    weatherSharedPref.cityPref(i.toString()))?.toDouble())
+                    owmResult.weatherCall(lastLocation, i.toString())
+                    { displayToast(R.string.server_not_found) }
                 }
             }
         }
@@ -89,7 +92,7 @@ internal class MainViewModel(application: Application) : AndroidViewModel(applic
         GlobalScope.launch(Dispatchers.Main) {
             displayToast.value = value
             delay(10L)
-            displayToast.value = 0
+            displayToast.value = 0 // stop displaying toast message
         }
     }
 
