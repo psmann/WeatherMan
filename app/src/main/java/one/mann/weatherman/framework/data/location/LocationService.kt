@@ -4,13 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.google.android.gms.location.*
 
-internal class GpsLocation(context: Context) {
+internal class LocationService(context: Context) {
 
     private var locationCallback: LocationCallback? = null
     private val locationProviderClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
     private val currentLocation: Array<Double?> = arrayOfNulls(2)
 
-    @SuppressLint("MissingPermission") // locationProviderClient is being checked before this method is called
+    @SuppressLint("MissingPermission") // locationProviderClient is already being checked
     fun getLocation(callback: (Array<Double?>) -> Unit) {
         val locationRequest = LocationRequest()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)

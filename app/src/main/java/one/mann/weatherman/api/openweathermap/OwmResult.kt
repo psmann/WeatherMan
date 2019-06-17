@@ -4,6 +4,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import one.mann.domain.util.*
+import one.mann.weatherman.api.ICON_EXTENSION
+import one.mann.weatherman.api.ICON_URL
 import one.mann.weatherman.api.Keys
 import one.mann.weatherman.api.teleport.TeleportResult
 import one.mann.weatherman.framework.data.sharedprefs.WeatherSharedPref
@@ -21,7 +23,6 @@ internal class OwmResult(private val weatherSharedPref: WeatherSharedPref) : Tel
 
     companion object {
         private const val BASE_URL = "http://api.openweathermap.org/data/2.5/"
-        private const val ICON_URL = "http://openweathermap.org/img/w/"
     }
 
     fun weatherCall(geoCoordinates: Array<Double?>, cityPref: String, failedCallback: () -> Unit) {

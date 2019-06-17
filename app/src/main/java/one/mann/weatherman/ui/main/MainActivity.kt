@@ -1,11 +1,8 @@
 package one.mann.weatherman.ui.main
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.content.IntentSender
 import android.graphics.Color
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -14,12 +11,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
-import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
@@ -32,34 +23,23 @@ import one.mann.weatherman.ui.main.adapter.ViewPagerAdapter
 
 internal class MainActivity : BaseActivity() {
 
-    private val locationRequestCode = 1011
-    private val placeAutocompleteRequestCode = 1021
+    private val autocompleteRequest = 1021
     private val pagesAdapter = ViewPagerAdapter(supportFragmentManager)
     private lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        locationPermissionListener = { initObjects() }
-        if (getCheckLocationPermission()) initObjects()
+        handleLocationPermission { result -> initActivity(result) }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            locationRequestCode ->
-                when (resultCode) {
-                    Activity.RESULT_OK -> mainViewModel.getWeather(true)
-                    Activity.RESULT_CANCELED -> mainViewModel.getWeather(false)
-                }
-            placeAutocompleteRequestCode ->
-                when (resultCode) {
-                    Activity.RESULT_OK -> {
-                        val place = Autocomplete.getPlaceFromIntent(data!!)
-                        mainViewModel.newCityLocation(place.latLng!!.latitude, place.latLng!!.longitude)
-                    }
-                }
-        }
+        if (requestCode == autocompleteRequest)
+            if (resultCode == Activity.RESULT_OK) {
+                val place = Autocomplete.getPlaceFromIntent(data!!)
+                mainViewModel.newCityLocation(place.latLng!!.latitude, place.latLng!!.longitude)
+            }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -69,14 +49,20 @@ internal class MainActivity : BaseActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) { // add more options
-            R.id.menu_add_city -> placeAutocompleteIntent()
+            R.id.menu_add_city -> autocompleteWidget()
         }
         return super.onOptionsItemSelected(item)
     }
 
-    private fun initObjects() {
+    private fun initActivity(success: Boolean) {
+        if (!success) { // If permission denied then exit
+            toast(R.string.permission_required)
+            finish()
+            return
+        }
         setSupportActionBar(main_toolbar)
         main_viewPager.adapter = pagesAdapter
+        // fix horizontal scrolling
         main_viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
                 if (!swipe_refresh_layout.isRefreshing)
@@ -91,56 +77,37 @@ internal class MainActivity : BaseActivity() {
         mainViewModel.displayLoadingBar.observe(this,
                 Observer { result -> swipe_refresh_layout.isRefreshing = result ?: false })
         mainViewModel.displayUi.observe(this,
-                Observer { aBoolean -> if (!aBoolean!!) checkLocationSettings() })
+                Observer { display -> if (!display!!) handleLocationServiceResult() })
         mainViewModel.displayToast.observe(this, Observer { msg -> if (msg != 0) toast(msg) })
         mainViewModel.cityCount.observe(this, Observer { count -> pagesAdapter.updatePages(count!!) })
         swipe_refresh_layout.setColorSchemeColors(Color.RED, Color.BLUE)
-        swipe_refresh_layout.setOnRefreshListener { this.checkLocationSettings() }
+        swipe_refresh_layout.setOnRefreshListener { handleLocationServiceResult() }
     }
 
-    private fun checkNetworkConnection(): Boolean {
-        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connectivityManager.activeNetworkInfo
-        return networkInfo != null && networkInfo.isConnected
-    }
-
-    private fun checkLocationSettings() {
-        if (!checkNetworkConnection()) {
-            toast(R.string.no_internet_connection)
-            swipe_refresh_layout.isRefreshing = false
-            return
-        }
-        val builder = LocationSettingsRequest.Builder()
-                .addLocationRequest(LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY))
-        LocationServices.getSettingsClient(this)
-                .checkLocationSettings(builder.build())
-                .addOnCompleteListener { task ->
-                    try { // Location settings are On
-                        task.getResult(ApiException::class.java)
-                        mainViewModel.getWeather(true)
-                    } catch (exception: ApiException) {
-                        when (exception.statusCode) { // Settings are Off. Prompt and check result in onActivityResult()
-                            LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> try {
-                                val resolvable = exception as ResolvableApiException
-                                resolvable.startResolutionForResult(this@MainActivity, locationRequestCode)
-                            } catch (ignored: IntentSender.SendIntentException) {
-                            } catch (ignored: ClassCastException) {
-                            } // Location settings not available on the device
-                            LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
-                                toast(R.string.location_settings_not_available)
-                                finish()
-                            }
-                        }
-                    }
+    private fun handleLocationServiceResult() = handleLocationPermission { permission ->
+        if (permission) checkLocationService { result ->
+            when (result) {
+                LocationResponse.NO_NETWORK -> {
+                    toast(R.string.no_internet_connection)
+                    swipe_refresh_layout.isRefreshing = false
                 }
+                LocationResponse.ENABLED -> mainViewModel.getWeather(true)
+                LocationResponse.DISABLED -> mainViewModel.getWeather(false)
+                LocationResponse.UNAVAILABLE -> {
+                    toast(R.string.location_settings_not_available)
+                    finish()
+                }
+            }
+        }
     }
 
-    private fun placeAutocompleteIntent() = try {
+    // Widget for Places API that needs to run in activity scope
+    private fun autocompleteWidget() = try {
         if (!Places.isInitialized()) Places.initialize(applicationContext, Keys.Places_APP_KEY)
         val filter: List<Place.Field> = listOf(Place.Field.LAT_LNG)
         val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, filter)
                 .build(this)
-        startActivityForResult(intent, placeAutocompleteRequestCode)
+        startActivityForResult(intent, autocompleteRequest)
     } catch (ignored: GooglePlayServicesRepairableException) {
     } catch (ignored: GooglePlayServicesNotAvailableException) {
     }
