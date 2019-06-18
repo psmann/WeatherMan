@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager.PERMISSION_GRANTED
-import android.net.ConnectivityManager
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +17,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
+import one.mann.weatherman.ui.common.checkNetworkConnection
 
 internal abstract class BaseActivity : AppCompatActivity() {
 
@@ -60,13 +60,6 @@ internal abstract class BaseActivity : AppCompatActivity() {
         else locationPermissionListener(true)
     }
 
-    // Check status of network connection
-    private fun checkNetworkConnection(): Boolean {
-        val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connectivityManager.activeNetworkInfo
-        return networkInfo != null && networkInfo.isConnected
-    }
-
     // Check status of location services and handle in lambda
     protected fun checkLocationService(result: (LocationResponse) -> Unit) {
         if (!checkNetworkConnection()) {
@@ -96,6 +89,7 @@ internal abstract class BaseActivity : AppCompatActivity() {
                 }
     }
 
+    // toast message extension to be used only in activity scope with String Resources
     protected fun Context.toast(@StringRes msg: Int, length: Int = Toast.LENGTH_SHORT) =
             Toast.makeText(this, this.resources.getText(msg), length).show()
 

@@ -12,23 +12,25 @@ class WeatherRepository(private val apiWeather: IApiWeatherSource,
                         private val locationRepository: LocationRepository,
                         private val dbData: IDbDataSource) {
 
-    suspend fun save(locationType: LocationType) {
-        val location = locationRepository.getLocation(locationType)
-        dbData.insertWeather(
-                mapToWeather(apiWeather.getCurrentWeather(location.coordinates),
-                        apiWeather.getDailyForecast(location.coordinates),
-                        location,
-                        apiTimezone.getTimezone(location.coordinates)))
+    suspend fun saveNew(locationType: LocationType? = null) {
+        val location = if (locationType == LocationType.DEVICE) locationRepository.getDeviceLocation()
+        else locationRepository.getApiLocation()
+        dbData.insertWeather( mapToWeather(apiWeather.getCurrentWeather(location),
+                apiWeather.getDailyForecast(location), apiTimezone.getTimezone(location), location))
     }
 
-    suspend fun fetchAll(): List<Weather> {
-        if (dbData.isDbEmpty()) save(LocationType.DEVICE) // get device location when used for the first time
-        return dbData.getAllWeather()
-    }
+    suspend fun fetchAll(): List<Weather> = dbData.getAllWeather()
 
-    suspend fun updateAll(): List<Weather> {
-        dbData.updateAllWeather()
-        return dbData.getAllWeather()
+    suspend fun updateAll(locationType: LocationType) {
+        val locations = dbData.getAllLocations()
+        if (locationType == LocationType.DEVICE) locations[0] = locationRepository.getDeviceLocation()
+        val currentWeathers = apiWeather.getAllCurrentWeather(locations)
+        val dailyForecasts = apiWeather.getAllDailyForecast(locations)
+        val timezones = apiTimezone.getAllTimezone(locations)
+        val weathers: MutableList<Weather> = mutableListOf()
+        for (i in 0 until locations.size)
+            weathers.add(mapToWeather(currentWeathers[i], dailyForecasts[i], timezones[i], locations[i]))
+        dbData.updateAllWeather(weathers)
     }
 
     suspend fun delete(id: Int) = dbData.deleteWeather(id)

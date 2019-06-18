@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.*
 import one.mann.weatherman.R
 import one.mann.weatherman.api.openweathermap.OwmResult
-import one.mann.weatherman.framework.data.location.LocationService
+import one.mann.weatherman.framework.data.location.LocationDataSource
 import one.mann.weatherman.framework.data.sharedprefs.WeatherSharedPref
 
 internal class MainViewModel(application: Application) : AndroidViewModel(application),
@@ -20,7 +20,7 @@ internal class MainViewModel(application: Application) : AndroidViewModel(applic
     val cityCount: MutableLiveData<Int> = MutableLiveData()
     private val weatherSharedPref: WeatherSharedPref = WeatherSharedPref(application)
     private val owmResult: OwmResult = OwmResult(weatherSharedPref)
-    private val locationService: LocationService = LocationService(application)
+    private val locationDataSource: LocationDataSource = LocationDataSource(application)
 
     init {
         weatherLiveData.value = weatherSharedPref
@@ -45,8 +45,9 @@ internal class MainViewModel(application: Application) : AndroidViewModel(applic
         weatherSharedPref.saveLoadingBar(true)
         GlobalScope.launch {
             when {
-                gpsEnabled -> locationService.getLocation { location ->
-                    GlobalScope.launch { makeWeatherCall(location, "1") }
+                gpsEnabled -> {
+                    val coords = locationDataSource.getLocation().coordinates
+                    makeWeatherCall(arrayOf(coords[0].toDouble(), coords[1].toDouble()), "1")
                 }
                 weatherSharedPref.getWeatherData(WeatherSharedPref.LOCATION,
                         weatherSharedPref.cityPref("1")) == "" -> {

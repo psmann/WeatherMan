@@ -16,6 +16,7 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import kotlinx.android.synthetic.main.activity_main.*
+import one.mann.domain.model.Location
 import one.mann.weatherman.R
 import one.mann.weatherman.api.Keys
 import one.mann.weatherman.ui.base.BaseActivity
@@ -26,6 +27,9 @@ internal class MainActivity : BaseActivity() {
     private val autocompleteRequest = 1021
     private val pagesAdapter = ViewPagerAdapter(supportFragmentManager)
     private lateinit var mainViewModel: MainViewModel
+    private var placeCallback: () -> Location? = { null }
+//    private val locationRepository = LocationRepository(LocationDataSource(this), placeCallback())
+//    private val weatherRepository = WeatherRepository(OwmDataSource(), TeleportDataSource(), locationRepository, DbDataSource())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +43,9 @@ internal class MainActivity : BaseActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 val place = Autocomplete.getPlaceFromIntent(data!!)
                 mainViewModel.newCityLocation(place.latLng!!.latitude, place.latLng!!.longitude)
+                placeCallback = {
+                    Location(arrayOf(place.latLng!!.latitude.toFloat(), place.latLng!!.longitude.toFloat()))
+                }
             }
     }
 
@@ -84,9 +91,9 @@ internal class MainActivity : BaseActivity() {
         swipe_refresh_layout.setOnRefreshListener { handleLocationServiceResult() }
     }
 
-    private fun handleLocationServiceResult() = handleLocationPermission { permission ->
-        if (permission) checkLocationService { result ->
-            when (result) {
+    private fun handleLocationServiceResult() = handleLocationPermission { success ->
+        if (success) checkLocationService {
+            when (it) {
                 LocationResponse.NO_NETWORK -> {
                     toast(R.string.no_internet_connection)
                     swipe_refresh_layout.isRefreshing = false
@@ -101,7 +108,7 @@ internal class MainActivity : BaseActivity() {
         }
     }
 
-    // Widget for Places API that needs to run in activity scope
+    // Widget for Places Autocomplete API that needs to run in activity scope
     private fun autocompleteWidget() = try {
         if (!Places.isInitialized()) Places.initialize(applicationContext, Keys.Places_APP_KEY)
         val filter: List<Place.Field> = listOf(Place.Field.LAT_LNG)
