@@ -9,5 +9,5 @@ internal object RetrofitInstance {
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .run { create<OwmService>(OwmService::class.java) }
+            .run { create(OwmService::class.java) }
 }

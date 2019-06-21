@@ -1,4 +1,4 @@
-package one.mann.weatherman.ui.base
+package one.mann.weatherman.ui.common.base
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.Activity
@@ -17,17 +17,16 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
-import one.mann.weatherman.ui.common.checkNetworkConnection
+import one.mann.domain.model.LocationResponse
+import one.mann.domain.model.LocationResponse.*
+import one.mann.weatherman.ui.common.util.checkNetworkConnection
 
 internal abstract class BaseActivity : AppCompatActivity() {
 
     companion object {
         private const val locationRequest = 1011
-
         private var locationPermissionListener: (Boolean) -> Unit = {}
-
         private var networkLocationServiceListener: (LocationResponse) -> Unit = {}
-
         private val locationRequestBuilder = LocationSettingsRequest.Builder()
                 .addLocationRequest(LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY))
     }
@@ -46,8 +45,8 @@ internal abstract class BaseActivity : AppCompatActivity() {
         when (requestCode) {
             locationRequest ->
                 when (resultCode) {
-                    Activity.RESULT_OK -> networkLocationServiceListener(LocationResponse.ENABLED)
-                    Activity.RESULT_CANCELED -> networkLocationServiceListener(LocationResponse.DISABLED)
+                    Activity.RESULT_OK -> networkLocationServiceListener(ENABLED)
+                    Activity.RESULT_CANCELED -> networkLocationServiceListener(DISABLED)
                 }
         }
     }
@@ -63,7 +62,7 @@ internal abstract class BaseActivity : AppCompatActivity() {
     // Check status of location services and handle in lambda
     protected fun checkLocationService(result: (LocationResponse) -> Unit) {
         if (!checkNetworkConnection()) {
-            result(LocationResponse.NO_NETWORK)
+            result(NO_NETWORK)
             return
         }
         networkLocationServiceListener = result
@@ -72,7 +71,7 @@ internal abstract class BaseActivity : AppCompatActivity() {
                 .addOnCompleteListener { task ->
                     try { // Location settings are On
                         task.getResult(ApiException::class.java)
-                        networkLocationServiceListener(LocationResponse.ENABLED)
+                        networkLocationServiceListener(ENABLED)
                     } catch (exception: ApiException) {
                         when (exception.statusCode) {
                             // Location settings are Off. Check result in onActivityResult()
@@ -83,17 +82,13 @@ internal abstract class BaseActivity : AppCompatActivity() {
                             } catch (ignored: ClassCastException) {
                             } // Location settings not available on device
                             LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE ->
-                                networkLocationServiceListener(LocationResponse.UNAVAILABLE)
+                                networkLocationServiceListener(UNAVAILABLE)
                         }
                     }
                 }
     }
 
-    // toast message extension to be used only in activity scope with String Resources
+    // Toast message extension to be used only in activity scope with String Resources
     protected fun Context.toast(@StringRes msg: Int, length: Int = Toast.LENGTH_SHORT) =
             Toast.makeText(this, this.resources.getText(msg), length).show()
-
-    enum class LocationResponse {
-        NO_NETWORK, ENABLED, DISABLED, UNAVAILABLE
-    }
 }

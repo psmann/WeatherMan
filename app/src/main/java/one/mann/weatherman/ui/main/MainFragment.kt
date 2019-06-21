@@ -7,21 +7,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_weather.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import one.mann.interactors.data.repository.WeatherRepository
+import one.mann.interactors.usecase.*
 import one.mann.weatherman.R
-import one.mann.weatherman.ui.main.adapter.CityRecyclerAdapter
+import one.mann.weatherman.api.openweathermap.OwmDataSource
+import one.mann.weatherman.api.teleport.TeleportDataSource
+import one.mann.weatherman.framework.data.database.DbDataSource
+import one.mann.weatherman.framework.data.location.LocationDataSource
+import one.mann.weatherman.ui.common.util.app
+import one.mann.weatherman.ui.common.util.getViewModel
+import one.mann.weatherman.ui.main.adapter.MainRecyclerAdapter
 
 internal class MainFragment : Fragment() {
 
     private lateinit var mainViewModel: MainViewModel
-    private var position = 1
-    private val cityRecyclerAdapter: CityRecyclerAdapter = CityRecyclerAdapter()
+    private var position = 0
+    private val weatherRecyclerAdapter = MainRecyclerAdapter()
 
     companion object {
         private const val POSITION = "POSITION"
@@ -43,22 +46,31 @@ internal class MainFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        city_recyclerview.visibility = View.GONE
+
+        // todo: check activity context to fix the issue?
+        mainViewModel = activity?.run {
+            getViewModel {
+                val weatherRepository = WeatherRepository(OwmDataSource(), TeleportDataSource(),
+                        LocationDataSource(app), DbDataSource(app.db))
+                MainViewModel(
+                        AddCity(weatherRepository),
+                        GetAllWeather(weatherRepository),
+                        RemoveCity(weatherRepository),
+                        UpdateWeather(weatherRepository),
+                        GetCityCount(weatherRepository)
+                )
+            }
+        }!!
+        mainViewModel.displayUI.observe(this, Observer {
+            if (it) city_recyclerview.visibility = View.VISIBLE
+            else city_recyclerview.visibility = View.GONE
+        })
+        mainViewModel.weatherData.observe(this, Observer {
+            if (it.size >= position + 1) weatherRecyclerAdapter.putData(it[position])
+        })
+
         city_recyclerview.setHasFixedSize(true)
         city_recyclerview.layoutManager = LinearLayoutManager(context)
-        city_recyclerview.adapter = cityRecyclerAdapter
-
-        mainViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        mainViewModel.weatherLiveData.observe(this,
-                Observer { weatherSharedPref ->
-                    cityRecyclerAdapter.bindData(weatherSharedPref!!, position)
-                })
-        mainViewModel.displayUi.observe(this, Observer { aBoolean ->
-            if (aBoolean!! && city_recyclerview.visibility == View.GONE)
-                GlobalScope.launch(Dispatchers.Main) {
-                    delay(10L)
-                    city_recyclerview.visibility = View.VISIBLE
-                }
-        })
+        city_recyclerview.adapter = weatherRecyclerAdapter
     }
 }

@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
@@ -17,19 +16,31 @@ import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import kotlinx.android.synthetic.main.activity_main.*
 import one.mann.domain.model.Location
+import one.mann.domain.model.LocationResponse.*
+import one.mann.domain.model.LocationType.DB
+import one.mann.domain.model.LocationType.DEVICE
+import one.mann.interactors.data.repository.WeatherRepository
+import one.mann.interactors.usecase.*
 import one.mann.weatherman.R
 import one.mann.weatherman.api.Keys
-import one.mann.weatherman.ui.base.BaseActivity
-import one.mann.weatherman.ui.main.adapter.ViewPagerAdapter
+import one.mann.weatherman.api.openweathermap.OwmDataSource
+import one.mann.weatherman.api.teleport.TeleportDataSource
+import one.mann.weatherman.framework.data.database.DbDataSource
+import one.mann.weatherman.framework.data.location.LocationDataSource
+import one.mann.weatherman.ui.common.base.BaseActivity
+import one.mann.weatherman.ui.common.util.app
+import one.mann.weatherman.ui.common.util.getViewModel
+import one.mann.weatherman.ui.main.adapter.MainPagerAdapter
 
 internal class MainActivity : BaseActivity() {
 
-    private val autocompleteRequest = 1021
-    private val pagesAdapter = ViewPagerAdapter(supportFragmentManager)
+    companion object {
+        private const val autocompleteRequest = 1021
+    }
+
+    private val pagesAdapter = MainPagerAdapter(supportFragmentManager)
     private lateinit var mainViewModel: MainViewModel
-    private var placeCallback: () -> Location? = { null }
-//    private val locationRepository = LocationRepository(LocationDataSource(this), placeCallback())
-//    private val weatherRepository = WeatherRepository(OwmDataSource(), TeleportDataSource(), locationRepository, DbDataSource())
+    private var firstRun = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,10 +53,8 @@ internal class MainActivity : BaseActivity() {
         if (requestCode == autocompleteRequest)
             if (resultCode == Activity.RESULT_OK) {
                 val place = Autocomplete.getPlaceFromIntent(data!!)
-                mainViewModel.newCityLocation(place.latLng!!.latitude, place.latLng!!.longitude)
-                placeCallback = {
-                    Location(arrayOf(place.latLng!!.latitude.toFloat(), place.latLng!!.longitude.toFloat()))
-                }
+                mainViewModel.addCity(Location(arrayOf(place.latLng!!.latitude.toFloat(),
+                        place.latLng!!.longitude.toFloat())))
             }
     }
 
@@ -80,13 +89,25 @@ internal class MainActivity : BaseActivity() {
             override fun onPageSelected(position: Int) {}
         })
         main_tabLayout.setupWithViewPager(main_viewPager)
-        mainViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        mainViewModel.displayLoadingBar.observe(this,
-                Observer { result -> swipe_refresh_layout.isRefreshing = result ?: false })
-        mainViewModel.displayUi.observe(this,
-                Observer { display -> if (!display!!) handleLocationServiceResult() })
-        mainViewModel.displayToast.observe(this, Observer { msg -> if (msg != 0) toast(msg) })
-        mainViewModel.cityCount.observe(this, Observer { count -> pagesAdapter.updatePages(count!!) })
+
+        mainViewModel = getViewModel {
+            val weatherRepository = WeatherRepository(OwmDataSource(), TeleportDataSource(),
+                    LocationDataSource(app), DbDataSource(app.db))
+            MainViewModel(
+                    AddCity(weatherRepository),
+                    GetAllWeather(weatherRepository),
+                    RemoveCity(weatherRepository),
+                    UpdateWeather(weatherRepository),
+                    GetCityCount(weatherRepository)
+            )
+        }
+        mainViewModel.cityCount.observe(this, Observer {
+            if (it == 0) handleLocationServiceResult()
+            else {
+                pagesAdapter.updatePages(it!!)
+                firstRun = false
+            }
+        })
         swipe_refresh_layout.setColorSchemeColors(Color.RED, Color.BLUE)
         swipe_refresh_layout.setOnRefreshListener { handleLocationServiceResult() }
     }
@@ -94,26 +115,26 @@ internal class MainActivity : BaseActivity() {
     private fun handleLocationServiceResult() = handleLocationPermission { success ->
         if (success) checkLocationService {
             when (it) {
-                LocationResponse.NO_NETWORK -> {
-                    toast(R.string.no_internet_connection)
-                    swipe_refresh_layout.isRefreshing = false
+                NO_NETWORK -> toast(R.string.no_internet_connection)
+                ENABLED -> {
+                    if (firstRun) mainViewModel.addCity()
+                    else mainViewModel.updateWeather(DEVICE)
                 }
-                LocationResponse.ENABLED -> mainViewModel.getWeather(true)
-                LocationResponse.DISABLED -> mainViewModel.getWeather(false)
-                LocationResponse.UNAVAILABLE -> {
-                    toast(R.string.location_settings_not_available)
-                    finish()
+                DISABLED -> {
+                    if (firstRun) toast(R.string.gps_needed_for_location)
+                    else mainViewModel.updateWeather(DB)
                 }
+                UNAVAILABLE -> toast(R.string.location_settings_not_available)
             }
         }
+        swipe_refresh_layout.isRefreshing = false
     }
 
     // Widget for Places Autocomplete API that needs to run in activity scope
     private fun autocompleteWidget() = try {
         if (!Places.isInitialized()) Places.initialize(applicationContext, Keys.Places_APP_KEY)
         val filter: List<Place.Field> = listOf(Place.Field.LAT_LNG)
-        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, filter)
-                .build(this)
+        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, filter).build(this)
         startActivityForResult(intent, autocompleteRequest)
     } catch (ignored: GooglePlayServicesRepairableException) {
     } catch (ignored: GooglePlayServicesNotAvailableException) {

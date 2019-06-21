@@ -9,5 +9,5 @@ internal object RetrofitInstance {
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .run { create<TeleportService>(TeleportService::class.java) }
+            .run { create(TeleportService::class.java) }
 }

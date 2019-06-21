@@ -1,21 +1,24 @@
 package one.mann.interactors.data.repository
 
+import one.mann.domain.model.Location
 import one.mann.domain.model.LocationType
 import one.mann.domain.model.Weather
 import one.mann.interactors.data.mapToWeather
 import one.mann.interactors.data.source.IApiTimezoneSource
 import one.mann.interactors.data.source.IApiWeatherSource
 import one.mann.interactors.data.source.IDbDataSource
+import one.mann.interactors.data.source.IDeviceLocationSource
 
 class WeatherRepository(private val apiWeather: IApiWeatherSource,
                         private val apiTimezone: IApiTimezoneSource,
-                        private val locationRepository: LocationRepository,
+                        private val deviceLocation: IDeviceLocationSource,
                         private val dbData: IDbDataSource) {
 
-    suspend fun saveNew(locationType: LocationType? = null) {
-        val location = if (locationType == LocationType.DEVICE) locationRepository.getDeviceLocation()
-        else locationRepository.getApiLocation()
-        dbData.insertWeather( mapToWeather(apiWeather.getCurrentWeather(location),
+    suspend fun dbSize(): Int = dbData.getDbSize()
+
+    suspend fun saveNew(apiLocation: Location? = null) {
+        val location = apiLocation ?: deviceLocation.getLocation()
+        dbData.insertWeather(mapToWeather(apiWeather.getCurrentWeather(location),
                 apiWeather.getDailyForecast(location), apiTimezone.getTimezone(location), location))
     }
 
@@ -23,7 +26,7 @@ class WeatherRepository(private val apiWeather: IApiWeatherSource,
 
     suspend fun updateAll(locationType: LocationType) {
         val locations = dbData.getAllLocations()
-        if (locationType == LocationType.DEVICE) locations[0] = locationRepository.getDeviceLocation()
+        if (locationType == LocationType.DEVICE) locations[0] = deviceLocation.getLocation()
         val currentWeathers = apiWeather.getAllCurrentWeather(locations)
         val dailyForecasts = apiWeather.getAllDailyForecast(locations)
         val timezones = apiTimezone.getAllTimezone(locations)
@@ -33,5 +36,5 @@ class WeatherRepository(private val apiWeather: IApiWeatherSource,
         dbData.updateAllWeather(weathers)
     }
 
-    suspend fun delete(id: Int) = dbData.deleteWeather(id)
+    suspend fun delete(name: String) = dbData.deleteWeather(name)
 }

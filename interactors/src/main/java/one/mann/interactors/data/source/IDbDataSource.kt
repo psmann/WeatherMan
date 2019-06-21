@@ -5,15 +5,15 @@ import one.mann.domain.model.Weather
 
 interface IDbDataSource {
 
-    suspend fun isDbEmpty(): Boolean
-
     suspend fun insertWeather(weather: Weather)
+
+    suspend fun getDbSize(): Int
 
     suspend fun getAllWeather(): List<Weather>
 
+    suspend fun getAllLocations(): MutableList<Location>
+
     suspend fun updateAllWeather(weathers: List<Weather>)
 
-    suspend fun deleteWeather(id: Int)
-
-    suspend fun getAllLocations(): MutableList<Location>
+    suspend fun deleteWeather(name: String)
 }

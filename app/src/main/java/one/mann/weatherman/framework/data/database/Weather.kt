@@ -25,6 +25,8 @@ internal data class Weather(
         val dayLength: String,
         val lastChecked: String,
         val sunPosition: Float,
+        val minTemp: String,
+        val maxTemp: String,
         // Daily Forecast
         val day1Date: String,
         val day1MinTemp: String,

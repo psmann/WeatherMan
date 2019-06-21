@@ -6,20 +6,20 @@ import androidx.room.*
 internal interface WeatherDao {
 
     @Query("SELECT COUNT(id) FROM Weather")
-    fun tableSize(): Int
+    suspend fun tableSize(): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(weather: Weather)
-
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun updateAll(weathers: List<Weather>)
+    suspend fun insert(weather: Weather)
 
     @Query("SELECT * FROM Weather ORDER BY id ASC")
-    fun getAll(): List<Weather>
+    suspend fun getAll(): List<Weather>
 
     @Query("SELECT coordinatesLat, coordinatesLong FROM Weather ORDER BY id ASC")
-    fun getAllLocations(): List<LocationTuple>
+    suspend fun getAllLocations(): List<LocationTuple>
 
-    @Query("DELETE FROM Weather WHERE id = :id")
-    fun delete(id: Int)
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateAll(weathers: List<Weather>)
+
+    @Query("DELETE FROM Weather WHERE cityName = :name")
+    suspend fun delete(name: String)
 }

@@ -1,7 +1,7 @@
 package one.mann.weatherman.framework.data.location
 
 import android.annotation.SuppressLint
-import android.content.Context
+import android.app.Application
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -11,9 +11,9 @@ import one.mann.domain.model.Location
 import one.mann.interactors.data.source.IDeviceLocationSource
 import kotlin.coroutines.resume
 
-internal class LocationDataSource(context: Context) : IDeviceLocationSource {
+internal class LocationDataSource(application: Application) : IDeviceLocationSource {
 
-    private val client = LocationServices.getFusedLocationProviderClient(context)
+    private val client = LocationServices.getFusedLocationProviderClient(application)
 
     @SuppressLint("MissingPermission") // Already being checked
     override suspend fun getLocation(): Location =

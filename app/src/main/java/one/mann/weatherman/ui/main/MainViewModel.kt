@@ -1,108 +1,62 @@
 package one.mann.weatherman.ui.main
 
-import android.app.Application
-import android.content.SharedPreferences
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.*
-import one.mann.weatherman.R
-import one.mann.weatherman.api.openweathermap.OwmResult
-import one.mann.weatherman.framework.data.location.LocationDataSource
-import one.mann.weatherman.framework.data.sharedprefs.WeatherSharedPref
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import one.mann.domain.model.Location
+import one.mann.domain.model.LocationType
+import one.mann.domain.model.Weather
+import one.mann.interactors.usecase.*
+import one.mann.weatherman.ui.common.base.BaseViewModel
 
-internal class MainViewModel(application: Application) : AndroidViewModel(application),
-        SharedPreferences.OnSharedPreferenceChangeListener {
+internal class MainViewModel(
+        private val addCity: AddCity,
+        private val getAllWeather: GetAllWeather,
+        private val removeCity: RemoveCity,
+        private val updateWeather: UpdateWeather,
+        private val getCityCount: GetCityCount
+) : BaseViewModel() {
 
-    val weatherLiveData: MutableLiveData<WeatherSharedPref> = MutableLiveData()
-    val displayLoadingBar: MutableLiveData<Boolean> = MutableLiveData()
-    val displayUi: MutableLiveData<Boolean> = MutableLiveData()
-    val displayToast: MutableLiveData<Int> = MutableLiveData()
+    val weatherData: MutableLiveData<List<Weather>> = MutableLiveData()
     val cityCount: MutableLiveData<Int> = MutableLiveData()
-    private val weatherSharedPref: WeatherSharedPref = WeatherSharedPref(application)
-    private val owmResult: OwmResult = OwmResult(weatherSharedPref)
-    private val locationDataSource: LocationDataSource = LocationDataSource(application)
+    val displayUI: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
-        weatherLiveData.value = weatherSharedPref
-        displayLoadingBar.value = weatherSharedPref.loadingBar
-        displayToast.value = 0
-        cityCount.value = weatherSharedPref.cityCount
-        weatherSharedPref.mainPref.registerOnSharedPreferenceChangeListener(this)
-        for (i in 1..weatherSharedPref.cityCount)
-            weatherSharedPref.cityPref(i.toString()).registerOnSharedPreferenceChangeListener(this)
-        displayUi.value = weatherSharedPref.uiVisibility
+        displayUI.value = false // todo: called multiple times, not efficient read from prefs instead
+        getCount()
+        getWeather()
     }
 
-    fun newCityLocation(lat: Double, lon: Double) {
-        val loc: Array<Double?> = arrayOf(lat, lon)
-        weatherSharedPref.setCityCount(cityCount.value!! + 1)
-        val newCity = weatherSharedPref.cityCount.toString()
-        weatherSharedPref.cityPref(newCity).registerOnSharedPreferenceChangeListener(this)
-        GlobalScope.launch { makeWeatherCall(loc, newCity) }
-    }
-
-    fun getWeather(gpsEnabled: Boolean) {
-        weatherSharedPref.saveLoadingBar(true)
-        GlobalScope.launch {
-            when {
-                gpsEnabled -> {
-                    val coords = locationDataSource.getLocation().coordinates
-                    makeWeatherCall(arrayOf(coords[0].toDouble(), coords[1].toDouble()), "1")
-                }
-                weatherSharedPref.getWeatherData(WeatherSharedPref.LOCATION,
-                        weatherSharedPref.cityPref("1")) == "" -> {
-                    weatherSharedPref.saveLoadingBar(false)
-                    withContext(Dispatchers.Main) { displayToast(R.string.gps_needed_for_location) }
-                }
-                else -> {
-                    makeWeatherCall(emptyArray(), "0")
-                    withContext(Dispatchers.Main) { displayToast(R.string.no_gps_updating_previous_location) }
-                }
-            }
+    fun addCity(apiLocation: Location? = null) {
+        launch(Dispatchers.IO) {
+            addCity.invoke(apiLocation)
+            getCount()
+            getWeather()
         }
     }
 
-    private suspend fun makeWeatherCall(location: Array<Double?>, cityPref: String) {
-        when (cityPref) {
-            "0" -> for (i in 1..weatherSharedPref.cityCount) {
-                val lastLocation: Array<Double?> = arrayOf(
-                        weatherSharedPref.getWeatherData(WeatherSharedPref.LATITUDE,
-                                weatherSharedPref.cityPref(i.toString()))?.toDouble(),
-                        weatherSharedPref.getWeatherData(WeatherSharedPref.LONGITUDE,
-                                weatherSharedPref.cityPref(i.toString()))?.toDouble())
-                owmResult.weatherCall(lastLocation, i.toString())
-                { displayToast(R.string.server_not_found) }
-            }
-            else -> {
-                owmResult.weatherCall(location, cityPref) { displayToast(R.string.server_not_found) }
-                for (i in 1..weatherSharedPref.cityCount) {
-                    if (i == cityPref.toInt()) continue // skip city already updated
-                    val lastLocation: Array<Double?> = arrayOf(
-                            weatherSharedPref.getWeatherData(WeatherSharedPref.LATITUDE,
-                                    weatherSharedPref.cityPref(i.toString()))?.toDouble(),
-                            weatherSharedPref.getWeatherData(WeatherSharedPref.LONGITUDE,
-                                    weatherSharedPref.cityPref(i.toString()))?.toDouble())
-                    owmResult.weatherCall(lastLocation, i.toString())
-                    { displayToast(R.string.server_not_found) }
-                }
-            }
+    fun updateWeather(locationType: LocationType) {
+        launch(Dispatchers.IO) {
+            updateWeather.invoke(locationType)
+            getCount()
+            getWeather()
+
         }
     }
 
-    private fun displayToast(value: Int) {
-        GlobalScope.launch(Dispatchers.Main) {
-            displayToast.value = value
-            delay(10L)
-            displayToast.value = 0 // stop displaying toast message
+    private fun getCount() {
+        launch {
+            cityCount.value = getCityCount.invoke()
         }
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
-        when (key) { // can be split up into constituent vars and handled separately for efficiency
-            WeatherSharedPref.UI_VISIBILITY -> displayUi.value = weatherSharedPref.uiVisibility
-            WeatherSharedPref.LOADING_BAR -> displayLoadingBar.value = weatherSharedPref.loadingBar
-            WeatherSharedPref.COUNT -> cityCount.value = weatherSharedPref.cityCount
-            WeatherSharedPref.UPDATE_ALL -> weatherLiveData.value = weatherSharedPref
+    private fun getWeather() {
+        launch {
+            val data = getAllWeather.invoke()
+            if (data.isNotEmpty()) {
+                weatherData.value = data
+                displayUI.value = true
+            }
         }
     }
 }
