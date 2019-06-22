@@ -8,13 +8,13 @@ internal class TeleportDataSource : IApiTimezoneSource {
 
     override suspend fun getTimezone(location: Location): String =
             RetrofitInstance.service
-                    .getTimeZoneData(location.coordinates[0].toString(), location.coordinates[1].toString())
+                    .getTimezone(location.coordinates[0].toString(), location.coordinates[1].toString())
                     .mapToString()
 
     override suspend fun getAllTimezone(locations: List<Location>): List<String> {
         val timezones: MutableList<String> = mutableListOf()
         for(location in locations) timezones.add(RetrofitInstance.service
-                .getTimeZoneData(location.coordinates[0].toString(), location.coordinates[1].toString())
+                .getTimezone(location.coordinates[0].toString(), location.coordinates[1].toString())
                 .mapToString())
         return timezones
     }

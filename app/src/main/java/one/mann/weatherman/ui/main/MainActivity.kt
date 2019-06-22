@@ -78,7 +78,7 @@ internal class MainActivity : BaseActivity() {
         }
         setSupportActionBar(main_toolbar)
         main_viewPager.adapter = pagesAdapter
-        // fix horizontal scrolling
+        // Fix horizontal scrolling
         main_viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
                 if (!swipe_refresh_layout.isRefreshing)
@@ -101,6 +101,7 @@ internal class MainActivity : BaseActivity() {
                     GetCityCount(weatherRepository)
             )
         }
+        mainViewModel.loadingState.observe(this, Observer { swipe_refresh_layout.isRefreshing = it })
         mainViewModel.cityCount.observe(this, Observer {
             if (it == 0) handleLocationServiceResult()
             else {
@@ -127,7 +128,6 @@ internal class MainActivity : BaseActivity() {
                 UNAVAILABLE -> toast(R.string.location_settings_not_available)
             }
         }
-        swipe_refresh_layout.isRefreshing = false
     }
 
     // Widget for Places Autocomplete API that needs to run in activity scope

@@ -20,43 +20,39 @@ internal class MainViewModel(
     val weatherData: MutableLiveData<List<Weather>> = MutableLiveData()
     val cityCount: MutableLiveData<Int> = MutableLiveData()
     val displayUI: MutableLiveData<Boolean> = MutableLiveData()
+    val loadingState: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
-        displayUI.value = false // todo: called multiple times, not efficient read from prefs instead
-        getCount()
-        getWeather()
+        displayUI.value = false
+        loadingState.value = false
+        updateUI()
     }
 
     fun addCity(apiLocation: Location? = null) {
+        loadingState.value = true
         launch(Dispatchers.IO) {
             addCity.invoke(apiLocation)
-            getCount()
-            getWeather()
+            updateUI()
         }
     }
 
     fun updateWeather(locationType: LocationType) {
+        loadingState.value = true // Start refreshing
         launch(Dispatchers.IO) {
             updateWeather.invoke(locationType)
-            getCount()
-            getWeather()
-
+            updateUI()
         }
     }
 
-    private fun getCount() {
+    private fun updateUI() {
         launch {
-            cityCount.value = getCityCount.invoke()
-        }
-    }
-
-    private fun getWeather() {
-        launch {
+            cityCount.value = getCityCount.invoke() // Update ViewPager position count
             val data = getAllWeather.invoke()
             if (data.isNotEmpty()) {
-                weatherData.value = data
-                displayUI.value = true
+                weatherData.value = data // Update all weather data
+                if (displayUI.value == false) displayUI.value = true // Show UI if hidden
             }
+            loadingState.value = false // Stop refreshing
         }
     }
 }
