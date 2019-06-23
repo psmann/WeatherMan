@@ -24,7 +24,7 @@ import one.mann.weatherman.ui.common.util.checkNetworkConnection
 internal abstract class BaseActivity : AppCompatActivity() {
 
     companion object {
-        private const val locationRequest = 1011
+        private const val LOCATION_REQUEST_CODE = 1011
         private var locationPermissionListener: (Boolean) -> Unit = {}
         private var networkLocationServiceListener: (LocationResponse) -> Unit = {}
         private val locationRequestBuilder = LocationSettingsRequest.Builder()
@@ -33,7 +33,7 @@ internal abstract class BaseActivity : AppCompatActivity() {
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == locationRequest) {
+        if (requestCode == LOCATION_REQUEST_CODE) {
             if (grantResults.isNotEmpty() && grantResults[0] == PERMISSION_GRANTED)
                 locationPermissionListener(true)
             else locationPermissionListener(false)
@@ -43,7 +43,7 @@ internal abstract class BaseActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            locationRequest ->
+            LOCATION_REQUEST_CODE ->
                 when (resultCode) {
                     Activity.RESULT_OK -> networkLocationServiceListener(ENABLED)
                     Activity.RESULT_CANCELED -> networkLocationServiceListener(DISABLED)
@@ -51,11 +51,11 @@ internal abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    // Gives permissions for both NETWORK_PROVIDER (COARSE_LOCATION) and GPS_PROVIDER (FINE_LOCATION)
+    // Give permissions for both NETWORK_PROVIDER (COARSE_LOCATION) and GPS_PROVIDER (FINE_LOCATION)
     protected fun handleLocationPermission(result: (Boolean) -> Unit) {
         locationPermissionListener = result
         if (checkSelfPermission(this, ACCESS_FINE_LOCATION) != PERMISSION_GRANTED)
-            requestPermissions(this, arrayOf(ACCESS_FINE_LOCATION), locationRequest)
+            requestPermissions(this, arrayOf(ACCESS_FINE_LOCATION), LOCATION_REQUEST_CODE)
         else locationPermissionListener(true)
     }
 
@@ -77,7 +77,7 @@ internal abstract class BaseActivity : AppCompatActivity() {
                             // Location settings are Off. Check result in onActivityResult()
                             LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> try {
                                 val resolvable = exception as ResolvableApiException
-                                resolvable.startResolutionForResult(this, locationRequest)
+                                resolvable.startResolutionForResult(this, LOCATION_REQUEST_CODE)
                             } catch (ignored: IntentSender.SendIntentException) {
                             } catch (ignored: ClassCastException) {
                             } // Location settings not available on device
@@ -88,7 +88,7 @@ internal abstract class BaseActivity : AppCompatActivity() {
                 }
     }
 
-    // Toast message extension to be used only in activity scope with String Resources
+    // Toast extension function to be used only in activity scope with String Resources
     protected fun Context.toast(@StringRes msg: Int, length: Int = Toast.LENGTH_SHORT) =
             Toast.makeText(this, this.resources.getText(msg), length).show()
 }

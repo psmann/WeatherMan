@@ -35,12 +35,12 @@ import one.mann.weatherman.ui.main.adapter.MainPagerAdapter
 internal class MainActivity : BaseActivity() {
 
     companion object {
-        private const val autocompleteRequest = 1021
+        private const val AUTOCOMPLETE_REQUEST_CODE = 1021
     }
 
-    private val pagesAdapter = MainPagerAdapter(supportFragmentManager)
+    private val mainPagerAdapter = MainPagerAdapter(supportFragmentManager)
     private lateinit var mainViewModel: MainViewModel
-    private var firstRun = true
+    private var isFirstRun = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +50,7 @@ internal class MainActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == autocompleteRequest)
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE)
             if (resultCode == Activity.RESULT_OK) {
                 val place = Autocomplete.getPlaceFromIntent(data!!)
                 mainViewModel.addCity(Location(arrayOf(place.latLng!!.latitude.toFloat(),
@@ -77,7 +77,7 @@ internal class MainActivity : BaseActivity() {
             return
         }
         setSupportActionBar(main_toolbar)
-        main_viewPager.adapter = pagesAdapter
+        main_viewPager.adapter = mainPagerAdapter
         // Fix horizontal scrolling
         main_viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
@@ -105,8 +105,8 @@ internal class MainActivity : BaseActivity() {
         mainViewModel.cityCount.observe(this, Observer {
             if (it == 0) handleLocationServiceResult()
             else {
-                pagesAdapter.updatePages(it!!)
-                firstRun = false
+                mainPagerAdapter.updatePages(it!!)
+                isFirstRun = false
             }
         })
         swipe_refresh_layout.setColorSchemeColors(Color.RED, Color.BLUE)
@@ -116,16 +116,22 @@ internal class MainActivity : BaseActivity() {
     private fun handleLocationServiceResult() = handleLocationPermission { success ->
         if (success) checkLocationService {
             when (it) {
-                NO_NETWORK -> toast(R.string.no_internet_connection)
+                NO_NETWORK -> {
+                    toast(R.string.no_internet_connection)
+                    swipe_refresh_layout.isRefreshing = false
+                }
                 ENABLED -> {
-                    if (firstRun) mainViewModel.addCity()
+                    if (isFirstRun) mainViewModel.addCity()
                     else mainViewModel.updateWeather(DEVICE)
                 }
                 DISABLED -> {
-                    if (firstRun) toast(R.string.gps_needed_for_location)
+                    if (isFirstRun) toast(R.string.gps_needed_for_location)
                     else mainViewModel.updateWeather(DB)
                 }
-                UNAVAILABLE -> toast(R.string.location_settings_not_available)
+                UNAVAILABLE -> {
+                    toast(R.string.location_settings_not_available)
+                    finish()
+                }
             }
         }
     }
@@ -135,7 +141,7 @@ internal class MainActivity : BaseActivity() {
         if (!Places.isInitialized()) Places.initialize(applicationContext, Keys.Places_APP_KEY)
         val filter: List<Place.Field> = listOf(Place.Field.LAT_LNG)
         val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, filter).build(this)
-        startActivityForResult(intent, autocompleteRequest)
+        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
     } catch (ignored: GooglePlayServicesRepairableException) {
     } catch (ignored: GooglePlayServicesNotAvailableException) {
     }

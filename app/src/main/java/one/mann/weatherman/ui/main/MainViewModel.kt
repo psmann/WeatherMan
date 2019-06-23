@@ -23,7 +23,7 @@ internal class MainViewModel(
     val loadingState: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
-        displayUI.value = false
+        displayUI.value = false // Hide UI until all views have been loaded with data
         loadingState.value = false
         updateUI()
     }

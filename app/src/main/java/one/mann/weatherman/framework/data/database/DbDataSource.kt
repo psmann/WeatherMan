@@ -18,7 +18,7 @@ internal class DbDataSource(db: WeatherDb) : IDbDataSource {
             dao.getAllLocations().map { it.mapToDomain() }.toMutableList()
 
     override suspend fun updateAllWeather(weathers: List<Weather>) =
-            dao.updateAll(weathers.mapIndexed { i, it -> it.mapToDb(i + 1) })
+            dao.updateAll(weathers.mapIndexed { i, it -> it.mapToDb(i + 1) }) // i starts at 0
 
     override suspend fun deleteWeather(name: String) = dao.delete(name)
 }

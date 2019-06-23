@@ -24,7 +24,7 @@ internal class MainFragment : Fragment() {
 
     private lateinit var mainViewModel: MainViewModel
     private var position = 0
-    private val weatherRecyclerAdapter = MainRecyclerAdapter()
+    private lateinit var mainRecyclerAdapter: MainRecyclerAdapter
 
     companion object {
         private const val POSITION = "POSITION"
@@ -46,8 +46,12 @@ internal class MainFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        mainRecyclerAdapter = MainRecyclerAdapter()
+        city_recyclerview.setHasFixedSize(true)
+        city_recyclerview.layoutManager = LinearLayoutManager(context)
+        city_recyclerview.adapter = mainRecyclerAdapter
 
-        // todo: check activity context to fix the issue?
+        // Use the same mainViewModel instance from activity
         mainViewModel = activity?.run {
             getViewModel {
                 val weatherRepository = WeatherRepository(OwmDataSource(), TeleportDataSource(),
@@ -66,11 +70,10 @@ internal class MainFragment : Fragment() {
             else city_recyclerview.visibility = View.GONE
         })
         mainViewModel.weatherData.observe(this, Observer {
-            if (it.size >= position + 1) weatherRecyclerAdapter.putData(it[position])
+            if (it.size >= position + 1) {
+                if (::mainRecyclerAdapter.isInitialized)
+                    mainRecyclerAdapter.putData(it[position])
+            }
         })
-
-        city_recyclerview.setHasFixedSize(true)
-        city_recyclerview.layoutManager = LinearLayoutManager(context)
-        city_recyclerview.adapter = weatherRecyclerAdapter
     }
 }

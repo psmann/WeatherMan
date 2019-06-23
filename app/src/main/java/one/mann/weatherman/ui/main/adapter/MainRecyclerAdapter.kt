@@ -21,7 +21,6 @@ internal class MainRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
-
         when (holder) {
             is City -> {
                 holder.cityName.text = weather.cityName
@@ -40,10 +39,11 @@ internal class MainRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
                 holder.weatherIcon.loadImage(weather.icon)
             }
             is Sun -> {
+                holder.setIsRecyclable(false) // Force reload sunGraphView and fix not updating issue
                 holder.dayLength.text = weather.dayLength
                 holder.sunrise.text = weather.sunrise
                 holder.sunset.text = weather.sunset
-                holder.sunGraphView.updateView(weather.sunPosition)
+                holder.sunGraphView.setT(weather.sunPosition)
             }
             is Clouds -> {
                 holder.visibility.text = weather.visibility

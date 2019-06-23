@@ -31,8 +31,8 @@ internal class LocationDataSource(application: Application) : IDeviceLocationSou
                     }
                 } // Check for last location if available else request for an update (drains battery)
                 client.lastLocation.addOnSuccessListener {
-                    if (it != null) continuation
-                            .resume(Location(arrayOf(it.latitude.toFloat(), it.longitude.toFloat())))
+                    if (it != null) continuation.resume(
+                            Location(arrayOf(it.latitude.toFloat(), it.longitude.toFloat())))
                     else client.requestLocationUpdates(locationRequest, locationCallback, null)
                 }
             }
