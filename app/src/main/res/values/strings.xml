@@ -17,6 +17,7 @@
     <string name="sunrise">Sunrise</string>
     <string name="sunset">Sunset</string>
     <string name="day_length">Length of Day:</string>
+    <string name="cant_remove_first_location">Current location can\'t be removed.</string>
     <string name="gps_needed_for_location">GPS is needed for current location detection.</string>
     <string name="permission_required">Permission is required for location detection.</string>
     <string name="server_not_found">Could not connect to the server.</string>
@@ -25,4 +26,5 @@
     <string name="weather_icon">Weather Icon</string>
     <string name="location_settings_not_available">Location settings are not available on this device.</string>
     <string name="add_city">Add City</string>
+    <string name="remove_city">Remove City</string>
 </resources>

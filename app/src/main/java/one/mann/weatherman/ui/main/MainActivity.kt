@@ -64,85 +64,91 @@ internal class MainActivity : BaseActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) { // add more options
+        when (item!!.itemId) {
             R.id.menu_add_city -> autocompleteWidget()
+            R.id.menu_remove_city -> {
+                val position = main_viewPager.currentItem
+                if (position == 0) {
+                    toast(R.string.cant_remove_first_location)
+                    return false
+                }
+                mainViewModel.removeCity(position)
+            }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    private fun initActivity(success: Boolean) {
-        if (!success) { // If permission denied then exit
-            toast(R.string.permission_required)
-            finish()
-            return
-        }
-        setSupportActionBar(main_toolbar)
-        main_viewPager.adapter = mainPagerAdapter
-        // Fix horizontal scrolling
-        main_viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {
-                if (!swipe_refresh_layout.isRefreshing)
-                    swipe_refresh_layout.isEnabled = state == ViewPager.SCROLL_STATE_IDLE
+        private fun initActivity(success: Boolean) {
+            if (!success) { // If permission denied then exit
+                toast(R.string.permission_required)
+                finish()
+                return
             }
+            setSupportActionBar(main_toolbar)
+            main_viewPager.adapter = mainPagerAdapter
+            main_tabLayout.setupWithViewPager(main_viewPager)
+            main_viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+                override fun onPageScrollStateChanged(state: Int) { // Fix horizontal scrolling
+                    if (!swipe_refresh_layout.isRefreshing)
+                        swipe_refresh_layout.isEnabled = state == ViewPager.SCROLL_STATE_IDLE
+                }
 
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
-            override fun onPageSelected(position: Int) {}
-        })
-        main_tabLayout.setupWithViewPager(main_viewPager)
-
-        mainViewModel = getViewModel {
-            val weatherRepository = WeatherRepository(OwmDataSource(), TeleportDataSource(),
-                    LocationDataSource(app), DbDataSource(app.db))
-            MainViewModel(
-                    AddCity(weatherRepository),
-                    GetAllWeather(weatherRepository),
-                    RemoveCity(weatherRepository),
-                    UpdateWeather(weatherRepository),
-                    GetCityCount(weatherRepository)
-            )
-        }
-        mainViewModel.loadingState.observe(this, Observer { swipe_refresh_layout.isRefreshing = it })
-        mainViewModel.cityCount.observe(this, Observer {
-            if (it == 0) handleLocationServiceResult()
-            else {
-                mainPagerAdapter.updatePages(it!!)
-                isFirstRun = false
+                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+                override fun onPageSelected(position: Int) {}
+            })
+            mainViewModel = getViewModel {
+                val weatherRepository = WeatherRepository(OwmDataSource(), TeleportDataSource(),
+                        LocationDataSource(app), DbDataSource(app.db))
+                MainViewModel(
+                        AddCity(weatherRepository),
+                        GetAllWeather(weatherRepository),
+                        RemoveCity(weatherRepository),
+                        UpdateWeather(weatherRepository),
+                        GetCityCount(weatherRepository)
+                )
             }
-        })
-        swipe_refresh_layout.setColorSchemeColors(Color.RED, Color.BLUE)
-        swipe_refresh_layout.setOnRefreshListener { handleLocationServiceResult() }
-    }
+            mainViewModel.loadingState.observe(this, Observer { swipe_refresh_layout.isRefreshing = it })
+            mainViewModel.cityCount.observe(this, Observer {
+                if (it == 0) handleLocationServiceResult()
+                else {
+                    mainPagerAdapter.updatePages(it!!)
+                    isFirstRun = false
+                }
+            })
+            swipe_refresh_layout.setColorSchemeColors(Color.RED, Color.BLUE)
+            swipe_refresh_layout.setOnRefreshListener { handleLocationServiceResult() }
+        }
 
-    private fun handleLocationServiceResult() = handleLocationPermission { success ->
-        if (success) checkLocationService {
-            when (it) {
-                NO_NETWORK -> {
-                    toast(R.string.no_internet_connection)
-                    swipe_refresh_layout.isRefreshing = false
-                }
-                ENABLED -> {
-                    if (isFirstRun) mainViewModel.addCity()
-                    else mainViewModel.updateWeather(DEVICE)
-                }
-                DISABLED -> {
-                    if (isFirstRun) toast(R.string.gps_needed_for_location)
-                    else mainViewModel.updateWeather(DB)
-                }
-                UNAVAILABLE -> {
-                    toast(R.string.location_settings_not_available)
-                    finish()
+        private fun handleLocationServiceResult() = handleLocationPermission { success ->
+            if (success) checkLocationService {
+                when (it) {
+                    NO_NETWORK -> {
+                        toast(R.string.no_internet_connection)
+                        swipe_refresh_layout.isRefreshing = false
+                    }
+                    ENABLED -> {
+                        if (isFirstRun) mainViewModel.addCity()
+                        else mainViewModel.updateWeather(DEVICE)
+                    }
+                    DISABLED -> {
+                        if (isFirstRun) toast(R.string.gps_needed_for_location)
+                        else mainViewModel.updateWeather(DB)
+                    }
+                    UNAVAILABLE -> {
+                        toast(R.string.location_settings_not_available)
+                        finish()
+                    }
                 }
             }
         }
-    }
 
-    // Widget for Places Autocomplete API that needs to run in activity scope
-    private fun autocompleteWidget() = try {
-        if (!Places.isInitialized()) Places.initialize(applicationContext, Keys.Places_APP_KEY)
-        val filter: List<Place.Field> = listOf(Place.Field.LAT_LNG)
-        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, filter).build(this)
-        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
-    } catch (ignored: GooglePlayServicesRepairableException) {
-    } catch (ignored: GooglePlayServicesNotAvailableException) {
+        // Widget for Places Autocomplete API that needs to run in activity scope
+        private fun autocompleteWidget() = try {
+            if (!Places.isInitialized()) Places.initialize(applicationContext, Keys.Places_APP_KEY)
+            val filter: List<Place.Field> = listOf(Place.Field.LAT_LNG)
+            val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, filter).build(this)
+            startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
+        } catch (ignored: GooglePlayServicesRepairableException) {
+        } catch (ignored: GooglePlayServicesNotAvailableException) {
+        }
     }
-}

@@ -10,6 +10,10 @@ import one.mann.weatherman.ui.main.adapter.WeatherViewHolder.*
 
 internal class MainRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
 
+    companion object {
+        private const val VIEW_HOLDER_COUNT = 5
+    }
+
     private var weather = Weather()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder = when (viewType) {
@@ -85,11 +89,11 @@ internal class MainRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
         }
     }
 
-    override fun getItemCount(): Int = 5
+    override fun getItemCount(): Int = VIEW_HOLDER_COUNT
 
     override fun getItemViewType(position: Int): Int = position
 
-    fun putData(weather: Weather) {
+    fun update(weather: Weather) {
         this.weather = weather
         notifyDataSetChanged()
     }

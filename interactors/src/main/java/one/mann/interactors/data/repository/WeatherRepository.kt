@@ -9,20 +9,22 @@ import one.mann.interactors.data.source.IApiWeatherSource
 import one.mann.interactors.data.source.IDbDataSource
 import one.mann.interactors.data.source.IDeviceLocationSource
 
-class WeatherRepository(private val apiWeather: IApiWeatherSource,
-                        private val apiTimezone: IApiTimezoneSource,
-                        private val deviceLocation: IDeviceLocationSource,
-                        private val dbData: IDbDataSource) {
+class WeatherRepository(
+        private val apiWeather: IApiWeatherSource,
+        private val apiTimezone: IApiTimezoneSource,
+        private val deviceLocation: IDeviceLocationSource,
+        private val dbData: IDbDataSource
+) {
 
     suspend fun dbSize(): Int = dbData.getDbSize()
 
-    suspend fun saveNew(apiLocation: Location? = null) {
+    suspend fun create(apiLocation: Location? = null) {
         val location = apiLocation ?: deviceLocation.getLocation()
         dbData.insertWeather(mapToWeather(apiWeather.getCurrentWeather(location),
                 apiWeather.getDailyForecast(location), apiTimezone.getTimezone(location), location))
     }
 
-    suspend fun fetchAll(): List<Weather> = dbData.getAllWeather()
+    suspend fun readAll(): List<Weather> = dbData.getAllWeather()
 
     suspend fun updateAll(locationType: LocationType) {
         val locations = dbData.getAllLocations()

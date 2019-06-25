@@ -12,13 +12,13 @@ internal class DbDataSource(db: WeatherDb) : IDbDataSource {
 
     override suspend fun getDbSize(): Int = dao.tableSize()
 
-    override suspend fun getAllWeather(): List<Weather> = dao.getAll().map { it.mapToDomain() }
+    override suspend fun getAllWeather(): List<Weather> = dao.fetchAll().map { it.mapToDomain() }
 
     override suspend fun getAllLocations(): MutableList<Location> =
-            dao.getAllLocations().map { it.mapToDomain() }.toMutableList()
+            dao.fetchLocations().map { it.mapToDomain() }.toMutableList()
 
     override suspend fun updateAllWeather(weathers: List<Weather>) =
-            dao.updateAll(weathers.mapIndexed { i, it -> it.mapToDb(i + 1) }) // i starts at 0
+            dao.updateAll(weathers.map { it.mapToDb() })
 
     override suspend fun deleteWeather(name: String) = dao.delete(name)
 }

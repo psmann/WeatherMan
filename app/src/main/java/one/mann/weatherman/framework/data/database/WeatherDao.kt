@@ -12,10 +12,10 @@ internal interface WeatherDao {
     suspend fun insert(weather: Weather)
 
     @Query("SELECT * FROM Weather ORDER BY id ASC")
-    suspend fun getAll(): List<Weather>
+    suspend fun fetchAll(): List<Weather>
 
-    @Query("SELECT coordinatesLat, coordinatesLong FROM Weather ORDER BY id ASC")
-    suspend fun getAllLocations(): List<LocationTuple>
+    @Query("SELECT coordinatesLat, coordinatesLong, id FROM Weather ORDER BY id ASC")
+    suspend fun fetchLocations(): List<LocationTuple>
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateAll(weathers: List<Weather>)

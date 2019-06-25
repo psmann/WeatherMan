@@ -5,6 +5,12 @@
     tools:context=".MainActivity">
 
     <item
+        android:id="@+id/menu_remove_city"
+        android:icon="@drawable/ic_outline_remove_circle_outline_24px"
+        android:title="@string/remove_city"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/menu_add_city"
         android:icon="@drawable/ic_round_add_circle_outline_24px"
         android:orderInCategory="100"

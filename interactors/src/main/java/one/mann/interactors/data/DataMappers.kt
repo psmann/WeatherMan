@@ -6,13 +6,14 @@ import one.mann.domain.model.Location
 import one.mann.domain.model.Weather
 import one.mann.domain.util.*
 
-// Map all data to Weather model
+// Map all API data to domain Weather model
 internal fun mapToWeather(
         currentWeather: CurrentWeather,
         dailyForecast: List<DailyForecast>,
         timezone: String,
         location: Location
 ): Weather = Weather(
+        location.id,
         currentWeather.cityName,
         currentWeather.currentTemperature.addUnits(CELSIUS),
         feelsLike(currentWeather.currentTemperature, currentWeather.humidity, currentWeather.windSpeed)

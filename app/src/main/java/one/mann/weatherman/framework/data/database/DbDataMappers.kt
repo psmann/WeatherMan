@@ -4,10 +4,13 @@ import one.mann.domain.model.Location
 import one.mann.domain.model.Weather as DomainWeather
 import one.mann.weatherman.framework.data.database.Weather as DbWeather
 
-internal fun LocationTuple.mapToDomain(): Location = Location(arrayOf(coordinatesLat, coordinatesLong))
+internal fun LocationTuple.mapToDomain(): Location = Location(
+        arrayOf(coordinatesLat, coordinatesLong),
+        id
+)
 
-internal fun DomainWeather.mapToDb(id: Int = 0): DbWeather = DbWeather(
-        id, // Auto generated
+internal fun DomainWeather.mapToDb(): DbWeather = DbWeather(
+        id, // null to use SQLite's default increment system
         cityName,
         currentTemp,
         feelsLike,
@@ -62,6 +65,7 @@ internal fun DomainWeather.mapToDb(id: Int = 0): DbWeather = DbWeather(
 )
 
 internal fun DbWeather.mapToDomain(): DomainWeather = DomainWeather(
+        id,
         cityName,
         currentTemp,
         feelsLike,

@@ -5,5 +5,5 @@ import one.mann.interactors.data.repository.WeatherRepository
 
 class GetAllWeather(private val weatherRepository: WeatherRepository) {
 
-    suspend fun invoke(): List<Weather> = weatherRepository.fetchAll()
+    suspend fun invoke(): List<Weather> = weatherRepository.readAll()
 }

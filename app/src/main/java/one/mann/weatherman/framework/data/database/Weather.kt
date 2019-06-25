@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 internal data class Weather(
-        @PrimaryKey(autoGenerate = true) val id: Int,
+        @PrimaryKey val id: Int?, // SQLite's default ROWID increment system is used which suits the use-case
         // Current Weather
         val cityName: String,
         val currentTemp: String,

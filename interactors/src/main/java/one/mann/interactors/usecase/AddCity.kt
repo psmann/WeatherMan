@@ -5,5 +5,5 @@ import one.mann.interactors.data.repository.WeatherRepository
 
 class AddCity(private val weatherRepository: WeatherRepository) {
 
-    suspend fun invoke(apiLocation: Location? = null) = weatherRepository.saveNew(apiLocation)
+    suspend fun invoke(apiLocation: Location? = null) = weatherRepository.create(apiLocation)
 }

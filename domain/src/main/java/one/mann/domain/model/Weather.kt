@@ -2,6 +2,7 @@ package one.mann.domain.model
 
 data class Weather(
         // Current Weather
+        val id: Int? = null,
         val cityName: String = "",
         val currentTemp: String = "",
         val feelsLike: String = "",

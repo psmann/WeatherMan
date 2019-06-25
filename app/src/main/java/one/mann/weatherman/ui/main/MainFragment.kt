@@ -40,9 +40,8 @@ internal class MainFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_weather, container, false)
-    }
+                              savedInstanceState: Bundle?): View? =
+            inflater.inflate(R.layout.fragment_weather, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -50,8 +49,7 @@ internal class MainFragment : Fragment() {
         city_recyclerview.setHasFixedSize(true)
         city_recyclerview.layoutManager = LinearLayoutManager(context)
         city_recyclerview.adapter = mainRecyclerAdapter
-
-        // Use the same mainViewModel instance from activity
+        // Use mainViewModel currently running in parent activity scope
         mainViewModel = activity?.run {
             getViewModel {
                 val weatherRepository = WeatherRepository(OwmDataSource(), TeleportDataSource(),
@@ -70,10 +68,7 @@ internal class MainFragment : Fragment() {
             else city_recyclerview.visibility = View.GONE
         })
         mainViewModel.weatherData.observe(this, Observer {
-            if (it.size >= position + 1) {
-                if (::mainRecyclerAdapter.isInitialized)
-                    mainRecyclerAdapter.putData(it[position])
-            }
+            if (it.size >= position + 1) mainRecyclerAdapter.update(it[position])
         })
     }
 }

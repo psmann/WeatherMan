@@ -3,6 +3,7 @@ package one.mann.weatherman.ui.main
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import one.mann.domain.model.Location
 import one.mann.domain.model.LocationType
 import one.mann.domain.model.Weather
@@ -23,8 +24,7 @@ internal class MainViewModel(
     val loadingState: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
-        displayUI.value = false // Hide UI until all views have been loaded with data
-        loadingState.value = false
+        displayUI.value = false // Hide UI until all recyclerView has been loaded with data
         updateUI()
     }
 
@@ -44,14 +44,22 @@ internal class MainViewModel(
         }
     }
 
+    fun removeCity(position: Int) {
+        val cityName = weatherData.value?.get(position)?.cityName ?: return // Return if null
+        launch(Dispatchers.IO) {
+            removeCity.invoke(cityName)
+            updateUI()
+        }
+    }
+
     private fun updateUI() {
         launch {
-            cityCount.value = getCityCount.invoke() // Update ViewPager position count
-            val data = getAllWeather.invoke()
+            val data = withContext(Dispatchers.IO) { getAllWeather.invoke() }
             if (data.isNotEmpty()) {
                 weatherData.value = data // Update all weather data
                 if (displayUI.value == false) displayUI.value = true // Show UI if hidden
             }
+            cityCount.value = getCityCount.invoke() // Update ViewPager after updating weatherData if not null
             loadingState.value = false // Stop refreshing
         }
     }

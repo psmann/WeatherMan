@@ -26,13 +26,13 @@ internal class LocationDataSource(application: Application) : IDeviceLocationSou
                         for (location in locationResult.locations) {
                             client.removeLocationUpdates(this)
                             continuation.resume(Location(arrayOf(location.latitude.toFloat(),
-                                    location.longitude.toFloat())))
-                        }
+                                    location.longitude.toFloat()), 1))
+                        } // Location() id = 1 because this will always be the first location
                     }
                 } // Check for last location if available else request for an update (drains battery)
                 client.lastLocation.addOnSuccessListener {
                     if (it != null) continuation.resume(
-                            Location(arrayOf(it.latitude.toFloat(), it.longitude.toFloat())))
+                            Location(arrayOf(it.latitude.toFloat(), it.longitude.toFloat()), 1))
                     else client.requestLocationUpdates(locationRequest, locationCallback, null)
                 }
             }
