@@ -1,6 +1,8 @@
 package one.mann.weatherman.framework.data.database
 
 import androidx.room.*
+import one.mann.weatherman.framework.data.database.model.LocationTuple
+import one.mann.weatherman.framework.data.database.model.Weather
 
 @Dao
 internal interface WeatherDao {

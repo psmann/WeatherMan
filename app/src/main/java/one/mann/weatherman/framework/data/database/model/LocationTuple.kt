@@ -1,4 +1,4 @@
-package one.mann.weatherman.framework.data.database
+package one.mann.weatherman.framework.data.database.model
 
 import androidx.room.ColumnInfo
 

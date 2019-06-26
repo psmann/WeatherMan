@@ -27,7 +27,7 @@ internal class LocationDataSource(application: Application) : IDeviceLocationSou
                             client.removeLocationUpdates(this)
                             continuation.resume(Location(arrayOf(location.latitude.toFloat(),
                                     location.longitude.toFloat()), 1))
-                        } // Location() id = 1 because this will always be the first location
+                        } // Location id = 1 because this is always the first entry in DB
                     }
                 } // Check for last location if available else request for an update (drains battery)
                 client.lastLocation.addOnSuccessListener {

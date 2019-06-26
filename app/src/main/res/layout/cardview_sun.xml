@@ -63,7 +63,7 @@
         <one.mann.weatherman.ui.main.SunGraphView
             android:id="@+id/sunlight_graph"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"

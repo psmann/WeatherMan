@@ -24,7 +24,7 @@ internal class MainViewModel(
     val loadingState: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
-        displayUI.value = false // Hide UI until all recyclerView has been loaded with data
+        displayUI.value = false // Hide UI until recyclerView has been loaded with data
         updateUI()
     }
 
@@ -59,7 +59,7 @@ internal class MainViewModel(
                 weatherData.value = data // Update all weather data
                 if (displayUI.value == false) displayUI.value = true // Show UI if hidden
             }
-            cityCount.value = getCityCount.invoke() // Update ViewPager after updating weatherData if not null
+            cityCount.value = getCityCount.invoke() // Update ViewPager only after updating weatherData (if not null)
             loadingState.value = false // Stop refreshing
         }
     }

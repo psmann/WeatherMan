@@ -8,7 +8,7 @@ import one.mann.interactors.data.source.IApiWeatherSource
 import one.mann.weatherman.api.Keys
 import one.mann.weatherman.api.mapToDomain
 
-internal class OwmDataSource() : IApiWeatherSource {
+internal class OwmDataSource : IApiWeatherSource {
 
     override suspend fun getCurrentWeather(location: Location): CurrentWeather =
             RetrofitInstance.service

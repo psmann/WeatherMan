@@ -8,9 +8,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlin.coroutines.CoroutineContext
 
-internal abstract class BaseViewModel() : ViewModel(), CoroutineScope {
+internal abstract class BaseViewModel : ViewModel(), CoroutineScope {
 
-    private var job: Job = SupervisorJob()
+    private var job: Job = SupervisorJob() // Doesn't get cancelled when a child coroutine crashes
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 

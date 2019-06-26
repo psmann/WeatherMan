@@ -1,11 +1,11 @@
-package one.mann.weatherman.framework.data.database
+package one.mann.weatherman.framework.data.database.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
 internal data class Weather(
-        @PrimaryKey val id: Int?, // SQLite's default ROWID increment system is used which suits the use-case
+        @PrimaryKey val id: Int?, // when null SQLite's default ROWID increment system is used
         // Current Weather
         val cityName: String,
         val currentTemp: String,
