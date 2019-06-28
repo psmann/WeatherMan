@@ -27,4 +27,5 @@
     <string name="location_settings_not_available">Location settings are not available on this device.</string>
     <string name="add_city">Add City</string>
     <string name="remove_city">Remove City</string>
+    <string name="error_has_occurred_try_again">An error has occurred. Please try again.</string>
 </resources>

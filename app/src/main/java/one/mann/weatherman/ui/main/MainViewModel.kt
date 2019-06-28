@@ -9,6 +9,7 @@ import one.mann.domain.model.LocationType
 import one.mann.domain.model.Weather
 import one.mann.interactors.usecase.*
 import one.mann.weatherman.ui.common.base.BaseViewModel
+import java.io.IOException
 
 internal class MainViewModel(
         private val addCity: AddCity,
@@ -22,24 +23,34 @@ internal class MainViewModel(
     val cityCount: MutableLiveData<Int> = MutableLiveData()
     val displayUI: MutableLiveData<Boolean> = MutableLiveData()
     val loadingState: MutableLiveData<Boolean> = MutableLiveData()
+    val displayError: MutableLiveData<Boolean> = MutableLiveData()
 
     init {
         displayUI.value = false // Hide UI until recyclerView has been loaded with data
+        displayError.value = false
         updateUI()
     }
 
     fun addCity(apiLocation: Location? = null) {
         loadingState.value = true
-        launch(Dispatchers.IO) {
-            addCity.invoke(apiLocation)
+        launch {
+            try {
+                withContext(Dispatchers.IO) { addCity.invoke(apiLocation) }
+            } catch (e: IOException) {
+                displayError.value = true
+            }
             updateUI()
         }
     }
 
     fun updateWeather(locationType: LocationType) {
         loadingState.value = true // Start refreshing
-        launch(Dispatchers.IO) {
-            updateWeather.invoke(locationType)
+        launch {
+            try {
+                withContext(Dispatchers.IO) { updateWeather.invoke(locationType) }
+            } catch (e: IOException) {
+                displayError.value = true
+            }
             updateUI()
         }
     }
@@ -62,5 +73,9 @@ internal class MainViewModel(
             cityCount.value = getCityCount.invoke() // Update ViewPager only after updating weatherData (if not null)
             loadingState.value = false // Stop refreshing
         }
+    }
+
+    fun resetDisplayError() {
+        displayError.value = false
     }
 }

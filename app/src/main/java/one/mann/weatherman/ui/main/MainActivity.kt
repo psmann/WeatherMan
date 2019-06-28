@@ -107,6 +107,12 @@ internal class MainActivity : BaseActivity() {
                     GetCityCount(weatherRepository)
             )
         }
+        mainViewModel.displayError.observe(this, Observer {
+            if (it) {
+                toast(R.string.error_has_occurred_try_again)
+                mainViewModel.resetDisplayError()
+            }
+        })
         mainViewModel.loadingState.observe(this, Observer { swipe_refresh_layout.isRefreshing = it })
         mainViewModel.cityCount.observe(this, Observer {
             if (it == 0) handleLocationServiceResult()
@@ -144,7 +150,7 @@ internal class MainActivity : BaseActivity() {
 
     // Widget for Places Autocomplete API that needs to run in activity scope
     private fun autocompleteWidget() = try {
-        if (!Places.isInitialized()) Places.initialize(applicationContext, Keys.Places_APP_KEY)
+        if (!Places.isInitialized()) Places.initialize(applicationContext, Keys.PLACES_APP_KEY)
         val filter: List<Place.Field> = listOf(Place.Field.LAT_LNG)
         val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, filter).build(this)
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)

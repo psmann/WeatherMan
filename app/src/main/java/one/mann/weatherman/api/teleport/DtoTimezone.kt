@@ -1,46 +1,38 @@
 package one.mann.weatherman.api.teleport
 
-import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 internal class DtoTimezone(
         @SerializedName("_embedded")
-        @Expose
-        var embedded: Embedded
+        var embedded1: Embedded1
 ) {
     data class CityTimezone(
             @SerializedName("iana_name")
-            @Expose
             var ianaName: String
     )
 
-    data class Embedded(
+    data class Embedded1(
             @SerializedName("location:nearest-cities")
-            @Expose
             var locationNearestCities: List<LocationNearestCities>
     )
 
-    data class Embedded_(
+    data class Embedded2(
             @SerializedName("location:nearest-city")
-            @Expose
             var locationNearestCity: LocationNearestCity
     )
 
-    data class Embedded__(
+    data class Embedded3(
             @SerializedName("city:timezone")
-            @Expose
             var cityTimezone: CityTimezone
     )
 
     data class LocationNearestCities(
             @SerializedName("_embedded")
-            @Expose
-            var embedded: Embedded_
+            var embedded2: Embedded2
     )
 
     data class LocationNearestCity(
             @SerializedName("_embedded")
-            @Expose
-            var embedded: Embedded__
+            var embedded3: Embedded3
     )
 }

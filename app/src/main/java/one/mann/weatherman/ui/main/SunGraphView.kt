@@ -65,7 +65,7 @@ internal class SunGraphView @JvmOverloads constructor(
             pointY = ((k.pow(3) * startEndY) + (3 * k.pow(2) * tValue * controlY)
                     + (3 * k * tValue.pow(2) * controlY) + (tValue.pow(3) * startEndY)) - offset
 
-            // Colour transition according to amount of day light left -> 0 = yellow; 100 = purple
+            // Colour transition according to amount of day light left. 0 = yellow; 100 = purple
             updatePaintColour((tValue * 100).toInt())
             displaySun = true
         } else {
@@ -83,7 +83,7 @@ internal class SunGraphView @JvmOverloads constructor(
             MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec))
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        updateView() // Update parameters only after correct width is known
+        updateView() // Update parameters only after correct height and width are known
         super.onSizeChanged(w, h, oldw, oldh)
     }
 

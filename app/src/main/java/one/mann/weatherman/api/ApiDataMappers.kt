@@ -26,7 +26,7 @@ internal fun DtoCurrentWeather.mapToDomain(): CurrentWeather = CurrentWeather(
         visibility
 )
 
-internal fun DtoDailyForecast.List_.mapToDomain(): DailyForecast = DailyForecast(
+internal fun DtoDailyForecast.ListObject.mapToDomain(): DailyForecast = DailyForecast(
         dt * 1000,
         temp.min,
         temp.max,
@@ -34,4 +34,4 @@ internal fun DtoDailyForecast.List_.mapToDomain(): DailyForecast = DailyForecast
 )
 
 internal fun DtoTimezone.mapToString(): String =
-        embedded.locationNearestCities[0].embedded.locationNearestCity.embedded.cityTimezone.ianaName
+        embedded1.locationNearestCities[0].embedded2.locationNearestCity.embedded3.cityTimezone.ianaName

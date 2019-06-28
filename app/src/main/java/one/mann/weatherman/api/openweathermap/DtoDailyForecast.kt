@@ -1,8 +1,9 @@
 package one.mann.weatherman.api.openweathermap
 
-internal class DtoDailyForecast(var list: List<List_>) {
+internal class DtoDailyForecast(var list: List<ListObject>) {
 
-    data class List_( // todo serialise name
+
+    data class ListObject(
             var dt: Long,
             var temp: Temp,
             var weather: List<Weather>

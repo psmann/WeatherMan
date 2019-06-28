@@ -8,16 +8,12 @@ internal interface OwmService {
     @GET("weather")
     suspend fun getCurrentWeather(
             @Query("lat") latitude: Float,
-            @Query("lon") longitude: Float,
-            @Query("units") units: String,
-            @Query("appid") appId: String
+            @Query("lon") longitude: Float
     ): DtoCurrentWeather
 
     @GET("forecast/daily")
     suspend fun getDailyForecast(
             @Query("lat") latitude: Float,
-            @Query("lon") longitude: Float,
-            @Query("units") units: String,
-            @Query("appid") appId: String
+            @Query("lon") longitude: Float
     ): DtoDailyForecast
 }
