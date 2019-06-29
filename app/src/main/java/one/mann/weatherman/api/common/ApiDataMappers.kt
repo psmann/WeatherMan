@@ -1,4 +1,4 @@
-package one.mann.weatherman.api
+package one.mann.weatherman.api.common
 
 import one.mann.domain.model.CurrentWeather
 import one.mann.domain.model.DailyForecast

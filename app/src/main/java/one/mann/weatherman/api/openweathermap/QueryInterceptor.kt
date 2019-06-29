@@ -9,14 +9,14 @@ internal class QueryInterceptor(
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
-        val oldRequest = chain.request() // Intercept original request
-        val url = oldRequest.url
+        val oldRequest = chain.request() // Original request
+        val queryUrl = oldRequest.url
                 .run {
-                    newBuilder().addQueryParameter(key, value) // Add new query with key-val pair
+                    newBuilder().addQueryParameter(key, value) // Add new query using key-val pair
                             .build()
                 }
         val newRequest = oldRequest.newBuilder() // Rebuild the request with query
-                .url(url)
+                .url(queryUrl)
                 .build()
         return chain.proceed(newRequest)
     }

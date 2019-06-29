@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import one.mann.weatherman.WeatherApp
-import one.mann.weatherman.ui.GlideApp
+import one.mann.weatherman.ui.common.GlideApp
 
 internal val Context.app: WeatherApp
     get() = applicationContext as WeatherApp

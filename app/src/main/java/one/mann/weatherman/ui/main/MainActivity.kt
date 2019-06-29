@@ -22,7 +22,7 @@ import one.mann.domain.model.LocationType.DEVICE
 import one.mann.interactors.data.repository.WeatherRepository
 import one.mann.interactors.usecase.*
 import one.mann.weatherman.R
-import one.mann.weatherman.api.Keys
+import one.mann.weatherman.api.common.Keys
 import one.mann.weatherman.api.openweathermap.OwmDataSource
 import one.mann.weatherman.api.teleport.TeleportDataSource
 import one.mann.weatherman.framework.data.database.DbDataSource
@@ -31,6 +31,8 @@ import one.mann.weatherman.ui.common.base.BaseActivity
 import one.mann.weatherman.ui.common.util.app
 import one.mann.weatherman.ui.common.util.getViewModel
 import one.mann.weatherman.ui.main.adapter.MainPagerAdapter
+import one.mann.weatherman.ui.main.di.DaggerMainComponent
+import javax.inject.Inject
 
 internal class MainActivity : BaseActivity() {
 
@@ -41,6 +43,10 @@ internal class MainActivity : BaseActivity() {
     private val mainPagerAdapter = MainPagerAdapter(supportFragmentManager)
     private lateinit var mainViewModel: MainViewModel
     private var isFirstRun = true
+    @Inject
+    lateinit var owmDataSource: OwmDataSource
+    @Inject
+    lateinit var teleportDataSource: TeleportDataSource
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +90,8 @@ internal class MainActivity : BaseActivity() {
             finish()
             return
         }
+        val component = DaggerMainComponent.create()
+        component.injectActivity(this)
         setSupportActionBar(main_toolbar)
         main_viewPager.adapter = mainPagerAdapter
         main_tabLayout.setupWithViewPager(main_viewPager)
@@ -97,7 +105,7 @@ internal class MainActivity : BaseActivity() {
             override fun onPageSelected(position: Int) {}
         })
         mainViewModel = getViewModel {
-            val weatherRepository = WeatherRepository(OwmDataSource(), TeleportDataSource(),
+            val weatherRepository = WeatherRepository(owmDataSource, teleportDataSource,
                     LocationDataSource(app), DbDataSource(app.db))
             MainViewModel(
                     AddCity(weatherRepository),

@@ -19,12 +19,18 @@ import one.mann.weatherman.framework.data.location.LocationDataSource
 import one.mann.weatherman.ui.common.util.app
 import one.mann.weatherman.ui.common.util.getViewModel
 import one.mann.weatherman.ui.main.adapter.MainRecyclerAdapter
+import one.mann.weatherman.ui.main.di.DaggerMainComponent
+import javax.inject.Inject
 
 internal class MainFragment : Fragment() {
 
     private lateinit var mainViewModel: MainViewModel
     private var position = 0
     private lateinit var mainRecyclerAdapter: MainRecyclerAdapter
+    @Inject
+    lateinit var owmDataSource: OwmDataSource
+    @Inject
+    lateinit var teleportDataSource: TeleportDataSource
 
     companion object {
         private const val POSITION = "POSITION"
@@ -45,6 +51,8 @@ internal class MainFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        val component = DaggerMainComponent.create()
+        component.injectFragment(this)
         mainRecyclerAdapter = MainRecyclerAdapter()
         city_recyclerview.setHasFixedSize(true)
         city_recyclerview.layoutManager = LinearLayoutManager(context)
@@ -52,7 +60,7 @@ internal class MainFragment : Fragment() {
         // Use mainViewModel currently running in parent activity scope
         mainViewModel = activity?.run {
             getViewModel {
-                val weatherRepository = WeatherRepository(OwmDataSource(), TeleportDataSource(),
+                val weatherRepository = WeatherRepository(owmDataSource, teleportDataSource,
                         LocationDataSource(app), DbDataSource(app.db))
                 MainViewModel(
                         AddCity(weatherRepository),
