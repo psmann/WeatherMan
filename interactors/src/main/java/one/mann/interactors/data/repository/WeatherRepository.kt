@@ -8,8 +8,9 @@ import one.mann.interactors.data.source.IApiTimezoneSource
 import one.mann.interactors.data.source.IApiWeatherSource
 import one.mann.interactors.data.source.IDbDataSource
 import one.mann.interactors.data.source.IDeviceLocationSource
+import javax.inject.Inject
 
-class WeatherRepository(
+class WeatherRepository @Inject constructor(
         private val apiWeather: IApiWeatherSource,
         private val apiTimezone: IApiTimezoneSource,
         private val deviceLocation: IDeviceLocationSource,

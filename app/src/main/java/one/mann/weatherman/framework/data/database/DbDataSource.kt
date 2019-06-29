@@ -3,8 +3,9 @@ package one.mann.weatherman.framework.data.database
 import one.mann.domain.model.Location
 import one.mann.domain.model.Weather
 import one.mann.interactors.data.source.IDbDataSource
+import javax.inject.Inject
 
-internal class DbDataSource(db: WeatherDb) : IDbDataSource {
+internal class DbDataSource @Inject constructor(db: WeatherDb) : IDbDataSource {
 
     private val dao = db.weatherDao()
 

@@ -10,8 +10,9 @@ import one.mann.domain.model.Weather
 import one.mann.interactors.usecase.*
 import one.mann.weatherman.ui.common.base.BaseViewModel
 import java.io.IOException
+import javax.inject.Inject
 
-internal class MainViewModel(
+internal class MainViewModel @Inject constructor(
         private val addCity: AddCity,
         private val getAllWeather: GetAllWeather,
         private val removeCity: RemoveCity,

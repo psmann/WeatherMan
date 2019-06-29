@@ -9,9 +9,10 @@ import one.mann.weatherman.api.openweathermap.QueryInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
-internal class OwmModule {
+internal class OwmServiceModule {
 
     companion object {
         private const val BASE_URL = "http://api.openweathermap.org/data/2.5/"
@@ -21,36 +22,39 @@ internal class OwmModule {
     }
 
     @Provides
-//    @Singleton
+    @Singleton
     @Named("AppIdQuery")
     fun provideAppIdQueryInterceptor(): QueryInterceptor = QueryInterceptor(QUERY_APPID, Keys.OWM_APPID)
 
     @Provides
-//    @Singleton
+    @Singleton
     @Named("UnitsQuery")
     fun provideUnitsQueryInterceptor(): QueryInterceptor = QueryInterceptor(QUERY_UNITS, UNITS)
 
     @Provides
-//    @Singleton
-    fun provideOkHttpClient(@Named("AppIdQuery") appIdQueryInterceptor: QueryInterceptor,
-                            @Named("UnitsQuery") unitsQueryInterceptor: QueryInterceptor
+    @Singleton
+    fun provideOkHttpClient(
+            @Named("AppIdQuery") appIdQueryInterceptor: QueryInterceptor,
+            @Named("UnitsQuery") unitsQueryInterceptor: QueryInterceptor
     ): OkHttpClient = OkHttpClient.Builder()
             .addInterceptor(appIdQueryInterceptor)
             .addInterceptor(unitsQueryInterceptor)
             .build()
 
     @Provides
-//    @Singleton
+    @Singleton
     @Named("OwmInstance")
-    fun provideOwmRestAdapter(okHttpClient: OkHttpClient,
-                              gsonConverterFactory: GsonConverterFactory): Retrofit = Retrofit.Builder()
+    fun provideOwmRestAdapter(
+            okHttpClient: OkHttpClient,
+            gsonConverterFactory: GsonConverterFactory
+    ): Retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(gsonConverterFactory)
             .client(okHttpClient)
             .build()
 
     @Provides
-//    @Singleton
+    @Singleton
     fun provideOwmService(@Named("OwmInstance") retrofit: Retrofit): OwmService =
             retrofit.create(OwmService::class.java)
 }

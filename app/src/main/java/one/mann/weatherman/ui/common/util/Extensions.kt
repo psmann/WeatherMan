@@ -11,30 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import one.mann.weatherman.WeatherApp
 import one.mann.weatherman.ui.common.GlideApp
-
-internal val Context.app: WeatherApp
-    get() = applicationContext as WeatherApp
-
-//internal inline fun <reified VM : ViewModel> Any.getViewModel(): VM = when (this) {
-//    is AppCompatActivity -> ViewModelProviders.of(this).get(VM::class.java)
-//    is Fragment -> ViewModelProviders.of(this).get(VM::class.java)
-//    else -> throw Exception()
-//}
-
-// Instantiate ViewModels with constructor arguments, cast is checked at call
-@Suppress("UNCHECKED_CAST")
-internal inline fun <reified VM : ViewModel> Any.getViewModel(crossinline factory: () -> VM): VM {
-    val vmFactory = object : ViewModelProvider.Factory {
-        override fun <F : ViewModel?> create(modelClass: Class<F>): F = factory() as F
-    }
-    return when (this) {
-        is AppCompatActivity -> ViewModelProviders.of(this, vmFactory).get(VM::class.java)
-        is Fragment -> ViewModelProviders.of(this, vmFactory).get(VM::class.java)
-        else -> throw Exception()
-    }
-}
 
 // Set ImageView using GlideApp
 internal fun ImageView.loadImage(url: String) = GlideApp.with(context)
@@ -52,6 +29,26 @@ internal fun Context.checkNetworkConnection(): Boolean {
     val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val networkInfo = connectivityManager.activeNetworkInfo
     return networkInfo != null && networkInfo.isConnected
+}
+
+// Instantiate ViewModel
+internal inline fun <reified VM : ViewModel> Any.getViewModel(): VM = when (this) {
+    is AppCompatActivity -> ViewModelProviders.of(this).get(VM::class.java)
+    is Fragment -> ViewModelProviders.of(this).get(VM::class.java)
+    else -> throw Exception()
+}
+
+// Instantiate ViewModel with constructor arguments; Cast is checked at call
+@Suppress("UNCHECKED_CAST")
+internal inline fun <reified VM : ViewModel> Any.getViewModel(crossinline factory: () -> VM): VM {
+    val vmFactory = object : ViewModelProvider.Factory {
+        override fun <F : ViewModel?> create(modelClass: Class<F>): F = factory() as F
+    }
+    return when (this) {
+        is AppCompatActivity -> ViewModelProviders.of(this, vmFactory).get(VM::class.java)
+        is Fragment -> ViewModelProviders.of(this, vmFactory).get(VM::class.java)
+        else -> throw Exception()
+    }
 }
 
 // Check if internet is actually working

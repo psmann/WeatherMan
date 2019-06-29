@@ -19,16 +19,11 @@ import one.mann.domain.model.Location
 import one.mann.domain.model.LocationResponse.*
 import one.mann.domain.model.LocationType.DB
 import one.mann.domain.model.LocationType.DEVICE
-import one.mann.interactors.data.repository.WeatherRepository
 import one.mann.interactors.usecase.*
 import one.mann.weatherman.R
 import one.mann.weatherman.api.common.Keys
-import one.mann.weatherman.api.openweathermap.OwmDataSource
-import one.mann.weatherman.api.teleport.TeleportDataSource
-import one.mann.weatherman.framework.data.database.DbDataSource
-import one.mann.weatherman.framework.data.location.LocationDataSource
+import one.mann.weatherman.application.WeatherApp
 import one.mann.weatherman.ui.common.base.BaseActivity
-import one.mann.weatherman.ui.common.util.app
 import one.mann.weatherman.ui.common.util.getViewModel
 import one.mann.weatherman.ui.main.adapter.MainPagerAdapter
 import one.mann.weatherman.ui.main.di.DaggerMainComponent
@@ -44,9 +39,15 @@ internal class MainActivity : BaseActivity() {
     private lateinit var mainViewModel: MainViewModel
     private var isFirstRun = true
     @Inject
-    lateinit var owmDataSource: OwmDataSource
+    lateinit var addcity: AddCity
     @Inject
-    lateinit var teleportDataSource: TeleportDataSource
+    lateinit var getAllWeather: GetAllWeather
+    @Inject
+    lateinit var removeCity: RemoveCity
+    @Inject
+    lateinit var updateWeather: UpdateWeather
+    @Inject
+    lateinit var getCityCount: GetCityCount
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,7 +91,9 @@ internal class MainActivity : BaseActivity() {
             finish()
             return
         }
-        val component = DaggerMainComponent.create()
+        val component = DaggerMainComponent.builder()
+                .weatherAppComponent(WeatherApp.component)
+                .build()
         component.injectActivity(this)
         setSupportActionBar(main_toolbar)
         main_viewPager.adapter = mainPagerAdapter
@@ -105,16 +108,9 @@ internal class MainActivity : BaseActivity() {
             override fun onPageSelected(position: Int) {}
         })
         mainViewModel = getViewModel {
-            val weatherRepository = WeatherRepository(owmDataSource, teleportDataSource,
-                    LocationDataSource(app), DbDataSource(app.db))
-            MainViewModel(
-                    AddCity(weatherRepository),
-                    GetAllWeather(weatherRepository),
-                    RemoveCity(weatherRepository),
-                    UpdateWeather(weatherRepository),
-                    GetCityCount(weatherRepository)
-            )
+            MainViewModel(addcity, getAllWeather, removeCity, updateWeather, getCityCount)
         }
+
         mainViewModel.displayError.observe(this, Observer {
             if (it) {
                 toast(R.string.error_has_occurred_try_again)

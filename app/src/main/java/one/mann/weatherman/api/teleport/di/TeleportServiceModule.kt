@@ -6,16 +6,17 @@ import one.mann.weatherman.api.teleport.TeleportService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
+import javax.inject.Singleton
 
 @Module
-internal class TeleportModule {
+internal class TeleportServiceModule {
 
     companion object {
         private const val BASE_URL = "https://api.teleport.org/api/locations/"
     }
 
     @Provides
-//    @Singleton
+    @Singleton
     @Named("TeleportInstance")
     fun provideTeleportRestAdapter(gsonConverterFactory: GsonConverterFactory): Retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -23,7 +24,7 @@ internal class TeleportModule {
             .build()
 
     @Provides
-//    @Singleton
+    @Singleton
     fun provideTeleportService(@Named("TeleportInstance") retrofit: Retrofit): TeleportService =
             retrofit.create(TeleportService::class.java)
 }
