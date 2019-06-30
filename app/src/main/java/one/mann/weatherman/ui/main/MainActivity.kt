@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
@@ -19,10 +20,9 @@ import one.mann.domain.model.Location
 import one.mann.domain.model.LocationResponse.*
 import one.mann.domain.model.LocationType.DB
 import one.mann.domain.model.LocationType.DEVICE
-import one.mann.interactors.usecase.*
 import one.mann.weatherman.R
 import one.mann.weatherman.api.common.Keys
-import one.mann.weatherman.application.WeatherApp
+import one.mann.weatherman.application.WeatherManApp
 import one.mann.weatherman.ui.common.base.BaseActivity
 import one.mann.weatherman.ui.common.util.getViewModel
 import one.mann.weatherman.ui.main.adapter.MainPagerAdapter
@@ -36,18 +36,10 @@ internal class MainActivity : BaseActivity() {
     }
 
     private val mainPagerAdapter = MainPagerAdapter(supportFragmentManager)
-    private lateinit var mainViewModel: MainViewModel
+    private val mainViewModel: MainViewModel by lazy { getViewModel(viewModelFactory) }
     private var isFirstRun = true
     @Inject
-    lateinit var addcity: AddCity
-    @Inject
-    lateinit var getAllWeather: GetAllWeather
-    @Inject
-    lateinit var removeCity: RemoveCity
-    @Inject
-    lateinit var updateWeather: UpdateWeather
-    @Inject
-    lateinit var getCityCount: GetCityCount
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,16 +77,19 @@ internal class MainActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun injectDependencies() {
+        val component = DaggerMainComponent.builder()
+                .weatherManAppComponent(WeatherManApp.appComponent)
+                .build()
+        component.injectActivity(this)
+    }
+
     private fun initActivity(success: Boolean) {
         if (!success) { // If permission denied then exit
             toast(R.string.permission_required)
             finish()
             return
         }
-        val component = DaggerMainComponent.builder()
-                .weatherAppComponent(WeatherApp.component)
-                .build()
-        component.injectActivity(this)
         setSupportActionBar(main_toolbar)
         main_viewPager.adapter = mainPagerAdapter
         main_tabLayout.setupWithViewPager(main_viewPager)
@@ -107,10 +102,6 @@ internal class MainActivity : BaseActivity() {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
             override fun onPageSelected(position: Int) {}
         })
-        mainViewModel = getViewModel {
-            MainViewModel(addcity, getAllWeather, removeCity, updateWeather, getCityCount)
-        }
-
         mainViewModel.displayError.observe(this, Observer {
             if (it) {
                 toast(R.string.error_has_occurred_try_again)

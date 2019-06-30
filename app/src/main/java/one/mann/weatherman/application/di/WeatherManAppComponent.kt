@@ -10,8 +10,9 @@ import one.mann.weatherman.framework.data.database.di.DbModule
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [WeatherAppModule::class, ApiServiceModule::class, DbModule::class])
-internal interface WeatherAppComponent {
+@Component(modules = [WeatherManAppModule::class, ApiServiceModule::class, DbModule::class])
+
+internal interface WeatherManAppComponent {
 
     fun getContext(): Context
 

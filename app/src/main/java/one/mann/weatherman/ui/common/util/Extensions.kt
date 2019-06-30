@@ -6,8 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.annotation.LayoutRes
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -32,24 +31,14 @@ internal fun Context.checkNetworkConnection(): Boolean {
 }
 
 // Instantiate ViewModel
-internal inline fun <reified VM : ViewModel> Any.getViewModel(): VM = when (this) {
-    is AppCompatActivity -> ViewModelProviders.of(this).get(VM::class.java)
-    is Fragment -> ViewModelProviders.of(this).get(VM::class.java)
-    else -> throw Exception()
-}
+internal inline fun <reified VM : ViewModel> FragmentActivity.getViewModel(factory: ViewModelProvider.Factory): VM =
+        ViewModelProviders.of(this, factory)[VM::class.java]
 
-// Instantiate ViewModel with constructor arguments; Cast is checked at call
-@Suppress("UNCHECKED_CAST")
-internal inline fun <reified VM : ViewModel> Any.getViewModel(crossinline factory: () -> VM): VM {
-    val vmFactory = object : ViewModelProvider.Factory {
-        override fun <F : ViewModel?> create(modelClass: Class<F>): F = factory() as F
-    }
-    return when (this) {
-        is AppCompatActivity -> ViewModelProviders.of(this, vmFactory).get(VM::class.java)
-        is Fragment -> ViewModelProviders.of(this, vmFactory).get(VM::class.java)
-        else -> throw Exception()
-    }
-}
+//internal inline fun <reified VM : ViewModel> Any.getViewModel(): VM = when (this) {
+//    is AppCompatActivity -> ViewModelProviders.of(this).get(VM::class.java)
+//    is Fragment -> ViewModelProviders.of(this).get(VM::class.java)
+//    else -> throw Exception()
+//}
 
 // Check if internet is actually working
 //internal suspend fun isOnline(): Boolean = try {

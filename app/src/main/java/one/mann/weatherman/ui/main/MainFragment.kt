@@ -9,9 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_weather.*
-import one.mann.interactors.usecase.*
 import one.mann.weatherman.R
-import one.mann.weatherman.application.WeatherApp
+import one.mann.weatherman.application.WeatherManApp
+import one.mann.weatherman.ui.common.base.ViewModelFactory
 import one.mann.weatherman.ui.common.util.getViewModel
 import one.mann.weatherman.ui.main.adapter.MainRecyclerAdapter
 import one.mann.weatherman.ui.main.di.DaggerMainComponent
@@ -19,19 +19,11 @@ import javax.inject.Inject
 
 internal class MainFragment : Fragment() {
 
-    private lateinit var mainViewModel: MainViewModel
     private var position = 0
-    private lateinit var mainRecyclerAdapter: MainRecyclerAdapter
+    private val mainViewModel: MainViewModel by lazy { activity?.run { getViewModel(viewModelFactory) }!! }
+    private val mainRecyclerAdapter: MainRecyclerAdapter by lazy { MainRecyclerAdapter() }
     @Inject
-    lateinit var addcity: AddCity
-    @Inject
-    lateinit var getAllWeather: GetAllWeather
-    @Inject
-    lateinit var removeCity: RemoveCity
-    @Inject
-    lateinit var updateWeather: UpdateWeather
-    @Inject
-    lateinit var getCityCount: GetCityCount
+    lateinit var viewModelFactory: ViewModelFactory
 
     companion object {
         private const val POSITION = "POSITION"
@@ -52,18 +44,10 @@ internal class MainFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val component = DaggerMainComponent.builder()
-                .weatherAppComponent(WeatherApp.component)
-                .build()
-        component.injectFragment(this)
-        mainRecyclerAdapter = MainRecyclerAdapter()
+        injectDependencies()
         city_recyclerview.setHasFixedSize(true)
         city_recyclerview.layoutManager = LinearLayoutManager(context)
         city_recyclerview.adapter = mainRecyclerAdapter
-        // Use mainViewModel currently running in parent activity scope
-        mainViewModel = activity?.run {
-            getViewModel { MainViewModel(addcity, getAllWeather, removeCity, updateWeather, getCityCount) }
-        }!!
         mainViewModel.displayUI.observe(this, Observer {
             if (it) city_recyclerview.visibility = View.VISIBLE
             else city_recyclerview.visibility = View.GONE
@@ -71,5 +55,12 @@ internal class MainFragment : Fragment() {
         mainViewModel.weatherData.observe(this, Observer {
             if (it.size >= position + 1) mainRecyclerAdapter.update(it[position])
         })
+    }
+
+    private fun injectDependencies() {
+        val component = DaggerMainComponent.builder()
+                .weatherManAppComponent(WeatherManApp.appComponent)
+                .build()
+        component.injectFragment(this)
     }
 }
