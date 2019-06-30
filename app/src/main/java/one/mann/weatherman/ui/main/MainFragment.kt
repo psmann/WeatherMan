@@ -21,7 +21,7 @@ internal class MainFragment : Fragment() {
 
     private var position = 0
     private val mainViewModel: MainViewModel by lazy { activity?.run { getViewModel(viewModelFactory) }!! }
-    private val mainRecyclerAdapter: MainRecyclerAdapter by lazy { MainRecyclerAdapter() }
+    private val mainRecyclerAdapter by lazy { MainRecyclerAdapter() }
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 

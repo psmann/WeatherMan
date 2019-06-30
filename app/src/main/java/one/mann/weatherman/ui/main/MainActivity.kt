@@ -35,7 +35,7 @@ internal class MainActivity : BaseActivity() {
         private const val AUTOCOMPLETE_REQUEST_CODE = 1021
     }
 
-    private val mainPagerAdapter = MainPagerAdapter(supportFragmentManager)
+    private val mainPagerAdapter by lazy { MainPagerAdapter(supportFragmentManager) }
     private val mainViewModel: MainViewModel by lazy { getViewModel(viewModelFactory) }
     private var isFirstRun = true
     @Inject
