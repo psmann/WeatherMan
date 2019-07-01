@@ -11,10 +11,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_weather.*
 import one.mann.weatherman.R
 import one.mann.weatherman.application.WeatherManApp
+import one.mann.weatherman.application.di.component.DaggerMainComponent
 import one.mann.weatherman.ui.common.base.ViewModelFactory
 import one.mann.weatherman.ui.common.util.getViewModel
 import one.mann.weatherman.ui.main.adapter.MainRecyclerAdapter
-import one.mann.weatherman.ui.main.di.DaggerMainComponent
 import javax.inject.Inject
 
 internal class MainFragment : Fragment() {

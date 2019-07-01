@@ -23,10 +23,10 @@ import one.mann.domain.model.LocationType.DEVICE
 import one.mann.weatherman.R
 import one.mann.weatherman.api.common.Keys
 import one.mann.weatherman.application.WeatherManApp
+import one.mann.weatherman.application.di.component.DaggerMainComponent
 import one.mann.weatherman.ui.common.base.BaseActivity
 import one.mann.weatherman.ui.common.util.getViewModel
 import one.mann.weatherman.ui.main.adapter.MainPagerAdapter
-import one.mann.weatherman.ui.main.di.DaggerMainComponent
 import javax.inject.Inject
 
 internal class MainActivity : BaseActivity() {

@@ -1,9 +1,9 @@
 package one.mann.weatherman.application
 
 import android.app.Application
-import one.mann.weatherman.application.di.DaggerWeatherManAppComponent
-import one.mann.weatherman.application.di.WeatherManAppComponent
-import one.mann.weatherman.application.di.WeatherManAppModule
+import one.mann.weatherman.application.di.component.DaggerWeatherManAppComponent
+import one.mann.weatherman.application.di.component.WeatherManAppComponent
+import one.mann.weatherman.application.di.module.WeatherManAppModule
 
 internal class WeatherManApp : Application() {
 

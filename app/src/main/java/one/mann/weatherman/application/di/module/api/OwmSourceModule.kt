@@ -1,4 +1,4 @@
-package one.mann.weatherman.api.openweathermap.di
+package one.mann.weatherman.application.di.module.api
 
 import dagger.Binds
 import dagger.Module

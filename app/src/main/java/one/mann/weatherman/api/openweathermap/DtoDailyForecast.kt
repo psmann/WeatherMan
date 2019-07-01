@@ -2,7 +2,6 @@ package one.mann.weatherman.api.openweathermap
 
 internal class DtoDailyForecast(var list: List<ListObject>) {
 
-
     data class ListObject(
             var dt: Long,
             var temp: Temp,

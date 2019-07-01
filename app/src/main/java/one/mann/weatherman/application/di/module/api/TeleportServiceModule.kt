@@ -1,4 +1,4 @@
-package one.mann.weatherman.api.teleport.di
+package one.mann.weatherman.application.di.module.api
 
 import dagger.Module
 import dagger.Provides

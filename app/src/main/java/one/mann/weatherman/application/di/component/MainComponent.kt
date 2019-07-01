@@ -1,13 +1,12 @@
-package one.mann.weatherman.ui.main.di
+package one.mann.weatherman.application.di.component
 
 import dagger.Component
-import one.mann.weatherman.api.openweathermap.di.OwmSourceModule
-import one.mann.weatherman.api.teleport.di.TeleportSourceModule
-import one.mann.weatherman.application.di.WeatherManAppComponent
-import one.mann.weatherman.framework.data.database.di.DbSourceModule
-import one.mann.weatherman.framework.data.location.di.LocationSourceModule
-import one.mann.weatherman.ui.common.di.ActivityScope
-import one.mann.weatherman.ui.common.di.ViewModelModule
+import one.mann.weatherman.application.di.module.api.OwmSourceModule
+import one.mann.weatherman.application.di.module.api.TeleportSourceModule
+import one.mann.weatherman.application.di.module.framework.DbSourceModule
+import one.mann.weatherman.application.di.module.framework.LocationSourceModule
+import one.mann.weatherman.application.di.annotation.ActivityScope
+import one.mann.weatherman.application.di.module.ui.ViewModelModule
 import one.mann.weatherman.ui.main.MainActivity
 import one.mann.weatherman.ui.main.MainFragment
 

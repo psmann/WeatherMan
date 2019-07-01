@@ -1,4 +1,4 @@
-package one.mann.weatherman.application.di
+package one.mann.weatherman.application.di.module
 
 import android.content.Context
 import dagger.Module

@@ -1,9 +1,7 @@
-package one.mann.weatherman.api.common.di
+package one.mann.weatherman.application.di.module.api
 
 import dagger.Module
 import dagger.Provides
-import one.mann.weatherman.api.openweathermap.di.OwmServiceModule
-import one.mann.weatherman.api.teleport.di.TeleportServiceModule
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 

@@ -1,10 +1,10 @@
-package one.mann.weatherman.ui.main.di
+package one.mann.weatherman.application.di.module.ui
 
 import androidx.lifecycle.ViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
-import one.mann.weatherman.ui.common.di.ViewModelKey
+import one.mann.weatherman.application.di.annotation.ViewModelKey
 import one.mann.weatherman.ui.main.MainViewModel
 
 @Module
