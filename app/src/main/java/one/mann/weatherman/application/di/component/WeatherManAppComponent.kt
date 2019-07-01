@@ -1,25 +1,19 @@
 package one.mann.weatherman.application.di.component
 
-import android.content.Context
 import dagger.Component
-import one.mann.weatherman.application.di.module.api.ApiServiceModule
-import one.mann.weatherman.api.openweathermap.OwmService
-import one.mann.weatherman.api.teleport.TeleportService
 import one.mann.weatherman.application.di.module.WeatherManAppModule
-import one.mann.weatherman.framework.data.database.WeatherDb
+import one.mann.weatherman.application.di.module.api.ApiDataSourceModule
+import one.mann.weatherman.application.di.module.api.ApiServiceModule
 import one.mann.weatherman.application.di.module.framework.DbModule
+import one.mann.weatherman.application.di.module.framework.FrameworkDataSourceModule
+import one.mann.weatherman.application.di.module.framework.LocationModule
+import one.mann.weatherman.application.di.module.ui.ViewModelModule
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [WeatherManAppModule::class, ApiServiceModule::class, DbModule::class])
-
+@Component(modules = [WeatherManAppModule::class, ApiServiceModule::class, LocationModule::class,
+    DbModule::class, ViewModelModule::class, ApiDataSourceModule::class, FrameworkDataSourceModule::class])
 internal interface WeatherManAppComponent {
 
-    fun getContext(): Context
-
-    fun getTeleportService(): TeleportService
-
-    fun getOwmService(): OwmService
-
-    fun getWeatherDb(): WeatherDb
+    fun getMainComponent(): MainComponent
 }

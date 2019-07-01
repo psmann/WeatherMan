@@ -1,21 +1,18 @@
 package one.mann.weatherman.framework.data.location
 
 import android.annotation.SuppressLint
-import android.app.Application
-import android.content.Context
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.suspendCancellableCoroutine
 import one.mann.domain.model.Location
 import one.mann.interactors.data.source.IDeviceLocationSource
 import javax.inject.Inject
 import kotlin.coroutines.resume
 
-internal class LocationDataSource @Inject constructor(application: Context) : IDeviceLocationSource {
-
-    private val client = LocationServices.getFusedLocationProviderClient(application)
+internal class LocationDataSource @Inject constructor(private val client: FusedLocationProviderClient
+) : IDeviceLocationSource {
 
     @SuppressLint("MissingPermission") // Already being checked
     override suspend fun getLocation(): Location =

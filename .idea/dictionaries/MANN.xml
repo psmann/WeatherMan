@@ -9,8 +9,11 @@
       <w>hectopascal</w>
       <w>iana</w>
       <w>inet</w>
+      <w>interactors</w>
+      <w>mvvm</w>
       <w>steadman</w>
       <w>teleport</w>
+      <w>usecases</w>
     </words>
   </dictionary>
 </component>

@@ -23,7 +23,6 @@ import one.mann.domain.model.LocationType.DEVICE
 import one.mann.weatherman.R
 import one.mann.weatherman.api.common.Keys
 import one.mann.weatherman.application.WeatherManApp
-import one.mann.weatherman.application.di.component.DaggerMainComponent
 import one.mann.weatherman.ui.common.base.BaseActivity
 import one.mann.weatherman.ui.common.util.getViewModel
 import one.mann.weatherman.ui.main.adapter.MainPagerAdapter
@@ -77,12 +76,8 @@ internal class MainActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun injectDependencies() {
-        val component = DaggerMainComponent.builder()
-                .weatherManAppComponent(WeatherManApp.appComponent)
-                .build()
-        component.injectActivity(this)
-    }
+    override fun injectDependencies() =
+            WeatherManApp.appComponent.getMainComponent().injectActivity(this)
 
     private fun initActivity(success: Boolean) {
         if (!success) { // If permission denied then exit

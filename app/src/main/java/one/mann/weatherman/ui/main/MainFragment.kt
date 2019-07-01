@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_weather.*
 import one.mann.weatherman.R
 import one.mann.weatherman.application.WeatherManApp
-import one.mann.weatherman.application.di.component.DaggerMainComponent
 import one.mann.weatherman.ui.common.base.ViewModelFactory
 import one.mann.weatherman.ui.common.util.getViewModel
 import one.mann.weatherman.ui.main.adapter.MainRecyclerAdapter
@@ -57,10 +56,6 @@ internal class MainFragment : Fragment() {
         })
     }
 
-    private fun injectDependencies() {
-        val component = DaggerMainComponent.builder()
-                .weatherManAppComponent(WeatherManApp.appComponent)
-                .build()
-        component.injectFragment(this)
-    }
+    private fun injectDependencies() =
+            WeatherManApp.appComponent.getMainComponent().injectFragment(this)
 }
