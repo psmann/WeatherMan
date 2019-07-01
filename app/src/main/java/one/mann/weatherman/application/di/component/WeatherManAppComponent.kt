@@ -11,8 +11,15 @@ import one.mann.weatherman.application.di.module.ui.ViewModelModule
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [WeatherManAppModule::class, ApiServiceModule::class, LocationModule::class,
-    DbModule::class, ViewModelModule::class, ApiDataSourceModule::class, FrameworkDataSourceModule::class])
+@Component(modules = [
+    WeatherManAppModule::class,
+    ApiServiceModule::class,
+    LocationModule::class,
+    DbModule::class,
+    ViewModelModule::class,
+    ApiDataSourceModule::class,
+    FrameworkDataSourceModule::class
+])
 internal interface WeatherManAppComponent {
 
     fun getMainComponent(): MainComponent
