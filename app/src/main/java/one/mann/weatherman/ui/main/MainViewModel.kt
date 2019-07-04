@@ -33,8 +33,8 @@ internal class MainViewModel @Inject constructor(
     }
 
     fun addCity(apiLocation: Location? = null) {
-        loadingState.value = true
         launch {
+            loadingState.value = true // Start refreshing
             try {
                 withContext(Dispatchers.IO) { addCity.invoke(apiLocation) }
             } catch (e: IOException) {
@@ -45,8 +45,8 @@ internal class MainViewModel @Inject constructor(
     }
 
     fun updateWeather(locationType: LocationType) {
-        loadingState.value = true // Start refreshing
         launch {
+            loadingState.value = true // Start refreshing
             try {
                 withContext(Dispatchers.IO) { updateWeather.invoke(locationType) }
             } catch (e: IOException) {

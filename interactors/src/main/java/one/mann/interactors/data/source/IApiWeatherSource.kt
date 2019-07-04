@@ -6,7 +6,7 @@ import one.mann.domain.model.Location
 
 interface IApiWeatherSource {
 
-    suspend fun getCurrentWeather(location: Location): CurrentWeather // todo use interceptor for appId
+    suspend fun getCurrentWeather(location: Location): CurrentWeather
 
     suspend fun getDailyForecast(location: Location): List<DailyForecast>
 

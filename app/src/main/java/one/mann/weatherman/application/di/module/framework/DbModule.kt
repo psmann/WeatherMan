@@ -12,8 +12,7 @@ internal class DbModule {
 
     @Provides
     @Singleton
-    fun provideDb(context: Context): WeatherDb = Room.databaseBuilder(
-            context,
-            WeatherDb::class.java, "weather-db"
-    ).build()
+    fun provideDb(context: Context): WeatherDb =
+            Room.databaseBuilder(context, WeatherDb::class.java, "weather-db")
+                    .build()
 }

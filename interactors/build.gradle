@@ -13,5 +13,5 @@ dependencies {
     kapt 'com.google.dagger:dagger-compiler:2.23.2'
 
     // jUnit
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13-beta-3'
 }
