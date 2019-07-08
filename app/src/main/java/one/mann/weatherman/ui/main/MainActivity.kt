@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
@@ -26,6 +27,7 @@ import one.mann.weatherman.application.WeatherManApp
 import one.mann.weatherman.ui.common.base.BaseActivity
 import one.mann.weatherman.ui.common.util.getViewModel
 import one.mann.weatherman.ui.main.adapter.MainPagerAdapter
+import one.mann.weatherman.ui.settings.SettingsActivity
 import javax.inject.Inject
 
 internal class MainActivity : BaseActivity() {
@@ -57,7 +59,7 @@ internal class MainActivity : BaseActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_add, menu)
+        menuInflater.inflate(R.menu.menu_main, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -65,13 +67,22 @@ internal class MainActivity : BaseActivity() {
         when (item!!.itemId) {
             R.id.menu_add_city -> autocompleteWidget()
             R.id.menu_remove_city -> {
-                val position = main_viewPager.currentItem
-                if (position == 0) {
-                    toast(R.string.cant_remove_first_location)
-                    return false
-                }
-                mainViewModel.removeCity(position)
+                AlertDialog.Builder(this, R.style.AlertDialogTheme)
+                        .setTitle(getString(R.string.remove_city_location))
+                        .setMessage(getString(R.string.do_you_want_to_remove_location))
+                        .setPositiveButton(getString(R.string.yes)) { _, _ ->
+                            val position = main_viewPager.currentItem
+                            if (position == 0) toast(R.string.cant_remove_first_location)
+                            else {
+                                mainViewModel.removeCity(position)
+                                toast(R.string.location_removed)
+                            }
+                        }
+                        .setNegativeButton(getString(R.string.no)) { _, _ -> }
+                        .create()
+                        .show()
             }
+            R.id.menu_settings -> startActivity(Intent(this, SettingsActivity::class.java))
         }
         return super.onOptionsItemSelected(item)
     }

@@ -17,15 +17,37 @@
     <string name="sunrise">Sunrise</string>
     <string name="sunset">Sunset</string>
     <string name="day_length">Length of Day:</string>
-    <string name="cant_remove_first_location">Current location can\'t be removed.</string>
-    <string name="gps_needed_for_location">GPS is needed for current location detection.</string>
-    <string name="permission_required">Permission is required for location detection.</string>
-    <string name="server_not_found">Could not connect to the server.</string>
-    <string name="no_internet_connection">No active internet connection found.</string>
-    <string name="no_gps_updating_previous_location">Weather updated for previous location.</string>
+    <string name="cant_remove_first_location">Current location can\'t be removed</string>
+    <string name="gps_needed_for_location">GPS is needed for current location detection</string>
+    <string name="permission_required">Permission is required for location detection</string>
+    <string name="server_not_found">Could not connect to the server</string>
+    <string name="no_internet_connection">No active internet connection found</string>
+    <string name="no_gps_updating_previous_location">Weather updated for previous location</string>
     <string name="weather_icon">Weather Icon</string>
-    <string name="location_settings_not_available">Location settings are not available on this device.</string>
+    <string name="location_settings_not_available">Location settings are not available on this device</string>
     <string name="add_city">Add City</string>
     <string name="remove_city">Remove City</string>
-    <string name="error_has_occurred_try_again">An error has occurred. Please try again.</string>
+    <string name="error_has_occurred_try_again">An error has occurred. Please try again</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <string name="settings">Settings</string>
+    <string name="more">More</string>
+    <string name="location_removed">Location removed</string>
+    <string name="remove_city_location">Remove City Location</string>
+    <string name="do_you_want_to_remove_location">Do you want to remove this location?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 </resources>
