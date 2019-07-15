@@ -5,8 +5,8 @@ import okhttp3.Response
 import javax.inject.Inject
 
 internal class QueryInterceptor @Inject constructor(
-        private val key: String,
-        private val value: String
+        private var key: String,
+        private var value: String
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {

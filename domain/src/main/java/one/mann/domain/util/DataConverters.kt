@@ -15,21 +15,27 @@ const val DATE_PATTERN = "d MMM, h:mm aa"
 const val DAY_PATTERN = "E"
 const val TIME_PATTERN = "h:mm aa"
 const val CELSIUS = " C"
+const val FAHRENHEIT = " F"
 const val HECTOPASCAL = " hPa"
 const val PERCENT = " %"
 const val METERS = " m"
 const val METERS_PER_SECOND = " m/s"
 const val DEGREES = " °"
+const val IMPERIAL = "imperial"
 
 // Append data with units
 fun Any.addUnits(units: String): String = this.toString() + units
+
+// Change temperature units from Metric to Imperial
+fun Float.setUnitsType(type: String): Float =
+        if (type == IMPERIAL) String.format("%.2f", (this * (9 / 5)) + 32).toFloat()
+        else this
 
 // Round off variable to nearest integer value and return as a string
 fun Float.roundOff(): String = this.roundToInt().toString()
 
 // Convert location coordinates into a truncated comma separated string
-fun Array<Float>.coordinatesInString(): String =
-        String.format("%.4f", this[0]) + ", " + String.format("%.4f", this[1])
+fun Array<Float>.coordinatesInString(): String = String.format("%.4f", this[0]) + ", " + String.format("%.4f", this[1])
 
 // Convert the country code into an emoji icon
 fun countryCodeToEmoji(code: String): String {
@@ -75,8 +81,7 @@ fun epochToTime(time: Long, timezone: String): String {
 }
 
 // Calculate the sun position to be used in SunGraphView
-fun sunPositionBias(sunrise: Float, sunset: Float, currentTime: Float): Float =
-        (currentTime - sunrise) / (sunset - sunrise)
+fun sunPositionBias(sunrise: Float, sunset: Float, currentTime: Float): Float = (currentTime - sunrise) / (sunset - sunrise)
 
 // Calculate FeelsLike temperature using https://blog.metservice.com/FeelsLikeTemp for reference
 fun feelsLike(temperature: Float, humidity: Float, wind: Float): Float {

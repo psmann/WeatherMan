@@ -37,8 +37,7 @@ internal class MainFragment : Fragment() {
         arguments?.getInt(POSITION)?.let { position = it }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? =
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_weather, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -56,6 +55,5 @@ internal class MainFragment : Fragment() {
         })
     }
 
-    private fun injectDependencies() =
-            WeatherManApp.appComponent.getMainComponent().injectFragment(this)
+    private fun injectDependencies() = WeatherManApp.appComponent.getMainComponent().injectFragment(this)
 }

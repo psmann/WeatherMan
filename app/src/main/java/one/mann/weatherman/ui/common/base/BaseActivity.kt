@@ -40,8 +40,7 @@ internal abstract class BaseActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == LOCATION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PERMISSION_GRANTED)
-                locationPermissionListener(true)
+            if (grantResults.isNotEmpty() && grantResults[0] == PERMISSION_GRANTED) locationPermissionListener(true)
             else locationPermissionListener(false)
         }
     }

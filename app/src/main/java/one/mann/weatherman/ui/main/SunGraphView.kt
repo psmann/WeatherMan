@@ -74,13 +74,13 @@ internal class SunGraphView @JvmOverloads constructor(
         }
     }
 
-    private fun updatePaintColour(transition: Int = 125) = paintCurve.setARGB(alphaValue,
-            redValue - transition, greenValue - transition, blueValue + transition)
+    private fun updatePaintColour(change: Int = 125) =
+            paintCurve.setARGB(alphaValue, redValue - change, greenValue - change, blueValue + change)
 
     private fun pxToDip(value: Float): Float = value / screenDensity
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) = setMeasuredDimension(
-            MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec))
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) =
+            setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec))
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         updateView() // Update parameters only after correct height and width are known

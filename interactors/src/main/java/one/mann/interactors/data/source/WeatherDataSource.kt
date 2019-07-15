@@ -4,7 +4,7 @@ import one.mann.domain.model.CurrentWeather
 import one.mann.domain.model.DailyForecast
 import one.mann.domain.model.Location
 
-interface IApiWeatherSource {
+interface WeatherDataSource {
 
     suspend fun getCurrentWeather(location: Location): CurrentWeather
 

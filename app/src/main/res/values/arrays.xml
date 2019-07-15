@@ -1,12 +1,11 @@
 <resources>
-    <!-- Reply Preference -->
-    <string-array name="reply_entries">
-        <item>Reply</item>
-        <item>Reply to all</item>
+    <string-array name="units_entries">
+        <item>Imperial</item>
+        <item>Metric</item>
     </string-array>
 
-    <string-array name="reply_values">
-        <item>reply</item>
-        <item>reply_all</item>
+    <string-array name="units_values">
+        <item>imperial</item>
+        <item>metric</item>
     </string-array>
 </resources>

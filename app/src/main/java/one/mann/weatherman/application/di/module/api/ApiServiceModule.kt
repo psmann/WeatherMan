@@ -20,7 +20,7 @@ internal class ApiServiceModule {
         private const val OWM_BASE_URL = "http://api.openweathermap.org/data/2.5/"
         private const val QUERY_APPID = "appid"
         private const val QUERY_UNITS = "units"
-        private const val UNITS = "metric"
+        private const val DEFAULT_UNITS = "metric"
     }
 
     @Provides
@@ -35,7 +35,7 @@ internal class ApiServiceModule {
     @Provides
     @Singleton
     @Named("UnitsQuery")
-    fun provideUnitsQueryInterceptor(): QueryInterceptor = QueryInterceptor(QUERY_UNITS, UNITS)
+    fun provideUnitsQueryInterceptor(): QueryInterceptor = QueryInterceptor(QUERY_UNITS, DEFAULT_UNITS)
 
     @Provides
     @Singleton
@@ -50,14 +50,12 @@ internal class ApiServiceModule {
     @Provides
     @Singleton
     @Named("OwmInstance")
-    fun provideOwmRestAdapter(
-            okHttpClient: OkHttpClient,
-            gsonConverterFactory: GsonConverterFactory
-    ): Retrofit = Retrofit.Builder()
-            .baseUrl(OWM_BASE_URL)
-            .addConverterFactory(gsonConverterFactory)
-            .client(okHttpClient)
-            .build()
+    fun provideOwmRestAdapter(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory): Retrofit =
+            Retrofit.Builder()
+                    .baseUrl(OWM_BASE_URL)
+                    .addConverterFactory(gsonConverterFactory)
+                    .client(client)
+                    .build()
 
     @Provides
     @Singleton

@@ -3,11 +3,11 @@ package one.mann.weatherman.api.openweathermap
 import one.mann.domain.model.CurrentWeather
 import one.mann.domain.model.DailyForecast
 import one.mann.domain.model.Location
-import one.mann.interactors.data.source.IApiWeatherSource
+import one.mann.interactors.data.source.WeatherDataSource
 import one.mann.weatherman.api.common.mapToDomain
 import javax.inject.Inject
 
-internal class OwmDataSource @Inject constructor(private val owmService: OwmService) : IApiWeatherSource {
+internal class OwmDataSource @Inject constructor(private val owmService: OwmService) : WeatherDataSource {
 
     override suspend fun getCurrentWeather(location: Location): CurrentWeather =
             owmService.getCurrentWeather(location.coordinates[0], location.coordinates[1])

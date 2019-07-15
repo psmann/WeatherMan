@@ -4,25 +4,23 @@ import one.mann.domain.model.Location
 import one.mann.domain.model.LocationType
 import one.mann.domain.model.Weather
 import one.mann.interactors.data.mapToWeather
-import one.mann.interactors.data.source.IApiTimezoneSource
-import one.mann.interactors.data.source.IApiWeatherSource
-import one.mann.interactors.data.source.IDbDataSource
-import one.mann.interactors.data.source.IDeviceLocationSource
+import one.mann.interactors.data.source.*
 import javax.inject.Inject
 
 class WeatherRepository @Inject constructor(
-        private val apiWeather: IApiWeatherSource,
-        private val apiTimezone: IApiTimezoneSource,
-        private val deviceLocation: IDeviceLocationSource,
-        private val dbData: IDbDataSource
+        private val weatherData: WeatherDataSource,
+        private val timezoneData: TimezoneDataSource,
+        private val deviceLocation: DeviceLocationSource,
+        private val dbData: DatabaseDataSource,
+        private val preferencesData: PreferencesDataSource
 ) {
 
     suspend fun dbSize(): Int = dbData.getDbSize()
 
     suspend fun create(apiLocation: Location? = null) {
         val location = apiLocation ?: deviceLocation.getLocation()
-        dbData.insertWeather(mapToWeather(apiWeather.getCurrentWeather(location),
-                apiWeather.getDailyForecast(location), apiTimezone.getTimezone(location), location))
+        dbData.insertWeather(mapToWeather(weatherData.getCurrentWeather(location), weatherData.getDailyForecast(location),
+                timezoneData.getTimezone(location), location, preferencesData.getUnits()))
     }
 
     suspend fun readAll(): List<Weather> = dbData.getAllWeather()
@@ -30,12 +28,13 @@ class WeatherRepository @Inject constructor(
     suspend fun updateAll(locationType: LocationType) {
         val locations = dbData.getAllLocations()
         if (locationType == LocationType.DEVICE) locations[0] = deviceLocation.getLocation()
-        val currentWeathers = apiWeather.getAllCurrentWeather(locations)
-        val dailyForecasts = apiWeather.getAllDailyForecast(locations)
-        val timezones = apiTimezone.getAllTimezone(locations)
+        val currentWeathers = weatherData.getAllCurrentWeather(locations)
+        val dailyForecasts = weatherData.getAllDailyForecast(locations)
+        val timezones = timezoneData.getAllTimezone(locations)
         val weathers: MutableList<Weather> = mutableListOf()
         for (i in 0 until locations.size)
-            weathers.add(mapToWeather(currentWeathers[i], dailyForecasts[i], timezones[i], locations[i]))
+            weathers.add(mapToWeather(currentWeathers[i], dailyForecasts[i], timezones[i], locations[i],
+                    preferencesData.getUnits()))
         dbData.updateAllWeather(weathers)
     }
 

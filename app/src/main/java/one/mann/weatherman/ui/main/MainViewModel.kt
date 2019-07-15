@@ -1,5 +1,6 @@
 package one.mann.weatherman.ui.main
 
+import android.content.SharedPreferences
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -8,6 +9,7 @@ import one.mann.domain.model.Location
 import one.mann.domain.model.LocationType
 import one.mann.domain.model.Weather
 import one.mann.interactors.usecase.*
+import one.mann.weatherman.framework.data.preferences.SettingsDataSource.Companion.UNITS_KEY
 import one.mann.weatherman.ui.common.base.BaseViewModel
 import java.io.IOException
 import javax.inject.Inject
@@ -17,8 +19,9 @@ internal class MainViewModel @Inject constructor(
         private val getAllWeather: GetAllWeather,
         private val removeCity: RemoveCity,
         private val updateWeather: UpdateWeather,
-        private val getCityCount: GetCityCount
-) : BaseViewModel() {
+        private val getCityCount: GetCityCount,
+        private val settingsPrefs: SharedPreferences
+) : BaseViewModel(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     val weatherData: MutableLiveData<List<Weather>> = MutableLiveData()
     val cityCount: MutableLiveData<Int> = MutableLiveData()
@@ -30,6 +33,7 @@ internal class MainViewModel @Inject constructor(
         displayUI.value = false // Hide UI until recyclerView has been loaded with data
         displayError.value = false
         updateUI()
+        settingsPrefs.registerOnSharedPreferenceChangeListener(this)
     }
 
     fun addCity(apiLocation: Location? = null) {
@@ -78,5 +82,14 @@ internal class MainViewModel @Inject constructor(
 
     fun resetDisplayError() {
         displayError.value = false
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        settingsPrefs.unregisterOnSharedPreferenceChangeListener(this) // Remove listener at destruction
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        if (key == UNITS_KEY) updateWeather(LocationType.DB) // Update weather and UI when units are changed by user
     }
 }

@@ -19,9 +19,8 @@ internal fun ImageView.loadImage(url: String) = GlideApp.with(context)
         .into(this)
 
 // Inflate ViewGroups with ViewHolders
-internal fun ViewGroup.inflateView(@LayoutRes resource: Int, attachToRoot: Boolean = false) =
-        LayoutInflater.from(context)
-                .inflate(resource, this, attachToRoot)
+internal fun ViewGroup.inflateView(@LayoutRes resource: Int, attachToRoot: Boolean = false) = LayoutInflater.from(context)
+        .inflate(resource, this, attachToRoot)
 
 // Check status of network connection
 internal fun Context.checkNetworkConnection(): Boolean {

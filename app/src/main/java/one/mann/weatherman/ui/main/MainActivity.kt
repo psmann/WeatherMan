@@ -36,11 +36,11 @@ internal class MainActivity : BaseActivity() {
         private const val AUTOCOMPLETE_REQUEST_CODE = 1021
     }
 
-    private val mainPagerAdapter by lazy { MainPagerAdapter(supportFragmentManager) }
-    private val mainViewModel: MainViewModel by lazy { getViewModel(viewModelFactory) }
-    private var isFirstRun = true
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val mainViewModel: MainViewModel by lazy { getViewModel(viewModelFactory) }
+    private val mainPagerAdapter by lazy { MainPagerAdapter(supportFragmentManager) }
+    private var isFirstRun = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,8 +53,7 @@ internal class MainActivity : BaseActivity() {
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE)
             if (resultCode == Activity.RESULT_OK) {
                 val place = Autocomplete.getPlaceFromIntent(data!!)
-                mainViewModel.addCity(Location(arrayOf(place.latLng!!.latitude.toFloat(),
-                        place.latLng!!.longitude.toFloat())))
+                mainViewModel.addCity(Location(arrayOf(place.latLng!!.latitude.toFloat(), place.latLng!!.longitude.toFloat())))
             }
     }
 
@@ -87,8 +86,7 @@ internal class MainActivity : BaseActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun injectDependencies() =
-            WeatherManApp.appComponent.getMainComponent().injectActivity(this)
+    override fun injectDependencies() = WeatherManApp.appComponent.getMainComponent().injectActivity(this)
 
     private fun initActivity(success: Boolean) {
         if (!success) { // If permission denied then exit

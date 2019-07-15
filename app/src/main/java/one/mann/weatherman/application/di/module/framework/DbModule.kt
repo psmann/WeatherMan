@@ -10,8 +10,12 @@ import javax.inject.Singleton
 @Module
 internal class DbModule {
 
+    companion object {
+        private const val DB_NAME = "weather-db"
+    }
+
     @Provides
     @Singleton
     fun provideDb(context: Context): WeatherDb =
-            Room.databaseBuilder(context, WeatherDb::class.java, "weather-db").build()
+            Room.databaseBuilder(context, WeatherDb::class.java, DB_NAME).build()
 }

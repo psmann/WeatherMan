@@ -17,9 +17,9 @@ internal class MainPagerAdapter(fm: FragmentManager
 
     override fun getCount(): Int = pages
 
-    override fun getItemPosition(`object`: Any): Int = if(fragmentRemoved)
-        PagerAdapter.POSITION_NONE // Force adapter to reload all fragments
-    else PagerAdapter.POSITION_UNCHANGED
+    override fun getItemPosition(`object`: Any): Int =
+            if (fragmentRemoved) PagerAdapter.POSITION_NONE // Force adapter to reload all fragments
+            else PagerAdapter.POSITION_UNCHANGED
 
     fun updatePages(newPages: Int) {
         fragmentRemoved = newPages < pages // True if a fragment is removed

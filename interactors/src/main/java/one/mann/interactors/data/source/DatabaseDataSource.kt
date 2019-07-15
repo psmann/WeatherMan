@@ -3,7 +3,7 @@ package one.mann.interactors.data.source
 import one.mann.domain.model.Location
 import one.mann.domain.model.Weather
 
-interface IDbDataSource {
+interface DatabaseDataSource {
 
     suspend fun insertWeather(weather: Weather)
 
