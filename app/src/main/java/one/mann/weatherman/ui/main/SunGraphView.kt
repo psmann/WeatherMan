@@ -37,7 +37,7 @@ internal class SunGraphView @JvmOverloads constructor(
     private var endX = 0f // x end point (x3) = width of view
     private var pointX = 0f // x coordinate on curve
     private var pointY = 0f // y coordinate on curve
-    private var tValue = 0f // Percent of curve (0 to 1) where coordinates are required
+    private var tValue = 0f // Location on the curve (0 to 1) where coordinates are required
 
     fun setT(t: Float) { // Update sun position on the graph
         tValue = t
@@ -56,8 +56,8 @@ internal class SunGraphView @JvmOverloads constructor(
         pathCurve.cubicTo(controlX1, controlY, controlX2, controlY, endX, startEndY) // (x1, y1, x2, y2, x3, y3)
 
         // Calculate desired coordinates on the curve using formula:
-        /*  X(t) = (1-t)^3 * X0 + 3*(1-t)^2 * t * X1 + 3*(1-t) * t^2 * X2 + t^3 * X3
-            Y(t) = (1-t)^3 * Y0 + 3*(1-t)^2 * t * Y1 + 3*(1-t) * t^2 * Y2 + t^3 * Y3   */
+        // X(t) = (1-t)^3 * X0 + 3*(1-t)^2 * t * X1 + 3*(1-t) * t^2 * X2 + t^3 * X3
+        // Y(t) = (1-t)^3 * Y0 + 3*(1-t)^2 * t * Y1 + 3*(1-t) * t^2 * Y2 + t^3 * Y3
         if (tValue in 0f..1f) {
             val k = 1 - tValue // constant calculated for brevity
             pointX = ((k.pow(3) * startX) + (3 * k.pow(2) * tValue * controlX1)

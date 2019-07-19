@@ -1,4 +1,4 @@
-package one.mann.domain.util
+package one.mann.domain.logic
 
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -23,35 +23,35 @@ const val METERS_PER_SECOND = " m/s"
 const val DEGREES = " °"
 const val IMPERIAL = "imperial"
 
-// Append data with units
+/** Append data with units */
 fun Any.addUnits(units: String): String = this.toString() + units
 
-// Change temperature units from Metric to Imperial
+/** Change temperature units from Metric to Imperial */
 fun Float.setUnitsType(type: String): Float =
         if (type == IMPERIAL) String.format("%.2f", (this * (9 / 5)) + 32).toFloat()
         else this
 
-// Round off variable to nearest integer value and return as a string
+/** Round off variable to nearest integer value and return as a string */
 fun Float.roundOff(): String = this.roundToInt().toString()
 
-// Convert location coordinates into a truncated comma separated string
+/** Convert location coordinates into a truncated comma separated string */
 fun Array<Float>.coordinatesInString(): String = String.format("%.4f", this[0]) + ", " + String.format("%.4f", this[1])
 
-// Convert the country code into an emoji icon
+/** Convert the country code into an emoji icon */
 fun countryCodeToEmoji(code: String): String {
     val firstChar = Character.codePointAt(code, 0) - ASCII_OFFSET + FLAG_OFFSET
     val secondChar = Character.codePointAt(code, 1) - ASCII_OFFSET + FLAG_OFFSET
     return String(Character.toChars(firstChar)) + String(Character.toChars(secondChar))
 }
 
-// Calculate the length of day using sunrise and sunset
+/** Calculate the length of day using sunrise and sunset */
 fun lengthOfDay(sunrise: Long, sunset: Long): String {
     val hoursFormat = SimpleDateFormat(HOURS_PATTERN, Locale.getDefault())
     hoursFormat.timeZone = TimeZone.getTimeZone("UTC") // Remove time offset
     return hoursFormat.format(Date(sunset - sunrise)).toString()
 }
 
-// Convert unix epoch time into minutes
+/** Convert unix epoch time into minutes */
 fun epochToMinutes(time: Long, timezone: String): Float {
     val hourFormat = SimpleDateFormat("H", Locale.getDefault())
     val minuteFormat = SimpleDateFormat("m", Locale.getDefault())
@@ -60,30 +60,30 @@ fun epochToMinutes(time: Long, timezone: String): Float {
     return (hourFormat.format(Date(time)).toFloat() * 60) + minuteFormat.format(Date(time)).toFloat()
 }
 
-// Convert unix epoch time into date
+/** Convert unix epoch time into date */
 fun epochToDate(time: Long, timezone: String): String {
     val dateFormat = SimpleDateFormat(DATE_PATTERN, Locale.getDefault())
     dateFormat.timeZone = TimeZone.getTimeZone(timezone)
     return dateFormat.format(Date(time)).toString()
 }
 
-// Convert unix epoch time into day
+/** Convert unix epoch time into day */
 fun epochToDay(time: Long): String {
     val dayFormat = SimpleDateFormat(DAY_PATTERN, Locale.getDefault())
     return dayFormat.format(Date(time)).toString()
 }
 
-// Convert unix epoch time into normal time (hours and minutes)
+/** Convert unix epoch time into normal time (hours and minutes) */
 fun epochToTime(time: Long, timezone: String): String {
     val timeFormat = SimpleDateFormat(TIME_PATTERN, Locale.getDefault())
     timeFormat.timeZone = TimeZone.getTimeZone(timezone)
     return timeFormat.format(Date(time)).toString()
 }
 
-// Calculate the sun position to be used in SunGraphView
+/** Calculate the sun position to be used in SunGraphView */
 fun sunPositionBias(sunrise: Float, sunset: Float, currentTime: Float): Float = (currentTime - sunrise) / (sunset - sunrise)
 
-// Calculate FeelsLike temperature using https://blog.metservice.com/FeelsLikeTemp for reference
+/** Calculate FeelsLike temperature using https://blog.metservice.com/FeelsLikeTemp for reference */
 fun feelsLike(temperature: Float, humidity: Float, wind: Float): Float {
     var feelsLike: Double
     when {

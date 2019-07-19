@@ -4,7 +4,7 @@ import one.mann.domain.model.CurrentWeather
 import one.mann.domain.model.DailyForecast
 import one.mann.domain.model.Location
 import one.mann.domain.model.Weather
-import one.mann.domain.util.*
+import one.mann.domain.logic.*
 
 // Map all API data to domain Weather model
 internal fun mapToWeather(

@@ -45,16 +45,15 @@ internal class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        handleLocationPermission { result -> initActivity(result) }
+        handleLocationPermission { initActivity(it) }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == AUTOCOMPLETE_REQUEST_CODE)
-            if (resultCode == Activity.RESULT_OK) {
-                val place = Autocomplete.getPlaceFromIntent(data!!)
-                mainViewModel.addCity(Location(arrayOf(place.latLng!!.latitude.toFloat(), place.latLng!!.longitude.toFloat())))
-            }
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) if (resultCode == Activity.RESULT_OK) {
+            val place = Autocomplete.getPlaceFromIntent(data!!)
+            mainViewModel.addCity(Location(arrayOf(place.latLng!!.latitude.toFloat(), place.latLng!!.longitude.toFloat())))
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -88,8 +87,8 @@ internal class MainActivity : BaseActivity() {
 
     override fun injectDependencies() = WeatherManApp.appComponent.getMainComponent().injectActivity(this)
 
-    private fun initActivity(success: Boolean) {
-        if (!success) { // If permission denied then exit
+    private fun initActivity(permissionGranted: Boolean) {
+        if (!permissionGranted) { // If permission denied then exit
             toast(R.string.permission_required)
             finish()
             return
@@ -124,8 +123,8 @@ internal class MainActivity : BaseActivity() {
         swipe_refresh_layout.setOnRefreshListener { handleLocationServiceResult() }
     }
 
-    private fun handleLocationServiceResult() = handleLocationPermission { success ->
-        if (success) checkLocationService {
+    private fun handleLocationServiceResult() = handleLocationPermission { permissionGranted ->
+        if (permissionGranted) checkLocationService {
             when (it) {
                 NO_NETWORK -> {
                     toast(R.string.no_internet_connection)
@@ -147,7 +146,7 @@ internal class MainActivity : BaseActivity() {
         }
     }
 
-    // Widget for Places Autocomplete API that needs to run in activity scope
+    /** Widget for Places Autocomplete API that needs to run in activity scope */
     private fun autocompleteWidget() = try {
         if (!Places.isInitialized()) Places.initialize(applicationContext, Keys.PLACES_APP_KEY)
         val filter: List<Place.Field> = listOf(Place.Field.LAT_LNG)

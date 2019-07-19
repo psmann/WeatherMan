@@ -19,6 +19,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions { // Required for WorkManager
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions { jvmTarget = "1.8" }
 }
 
 dependencies {
@@ -40,7 +45,7 @@ dependencies {
     // Support v4
     //implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     // Design
-    implementation 'com.google.android.material:material:1.1.0-alpha07'
+    implementation 'com.google.android.material:material:1.1.0-alpha08'
     // Constraint Layout
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
     // CardView
@@ -57,7 +62,7 @@ dependencies {
     // Room Kotlin Extensions and Coroutines support
     implementation "androidx.room:room-ktx:$room_version"
     // WorkManager
-    implementation "androidx.work:work-runtime-ktx:2.1.0-rc01"
+    implementation "androidx.work:work-runtime-ktx:2.1.0"
     // Google Play Services
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     // Google Places API
@@ -79,10 +84,11 @@ dependencies {
     // jUnit
     testImplementation 'junit:junit:4.13-beta-3'
     // Runner
-    androidTestImplementation 'androidx.test:runner:1.3.0-alpha01'
+    androidTestImplementation 'androidx.test:runner:1.3.0-alpha02'
     // Espresso
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha01'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha02'
 }
+
 repositories {
     mavenCentral()
 }

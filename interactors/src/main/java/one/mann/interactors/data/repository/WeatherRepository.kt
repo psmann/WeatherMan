@@ -18,7 +18,7 @@ class WeatherRepository @Inject constructor(
     suspend fun dbSize(): Int = dbData.getDbSize()
 
     suspend fun create(apiLocation: Location? = null) {
-        val location = apiLocation ?: deviceLocation.getLocation()
+        val location = apiLocation ?: deviceLocation.getLocation() // Use value from db if apiLocation is null
         dbData.insertWeather(mapToWeather(weatherData.getCurrentWeather(location), weatherData.getDailyForecast(location),
                 timezoneData.getTimezone(location), location, preferencesData.getUnits()))
     }
@@ -32,9 +32,8 @@ class WeatherRepository @Inject constructor(
         val dailyForecasts = weatherData.getAllDailyForecast(locations)
         val timezones = timezoneData.getAllTimezone(locations)
         val weathers: MutableList<Weather> = mutableListOf()
-        for (i in 0 until locations.size)
-            weathers.add(mapToWeather(currentWeathers[i], dailyForecasts[i], timezones[i], locations[i],
-                    preferencesData.getUnits()))
+        for (i in 0 until locations.size) weathers.add(
+                mapToWeather(currentWeathers[i], dailyForecasts[i], timezones[i], locations[i], preferencesData.getUnits()))
         dbData.updateAllWeather(weathers)
     }
 

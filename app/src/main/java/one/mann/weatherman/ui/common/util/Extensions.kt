@@ -12,24 +12,24 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import one.mann.weatherman.ui.common.GlideApp
 
-// Set ImageView using GlideApp
+/** Set ImageView using GlideApp */
 internal fun ImageView.loadImage(url: String) = GlideApp.with(context)
         .load(url)
         .skipMemoryCache(true)
         .into(this)
 
-// Inflate ViewGroups with ViewHolders
+/** Inflate ViewGroups with ViewHolders */
 internal fun ViewGroup.inflateView(@LayoutRes resource: Int, attachToRoot: Boolean = false) = LayoutInflater.from(context)
         .inflate(resource, this, attachToRoot)
 
-// Check status of network connection
+/** Check status of network connection */
 internal fun Context.checkNetworkConnection(): Boolean {
     val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val networkInfo = connectivityManager.activeNetworkInfo
     return networkInfo != null && networkInfo.isConnected
 }
 
-// Instantiate ViewModel
+/** Instantiate ViewModel */
 internal inline fun <reified VM : ViewModel> FragmentActivity.getViewModel(factory: ViewModelProvider.Factory): VM =
         ViewModelProviders.of(this, factory)[VM::class.java]
 
@@ -39,7 +39,6 @@ internal inline fun <reified VM : ViewModel> FragmentActivity.getViewModel(facto
 //    else -> throw Exception()
 //}
 
-// Check if internet is actually working
 //internal suspend fun isOnline(): Boolean = try {
 //    // TCP/HTTP/DNS (depending on the port, 53=DNS, 80=HTTP)
 //    val timeoutMs = 1500

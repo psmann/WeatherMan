@@ -75,7 +75,7 @@ internal class MainViewModel @Inject constructor(
                 weatherData.value = data // Update all weather data
                 if (displayUI.value == false) displayUI.value = true // Show UI if hidden
             }
-            cityCount.value = getCityCount.invoke() // Update ViewPager only after updating weatherData (if not null)
+            cityCount.value = getCityCount.invoke() // Update viewPager only after updating weatherData (if not null)
             loadingState.value = false // Stop refreshing
         }
     }

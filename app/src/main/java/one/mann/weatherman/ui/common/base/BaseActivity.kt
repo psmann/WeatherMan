@@ -22,12 +22,13 @@ import one.mann.domain.model.LocationResponse
 import one.mann.domain.model.LocationResponse.*
 import one.mann.weatherman.ui.common.util.checkNetworkConnection
 
+/** Base activity for all activities that need location services */
 internal abstract class BaseActivity : AppCompatActivity() {
 
     companion object {
         private const val LOCATION_REQUEST_CODE = 1011
         private var locationPermissionListener: (Boolean) -> Unit = {}
-        private var networkLocationServiceListener: (LocationResponse) -> Unit = {}
+        private var networkAndLocationListener: (LocationResponse) -> Unit = {}
         private val locationRequestBuilder = LocationSettingsRequest.Builder()
                 .addLocationRequest(LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY))
     }
@@ -47,19 +48,16 @@ internal abstract class BaseActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            LOCATION_REQUEST_CODE ->
-                when (resultCode) {
-                    Activity.RESULT_OK -> networkLocationServiceListener(ENABLED)
-                    Activity.RESULT_CANCELED -> networkLocationServiceListener(DISABLED)
-                }
+        if (requestCode == LOCATION_REQUEST_CODE) when (resultCode) {
+            Activity.RESULT_OK -> networkAndLocationListener(ENABLED)
+            Activity.RESULT_CANCELED -> networkAndLocationListener(DISABLED)
         }
     }
 
-    // Inject all Dagger dependencies
+    /** Inject all Dagger dependencies */
     protected abstract fun injectDependencies()
 
-    // Give permissions for both NETWORK_PROVIDER (COARSE_LOCATION) and GPS_PROVIDER (FINE_LOCATION)
+    /** Give permissions for NETWORK_PROVIDER (COARSE_LOCATION) and GPS_PROVIDER (FINE_LOCATION) */
     protected fun handleLocationPermission(result: (Boolean) -> Unit) {
         locationPermissionListener = result
         if (checkSelfPermission(this, ACCESS_FINE_LOCATION) != PERMISSION_GRANTED)
@@ -67,36 +65,34 @@ internal abstract class BaseActivity : AppCompatActivity() {
         else locationPermissionListener(true)
     }
 
-    // Check status of location services and handle in lambda
+    /** Check status of location services and handle in lambda */
     protected fun checkLocationService(result: (LocationResponse) -> Unit) {
         if (!checkNetworkConnection()) {
             result(NO_NETWORK)
             return
         }
-        networkLocationServiceListener = result
+        networkAndLocationListener = result
         LocationServices.getSettingsClient(this)
                 .checkLocationSettings(locationRequestBuilder.build())
-                .addOnCompleteListener { task ->
+                .addOnCompleteListener {
                     try { // Location settings are On
-                        task.getResult(ApiException::class.java)
-                        networkLocationServiceListener(ENABLED)
-                    } catch (exception: ApiException) {
+                        it.getResult(ApiException::class.java)
+                        networkAndLocationListener(ENABLED)
+                    } catch (exception: ApiException) { // Location settings are Off
                         when (exception.statusCode) {
-                            // Location settings are Off. Check result in onActivityResult()
-                            LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> try {
+                            LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> try { // Check result in onActivityResult
                                 val resolvable = exception as ResolvableApiException
                                 resolvable.startResolutionForResult(this, LOCATION_REQUEST_CODE)
                             } catch (ignored: IntentSender.SendIntentException) {
                             } catch (ignored: ClassCastException) {
                             } // Location settings not available on device
-                            LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE ->
-                                networkLocationServiceListener(UNAVAILABLE)
+                            LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> networkAndLocationListener(UNAVAILABLE)
                         }
                     }
                 }
     }
 
-    // Toast extension function to be used only in activity scope with String Resources
+    /** Toast extension function to be used only in activity scope with String Resources */
     protected fun Context.toast(@StringRes msg: Int, length: Int = Toast.LENGTH_SHORT) =
             Toast.makeText(this, this.resources.getText(msg), length).show()
 }
