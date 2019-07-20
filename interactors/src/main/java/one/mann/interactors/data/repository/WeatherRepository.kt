@@ -4,7 +4,7 @@ import one.mann.domain.model.Location
 import one.mann.domain.model.LocationType
 import one.mann.domain.model.Weather
 import one.mann.interactors.data.mapToWeather
-import one.mann.interactors.data.source.*
+import one.mann.interactors.data.sources.*
 import javax.inject.Inject
 
 class WeatherRepository @Inject constructor(

@@ -3,7 +3,7 @@ package one.mann.weatherman.api.openweathermap
 import one.mann.domain.model.CurrentWeather
 import one.mann.domain.model.DailyForecast
 import one.mann.domain.model.Location
-import one.mann.interactors.data.source.WeatherDataSource
+import one.mann.interactors.data.sources.WeatherDataSource
 import one.mann.weatherman.api.common.mapToDomain
 import javax.inject.Inject
 

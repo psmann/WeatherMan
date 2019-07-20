@@ -2,7 +2,7 @@ package one.mann.weatherman.framework.data.database
 
 import one.mann.domain.model.Location
 import one.mann.domain.model.Weather
-import one.mann.interactors.data.source.DatabaseDataSource
+import one.mann.interactors.data.sources.DatabaseDataSource
 import javax.inject.Inject
 
 internal class WeatherDbSource @Inject constructor(db: WeatherDb) : DatabaseDataSource {

@@ -1,4 +1,4 @@
-package one.mann.interactors.usecase
+package one.mann.interactors.usecases
 
 import one.mann.domain.model.LocationType
 import one.mann.interactors.data.repository.WeatherRepository

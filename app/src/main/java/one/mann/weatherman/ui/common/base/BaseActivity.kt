@@ -54,7 +54,7 @@ internal abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    /** Inject all Dagger dependencies */
+    /** Dagger member injection */
     protected abstract fun injectDependencies()
 
     /** Give permissions for NETWORK_PROVIDER (COARSE_LOCATION) and GPS_PROVIDER (FINE_LOCATION) */
@@ -85,7 +85,7 @@ internal abstract class BaseActivity : AppCompatActivity() {
                                 resolvable.startResolutionForResult(this, LOCATION_REQUEST_CODE)
                             } catch (ignored: IntentSender.SendIntentException) {
                             } catch (ignored: ClassCastException) {
-                            } // Location settings not available on device
+                            } // Location settings are not available on device
                             LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> networkAndLocationListener(UNAVAILABLE)
                         }
                     }

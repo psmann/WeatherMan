@@ -1,4 +1,4 @@
-package one.mann.interactors.data.source
+package one.mann.interactors.data.sources
 
 import one.mann.domain.model.Location
 import one.mann.domain.model.Weather

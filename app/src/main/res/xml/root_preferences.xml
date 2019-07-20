@@ -3,20 +3,21 @@
     <PreferenceCategory app:title="@string/units_header">
 
         <ListPreference
-            app:defaultValue="metric"
-            app:entries="@array/units_entries"
-            app:entryValues="@array/units_values"
-            app:key="units"
-            app:title="@string/weather_units"
-            app:useSimpleSummaryProvider="true" />
+                app:defaultValue="metric"
+                app:entries="@array/units_entries"
+                app:entryValues="@array/units_values"
+                app:key="units"
+                app:title="@string/weather_units"
+                app:useSimpleSummaryProvider="true"/>
 
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/notification_header">
 
         <SwitchPreferenceCompat
-            app:key="notification"
-            app:title="@string/display_notification" />
+                app:defaultValue="false"
+                app:key="notification"
+                app:title="@string/display_notification"/>
 
     </PreferenceCategory>
 
