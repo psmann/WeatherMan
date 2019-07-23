@@ -6,7 +6,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import one.mann.domain.model.LocationType
 import one.mann.interactors.usecases.UpdateWeather
-import one.mann.weatherman.framework.service.workers.factory.CoroutineWorkerFactory
+import one.mann.weatherman.framework.service.workers.factory.ChildWorkerFactory
 import javax.inject.Inject
 
 internal class UpdateWeatherWorker(
@@ -24,7 +24,7 @@ internal class UpdateWeatherWorker(
         Result.failure()
     }
 
-    class Factory @Inject constructor(private val updateWeather: UpdateWeather) : CoroutineWorkerFactory {
+    class Factory @Inject constructor(private val updateWeather: UpdateWeather) : ChildWorkerFactory {
 
         override fun create(appContext: Context, params: WorkerParameters): CoroutineWorker =
                 UpdateWeatherWorker(appContext, params, updateWeather)

@@ -7,7 +7,7 @@ import one.mann.weatherman.ui.main.MainActivity
 import one.mann.weatherman.ui.main.MainFragment
 
 @ActivityScope
-@Subcomponent(modules = [WorkerModule::class])
+@Subcomponent
 internal interface MainComponent {
 
     fun injectActivity(mainActivity: MainActivity)

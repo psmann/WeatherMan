@@ -18,7 +18,7 @@ import javax.inject.Singleton
     ApiServiceModule::class,
     LocationModule::class,
     DbModule::class,
-//    WorkerModule::class,
+    WorkerModule::class,
     ViewModelModule::class,
     ApiDataSourceModule::class,
     FrameworkDataSourceModule::class
@@ -27,5 +27,5 @@ internal interface WeatherManAppComponent {
 
     fun getMainComponent(): MainComponent
 
-//    fun injectApplication(weatherManApp: WeatherManApp)
+    fun injectApplication(weatherManApp: WeatherManApp)
 }

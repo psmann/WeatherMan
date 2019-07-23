@@ -25,9 +25,9 @@ internal class WeatherManApp : Application() {
                 .weatherManAppModule(WeatherManAppModule(this@WeatherManApp))
                 .build()
 
-        //appComponent.injectApplication(this)
+        appComponent.injectApplication(this)
 
-//        WorkManager.initialize(this, Configuration.Builder().setWorkerFactory(workerFactory)
-//                .build())
+        WorkManager.initialize(this, Configuration.Builder().setWorkerFactory(workerFactory)
+                .build())
     }
 }
