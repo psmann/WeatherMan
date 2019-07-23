@@ -14,7 +14,8 @@ internal abstract class BaseViewModel : ViewModel(), CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    @CallSuper // Make children call this implementation if overridden
+    /** Make children call this implementation if overridden */
+    @CallSuper
     override fun onCleared() {
         job.cancel()
         super.onCleared()

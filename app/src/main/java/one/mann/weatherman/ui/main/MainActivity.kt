@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
+import androidx.work.WorkerFactory
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.libraries.places.api.Places
@@ -35,6 +36,9 @@ internal class MainActivity : BaseActivity() {
     companion object {
         private const val AUTOCOMPLETE_REQUEST_CODE = 1021
     }
+
+    @Inject
+    lateinit var workerFactory: WorkerFactory
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory

@@ -54,7 +54,7 @@ internal abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    /** Dagger member injection */
+    /** Field injection for Dagger components*/
     protected abstract fun injectDependencies()
 
     /** Give permissions for NETWORK_PROVIDER (COARSE_LOCATION) and GPS_PROVIDER (FINE_LOCATION) */

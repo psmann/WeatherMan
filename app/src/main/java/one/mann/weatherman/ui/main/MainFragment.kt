@@ -7,11 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_weather.*
 import one.mann.weatherman.R
 import one.mann.weatherman.application.WeatherManApp
-import one.mann.weatherman.ui.common.base.ViewModelFactory
 import one.mann.weatherman.ui.common.util.getViewModel
 import one.mann.weatherman.ui.main.adapter.MainRecyclerAdapter
 import javax.inject.Inject
@@ -22,7 +22,7 @@ internal class MainFragment : Fragment() {
     private val mainViewModel: MainViewModel by lazy { activity?.run { getViewModel(viewModelFactory) }!! }
     private val mainRecyclerAdapter by lazy { MainRecyclerAdapter() }
     @Inject
-    lateinit var viewModelFactory: ViewModelFactory
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     companion object {
         private const val POSITION = "POSITION"

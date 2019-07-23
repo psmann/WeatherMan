@@ -10,7 +10,7 @@ import one.mann.domain.model.Location
 import one.mann.domain.model.LocationType
 import one.mann.domain.model.Weather
 import one.mann.interactors.usecases.*
-import one.mann.weatherman.framework.worker.NotificationWorker
+import one.mann.weatherman.framework.service.workers.UpdateWeatherWorker
 import one.mann.weatherman.ui.common.base.BaseViewModel
 import one.mann.weatherman.ui.common.util.NOTIFICATIONS_WORKER
 import one.mann.weatherman.ui.common.util.SETTINGS_NOTIFICATIONS_KEY
@@ -92,7 +92,7 @@ internal class MainViewModel @Inject constructor(
 
     private fun startNotificationsWork() = workManager.beginUniqueWork(NOTIFICATIONS_WORKER,
             ExistingWorkPolicy.KEEP,
-            OneTimeWorkRequestBuilder<NotificationWorker>()
+            OneTimeWorkRequestBuilder<UpdateWeatherWorker>()
                     .setInitialDelay(5000L, TimeUnit.MILLISECONDS)
                     .setConstraints(Constraints.Builder()
                             .setRequiredNetworkType(NetworkType.CONNECTED)

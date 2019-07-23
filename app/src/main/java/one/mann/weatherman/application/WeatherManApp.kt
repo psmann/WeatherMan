@@ -1,9 +1,13 @@
 package one.mann.weatherman.application
 
 import android.app.Application
+import androidx.work.Configuration
+import androidx.work.WorkManager
+import androidx.work.WorkerFactory
 import one.mann.weatherman.application.di.component.DaggerWeatherManAppComponent
 import one.mann.weatherman.application.di.component.WeatherManAppComponent
 import one.mann.weatherman.application.di.module.WeatherManAppModule
+import javax.inject.Inject
 
 internal class WeatherManApp : Application() {
 
@@ -12,10 +16,18 @@ internal class WeatherManApp : Application() {
             private set
     }
 
+    @Inject
+    lateinit var workerFactory: WorkerFactory
+
     override fun onCreate() {
         super.onCreate()
         appComponent = DaggerWeatherManAppComponent.builder()
                 .weatherManAppModule(WeatherManAppModule(this@WeatherManApp))
                 .build()
+
+        //appComponent.injectApplication(this)
+
+//        WorkManager.initialize(this, Configuration.Builder().setWorkerFactory(workerFactory)
+//                .build())
     }
 }
