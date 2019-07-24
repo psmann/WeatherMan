@@ -1,6 +1,7 @@
 package one.mann.weatherman.ui.main
 
 import android.content.SharedPreferences
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.work.*
 import kotlinx.coroutines.Dispatchers
@@ -10,9 +11,11 @@ import one.mann.domain.model.Location
 import one.mann.domain.model.LocationType
 import one.mann.domain.model.Weather
 import one.mann.interactors.usecases.*
+import one.mann.weatherman.framework.service.workers.NotificationWorker
 import one.mann.weatherman.framework.service.workers.UpdateWeatherWorker
 import one.mann.weatherman.ui.common.base.BaseViewModel
 import one.mann.weatherman.ui.common.util.NOTIFICATIONS_WORKER
+import one.mann.weatherman.ui.common.util.NOTIFICATION_WORKER_TAG
 import one.mann.weatherman.ui.common.util.SETTINGS_NOTIFICATIONS_KEY
 import one.mann.weatherman.ui.common.util.SETTINGS_UNITS_KEY
 import java.io.IOException
@@ -25,7 +28,8 @@ internal class MainViewModel @Inject constructor(
         private val removeCity: RemoveCity,
         private val updateWeather: UpdateWeather,
         private val getCityCount: GetCityCount,
-        private val settingsPrefs: SharedPreferences
+        private val settingsPrefs: SharedPreferences,
+        private val workManager: WorkManager
 ) : BaseViewModel(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     val weatherData: MutableLiveData<List<Weather>> = MutableLiveData()
@@ -33,11 +37,12 @@ internal class MainViewModel @Inject constructor(
     val displayUI: MutableLiveData<Boolean> = MutableLiveData()
     val loadingState: MutableLiveData<Boolean> = MutableLiveData()
     val displayError: MutableLiveData<Boolean> = MutableLiveData()
-    val workManager = WorkManager.getInstance()
+    val workerStatus: LiveData<List<WorkInfo>>
 
     init {
         displayUI.value = false // Hide UI until recyclerView has been loaded with data
         displayError.value = false
+        workerStatus = workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG) // Listen to workInfo changes
         settingsPrefs.registerOnSharedPreferenceChangeListener(this)
         updateUI()
     }
@@ -78,7 +83,7 @@ internal class MainViewModel @Inject constructor(
         }
     }
 
-    private fun updateUI() {
+    fun updateUI() {
         launch {
             val data = withContext(Dispatchers.IO) { getAllWeather.invoke() }
             if (data.isNotEmpty()) {
@@ -92,11 +97,12 @@ internal class MainViewModel @Inject constructor(
 
     private fun startNotificationsWork() = workManager.beginUniqueWork(NOTIFICATIONS_WORKER,
             ExistingWorkPolicy.KEEP,
-            OneTimeWorkRequestBuilder<UpdateWeatherWorker>()
-                    .setInitialDelay(5000L, TimeUnit.MILLISECONDS)
+            OneTimeWorkRequestBuilder<UpdateWeatherWorker>().setInitialDelay(5000L, TimeUnit.MILLISECONDS)
                     .setConstraints(Constraints.Builder()
                             .setRequiredNetworkType(NetworkType.CONNECTED)
                             .build())
+                    .build())
+            .then(OneTimeWorkRequestBuilder<NotificationWorker>().addTag(NOTIFICATION_WORKER_TAG)
                     .build())
             .enqueue()
 

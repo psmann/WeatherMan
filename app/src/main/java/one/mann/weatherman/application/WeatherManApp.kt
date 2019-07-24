@@ -21,11 +21,11 @@ internal class WeatherManApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+
         appComponent = DaggerWeatherManAppComponent.builder()
                 .weatherManAppModule(WeatherManAppModule(this@WeatherManApp))
                 .build()
-
-        appComponent.injectApplication(this)
+                .apply { injectApplication(this@WeatherManApp) }
 
         WorkManager.initialize(this, Configuration.Builder().setWorkerFactory(workerFactory)
                 .build())

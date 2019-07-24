@@ -3,6 +3,7 @@ package one.mann.weatherman.application.di.module
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
+import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
 import one.mann.weatherman.application.WeatherManApp
@@ -20,4 +21,8 @@ internal class WeatherManAppModule @Inject constructor(private val application: 
     @Singleton
     fun provideDefaultPreferences(context: Context): SharedPreferences =
             PreferenceManager.getDefaultSharedPreferences(context)
+
+    @Provides
+    @Singleton
+    fun provideWorkManager(context: Context): WorkManager = WorkManager.getInstance(context)
 }

@@ -112,7 +112,8 @@ internal class MainActivity : BaseActivity() {
             }
         })
         mainViewModel.loadingState.observe(this, Observer { swipe_refresh_layout.isRefreshing = it })
-        mainViewModel.cityCount.observe(this, Observer {
+        mainViewModel.workerStatus.observe(this, Observer { mainViewModel.updateUI() }) // Update UI at work completion
+        mainViewModel.cityCount.observe(this, Observer { // If cityCount is 0 then this is the app's the first run
             if (it == 0) handleLocationServiceResult()
             else {
                 mainPagerAdapter.updatePages(it!!)
