@@ -64,22 +64,7 @@ internal class MainActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
             R.id.menu_add_city -> autocompleteWidget()
-            R.id.menu_remove_city -> {
-                AlertDialog.Builder(this, R.style.AlertDialogTheme)
-                        .setTitle(getString(R.string.remove_city_location))
-                        .setMessage(getString(R.string.do_you_want_to_remove_location))
-                        .setPositiveButton(getString(R.string.yes)) { _, _ ->
-                            val position = main_viewPager.currentItem
-                            if (position == 0) toast(R.string.cant_remove_first_location)
-                            else {
-                                mainViewModel.removeCity(position)
-                                toast(R.string.location_removed)
-                            }
-                        }
-                        .setNegativeButton(getString(R.string.no)) { _, _ -> }
-                        .create()
-                        .show()
-            }
+            R.id.menu_remove_city -> removeCityAlert().show()
             R.id.menu_settings -> startActivity(Intent(this, SettingsActivity::class.java))
         }
         return super.onOptionsItemSelected(item)
@@ -146,6 +131,20 @@ internal class MainActivity : BaseActivity() {
             }
         }
     }
+
+    private fun removeCityAlert() = AlertDialog.Builder(this@MainActivity, R.style.AlertDialogTheme)
+            .setTitle(getString(R.string.remove_city_location))
+            .setMessage(getString(R.string.do_you_want_to_remove_location))
+            .setPositiveButton(getString(R.string.yes)) { _, _ ->
+                val position = main_viewPager.currentItem
+                if (position == 0) toast(R.string.cant_remove_first_location)
+                else {
+                    mainViewModel.removeCity(position)
+                    toast(R.string.location_removed)
+                }
+            }
+            .setNegativeButton(getString(R.string.no)) { _, _ -> }
+            .create()
 
     /** Widget for Places Autocomplete API that needs to run in activity scope */
     private fun autocompleteWidget() = try {
