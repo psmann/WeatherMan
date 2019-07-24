@@ -11,12 +11,12 @@ import one.mann.interactors.data.sources.DeviceLocationSource
 import javax.inject.Inject
 import kotlin.coroutines.resume
 
-internal class LocationDataSource @Inject constructor(private val client: FusedLocationProviderClient) : DeviceLocationSource {
+internal class LocationDataSource @Inject constructor(private val client: FusedLocationProviderClient) :
+        DeviceLocationSource {
 
     @SuppressLint("MissingPermission") // Already being checked
     override suspend fun getLocation(): Location = suspendCancellableCoroutine { continuation ->
-        val locationRequest = LocationRequest()
-                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+        val locationRequest = LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(10 * 1000L)
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {

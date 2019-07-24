@@ -1,10 +1,10 @@
 package one.mann.interactors.data
 
+import one.mann.domain.logic.*
 import one.mann.domain.model.CurrentWeather
 import one.mann.domain.model.DailyForecast
 import one.mann.domain.model.Location
 import one.mann.domain.model.Weather
-import one.mann.domain.logic.*
 
 // Map all API data to domain Weather model
 internal fun mapToWeather(
@@ -17,9 +17,9 @@ internal fun mapToWeather(
         location.id,
         currentWeather.cityName,
         currentWeather.currentTemperature.setUnitsType(units)
-                .addUnits(if(units == IMPERIAL) FAHRENHEIT else CELSIUS),
+                .addUnits(if (units == IMPERIAL) FAHRENHEIT else CELSIUS),
         feelsLike(currentWeather.currentTemperature, currentWeather.humidity, currentWeather.windSpeed).setUnitsType(units)
-                .addUnits(if(units == IMPERIAL) FAHRENHEIT else CELSIUS),
+                .addUnits(if (units == IMPERIAL) FAHRENHEIT else CELSIUS),
         currentWeather.pressure.addUnits(HECTOPASCAL),
         currentWeather.humidity.addUnits(PERCENT),
         currentWeather.description,
@@ -37,9 +37,9 @@ internal fun mapToWeather(
         sunPositionBias(epochToMinutes(currentWeather.sunrise, timezone), epochToMinutes(currentWeather.sunset, timezone),
                 epochToMinutes(System.currentTimeMillis(), timezone)),
         dailyForecast[0].minTemp.setUnitsType(units)
-                .addUnits(if(units == IMPERIAL) FAHRENHEIT else CELSIUS),
+                .addUnits(if (units == IMPERIAL) FAHRENHEIT else CELSIUS),
         dailyForecast[0].maxTemp.setUnitsType(units)
-                .addUnits(if(units == IMPERIAL) FAHRENHEIT else CELSIUS),
+                .addUnits(if (units == IMPERIAL) FAHRENHEIT else CELSIUS),
         epochToDay(dailyForecast[0].forecastDate),
         dailyForecast[0].minTemp.setUnitsType(units).roundOff(),
         dailyForecast[0].maxTemp.setUnitsType(units).roundOff(),

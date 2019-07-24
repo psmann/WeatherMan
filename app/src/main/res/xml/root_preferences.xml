@@ -19,6 +19,15 @@
                 app:key="notification"
                 app:title="@string/display_notification"/>
 
+        <ListPreference
+                app:defaultValue="1"
+                app:key="notification_frequency"
+                app:entries="@array/frequency_entries"
+                app:entryValues="@array/frequency_values"
+                app:dependency="notification"
+                app:title="@string/notification_frequency"
+                app:useSimpleSummaryProvider="true"/>
+
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

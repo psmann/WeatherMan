@@ -5,7 +5,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
 import one.mann.weatherman.application.di.annotation.WorkerKey
-import one.mann.weatherman.framework.service.workers.UpdateWeatherWorker
+import one.mann.weatherman.framework.service.workers.NotificationWorker
 import one.mann.weatherman.framework.service.workers.factory.ChildWorkerFactory
 import one.mann.weatherman.framework.service.workers.factory.ParentWorkerFactory
 
@@ -17,6 +17,6 @@ internal abstract class WorkerModule {
 
     @Binds
     @IntoMap
-    @WorkerKey(UpdateWeatherWorker::class)
-    abstract fun bindUpdateWeatherWorker(worker: UpdateWeatherWorker.Factory): ChildWorkerFactory
+    @WorkerKey(NotificationWorker::class)
+    abstract fun bindUpdateWeatherWorker(worker: NotificationWorker.Factory): ChildWorkerFactory
 }

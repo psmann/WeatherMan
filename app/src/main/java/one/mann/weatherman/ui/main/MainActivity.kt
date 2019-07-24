@@ -36,11 +36,10 @@ internal class MainActivity : BaseActivity() {
         private const val AUTOCOMPLETE_REQUEST_CODE = 1021
     }
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    private var isFirstRun = true
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private val mainViewModel: MainViewModel by lazy { getViewModel(viewModelFactory) }
     private val mainPagerAdapter by lazy { MainPagerAdapter(supportFragmentManager) }
-    private var isFirstRun = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,9 +50,9 @@ internal class MainActivity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) if (resultCode == Activity.RESULT_OK) {
-            val place = Autocomplete.getPlaceFromIntent(data!!)
-            mainViewModel.addCity(Location(arrayOf(place.latLng!!.latitude.toFloat(), place.latLng!!.longitude.toFloat())))
-        }
+            val placeLoc = Autocomplete.getPlaceFromIntent(data!!).latLng // Get coordinates from intent
+            mainViewModel.addCity(Location(arrayOf(placeLoc!!.latitude.toFloat(), placeLoc.longitude.toFloat())))
+        } else toast(R.string.error_has_occurred_try_again)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -79,34 +78,34 @@ internal class MainActivity : BaseActivity() {
             return
         }
         setSupportActionBar(main_toolbar)
+        // Init ViewPager
         main_viewPager.adapter = mainPagerAdapter
         main_tabLayout.setupWithViewPager(main_viewPager)
         main_viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) { // Fix horizontal scrolling
-                if (!swipe_refresh_layout.isRefreshing)
-                    swipe_refresh_layout.isEnabled = state == ViewPager.SCROLL_STATE_IDLE
-            }
-
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
             override fun onPageSelected(position: Int) {}
+            override fun onPageScrollStateChanged(state: Int) { // Fix horizontal scrolling
+                if (!swipe_refresh_ly.isRefreshing) swipe_refresh_ly.isEnabled = state == ViewPager.SCROLL_STATE_IDLE
+            }
         })
+        // Init ViewModel
         mainViewModel.displayError.observe(this, Observer {
             if (it) {
                 toast(R.string.error_has_occurred_try_again)
                 mainViewModel.resetDisplayError()
             }
         })
-        mainViewModel.loadingState.observe(this, Observer { swipe_refresh_layout.isRefreshing = it })
-        mainViewModel.workerStatus.observe(this, Observer { mainViewModel.updateUI() }) // Update UI at work completion
-        mainViewModel.cityCount.observe(this, Observer { // If cityCount is 0 then this is the app's the first run
-            if (it == 0) handleLocationServiceResult()
+        mainViewModel.loadingState.observe(this, Observer { swipe_refresh_ly.isRefreshing = it })
+        mainViewModel.workerStatus.observe(this, Observer { mainViewModel.updateUI() }) // Update UI at completion
+        mainViewModel.cityCount.observe(this, Observer {
+            if (it == 0) handleLocationServiceResult() // If cityCount is 0 then this is the app's the first run
             else {
                 mainPagerAdapter.updatePages(it!!)
                 isFirstRun = false
             }
         })
-        swipe_refresh_layout.setColorSchemeColors(Color.RED, Color.BLUE)
-        swipe_refresh_layout.setOnRefreshListener { handleLocationServiceResult() }
+        swipe_refresh_ly.setColorSchemeColors(Color.RED, Color.BLUE)
+        swipe_refresh_ly.setOnRefreshListener { handleLocationServiceResult() }
     }
 
     private fun handleLocationServiceResult() = handleLocationPermission { permissionGranted ->
@@ -114,7 +113,7 @@ internal class MainActivity : BaseActivity() {
             when (it) {
                 NO_NETWORK -> {
                     toast(R.string.no_internet_connection)
-                    swipe_refresh_layout.isRefreshing = false
+                    swipe_refresh_ly.isRefreshing = false
                 }
                 ENABLED -> {
                     if (isFirstRun) mainViewModel.addCity()
@@ -132,7 +131,7 @@ internal class MainActivity : BaseActivity() {
         }
     }
 
-    private fun removeCityAlert() = AlertDialog.Builder(this@MainActivity, R.style.AlertDialogTheme)
+    private fun removeCityAlert() = AlertDialog.Builder(this, R.style.AlertDialogTheme)
             .setTitle(getString(R.string.remove_city_location))
             .setMessage(getString(R.string.do_you_want_to_remove_location))
             .setPositiveButton(getString(R.string.yes)) { _, _ ->

@@ -12,12 +12,8 @@ import one.mann.domain.model.LocationType
 import one.mann.domain.model.Weather
 import one.mann.interactors.usecases.*
 import one.mann.weatherman.framework.service.workers.NotificationWorker
-import one.mann.weatherman.framework.service.workers.UpdateWeatherWorker
 import one.mann.weatherman.ui.common.base.BaseViewModel
-import one.mann.weatherman.ui.common.util.NOTIFICATIONS_WORKER
-import one.mann.weatherman.ui.common.util.NOTIFICATION_WORKER_TAG
-import one.mann.weatherman.ui.common.util.SETTINGS_NOTIFICATIONS_KEY
-import one.mann.weatherman.ui.common.util.SETTINGS_UNITS_KEY
+import one.mann.weatherman.ui.common.util.*
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -37,12 +33,12 @@ internal class MainViewModel @Inject constructor(
     val displayUI: MutableLiveData<Boolean> = MutableLiveData()
     val loadingState: MutableLiveData<Boolean> = MutableLiveData()
     val displayError: MutableLiveData<Boolean> = MutableLiveData()
-    val workerStatus: LiveData<List<WorkInfo>>
+    val workerStatus: LiveData<List<WorkInfo>> // Listen to workInfo changes
 
     init {
         displayUI.value = false // Hide UI until recyclerView has been loaded with data
         displayError.value = false
-        workerStatus = workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG) // Listen to workInfo changes
+        workerStatus = workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG) // Attach to UpdateWeather worker
         settingsPrefs.registerOnSharedPreferenceChangeListener(this)
         updateUI()
     }
@@ -95,18 +91,18 @@ internal class MainViewModel @Inject constructor(
         }
     }
 
-    private fun startNotificationsWork() = workManager.beginUniqueWork(NOTIFICATIONS_WORKER,
-            ExistingWorkPolicy.KEEP,
-            OneTimeWorkRequestBuilder<UpdateWeatherWorker>().setInitialDelay(5000L, TimeUnit.MILLISECONDS)
+    private fun startNotificationWork(frequency: Long) = workManager.enqueueUniquePeriodicWork(
+            NOTIFICATIONS_WORKER,
+            ExistingPeriodicWorkPolicy.KEEP,
+            PeriodicWorkRequestBuilder<NotificationWorker>(frequency, TimeUnit.HOURS, 15, TimeUnit.MINUTES)
+                    .addTag(NOTIFICATION_WORKER_TAG)
                     .setConstraints(Constraints.Builder()
                             .setRequiredNetworkType(NetworkType.CONNECTED)
                             .build())
-                    .build())
-            .then(OneTimeWorkRequestBuilder<NotificationWorker>().addTag(NOTIFICATION_WORKER_TAG)
-                    .build())
-            .enqueue()
+                    .build()
+    )
 
-    private fun stopNotificationsWork() = workManager.cancelUniqueWork(NOTIFICATIONS_WORKER)
+    private fun stopNotificationWork() = workManager.cancelUniqueWork(NOTIFICATIONS_WORKER)
 
     override fun onCleared() {
         super.onCleared()
@@ -117,8 +113,9 @@ internal class MainViewModel @Inject constructor(
         when (key) {
             SETTINGS_UNITS_KEY -> updateWeather(LocationType.DB) // Update weather and UI when units are changed by user
             SETTINGS_NOTIFICATIONS_KEY ->
-                if (sharedPreferences!!.getBoolean(key, true)) startNotificationsWork()
-                else stopNotificationsWork()
+                if (sharedPreferences!!.getBoolean(key, true))
+                    startNotificationWork(sharedPreferences.getString(SETTINGS_FREQUENCY_KEY, "1")!!.toLong())
+                else stopNotificationWork()
         }
     }
 }

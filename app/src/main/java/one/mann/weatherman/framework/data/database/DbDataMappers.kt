@@ -1,17 +1,18 @@
 package one.mann.weatherman.framework.data.database
 
 import one.mann.domain.model.Location
+import one.mann.domain.model.NotificationData
 import one.mann.weatherman.framework.data.database.model.LocationTuple
+import one.mann.weatherman.framework.data.database.model.NotificationTuple
 import one.mann.domain.model.Weather as DomainWeather
 import one.mann.weatherman.framework.data.database.model.Weather as DbWeather
 
-internal fun LocationTuple.mapToDomain(): Location = Location(
-        arrayOf(coordinatesLat, coordinatesLong),
-        id
-)
+internal fun LocationTuple.mapToDomain(): Location = Location(arrayOf(coordinatesLat, coordinatesLong), id)
+
+internal fun NotificationTuple.mapToDomain(): NotificationData = NotificationData(cityName, currentTemp, description)
 
 internal fun DomainWeather.mapToDb(): DbWeather = DbWeather(
-        id, // null to use SQLite's default increment system
+        id, // id = null to use SQLite's default increment system
         cityName,
         currentTemp,
         feelsLike,

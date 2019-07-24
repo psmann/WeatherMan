@@ -16,18 +16,16 @@ internal class WeatherManApp : Application() {
             private set
     }
 
-    @Inject
-    lateinit var workerFactory: WorkerFactory
+    @Inject lateinit var workerFactory: WorkerFactory
 
     override fun onCreate() {
         super.onCreate()
 
         appComponent = DaggerWeatherManAppComponent.builder()
-                .weatherManAppModule(WeatherManAppModule(this@WeatherManApp))
+                .weatherManAppModule(WeatherManAppModule(this))
                 .build()
                 .apply { injectApplication(this@WeatherManApp) }
 
-        WorkManager.initialize(this, Configuration.Builder().setWorkerFactory(workerFactory)
-                .build())
+        WorkManager.initialize(this, Configuration.Builder().setWorkerFactory(workerFactory).build())
     }
 }

@@ -2,6 +2,7 @@ package one.mann.interactors.data.repository
 
 import one.mann.domain.model.Location
 import one.mann.domain.model.LocationType
+import one.mann.domain.model.NotificationData
 import one.mann.domain.model.Weather
 import one.mann.interactors.data.mapToWeather
 import one.mann.interactors.data.sources.*
@@ -22,6 +23,8 @@ class WeatherRepository @Inject constructor(
         dbData.insertWeather(mapToWeather(weatherData.getCurrentWeather(location), weatherData.getDailyForecast(location),
                 timezoneData.getTimezone(location), location, preferencesData.getUnits()))
     }
+
+    suspend fun readNotificationData(): NotificationData = dbData.getNotificationData()
 
     suspend fun readAll(): List<Weather> = dbData.getAllWeather()
 

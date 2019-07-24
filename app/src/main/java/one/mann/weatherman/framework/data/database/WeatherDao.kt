@@ -2,6 +2,7 @@ package one.mann.weatherman.framework.data.database
 
 import androidx.room.*
 import one.mann.weatherman.framework.data.database.model.LocationTuple
+import one.mann.weatherman.framework.data.database.model.NotificationTuple
 import one.mann.weatherman.framework.data.database.model.Weather
 
 @Dao
@@ -15,6 +16,9 @@ internal interface WeatherDao {
 
     @Query("SELECT * FROM Weather ORDER BY id ASC")
     suspend fun fetchAll(): List<Weather>
+
+    @Query("SELECT cityName, currentTemp, description FROM Weather WHERE id = 1")
+    suspend fun fetchNotificationData(): NotificationTuple
 
     @Query("SELECT coordinatesLat, coordinatesLong, id FROM Weather ORDER BY id ASC")
     suspend fun fetchLocations(): List<LocationTuple>

@@ -21,8 +21,7 @@ internal class MainFragment : Fragment() {
     private var position = 0
     private val mainViewModel: MainViewModel by lazy { activity?.run { getViewModel(viewModelFactory) }!! }
     private val mainRecyclerAdapter by lazy { MainRecyclerAdapter() }
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
 
     companion object {
         private const val POSITION = "POSITION"

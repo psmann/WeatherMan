@@ -1,4 +1,5 @@
 <resources>
+
     <string-array name="units_entries">
         <item>Imperial</item>
         <item>Metric</item>
@@ -8,4 +9,21 @@
         <item>imperial</item>
         <item>metric</item>
     </string-array>
+
+    <string-array name="frequency_entries">
+        <item>Every Hour</item>
+        <item>Every 3 Hours</item>
+        <item>Every 6 Hours</item>
+        <item>Every 12 Hours</item>
+        <item>Once a day</item>
+    </string-array>
+
+    <string-array name="frequency_values">
+        <item>1</item>
+        <item>3</item>
+        <item>6</item>
+        <item>12</item>
+        <item>24</item>
+    </string-array>
+
 </resources>
