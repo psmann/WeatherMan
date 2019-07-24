@@ -38,7 +38,7 @@ internal class MainViewModel @Inject constructor(
     init {
         displayUI.value = false // Hide UI until recyclerView has been loaded with data
         displayError.value = false
-        workerStatus = workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG) // Attach to UpdateWeather worker
+        workerStatus = workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG) // Attach to NotificationWorker
         settingsPrefs.registerOnSharedPreferenceChangeListener(this)
         updateUI()
     }
