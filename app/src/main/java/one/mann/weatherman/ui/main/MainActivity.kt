@@ -26,6 +26,7 @@ import one.mann.weatherman.api.common.Keys
 import one.mann.weatherman.application.WeatherManApp
 import one.mann.weatherman.ui.common.base.BaseActivity
 import one.mann.weatherman.ui.common.util.getViewModel
+import one.mann.weatherman.ui.main.MainViewModel.UiModel
 import one.mann.weatherman.ui.main.adapter.MainPagerAdapter
 import one.mann.weatherman.ui.settings.SettingsActivity
 import javax.inject.Inject
@@ -89,14 +90,12 @@ internal class MainActivity : BaseActivity() {
             }
         })
         // Init ViewModel
-        mainViewModel.displayError.observe(this, Observer {
-            if (it) {
-                toast(R.string.error_has_occurred_try_again)
-                mainViewModel.resetDisplayError()
+        mainViewModel.uiModel.observe(this, Observer {
+            when (it) {
+                is UiModel.Refreshing -> swipe_refresh_ly.isRefreshing = it.loading
+                is UiModel.ShowError -> toast(R.string.error_has_occurred_try_again)
             }
         })
-        mainViewModel.loadingState.observe(this, Observer { swipe_refresh_ly.isRefreshing = it })
-        mainViewModel.workerStatus.observe(this, Observer { mainViewModel.updateUI() }) // Update UI at completion
         mainViewModel.cityCount.observe(this, Observer {
             if (it == 0) handleLocationServiceResult() // If cityCount is 0 then this is the app's the first run
             else {

@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.fragment_weather.*
 import one.mann.weatherman.R
 import one.mann.weatherman.application.WeatherManApp
 import one.mann.weatherman.ui.common.util.getViewModel
+import one.mann.weatherman.ui.main.MainViewModel.UiModel
 import one.mann.weatherman.ui.main.adapter.MainRecyclerAdapter
 import javax.inject.Inject
 
@@ -45,9 +46,9 @@ internal class MainFragment : Fragment() {
         city_recyclerview.setHasFixedSize(true)
         city_recyclerview.layoutManager = LinearLayoutManager(context)
         city_recyclerview.adapter = mainRecyclerAdapter
-        mainViewModel.displayUI.observe(this, Observer {
-            if (it) city_recyclerview.visibility = View.VISIBLE
-            else city_recyclerview.visibility = View.GONE
+        // Init ViewModel
+        mainViewModel.uiModel.observe(this, Observer {
+            if (it is UiModel.DisplayUi) city_recyclerview.visibility = if (it.display) View.VISIBLE else View.GONE
         })
         mainViewModel.weatherData.observe(this, Observer {
             if (it.size >= position + 1) mainRecyclerAdapter.update(it[position])

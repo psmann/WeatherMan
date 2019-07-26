@@ -1,7 +1,6 @@
 package one.mann.weatherman.ui.main
 
 import android.content.SharedPreferences
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.work.*
 import kotlinx.coroutines.Dispatchers
@@ -28,32 +27,31 @@ internal class MainViewModel @Inject constructor(
         private val workManager: WorkManager
 ) : BaseViewModel(), SharedPreferences.OnSharedPreferenceChangeListener {
 
+    private var showUi = false
     val weatherData: MutableLiveData<List<Weather>> = MutableLiveData()
     val cityCount: MutableLiveData<Int> = MutableLiveData()
-    val displayUI: MutableLiveData<Boolean> = MutableLiveData()
-    val loadingState: MutableLiveData<Boolean> = MutableLiveData()
-    val displayError: MutableLiveData<Boolean> = MutableLiveData()
-    val workerStatus: LiveData<List<WorkInfo>> // Listen to workInfo changes
+    val uiModel = MutableLiveData<UiModel>()
 
     init {
-        displayUI.value = false // Hide UI until recyclerView has been loaded with data
-        displayError.value = false
-        workerStatus = workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG) // Attach to NotificationWorker
+        uiModel.value = UiModel.DisplayUi(false)
         settingsPrefs.registerOnSharedPreferenceChangeListener(this)
+        workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG).observeForever { updateUI() }
         updateUI()
     }
 
-    fun resetDisplayError() {
-        displayError.value = false
+    sealed class UiModel {
+        class Refreshing(val loading: Boolean) : UiModel()
+        class DisplayUi(val display: Boolean) : UiModel()
+        object ShowError : UiModel()
     }
 
     fun addCity(apiLocation: Location? = null) {
         launch {
-            loadingState.value = true // Start refreshing
+            uiModel.value = UiModel.Refreshing(true) // Start refreshing
             try {
                 withContext(Dispatchers.IO) { addCity.invoke(apiLocation) }
             } catch (e: IOException) {
-                displayError.value = true
+                uiModel.value = UiModel.ShowError
             }
             updateUI()
         }
@@ -61,11 +59,11 @@ internal class MainViewModel @Inject constructor(
 
     fun updateWeather(locationType: LocationType) {
         launch {
-            loadingState.value = true // Start refreshing
+            uiModel.value = UiModel.Refreshing(true) // Start refreshing
             try {
                 withContext(Dispatchers.IO) { updateWeather.invoke(locationType) }
             } catch (e: IOException) {
-                displayError.value = true
+                uiModel.value = UiModel.ShowError
             }
             updateUI()
         }
@@ -79,22 +77,23 @@ internal class MainViewModel @Inject constructor(
         }
     }
 
-    fun updateUI() {
+    private fun updateUI() {
         launch {
             val data = withContext(Dispatchers.IO) { getAllWeather.invoke() }
             if (data.isNotEmpty()) {
                 weatherData.value = data // Update all weather data
-                if (displayUI.value == false) displayUI.value = true // Show UI if hidden
+                if (!showUi) uiModel.value = UiModel.DisplayUi(true) // Show UI if hidden
+                showUi = true
             }
+            uiModel.value = UiModel.Refreshing(false)
             cityCount.value = getCityCount.invoke() // Update viewPager only after updating weatherData (if not null)
-            loadingState.value = false // Stop refreshing
         }
     }
 
     private fun startNotificationWork(frequency: Long) = workManager.enqueueUniquePeriodicWork(
-            NOTIFICATIONS_WORKER,
+            NOTIFICATION_WORKER,
             ExistingPeriodicWorkPolicy.KEEP,
-            PeriodicWorkRequestBuilder<NotificationWorker>(frequency, TimeUnit.HOURS, 15, TimeUnit.MINUTES)
+            PeriodicWorkRequestBuilder<NotificationWorker>(frequency, TimeUnit.MINUTES, 15, TimeUnit.MINUTES)
                     .addTag(NOTIFICATION_WORKER_TAG)
                     .setConstraints(Constraints.Builder()
                             .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -102,7 +101,7 @@ internal class MainViewModel @Inject constructor(
                     .build()
     )
 
-    private fun stopNotificationWork() = workManager.cancelUniqueWork(NOTIFICATIONS_WORKER)
+    private fun stopNotificationWork() = workManager.cancelUniqueWork(NOTIFICATION_WORKER)
 
     override fun onCleared() {
         super.onCleared()
@@ -113,9 +112,13 @@ internal class MainViewModel @Inject constructor(
         when (key) {
             SETTINGS_UNITS_KEY -> updateWeather(LocationType.DB) // Update weather and UI when units are changed by user
             SETTINGS_NOTIFICATIONS_KEY ->
-                if (sharedPreferences!!.getBoolean(key, true))
-                    startNotificationWork(sharedPreferences.getString(SETTINGS_FREQUENCY_KEY, "1")!!.toLong())
+                if (sharedPreferences!!.getBoolean(key, true)) startNotificationWork(
+                        sharedPreferences.getString(SETTINGS_FREQUENCY_KEY, "1")!!.toLong())
                 else stopNotificationWork()
+            SETTINGS_FREQUENCY_KEY -> {
+                stopNotificationWork() // Cancel old work
+                startNotificationWork(sharedPreferences!!.getString(key, "1")!!.toLong()) // Start new work
+            }
         }
     }
 }

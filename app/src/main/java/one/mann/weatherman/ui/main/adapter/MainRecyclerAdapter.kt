@@ -43,7 +43,7 @@ internal class MainRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
                 holder.weatherIcon.loadImage(weather.icon)
             }
             is Sun -> {
-                holder.setIsRecyclable(false) // Force reload sunGraphView and fix not updating issue
+                holder.setIsRecyclable(false) // Force-reload sunGraphView and fix view not updating issue
                 holder.dayLength.text = weather.dayLength
                 holder.sunrise.text = weather.sunrise
                 holder.sunset.text = weather.sunset
