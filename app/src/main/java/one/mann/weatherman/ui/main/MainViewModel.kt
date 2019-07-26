@@ -35,7 +35,7 @@ internal class MainViewModel @Inject constructor(
     init {
         uiModel.value = UiModel.DisplayUi(false)
         settingsPrefs.registerOnSharedPreferenceChangeListener(this)
-        workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG).observeForever { updateUI() }
+        workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG).observeForever { updateUI() } // Observe worker
         updateUI()
     }
 
@@ -93,7 +93,8 @@ internal class MainViewModel @Inject constructor(
     private fun startNotificationWork(frequency: Long) = workManager.enqueueUniquePeriodicWork(
             NOTIFICATION_WORKER,
             ExistingPeriodicWorkPolicy.KEEP,
-            PeriodicWorkRequestBuilder<NotificationWorker>(frequency, TimeUnit.MINUTES, 15, TimeUnit.MINUTES)
+            PeriodicWorkRequestBuilder<NotificationWorker>(frequency, TimeUnit.HOURS, 15, TimeUnit.MINUTES)
+                    .setInitialDelay(frequency, TimeUnit.HOURS) // Show first notification after the duration set
                     .addTag(NOTIFICATION_WORKER_TAG)
                     .setConstraints(Constraints.Builder()
                             .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -103,9 +104,11 @@ internal class MainViewModel @Inject constructor(
 
     private fun stopNotificationWork() = workManager.cancelUniqueWork(NOTIFICATION_WORKER)
 
+    /** Remove listeners and observers at destruction */
     override fun onCleared() {
         super.onCleared()
-        settingsPrefs.unregisterOnSharedPreferenceChangeListener(this) // Remove listener at destruction
+        settingsPrefs.unregisterOnSharedPreferenceChangeListener(this)
+        workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG).removeObserver { }
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
