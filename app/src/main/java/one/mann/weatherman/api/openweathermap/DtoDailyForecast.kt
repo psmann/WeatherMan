@@ -1,20 +1,17 @@
 package one.mann.weatherman.api.openweathermap
 
-internal class DtoDailyForecast(var list: List<ListObject>) {
+internal class DtoDailyForecast(val list: List<ListObject>) {
 
     data class ListObject(
-            var dt: Long,
-            var temp: Temp,
-            var weather: List<Weather>
+            val dt: Long,
+            val temp: Temp,
+            val weather: List<Weather>
     )
 
     data class Temp(
-            var min: Float,
-            var max: Float
+            val min: Float,
+            val max: Float
     )
 
-    data class Weather(
-            //var main: String,
-            var icon: String
-    )
+    data class Weather(val id: Int)
 }

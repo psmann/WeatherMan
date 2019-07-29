@@ -40,10 +40,10 @@ internal class MainRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
                 holder.feelsLike.text = weather.feelsLike
                 holder.currentTemp.text = weather.currentTemp
                 holder.description.text = weather.description
-                holder.weatherIcon.loadImage(weather.icon)
+                holder.weatherIcon.loadImage(weather.iconId, weather.sunPosition)
             }
             is Sun -> {
-                holder.setIsRecyclable(false) // Force-reload sunGraphView and fix view not updating issue
+                holder.setIsRecyclable(false) // Force-reload sunGraphView to fix view not updating issue
                 holder.dayLength.text = weather.dayLength
                 holder.sunrise.text = weather.sunrise
                 holder.sunset.text = weather.sunset
@@ -78,13 +78,13 @@ internal class MainRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
                 holder.forecast7Day.text = weather.day7Date
                 holder.forecast7Min.text = weather.day7MinTemp
                 holder.forecast7Max.text = weather.day7MaxTemp
-                holder.forecast1Icon.loadImage(weather.day1Icon)
-                holder.forecast2Icon.loadImage(weather.day2Icon)
-                holder.forecast3Icon.loadImage(weather.day3Icon)
-                holder.forecast4Icon.loadImage(weather.day4Icon)
-                holder.forecast5Icon.loadImage(weather.day5Icon)
-                holder.forecast6Icon.loadImage(weather.day6Icon)
-                holder.forecast7Icon.loadImage(weather.day7Icon)
+                holder.forecast1Icon.loadImage(weather.day1IconId)
+                holder.forecast2Icon.loadImage(weather.day2IconId)
+                holder.forecast3Icon.loadImage(weather.day3IconId)
+                holder.forecast4Icon.loadImage(weather.day4IconId)
+                holder.forecast5Icon.loadImage(weather.day5IconId)
+                holder.forecast6Icon.loadImage(weather.day6IconId)
+                holder.forecast7Icon.loadImage(weather.day7IconId)
             }
         }
     }

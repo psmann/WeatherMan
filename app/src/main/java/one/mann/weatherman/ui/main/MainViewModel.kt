@@ -85,7 +85,7 @@ internal class MainViewModel @Inject constructor(
                 if (!showUi) uiModel.value = UiModel.DisplayUi(true) // Show UI if hidden
                 showUi = true
             }
-            uiModel.value = UiModel.Refreshing(false)
+            uiModel.value = UiModel.Refreshing(false) // Stop refreshing
             cityCount.value = getCityCount.invoke() // Update viewPager only after updating weatherData (if not null)
         }
     }

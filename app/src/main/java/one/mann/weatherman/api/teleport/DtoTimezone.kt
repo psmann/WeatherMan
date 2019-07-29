@@ -2,35 +2,35 @@ package one.mann.weatherman.api.teleport
 
 import com.google.gson.annotations.SerializedName
 
-internal class DtoTimezone(@SerializedName("_embedded") var embedded1: Embedded1) {
+internal class DtoTimezone(@SerializedName("_embedded") val embedded1: Embedded1) {
 
     data class CityTimezone(
             @SerializedName("iana_name")
-            var ianaName: String
+            val ianaName: String
     )
 
     data class Embedded1(
             @SerializedName("location:nearest-cities")
-            var locationNearestCities: List<LocationNearestCities>
+            val locationNearestCities: List<LocationNearestCities>
     )
 
     data class Embedded2(
             @SerializedName("location:nearest-city")
-            var locationNearestCity: LocationNearestCity
+            val locationNearestCity: LocationNearestCity
     )
 
     data class Embedded3(
             @SerializedName("city:timezone")
-            var cityTimezone: CityTimezone
+            val cityTimezone: CityTimezone
     )
 
     data class LocationNearestCities(
             @SerializedName("_embedded")
-            var embedded2: Embedded2
+            val embedded2: Embedded2
     )
 
     data class LocationNearestCity(
             @SerializedName("_embedded")
-            var embedded3: Embedded3
+            val embedded3: Embedded3
     )
 }

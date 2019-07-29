@@ -6,7 +6,7 @@ data class CurrentWeather(
         val pressure: Float,
         val humidity: Float,
         val description: String,
-        val icon: String,
+        val iconId: Int,
         var sunrise: Long,
         var sunset: Long,
         val countryFlag: String,

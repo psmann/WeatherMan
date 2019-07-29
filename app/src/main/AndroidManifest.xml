@@ -26,7 +26,8 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="one.mann.weatherman.ui.main.MainActivity"/>
         </activity>
-        <activity android:name=".ui.main.MainActivity">
+        <activity android:name=".ui.main.MainActivity"
+                  android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

@@ -26,7 +26,7 @@ internal class DtoCurrentWeather(
 
     data class Weather(
             val main: String,
-            val icon: String
+            val id: Int
     )
 
     data class Wind(
