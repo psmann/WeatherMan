@@ -22,12 +22,12 @@ internal class LocationDataSource @Inject constructor(private val client: FusedL
             override fun onLocationResult(locationResult: LocationResult) {
                 for (location in locationResult.locations) {
                     client.removeLocationUpdates(this)
-                    continuation.resume(Location(arrayOf(location.latitude.toFloat(), location.longitude.toFloat()), 1))
+                    continuation.resume(Location(listOf(location.latitude.toFloat(), location.longitude.toFloat()), 1))
                 } // Location id = 1 because this is always the first entry in DB
             }
         } // Check for last location if available else request for an update (drains battery)
         client.lastLocation.addOnSuccessListener {
-            if (it != null) continuation.resume(Location(arrayOf(it.latitude.toFloat(), it.longitude.toFloat()), 1))
+            if (it != null) continuation.resume(Location(listOf(it.latitude.toFloat(), it.longitude.toFloat()), 1))
             else client.requestLocationUpdates(locationRequest, locationCallback, null)
         }
     }

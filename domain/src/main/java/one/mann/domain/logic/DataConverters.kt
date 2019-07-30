@@ -10,9 +10,10 @@ import kotlin.math.roundToInt
 
 const val FLAG_OFFSET = 0x1F1E6 // Regional Indicator Symbol for letter A
 const val ASCII_OFFSET = 0x41 // Uppercase letter A
-const val HOURS_PATTERN = "H 'Hours and' m 'Minutes'"
+const val DURATION_PATTERN = "H 'Hours and' m 'Minutes'"
 const val DATE_PATTERN = "d MMM, h:mm aa"
 const val DAY_PATTERN = "E"
+const val HOUR_PATTERN = "h aa"
 const val TIME_PATTERN = "h:mm aa"
 const val CELSIUS = " C"
 const val FAHRENHEIT = " F"
@@ -35,7 +36,7 @@ fun Float.setUnitsType(type: String): Float =
 fun Float.roundOff(): String = this.roundToInt().toString()
 
 /** Convert location coordinates into a truncated comma separated string */
-fun Array<Float>.coordinatesInString(): String = String.format("%.4f", this[0]) + ", " + String.format("%.4f", this[1])
+fun List<Float>.coordinatesInString(): String = String.format("%.4f", this[0]) + ", " + String.format("%.4f", this[1])
 
 /** Convert the country code into an emoji icon */
 fun countryCodeToEmoji(code: String): String {
@@ -44,9 +45,16 @@ fun countryCodeToEmoji(code: String): String {
     return String(Character.toChars(firstChar)) + String(Character.toChars(secondChar))
 }
 
+/** Convert unix epoch time into regular time */
+fun epochToFormat(time: Long, timezone: String, pattern: String): String {
+    val format = SimpleDateFormat(pattern, Locale.getDefault())
+    format.timeZone = TimeZone.getTimeZone(timezone)
+    return format.format(Date(time)).toString()
+}
+
 /** Calculate the length of day using sunrise and sunset */
 fun lengthOfDay(sunrise: Long, sunset: Long): String {
-    val hoursFormat = SimpleDateFormat(HOURS_PATTERN, Locale.getDefault())
+    val hoursFormat = SimpleDateFormat(DURATION_PATTERN, Locale.getDefault())
     hoursFormat.timeZone = TimeZone.getTimeZone("UTC") // Remove time offset
     return hoursFormat.format(Date(sunset - sunrise)).toString()
 }
@@ -61,27 +69,19 @@ fun epochToMinutes(time: Long, timezone: String): Float {
 }
 
 /** Convert unix epoch time into date */
-fun epochToDate(time: Long, timezone: String): String {
-    val dateFormat = SimpleDateFormat(DATE_PATTERN, Locale.getDefault())
-    dateFormat.timeZone = TimeZone.getTimeZone(timezone)
-    return dateFormat.format(Date(time)).toString()
-}
+fun epochToDate(time: Long, timezone: String): String = epochToFormat(time, timezone, DATE_PATTERN)
 
 /** Convert unix epoch time into day */
-fun epochToDay(time: Long): String {
-    val dayFormat = SimpleDateFormat(DAY_PATTERN, Locale.getDefault())
-    return dayFormat.format(Date(time)).toString()
-}
+fun epochToDay(time: Long, timezone: String): String = epochToFormat(time, timezone, DAY_PATTERN)
+
+/** Convert unit epoch time into hour */
+fun epochToHour(time: Long, timezone: String): String = epochToFormat(time, timezone, HOUR_PATTERN)
 
 /** Convert unix epoch time into normal time (hours and minutes) */
-fun epochToTime(time: Long, timezone: String): String {
-    val timeFormat = SimpleDateFormat(TIME_PATTERN, Locale.getDefault())
-    timeFormat.timeZone = TimeZone.getTimeZone(timezone)
-    return timeFormat.format(Date(time)).toString()
-}
+fun epochToTime(time: Long, timezone: String): String = epochToFormat(time, timezone, TIME_PATTERN)
 
-/** Calculate the sun position to be used in SunGraphView */
-fun sunPositionBias(sunrise: Float, sunset: Float, currentTime: Float): Float = (currentTime - sunrise) / (sunset - sunrise)
+/** Calculate the sun position to be used in SunGraphView and weather icons */
+fun sunPositionBias(sunrise: Float, sunset: Float, time: Float): Float = (time - sunrise) / (sunset - sunrise)
 
 /** Calculate FeelsLike temperature using https://blog.metservice.com/FeelsLikeTemp for reference */
 fun feelsLike(temperature: Float, humidity: Float, wind: Float): Float {

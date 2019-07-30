@@ -19,7 +19,7 @@ internal fun ImageView.loadImage(iconCode: Int, sunPosition: Float = 1f) {
     val uri = if (sunPosition in 0.0..1.0) dayIcons(iconCode) else nightIcons(iconCode)
     GlideApp.with(context)
             .load(context.resources.getIdentifier(uri, "drawable", context.packageName))
-            .skipMemoryCache(true)
+            .skipMemoryCache(true) // Skipped to ensure image is updated after every refresh
             .into(this)
 }
 

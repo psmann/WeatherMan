@@ -16,4 +16,11 @@ internal interface OwmService {
             @Query("lat") latitude: Float,
             @Query("lon") longitude: Float
     ): DtoDailyForecast
+
+    @GET("forecast")
+    suspend fun getHourlyForecast(
+            @Query("lat") latitude: Float,
+            @Query("lon") longitude: Float,
+            @Query("cnt") count: Int = 7 // Restrict to only next 7 three-hourly forecasts (= 21 hours)
+    ): DtoHourlyForecast
 }

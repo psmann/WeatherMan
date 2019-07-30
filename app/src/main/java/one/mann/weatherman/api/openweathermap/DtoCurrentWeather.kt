@@ -1,11 +1,11 @@
 package one.mann.weatherman.api.openweathermap
 
-internal class DtoCurrentWeather(
+internal data class DtoCurrentWeather(
         val main: Main,
         val sys: Sys,
         val wind: Wind,
         val clouds: Clouds,
-        val weather: Array<Weather>,
+        val weather: List<Weather>,
         val name: String,
         val dt: Long,
         val visibility: Float

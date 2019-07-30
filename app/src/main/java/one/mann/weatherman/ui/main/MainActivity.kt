@@ -52,7 +52,7 @@ internal class MainActivity : BaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) if (resultCode == Activity.RESULT_OK) {
             val placeLoc = Autocomplete.getPlaceFromIntent(data!!).latLng // Get coordinates from intent
-            mainViewModel.addCity(Location(arrayOf(placeLoc!!.latitude.toFloat(), placeLoc.longitude.toFloat())))
+            mainViewModel.addCity(Location(listOf(placeLoc!!.latitude.toFloat(), placeLoc.longitude.toFloat())))
         } else toast(R.string.error_has_occurred_try_again)
     }
 

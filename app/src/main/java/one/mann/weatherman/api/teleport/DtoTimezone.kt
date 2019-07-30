@@ -2,7 +2,7 @@ package one.mann.weatherman.api.teleport
 
 import com.google.gson.annotations.SerializedName
 
-internal class DtoTimezone(@SerializedName("_embedded") val embedded1: Embedded1) {
+internal data class DtoTimezone(@SerializedName("_embedded") val embedded1: Embedded1) {
 
     data class CityTimezone(
             @SerializedName("iana_name")

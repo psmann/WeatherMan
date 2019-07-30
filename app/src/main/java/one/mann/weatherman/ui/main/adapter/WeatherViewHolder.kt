@@ -72,4 +72,28 @@ internal sealed class WeatherViewHolder(itemView: View) : RecyclerView.ViewHolde
         var forecast7Max: TextView = itemView.findViewById(R.id.forecast_7_max)
         var forecast7Icon: ImageView = itemView.findViewById(R.id.forecast_7_icon)
     }
+
+    class HourlyForecast(itemView: View) : WeatherViewHolder(itemView) {
+        var forecast1Time: TextView = itemView.findViewById(R.id.forecast_1_time)
+        var forecast1Temp: TextView = itemView.findViewById(R.id.forecast_1_temp)
+        var forecast1Icon: ImageView = itemView.findViewById(R.id.forecast_1_icon)
+        var forecast2Time: TextView = itemView.findViewById(R.id.forecast_2_time)
+        var forecast2Temp: TextView = itemView.findViewById(R.id.forecast_2_temp)
+        var forecast2Icon: ImageView = itemView.findViewById(R.id.forecast_2_icon)
+        var forecast3Time: TextView = itemView.findViewById(R.id.forecast_3_time)
+        var forecast3Temp: TextView = itemView.findViewById(R.id.forecast_3_temp)
+        var forecast3Icon: ImageView = itemView.findViewById(R.id.forecast_3_icon)
+        var forecast4Time: TextView = itemView.findViewById(R.id.forecast_4_time)
+        var forecast4Temp: TextView = itemView.findViewById(R.id.forecast_4_temp)
+        var forecast4Icon: ImageView = itemView.findViewById(R.id.forecast_4_icon)
+        var forecast5Time: TextView = itemView.findViewById(R.id.forecast_5_time)
+        var forecast5Temp: TextView = itemView.findViewById(R.id.forecast_5_temp)
+        var forecast5Icon: ImageView = itemView.findViewById(R.id.forecast_5_icon)
+        var forecast6Time: TextView = itemView.findViewById(R.id.forecast_6_time)
+        var forecast6Temp: TextView = itemView.findViewById(R.id.forecast_6_temp)
+        var forecast6Icon: ImageView = itemView.findViewById(R.id.forecast_6_icon)
+        var forecast7Time: TextView = itemView.findViewById(R.id.forecast_7_time)
+        var forecast7Temp: TextView = itemView.findViewById(R.id.forecast_7_temp)
+        var forecast7Icon: ImageView = itemView.findViewById(R.id.forecast_7_icon)
+    }
 }

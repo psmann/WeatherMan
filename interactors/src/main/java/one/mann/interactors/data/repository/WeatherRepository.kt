@@ -13,7 +13,7 @@ class WeatherRepository @Inject constructor(
         private val timezoneData: TimezoneDataSource,
         private val deviceLocation: DeviceLocationSource,
         private val dbData: DatabaseDataSource,
-        private val preferencesData: PreferencesDataSource
+        private val prefsData: PreferencesDataSource
 ) {
 
     suspend fun dbSize(): Int = dbData.getDbSize()
@@ -21,7 +21,7 @@ class WeatherRepository @Inject constructor(
     suspend fun create(apiLocation: Location? = null) {
         val location = apiLocation ?: deviceLocation.getLocation() // Use value from db if apiLocation is null
         dbData.insertWeather(mapToWeather(weatherData.getCurrentWeather(location), weatherData.getDailyForecast(location),
-                timezoneData.getTimezone(location), location, preferencesData.getUnits()))
+                weatherData.getHourlyForecast(location), timezoneData.getTimezone(location), location, prefsData.getUnits()))
     }
 
     suspend fun readNotificationData(): NotificationData = dbData.getNotificationData()
@@ -33,10 +33,11 @@ class WeatherRepository @Inject constructor(
         if (locationType == LocationType.DEVICE) locations[0] = deviceLocation.getLocation()
         val currentWeathers = weatherData.getAllCurrentWeather(locations)
         val dailyForecasts = weatherData.getAllDailyForecast(locations)
+        val hourlyForecasts = weatherData.getAllHourlyForecast(locations)
         val timezones = timezoneData.getAllTimezone(locations)
         val weathers: MutableList<Weather> = mutableListOf()
-        for (i in 0 until locations.size) weathers.add(
-                mapToWeather(currentWeathers[i], dailyForecasts[i], timezones[i], locations[i], preferencesData.getUnits()))
+        for (i in 0 until locations.size) weathers.add(mapToWeather(currentWeathers[i], dailyForecasts[i],
+                hourlyForecasts[i], timezones[i], locations[i], prefsData.getUnits()))
         dbData.updateAllWeather(weathers)
     }
 

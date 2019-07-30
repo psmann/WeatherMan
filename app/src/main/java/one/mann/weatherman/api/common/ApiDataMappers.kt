@@ -2,8 +2,10 @@ package one.mann.weatherman.api.common
 
 import one.mann.domain.model.CurrentWeather
 import one.mann.domain.model.DailyForecast
+import one.mann.domain.model.HourlyForecast
 import one.mann.weatherman.api.openweathermap.DtoCurrentWeather
 import one.mann.weatherman.api.openweathermap.DtoDailyForecast
+import one.mann.weatherman.api.openweathermap.DtoHourlyForecast
 import one.mann.weatherman.api.teleport.DtoTimezone
 
 internal fun DtoCurrentWeather.mapToDomain(): CurrentWeather = CurrentWeather(
@@ -27,6 +29,12 @@ internal fun DtoDailyForecast.ListObject.mapToDomain(): DailyForecast = DailyFor
         dt * 1000,
         temp.min,
         temp.max,
+        weather[0].id
+)
+
+internal fun DtoHourlyForecast.ListObject.mapToDomain(): HourlyForecast = HourlyForecast(
+        dt * 1000,
+        main.temp,
         weather[0].id
 )
 
