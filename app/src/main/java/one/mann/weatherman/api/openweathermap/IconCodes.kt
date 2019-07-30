@@ -1,6 +1,6 @@
 package one.mann.weatherman.api.openweathermap
 
-
+/** Return file name of vector asset corresponding to the code received from API call */
 internal fun dayIcons(code: Int): String = when (code) {
     in 200..232 -> "thunder" // Thunderstorm
     in 300..310 -> "rainy_2" // Light rain

@@ -24,8 +24,7 @@ internal fun ImageView.loadImage(iconCode: Int, sunPosition: Float = 1f) {
 }
 
 /** Inflate ViewGroups with ViewHolders */
-internal fun ViewGroup.inflateView(@LayoutRes resource: Int,
-                                   attachToRoot: Boolean = false) = LayoutInflater.from(context)
+internal fun ViewGroup.inflateView(@LayoutRes resource: Int, attachToRoot: Boolean = false) = LayoutInflater.from(context)
         .inflate(resource, this, attachToRoot)
 
 /** Check status of network connection */
