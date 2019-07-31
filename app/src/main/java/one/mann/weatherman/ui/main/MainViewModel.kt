@@ -40,8 +40,8 @@ internal class MainViewModel @Inject constructor(
     }
 
     sealed class UiModel {
-        class Refreshing(val loading: Boolean) : UiModel()
-        class DisplayUi(val display: Boolean) : UiModel()
+        data class Refreshing(val loading: Boolean) : UiModel()
+        data class DisplayUi(val display: Boolean) : UiModel()
         object ShowError : UiModel()
     }
 

@@ -63,7 +63,8 @@ internal class MainActivity : BaseActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
-            R.id.menu_add_city -> autocompleteWidget()
+            R.id.menu_add_city -> if (mainViewModel.cityCount.value!! < 10) autocompleteWidget() // Set city limit to 10
+            else toast(R.string.remove_a_city_before_adding)
             R.id.menu_remove_city -> removeCityAlert().show()
             R.id.menu_settings -> startActivity(Intent(this, SettingsActivity::class.java))
         }
