@@ -45,8 +45,8 @@ fun countryCodeToEmoji(code: String): String {
     return String(Character.toChars(firstChar)) + String(Character.toChars(secondChar))
 }
 
-/** Convert unix epoch time into regular time */
-fun epochToFormat(time: Long, timezone: String, pattern: String): String {
+/** Base function to convert Unix epoch time into regular time formats */
+private fun epochToFormat(time: Long, timezone: String, pattern: String): String {
     val format = SimpleDateFormat(pattern, Locale.getDefault())
     format.timeZone = TimeZone.getTimeZone(timezone)
     return format.format(Date(time)).toString()
@@ -59,7 +59,7 @@ fun lengthOfDay(sunrise: Long, sunset: Long): String {
     return hoursFormat.format(Date(sunset - sunrise)).toString()
 }
 
-/** Convert unix epoch time into minutes */
+/** Convert Unix epoch time into minutes */
 fun epochToMinutes(time: Long, timezone: String): Float {
     val hourFormat = SimpleDateFormat("H", Locale.getDefault())
     val minuteFormat = SimpleDateFormat("m", Locale.getDefault())
@@ -68,16 +68,16 @@ fun epochToMinutes(time: Long, timezone: String): Float {
     return (hourFormat.format(Date(time)).toFloat() * 60) + minuteFormat.format(Date(time)).toFloat()
 }
 
-/** Convert unix epoch time into date */
+/** Convert Unix epoch time into date */
 fun epochToDate(time: Long, timezone: String): String = epochToFormat(time, timezone, DATE_PATTERN)
 
-/** Convert unix epoch time into day */
+/** Convert Unix epoch time into day */
 fun epochToDay(time: Long, timezone: String): String = epochToFormat(time, timezone, DAY_PATTERN)
 
-/** Convert unit epoch time into hour */
+/** Convert Unix epoch time into hour */
 fun epochToHour(time: Long, timezone: String): String = epochToFormat(time, timezone, HOUR_PATTERN)
 
-/** Convert unix epoch time into normal time (hours and minutes) */
+/** Convert Unix epoch time into normal time (hours and minutes) */
 fun epochToTime(time: Long, timezone: String): String = epochToFormat(time, timezone, TIME_PATTERN)
 
 /** Calculate the sun position to be used in SunGraphView and weather icons */
