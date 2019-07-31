@@ -1,5 +1,6 @@
 package one.mann.weatherman.api.teleport
 
+import one.mann.weatherman.api.teleport.dto.Timezone
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -9,5 +10,5 @@ internal interface TeleportService {
     suspend fun getTimezone(
             @Path("lat") latitude: String,
             @Path("long") longitude: String
-    ): DtoTimezone
+    ): Timezone
 }

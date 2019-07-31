@@ -1,6 +1,6 @@
-package one.mann.weatherman.api.openweathermap
+package one.mann.weatherman.api.openweathermap.dto
 
-internal data class DtoHourlyForecast(val list: List<ListObject>) {
+internal data class HourlyForecast(val list: List<ListObject>) {
 
     data class ListObject(
             val dt: Long,

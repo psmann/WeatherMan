@@ -5,7 +5,7 @@ import dagger.Module
 import one.mann.interactors.data.sources.DatabaseDataSource
 import one.mann.interactors.data.sources.DeviceLocationSource
 import one.mann.interactors.data.sources.PreferencesDataSource
-import one.mann.weatherman.framework.data.database.WeatherDbSource
+import one.mann.weatherman.framework.data.database.WeatherDbDataSource
 import one.mann.weatherman.framework.data.location.LocationDataSource
 import one.mann.weatherman.framework.data.preferences.SettingsDataSource
 
@@ -13,7 +13,7 @@ import one.mann.weatherman.framework.data.preferences.SettingsDataSource
 internal abstract class FrameworkDataSourceModule {
 
     @Binds
-    abstract fun bindDbDataSource(weatherDbSource: WeatherDbSource): DatabaseDataSource
+    abstract fun bindDbDataSource(weatherDbDataSource: WeatherDbDataSource): DatabaseDataSource
 
     @Binds
     abstract fun bindLocationDataSource(locationDataSource: LocationDataSource): DeviceLocationSource

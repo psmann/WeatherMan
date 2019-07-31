@@ -14,7 +14,7 @@ interface DatabaseDataSource {
 
     suspend fun getAllWeather(): List<Weather>
 
-    suspend fun getAllLocations(): MutableList<Location>
+    suspend fun getAllLocations(): List<Location>
 
     suspend fun updateAllWeather(weathers: List<Weather>)
 

@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import one.mann.interactors.usecases.GetNotificationData
@@ -23,10 +24,20 @@ internal class WeatherNotification @Inject constructor(
 ) {
 
     suspend fun showNotification() {
-        makeNotificationChannel()
+
+        val notificationCollapsed = RemoteViews(context.packageName, R.layout.notification_collapsed)
         val data = getNotificationData.invoke()
+
+        notificationCollapsed.setTextViewText(R.id.notification_temperature, data.currentTemp)
+        notificationCollapsed.setTextViewText(R.id.notification_city_name, data.cityName)
+        notificationCollapsed.setTextViewText(R.id.notification_humidity, "50%")
+        notificationCollapsed.setTextViewText(R.id.notification_wind_speed, "10 Km/Hr")
+        notificationCollapsed.setImageViewResource(R.id.notification_icon, R.drawable.ic_launcher_foreground)
+
+        makeNotificationChannel()
         NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setCustomContentView(notificationCollapsed)
                 .setContentTitle(data.description)
                 .setContentIntent(PendingIntent.getActivity(context, 0,
                         Intent(context, MainActivity::class.java), 0))

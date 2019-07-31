@@ -1,10 +1,9 @@
-package one.mann.weatherman.api.openweathermap
+package one.mann.weatherman.api.common
 
 import okhttp3.Interceptor
 import okhttp3.Response
-import javax.inject.Inject
 
-internal class QueryInterceptor @Inject constructor(
+internal class QueryInterceptor(
         private var key: String,
         private var value: String
 ) : Interceptor {

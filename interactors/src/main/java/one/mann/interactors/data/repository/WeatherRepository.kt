@@ -29,7 +29,7 @@ class WeatherRepository @Inject constructor(
     suspend fun readAll(): List<Weather> = dbData.getAllWeather()
 
     suspend fun updateAll(locationType: LocationType) {
-        val locations = dbData.getAllLocations()
+        val locations = dbData.getAllLocations().toMutableList()
         if (locationType == LocationType.DEVICE) locations[0] = deviceLocation.getLocation()
         val currentWeathers = weatherData.getAllCurrentWeather(locations)
         val dailyForecasts = weatherData.getAllDailyForecast(locations)

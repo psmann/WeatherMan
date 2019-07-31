@@ -12,15 +12,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import one.mann.weatherman.api.openweathermap.dayIcons
 import one.mann.weatherman.api.openweathermap.nightIcons
-import one.mann.weatherman.ui.common.GlideApp
 
-/** Set ImageView using GlideApp, use NightIcons after sunset. DayIcons used by default */
+/** Load vector resources directly for improved performance. Uses nightIcons after sunset, dayIcons used by default */
 internal fun ImageView.loadImage(iconCode: Int, sunPosition: Float = 1f) {
     val uri = if (sunPosition in 0.0..1.0) dayIcons(iconCode) else nightIcons(iconCode)
-    GlideApp.with(context)
-            .load(context.resources.getIdentifier(uri, "drawable", context.packageName))
-            .skipMemoryCache(true) // Skipped to ensure image is updated after every refresh
-            .into(this)
+    setImageResource(context.resources.getIdentifier(uri, "drawable", context.packageName))
 }
 
 /** Inflate ViewGroups with ViewHolders */
@@ -38,14 +34,11 @@ internal fun Context.checkNetworkConnection(): Boolean {
 internal inline fun <reified VM : ViewModel> FragmentActivity.getViewModel(factory: ViewModelProvider.Factory): VM =
         ViewModelProviders.of(this, factory)[VM::class.java]
 
-//internal suspend fun isOnline(): Boolean = try {
-//    // TCP/HTTP/DNS (depending on the port, 53=DNS, 80=HTTP)
-//    val timeoutMs = 1500
-//    val socket = Socket()
-//    val socketAddress = InetSocketAddress("8.8.8.8", 53) // Google DNS
-//    socket.connect(socketAddress, timeoutMs)
-//    socket.close()
-//    true
-//} catch (ignored: IOException) {
-//    false
+///** Load resources using GlideApp */
+//internal fun ImageView.loadImage(iconCode: Int, sunPosition: Float = 1f) {
+//    val uri = if (sunPosition in 0.0..1.0) dayIcons(iconCode) else nightIcons(iconCode)
+//    GlideApp.with(context)
+//            .load(context.resources.getIdentifier(uri, "drawable", context.packageName))
+//            .skipMemoryCache(true) // Skipped to ensure image is updated after every refresh
+//            .into(this)
 //}

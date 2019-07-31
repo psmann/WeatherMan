@@ -5,7 +5,7 @@ import dagger.Provides
 import okhttp3.OkHttpClient
 import one.mann.weatherman.api.common.Keys
 import one.mann.weatherman.api.openweathermap.OwmService
-import one.mann.weatherman.api.openweathermap.QueryInterceptor
+import one.mann.weatherman.api.common.QueryInterceptor
 import one.mann.weatherman.api.teleport.TeleportService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

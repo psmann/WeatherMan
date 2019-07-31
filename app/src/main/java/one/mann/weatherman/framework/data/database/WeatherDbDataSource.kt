@@ -6,7 +6,7 @@ import one.mann.domain.model.Weather
 import one.mann.interactors.data.sources.DatabaseDataSource
 import javax.inject.Inject
 
-internal class WeatherDbSource @Inject constructor(db: WeatherDb) : DatabaseDataSource {
+internal class WeatherDbDataSource @Inject constructor(db: WeatherDb) : DatabaseDataSource {
 
     private val dao = db.weatherDao()
 
@@ -18,8 +18,7 @@ internal class WeatherDbSource @Inject constructor(db: WeatherDb) : DatabaseData
 
     override suspend fun getAllWeather(): List<Weather> = dao.fetchAll().map { it.mapToDomain() }
 
-    override suspend fun getAllLocations(): MutableList<Location> =
-            dao.fetchLocations().map { it.mapToDomain() }.toMutableList()
+    override suspend fun getAllLocations(): List<Location> = dao.fetchLocations().map { it.mapToDomain() }
 
     override suspend fun updateAllWeather(weathers: List<Weather>) = dao.updateAll(weathers.map { it.mapToDb() })
 

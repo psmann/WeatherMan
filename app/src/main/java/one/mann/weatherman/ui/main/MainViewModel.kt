@@ -93,8 +93,8 @@ internal class MainViewModel @Inject constructor(
     private fun startNotificationWork(frequency: Long) = workManager.enqueueUniquePeriodicWork(
             NOTIFICATION_WORKER,
             ExistingPeriodicWorkPolicy.KEEP,
-            PeriodicWorkRequestBuilder<NotificationWorker>(frequency, TimeUnit.HOURS, 15, TimeUnit.MINUTES)
-                    .setInitialDelay(frequency, TimeUnit.HOURS) // Show first notification after the duration set
+            PeriodicWorkRequestBuilder<NotificationWorker>(frequency * 15, TimeUnit.MINUTES)//, 15, TimeUnit.MINUTES)
+                    //.setInitialDelay(frequency, TimeUnit.HOURS) // Show first notification after the duration set
                     .addTag(NOTIFICATION_WORKER_TAG)
                     .setConstraints(Constraints.Builder()
                             .setRequiredNetworkType(NetworkType.CONNECTED)
