@@ -69,10 +69,8 @@ internal class WeatherNotification @Inject constructor(
                 .setCustomContentView(notificationCollapsed)
                 .setCustomBigContentView(notificationExpanded)
                 .setStyle(NotificationCompat.DecoratedCustomViewStyle())
-                .setContentTitle(data.description)
                 .setContentIntent(PendingIntent.getActivity(context, 0,
                         Intent(context, MainActivity::class.java), 0))
-                .setContentText("Temperature in ${data.cityName} is ${data.currentTemp}")
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setVibrate(LongArray(0))
                 .setVisibility(NotificationCompat.VISIBILITY_SECRET)
