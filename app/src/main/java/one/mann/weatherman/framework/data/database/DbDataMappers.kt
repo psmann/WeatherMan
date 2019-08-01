@@ -9,7 +9,31 @@ import one.mann.weatherman.framework.data.database.model.Weather as DbWeather
 
 internal fun LocationTuple.mapToDomain(): Location = Location(listOf(coordinatesLat, coordinatesLong), id)
 
-internal fun NotificationTuple.mapToDomain(): NotificationData = NotificationData(cityName, currentTemp, description)
+internal fun NotificationTuple.mapToDomain(): NotificationData = NotificationData(
+        cityName,
+        description,
+        currentTemp,
+        minTemp,
+        maxTemp,
+        iconId,
+        sunPosition,
+        humidity,
+        hour03Time,
+        hour03IconId,
+        hour03SunPosition,
+        hour06Time,
+        hour06IconId,
+        hour06SunPosition,
+        hour09Time,
+        hour09IconId,
+        hour09SunPosition,
+        hour12Time,
+        hour12IconId,
+        hour12SunPosition,
+        hour15Time,
+        hour15IconId,
+        hour15SunPosition
+)
 
 internal fun DomainWeather.mapToDb(): DbWeather = DbWeather(
         id, // id = null to use SQLite's default increment system

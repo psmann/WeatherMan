@@ -37,6 +37,7 @@
     <string name="do_you_want_to_remove_location">Do you want to remove this location?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="forward_slash">/</string>
 
     <!-- Preference -->
     <string name="units_header">Units</string>

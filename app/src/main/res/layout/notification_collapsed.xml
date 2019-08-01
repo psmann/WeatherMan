@@ -1,46 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:layout_width="wrap_content"
-              android:layout_height="64dp"
-              android:background="@color/quantum_amber100">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools" android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="64dp">
 
-    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:orientation="vertical">
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
+                  android:orientation="vertical"
+                  android:layout_alignParentStart="true"
+                  android:layout_marginEnd="8dp">
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:id="@+id/notification_city_name"
-                  android:textAppearance="@style/TextAppearance.Compat.Notification.Info"/>
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                  android:textAlignment="center"
+                  android:textSize="12sp" android:layout_marginTop="8dp" android:textStyle="bold"/>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                       android:orientation="horizontal">
-            <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                       android:id="@+id/notification_icon"/>
+
+            <ImageView android:layout_width="40dp" android:layout_height="wrap_content"
+                       android:id="@+id/notification_icon"
+                       android:src="@android:drawable/sym_def_app_icon"
+                       android:contentDescription="@string/weather_icon"/>
+
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:id="@+id/notification_temperature"
-                      android:textAppearance="@style/TextAppearance.Compat.Notification.Info"/>
+                      android:id="@+id/notification_temp"
+                      android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                      android:gravity="center_vertical" android:layout_gravity="center_vertical"
+                      android:layout_marginStart="8dp" android:layout_marginEnd="8dp" android:textSize="12sp"/>
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:id="@+id/notification_max_temp"
+                      android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                      android:gravity="center_vertical" android:layout_gravity="center_vertical"
+                      android:layout_marginStart="8dp" android:textSize="12sp"/>
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                      android:text="@string/forward_slash"
+                      android:gravity="center_vertical" android:layout_gravity="center_vertical"
+                      android:layout_marginStart="4dp"/>
+
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:id="@+id/notification_min_temp"
+                      android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                      android:gravity="center_vertical" android:layout_gravity="center_vertical"
+                      android:layout_marginStart="4dp" android:textSize="12sp"/>
+
         </LinearLayout>
+
     </LinearLayout>
 
-    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:orientation="vertical">
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:orientation="horizontal">
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
+                  android:orientation="vertical" android:layout_gravity="end"
+                  android:layout_alignParentEnd="true">
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:id="@+id/notification_description"
+                  android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                  android:layout_marginTop="8dp"
+                  android:textSize="12sp"
+                  android:textAlignment="center" android:layout_marginBottom="4dp"/>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:orientation="horizontal"
+                      android:layout_marginTop="8dp">
+
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:text="Humidity: "
-                      android:textAppearance="@style/TextAppearance.Compat.Notification.Info"/>
+                      android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                      android:gravity="start" android:textSize="12sp" android:textAlignment="viewStart"
+                      android:paddingEnd="32dp" tools:ignore="RtlSymmetry"/>
+
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                       android:id="@+id/notification_humidity"
-                      android:textAppearance="@style/TextAppearance.Compat.Notification.Info"/>
-        </LinearLayout>
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:orientation="horizontal">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:text="Wind Speed: "
-                      android:textAppearance="@style/TextAppearance.Compat.Notification.Info"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:id="@+id/notification_wind_speed"
-                      android:textAppearance="@style/TextAppearance.Compat.Notification.Info"/>
+                      android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                      android:textSize="12sp"
+                      android:textAlignment="textEnd" android:layout_gravity="end"/>
+
         </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

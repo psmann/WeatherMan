@@ -4,7 +4,7 @@ data class CurrentWeather(
         val cityName: String,
         val currentTemperature: Float,
         val pressure: Float,
-        val humidity: Float,
+        val humidity: Int,
         val description: String,
         val iconId: Int,
         var sunrise: Long,

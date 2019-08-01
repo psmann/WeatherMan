@@ -17,7 +17,10 @@ internal interface WeatherDao {
     @Query("SELECT * FROM Weather ORDER BY id ASC")
     suspend fun fetchAll(): List<Weather>
 
-    @Query("SELECT cityName, currentTemp, description FROM Weather WHERE id = 1")
+    @Query("SELECT cityName, description, currentTemp, minTemp, maxTemp, iconId, sunPosition, humidity, " +
+            "hour03Time, hour03IconId, hour03SunPosition, hour06Time, hour06IconId, hour06SunPosition, " +
+            "hour09Time, hour09IconId, hour09SunPosition, hour12Time, hour12IconId, hour12SunPosition, " +
+            "hour15Time, hour15IconId, hour15SunPosition FROM Weather WHERE id = 1")
     suspend fun fetchNotificationData(): NotificationTuple
 
     @Query("SELECT coordinatesLat, coordinatesLong, id FROM Weather ORDER BY id ASC")

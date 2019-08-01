@@ -12,7 +12,7 @@ internal fun ApiCurrentWeather.mapToDomain(): DomainCurrentWeather = DomainCurre
         name,
         main.temp,
         main.pressure,
-        main.humidity,
+        main.humidity.toInt(),
         weather[0].main,
         weather[0].id,
         sys.sunrise * 1000,

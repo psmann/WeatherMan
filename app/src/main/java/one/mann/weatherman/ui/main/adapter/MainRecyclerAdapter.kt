@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import one.mann.domain.model.Weather
 import one.mann.weatherman.R
 import one.mann.weatherman.ui.common.util.inflateView
-import one.mann.weatherman.ui.common.util.loadImage
+import one.mann.weatherman.ui.common.util.loadIcon
 import one.mann.weatherman.ui.main.adapter.WeatherViewHolder.*
 
 internal class MainRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
@@ -40,7 +40,7 @@ internal class MainRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
             holder.feelsLike.text = weather.feelsLike
             holder.currentTemp.text = weather.currentTemp
             holder.description.text = weather.description
-            holder.weatherIcon.loadImage(weather.iconId, weather.sunPosition)
+            holder.weatherIcon.loadIcon(weather.iconId, weather.sunPosition)
         }
         is Sun -> {
             holder.setIsRecyclable(false) // Force-reload sunGraphView to fix view not updating issue
@@ -71,13 +71,13 @@ internal class MainRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
             holder.forecast6Temp.text = weather.hour18Temp
             holder.forecast7Time.text = weather.hour21Time
             holder.forecast7Temp.text = weather.hour21Temp
-            holder.forecast1Icon.loadImage(weather.hour03IconId, weather.hour03SunPosition)
-            holder.forecast2Icon.loadImage(weather.hour06IconId, weather.hour06SunPosition)
-            holder.forecast3Icon.loadImage(weather.hour09IconId, weather.hour09SunPosition)
-            holder.forecast4Icon.loadImage(weather.hour12IconId, weather.hour12SunPosition)
-            holder.forecast5Icon.loadImage(weather.hour15IconId, weather.hour15SunPosition)
-            holder.forecast6Icon.loadImage(weather.hour18IconId, weather.hour18SunPosition)
-            holder.forecast7Icon.loadImage(weather.hour21IconId, weather.hour21SunPosition)
+            holder.forecast1Icon.loadIcon(weather.hour03IconId, weather.hour03SunPosition)
+            holder.forecast2Icon.loadIcon(weather.hour06IconId, weather.hour06SunPosition)
+            holder.forecast3Icon.loadIcon(weather.hour09IconId, weather.hour09SunPosition)
+            holder.forecast4Icon.loadIcon(weather.hour12IconId, weather.hour12SunPosition)
+            holder.forecast5Icon.loadIcon(weather.hour15IconId, weather.hour15SunPosition)
+            holder.forecast6Icon.loadIcon(weather.hour18IconId, weather.hour18SunPosition)
+            holder.forecast7Icon.loadIcon(weather.hour21IconId, weather.hour21SunPosition)
         }
         is DailyForecast -> {
             holder.forecast1Day.text = weather.day1Date
@@ -101,13 +101,13 @@ internal class MainRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
             holder.forecast7Day.text = weather.day7Date
             holder.forecast7Min.text = weather.day7MinTemp
             holder.forecast7Max.text = weather.day7MaxTemp
-            holder.forecast1Icon.loadImage(weather.day1IconId)
-            holder.forecast2Icon.loadImage(weather.day2IconId)
-            holder.forecast3Icon.loadImage(weather.day3IconId)
-            holder.forecast4Icon.loadImage(weather.day4IconId)
-            holder.forecast5Icon.loadImage(weather.day5IconId)
-            holder.forecast6Icon.loadImage(weather.day6IconId)
-            holder.forecast7Icon.loadImage(weather.day7IconId)
+            holder.forecast1Icon.loadIcon(weather.day1IconId)
+            holder.forecast2Icon.loadIcon(weather.day2IconId)
+            holder.forecast3Icon.loadIcon(weather.day3IconId)
+            holder.forecast4Icon.loadIcon(weather.day4IconId)
+            holder.forecast5Icon.loadIcon(weather.day5IconId)
+            holder.forecast6Icon.loadIcon(weather.day6IconId)
+            holder.forecast7Icon.loadIcon(weather.day7IconId)
         }
     }
 

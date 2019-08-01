@@ -14,10 +14,15 @@ import one.mann.weatherman.api.openweathermap.dayIcons
 import one.mann.weatherman.api.openweathermap.nightIcons
 
 /** Load vector resources directly for improved performance. Uses nightIcons after sunset, dayIcons used by default */
-internal fun ImageView.loadImage(iconCode: Int, sunPosition: Float = 1f) {
+internal fun ImageView.loadIcon(iconCode: Int, sunPosition: Float = 1f) {
     val uri = if (sunPosition in 0.0..1.0) dayIcons(iconCode) else nightIcons(iconCode)
     setImageResource(context.resources.getIdentifier(uri, "drawable", context.packageName))
 }
+
+/** Get file name for vector resource */
+internal fun getUri(iconCode: Int, sunPosition: Float): String =
+        if (sunPosition in 0.0..1.0) dayIcons(iconCode)
+        else nightIcons(iconCode)
 
 /** Inflate ViewGroups with ViewHolders */
 internal fun ViewGroup.inflateView(@LayoutRes resource: Int, attachToRoot: Boolean = false) = LayoutInflater.from(context)
@@ -35,7 +40,7 @@ internal inline fun <reified VM : ViewModel> FragmentActivity.getViewModel(facto
         ViewModelProviders.of(this, factory)[VM::class.java]
 
 ///** Load resources using GlideApp */
-//internal fun ImageView.loadImage(iconCode: Int, sunPosition: Float = 1f) {
+//internal fun ImageView.loadIcon(iconCode: Int, sunPosition: Float = 1f) {
 //    val uri = if (sunPosition in 0.0..1.0) dayIcons(iconCode) else nightIcons(iconCode)
 //    GlideApp.with(context)
 //            .load(context.resources.getIdentifier(uri, "drawable", context.packageName))

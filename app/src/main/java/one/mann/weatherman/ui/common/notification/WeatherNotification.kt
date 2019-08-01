@@ -11,10 +11,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import one.mann.interactors.usecases.GetNotificationData
 import one.mann.weatherman.R
-import one.mann.weatherman.ui.common.util.NOTIFICATION_CHANNEL_DESCRIPTION
-import one.mann.weatherman.ui.common.util.NOTIFICATION_CHANNEL_ID
-import one.mann.weatherman.ui.common.util.NOTIFICATION_CHANNEL_NAME
-import one.mann.weatherman.ui.common.util.NOTIFICATION_ID
+import one.mann.weatherman.ui.common.util.*
 import one.mann.weatherman.ui.main.MainActivity
 import javax.inject.Inject
 
@@ -24,20 +21,27 @@ internal class WeatherNotification @Inject constructor(
 ) {
 
     suspend fun showNotification() {
-
         val notificationCollapsed = RemoteViews(context.packageName, R.layout.notification_collapsed)
         val data = getNotificationData.invoke()
 
-        notificationCollapsed.setTextViewText(R.id.notification_temperature, data.currentTemp)
+        val curTemp = data.currentTemp.replace("C", "").toFloat().toInt().toString()
+        val maxTemp = data.maxTemp.replace("C", "").toFloat().toInt().toString()
+        val minTemp = data.minTemp.replace("C", "").toFloat().toInt().toString()
+
+        notificationCollapsed.setTextViewText(R.id.notification_temp, "$curTemp°")
+        notificationCollapsed.setTextViewText(R.id.notification_max_temp, "$maxTemp°")
+        notificationCollapsed.setTextViewText(R.id.notification_min_temp, "$minTemp°")
         notificationCollapsed.setTextViewText(R.id.notification_city_name, data.cityName)
-        notificationCollapsed.setTextViewText(R.id.notification_humidity, "50%")
-        notificationCollapsed.setTextViewText(R.id.notification_wind_speed, "10 Km/Hr")
-        notificationCollapsed.setImageViewResource(R.id.notification_icon, R.drawable.ic_launcher_foreground)
+        notificationCollapsed.setTextViewText(R.id.notification_description, data.description)
+        notificationCollapsed.setTextViewText(R.id.notification_humidity, data.humidity)
+        notificationCollapsed.setImageViewResource(R.id.notification_icon, context.resources
+                .getIdentifier(getUri(data.iconId, data.sunPosition), "drawable", context.packageName))
 
         makeNotificationChannel()
         NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setCustomContentView(notificationCollapsed)
+                .setStyle(NotificationCompat.DecoratedCustomViewStyle())
                 .setContentTitle(data.description)
                 .setContentIntent(PendingIntent.getActivity(context, 0,
                         Intent(context, MainActivity::class.java), 0))
@@ -52,7 +56,7 @@ internal class WeatherNotification @Inject constructor(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?).run {
                 val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME,
-                        NotificationManager.IMPORTANCE_DEFAULT)
+                        NotificationManager.IMPORTANCE_LOW)
                         .apply { this.description = NOTIFICATION_CHANNEL_DESCRIPTION }
                 this?.createNotificationChannel(channel)
             }
