@@ -6,7 +6,7 @@ import androidx.work.WorkerParameters
 import one.mann.domain.model.LocationType
 import one.mann.interactors.usecases.UpdateWeather
 import one.mann.weatherman.framework.service.workers.factory.ChildWorkerFactory
-import one.mann.weatherman.ui.common.notification.WeatherNotification
+import one.mann.weatherman.ui.notification.WeatherNotification
 import javax.inject.Inject
 
 internal class NotificationWorker(

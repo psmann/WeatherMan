@@ -63,8 +63,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="cloud_unknown" />
-                            <entry key="sourceFile" value="C:\Users\MANN\Desktop\weather-underground-icons-master\dist\icons\black\svg\unknown.svg" />
+                            <entry key="outputName" value="ic_notification_icon" />
+                            <entry key="sourceFile" value="C:\Users\MANN\Desktop\mostlysunny.svg" />
                           </map>
                         </option>
                       </PersistentState>
