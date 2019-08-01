@@ -84,7 +84,7 @@ fun epochToTime(time: Long, timezone: String): String = epochToFormat(time, time
 fun sunPositionBias(sunrise: Float, sunset: Float, time: Float): Float = (time - sunrise) / (sunset - sunrise)
 
 /** Calculate FeelsLike temperature using https://blog.metservice.com/FeelsLikeTemp for reference */
-fun feelsLike(temperature: Float, humidity: Float, wind: Float): Float {
+fun feelsLike(temperature: Float, humidity: Int, wind: Float): Float {
     var feelsLike: Double
     when {
         temperature < 14 -> { // = Wind Chill calculated using JAG/TI formula
@@ -94,7 +94,7 @@ fun feelsLike(temperature: Float, humidity: Float, wind: Float): Float {
                 feelsLike = temperature - (((temperature - feelsLike) * (14 - temperature)) / 4)
         }
         else -> { // = Heat Index or Apparent Temperature calculated using the Steadman formula
-            val e = humidity.toInt() / 100 * 6.105 * exp(17.27 * temperature / (237.7 + temperature)) // Pressure
+            val e = humidity / 100 * 6.105 * exp(17.27 * temperature / (237.7 + temperature)) // Pressure
             feelsLike = temperature + (0.33 * e) - (0.7 * wind) - 4
         }
     }
