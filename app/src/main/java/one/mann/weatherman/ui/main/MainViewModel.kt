@@ -3,7 +3,7 @@ package one.mann.weatherman.ui.main
 import android.content.SharedPreferences
 import androidx.lifecycle.MutableLiveData
 import androidx.work.*
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import one.mann.domain.model.Location
@@ -49,7 +49,7 @@ internal class MainViewModel @Inject constructor(
         launch {
             uiModel.value = UiModel.Refreshing(true) // Start refreshing
             try {
-                withContext(Dispatchers.IO) { addCity.invoke(apiLocation) }
+                withContext(IO) { addCity.invoke(apiLocation) }
             } catch (e: IOException) {
                 uiModel.value = UiModel.ShowError
             }
@@ -61,7 +61,7 @@ internal class MainViewModel @Inject constructor(
         launch {
             uiModel.value = UiModel.Refreshing(true) // Start refreshing
             try {
-                withContext(Dispatchers.IO) { updateWeather.invoke(locationType) }
+                withContext(IO) { updateWeather.invoke(locationType) }
             } catch (e: IOException) {
                 uiModel.value = UiModel.ShowError
             }
@@ -71,7 +71,7 @@ internal class MainViewModel @Inject constructor(
 
     fun removeCity(position: Int) {
         val cityName = weatherData.value?.get(position)?.cityName ?: return // Return if null
-        launch(Dispatchers.IO) {
+        launch(IO) {
             removeCity.invoke(cityName)
             updateUI()
         }
@@ -79,7 +79,7 @@ internal class MainViewModel @Inject constructor(
 
     private fun updateUI() {
         launch {
-            val data = withContext(Dispatchers.IO) { getAllWeather.invoke() }
+            val data = withContext(IO) { getAllWeather.invoke() }
             if (data.isNotEmpty()) {
                 weatherData.value = data // Update all weather data
                 if (!showUi) uiModel.value = UiModel.DisplayUi(true) // Show UI if hidden

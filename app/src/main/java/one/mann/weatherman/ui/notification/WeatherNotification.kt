@@ -65,7 +65,7 @@ internal class WeatherNotification @Inject constructor(
         // Create notification channel if necessary
         makeNotificationChannel()
         NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_notification_icon)
+                .setSmallIcon(R.drawable.ic_notification)
                 .setCustomContentView(notificationCollapsed)
                 .setCustomBigContentView(notificationExpanded)
                 .setStyle(NotificationCompat.DecoratedCustomViewStyle())
