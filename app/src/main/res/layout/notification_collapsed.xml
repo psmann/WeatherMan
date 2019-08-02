@@ -59,7 +59,7 @@
                   android:id="@+id/notification_description"
                   android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
                   android:textSize="12sp"
-                  android:textAlignment="center" android:layout_marginBottom="4dp"/>
+                  android:textAlignment="center" android:layout_marginBottom="6dp"/>
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                       android:orientation="horizontal"
