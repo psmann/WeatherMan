@@ -21,8 +21,7 @@ internal fun ImageView.loadIcon(iconCode: Int, sunPosition: Float = 1f) {
 
 /** Get file name for vector resource */
 internal fun getUri(iconCode: Int, sunPosition: Float): String =
-        if (sunPosition in 0.0..1.0) dayIcons(iconCode)
-        else nightIcons(iconCode)
+        if (sunPosition in 0.0..1.0) dayIcons(iconCode) else nightIcons(iconCode)
 
 /** Inflate ViewGroups with ViewHolders */
 internal fun ViewGroup.inflateView(@LayoutRes resource: Int, attachToRoot: Boolean = false) = LayoutInflater.from(context)

@@ -18,7 +18,7 @@ internal fun ApiCurrentWeather.mapToDomain(): DomainCurrentWeather = DomainCurre
         sys.sunrise * 1000,
         sys.sunset * 1000,
         sys.country,
-        clouds.all,
+        clouds.all.toInt(),
         wind.speed,
         wind.deg,
         dt * 1000,

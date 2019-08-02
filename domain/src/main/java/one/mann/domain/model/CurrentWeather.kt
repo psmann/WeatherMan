@@ -10,7 +10,7 @@ data class CurrentWeather(
         var sunrise: Long,
         var sunset: Long,
         val countryFlag: String,
-        val clouds: Float,
+        val clouds: Int,
         val windSpeed: Float,
         val windDirection: Float,
         var lastUpdated: Long,
