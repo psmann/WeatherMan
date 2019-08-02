@@ -20,7 +20,7 @@ internal class NotificationWorker(
         // Multiple tasks enqueued inside a single Worker class as a workaround
         // since PeriodicWork doesn't allow chaining of multiple workers
         updateWeather.invoke(LocationType.DB)
-        weatherNotification.showNotification()
+        weatherNotification.show()
         Result.success()
     } catch (e: Exception) {
         Result.failure()

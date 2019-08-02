@@ -21,15 +21,15 @@ internal class WeatherNotification @Inject constructor(
         private val context: Context,
         private val getNotificationData: GetNotificationData
 ) {
-
-    suspend fun showNotification() {
+    /** Get updated data, set up custom layouts, create channel, build notification and display */
+    suspend fun show() {
         val data = getNotificationData.invoke()
         val notificationCollapsed = RemoteViews(context.packageName, R.layout.notification_collapsed)
         val notificationExpanded = RemoteViews(context.packageName, R.layout.notification_expanded)
         val curTemp = data.currentTemp.replace("C", "").toFloat().roundOff()
         val maxTemp = data.maxTemp.replace("C", "").toFloat().roundOff()
         val minTemp = data.minTemp.replace("C", "").toFloat().roundOff()
-
+        // Set up layout for collapsed notification
         notificationCollapsed.setTextViewText(R.id.notification_temp, "$curTemp°")
         notificationCollapsed.setTextViewText(R.id.notification_max_temp, "$maxTemp°")
         notificationCollapsed.setTextViewText(R.id.notification_min_temp, "$minTemp°")
@@ -38,7 +38,7 @@ internal class WeatherNotification @Inject constructor(
         notificationCollapsed.setTextViewText(R.id.notification_humidity, data.humidity)
         notificationCollapsed.setImageViewResource(R.id.notification_icon, context.resources
                 .getIdentifier(getUri(data.iconId, data.sunPosition), "drawable", context.packageName))
-
+        // Set up layout for expanded notification
         notificationExpanded.setTextViewText(R.id.notification_temp, "$curTemp°")
         notificationExpanded.setTextViewText(R.id.notification_max_temp, "$maxTemp°")
         notificationExpanded.setTextViewText(R.id.notification_min_temp, "$minTemp°")
@@ -62,7 +62,7 @@ internal class WeatherNotification @Inject constructor(
                 .getIdentifier(getUri(data.hour12IconId, data.hour12SunPosition), "drawable", context.packageName))
         notificationExpanded.setImageViewResource(R.id.notification_icon_forecast5, context.resources
                 .getIdentifier(getUri(data.hour15IconId, data.hour15SunPosition), "drawable", context.packageName))
-
+        // Create notification channel if necessary
         makeNotificationChannel()
         NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notification_icon)
@@ -77,7 +77,7 @@ internal class WeatherNotification @Inject constructor(
                 .run { NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, this.build()) }
     }
 
-    /** Create a notification channel if necessary, creating an existing notification channel performs no operation */
+    /** Create notification channel, re-creating an existing channel performs no operation */
     private fun makeNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?).run {
