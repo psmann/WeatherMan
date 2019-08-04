@@ -4,9 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
@@ -16,6 +15,7 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import one.mann.domain.model.Location
 import one.mann.domain.model.LocationResponse.*
@@ -38,7 +38,8 @@ internal class MainActivity : BaseActivity() {
     }
 
     private var isFirstRun = true
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private val mainViewModel: MainViewModel by lazy { getViewModel(viewModelFactory) }
     private val mainPagerAdapter by lazy { MainPagerAdapter(supportFragmentManager) }
 
@@ -53,22 +54,7 @@ internal class MainActivity : BaseActivity() {
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) if (resultCode == Activity.RESULT_OK) {
             val placeLoc = Autocomplete.getPlaceFromIntent(data!!).latLng // Get coordinates from intent
             mainViewModel.addCity(Location(listOf(placeLoc!!.latitude.toFloat(), placeLoc.longitude.toFloat())))
-        } else toast(R.string.error_has_occurred_try_again)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
-            R.id.menu_add_city -> if (mainViewModel.cityCount.value!! < 10) autocompleteWidget() // Set city limit to 10
-            else toast(R.string.remove_a_city_before_adding)
-            R.id.menu_remove_city -> removeCityAlert().show()
-            R.id.menu_settings -> startActivity(Intent(this, SettingsActivity::class.java))
         }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun injectDependencies() = WeatherManApp.appComponent.getMainComponent().injectActivity(this)
@@ -79,10 +65,19 @@ internal class MainActivity : BaseActivity() {
             finish()
             return
         }
-        setSupportActionBar(main_toolbar)
+        // Init Toolbar
+        main_toolbar.inflateMenu(R.menu.menu_main) // Inflate menu directly into toolbar
+        main_toolbar.setOnMenuItemClickListener {
+            when (it!!.itemId) {
+                R.id.menu_add_city -> if (main_viewPager.adapter!!.count < 10) autocompleteWidget() // Limit cities to 10
+                else toast(R.string.remove_a_city_before_adding)
+                R.id.menu_remove_city -> removeCityAlert().show()
+                R.id.menu_settings -> startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
+            }
+            false
+        }
         // Init ViewPager
         main_viewPager.adapter = mainPagerAdapter
-        main_tabLayout.setupWithViewPager(main_viewPager)
         main_viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
             override fun onPageSelected(position: Int) {}
@@ -100,6 +95,7 @@ internal class MainActivity : BaseActivity() {
         mainViewModel.cityCount.observe(this, Observer {
             if (it == 0) handleLocationServiceResult() // If cityCount is 0 then this is the app's the first run
             else {
+                if (it == 2) navigationGuideSnack().show() // Show Snackbar when user adds a city for the first time
                 mainPagerAdapter.updatePages(it!!)
                 isFirstRun = false
             }
@@ -144,6 +140,12 @@ internal class MainActivity : BaseActivity() {
             }
             .setNegativeButton(getString(R.string.no)) { _, _ -> }
             .create()
+
+    private fun navigationGuideSnack() = Snackbar
+            .make(activity_main_cl, getString(R.string.swipe_left_or_right), Snackbar.LENGTH_INDEFINITE)
+            .setAction(getString(R.string.got_it)) { }
+            .setBackgroundTint(ContextCompat.getColor(this, R.color.gradientStart))
+            .setActionTextColor(Color.WHITE)
 
     /** Widget for Places Autocomplete API that needs to run in activity scope */
     private fun autocompleteWidget() = try {

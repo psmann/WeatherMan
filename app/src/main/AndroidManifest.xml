@@ -18,6 +18,8 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="AllowBackup,GoogleAppIndexingWarning">
+        <activity android:name=".ui.detail.DetailActivity">
+        </activity>
         <activity
                 android:name=".ui.settings.SettingsActivity"
                 android:label="@string/title_activity_settings"
@@ -26,14 +28,16 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="one.mann.weatherman.ui.main.MainActivity"/>
         </activity>
-        <activity android:name=".ui.main.MainActivity"
-                  android:launchMode="singleTask">
+        <activity
+                android:name=".ui.main.MainActivity"
+                android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <provider
                 android:name="androidx.work.impl.WorkManagerInitializer"
                 android:authorities="${applicationId}.workmanager-init"

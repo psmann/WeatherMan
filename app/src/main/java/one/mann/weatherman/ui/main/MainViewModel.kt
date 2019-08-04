@@ -3,6 +3,7 @@ package one.mann.weatherman.ui.main
 import android.content.SharedPreferences
 import androidx.lifecycle.MutableLiveData
 import androidx.work.*
+import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -35,7 +36,8 @@ internal class MainViewModel @Inject constructor(
     init {
         uiModel.value = UiModel.DisplayUi(false)
         settingsPrefs.registerOnSharedPreferenceChangeListener(this)
-        workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG).observeForever { updateUI() } // Observe worker
+        workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG).observeForever { updateUI() } // Update on change
+        enqueueNotificationWork()
         updateUI()
     }
 
@@ -90,19 +92,33 @@ internal class MainViewModel @Inject constructor(
         }
     }
 
-    private fun startNotificationWork(frequency: Long) = workManager.enqueueUniquePeriodicWork(
-            NOTIFICATION_WORKER,
-            ExistingPeriodicWorkPolicy.KEEP,
-            PeriodicWorkRequestBuilder<NotificationWorker>(frequency, TimeUnit.HOURS, 15, TimeUnit.MINUTES)
-                    .setInitialDelay(frequency, TimeUnit.HOURS) // Show first notification after the duration set
-                    .addTag(NOTIFICATION_WORKER_TAG)
-                    .setConstraints(Constraints.Builder()
-                            .setRequiredNetworkType(NetworkType.CONNECTED)
-                            .build())
-                    .build()
-    )
+    /** Start worker if notifications are turned on by the user, does nothing if worker is already running */
+    private fun enqueueNotificationWork() {
+        launch(IO) {
+            if (settingsPrefs.getBoolean(SETTINGS_NOTIFICATIONS_KEY, true)) startNotificationWork(
+                    settingsPrefs.getString(SETTINGS_FREQUENCY_KEY, "1")!!.toLong())
+        }
+    }
 
-    private fun stopNotificationWork() = workManager.cancelUniqueWork(NOTIFICATION_WORKER)
+    private fun startNotificationWork(frequency: Long) {
+        launch(Default) {
+            workManager.enqueueUniquePeriodicWork(
+                    NOTIFICATION_WORKER,
+                    ExistingPeriodicWorkPolicy.KEEP,
+                    PeriodicWorkRequestBuilder<NotificationWorker>(frequency, TimeUnit.HOURS, 15, TimeUnit.MINUTES)
+                            .setInitialDelay(frequency, TimeUnit.HOURS) // Show first notification after the duration set
+                            .addTag(NOTIFICATION_WORKER_TAG)
+                            .setConstraints(Constraints.Builder()
+                                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                                    .build())
+                            .build()
+            )
+        }
+    }
+
+    private fun stopNotificationWork() {
+        launch(Default) { workManager.cancelUniqueWork(NOTIFICATION_WORKER) }
+    }
 
     /** Remove listeners and observers at destruction */
     override fun onCleared() {

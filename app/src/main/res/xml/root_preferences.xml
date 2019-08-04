@@ -15,7 +15,7 @@
     <PreferenceCategory app:title="@string/notification_header">
 
         <SwitchPreferenceCompat
-                app:defaultValue="false"
+                app:defaultValue="true"
                 app:key="notification"
                 app:title="@string/display_notification"/>
 

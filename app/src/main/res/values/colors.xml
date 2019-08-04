@@ -3,7 +3,7 @@
     <color name="colorPrimary">#3949ab</color>
     <color name="colorPrimaryDark">#1a237e</color>
     <color name="colorAccent">#80deea</color>
-    <color name="colorGradientStart">#7986cb</color>
-    <color name="colorGradientCenter">#00bcd4</color>
-    <color name="colorGradientEnd">#b2ebf2</color>
+    <color name="gradientStart">#7986cb</color>
+    <color name="gradientCenter">#00bcd4</color>
+    <color name="gradientEnd">#b2ebf2</color>
 </resources>
