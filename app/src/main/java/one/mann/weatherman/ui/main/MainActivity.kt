@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -45,6 +46,7 @@ internal class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         setContentView(R.layout.activity_main)
         handleLocationPermission { initActivity(it) }
     }
@@ -144,7 +146,7 @@ internal class MainActivity : BaseActivity() {
     private fun navigationGuideSnack() = Snackbar
             .make(activity_main_cl, getString(R.string.swipe_left_or_right), Snackbar.LENGTH_INDEFINITE)
             .setAction(getString(R.string.got_it)) { }
-            .setBackgroundTint(ContextCompat.getColor(this, R.color.gradientStart))
+            .setBackgroundTint(ContextCompat.getColor(this, R.color.dayClearStart))
             .setActionTextColor(Color.WHITE)
 
     /** Widget for Places Autocomplete API that needs to run in activity scope */

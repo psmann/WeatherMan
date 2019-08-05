@@ -3,7 +3,24 @@
     <color name="colorPrimary">#3949ab</color>
     <color name="colorPrimaryDark">#1a237e</color>
     <color name="colorAccent">#80deea</color>
-    <color name="gradientStart">#7986cb</color>
-    <color name="gradientCenter">#00bcd4</color>
-    <color name="gradientEnd">#b2ebf2</color>
+
+    // Background colours
+    <color name="dayClearStart">#01579B</color>
+    <color name="dayClearCenter">#03A9F4</color>
+    <color name="dayClearEnd">#B3E5FC</color>
+    <color name="dayCloudsStart">#263238</color>
+    <color name="dayCloudsCenter">#607D8B</color>
+    <color name="dayCloudsEnd">#B0BEC5</color>
+    <color name="nightClearStart">#211352</color>
+    <color name="nightClearCenter">#59497A</color>
+    <color name="nightClearEnd">#4A4A64</color>
+    <color name="nightCloudsStart">#33303D</color>
+    <color name="nightCloudsCenter">#524B63</color>
+    <color name="nightCloudsEnd">#575758</color>
+    <color name="sunriseClearStart">#E65100</color>
+    <color name="sunriseClearCenter">#FF9800</color>
+    <color name="sunriseClearEnd">#FFCC80</color>
+    <color name="sunriseCloudsStart">#6D2703</color>
+    <color name="sunriseCloudsCenter">#BB6F00</color>
+    <color name="sunriseCloudsEnd">#E29C32</color>
 </resources>

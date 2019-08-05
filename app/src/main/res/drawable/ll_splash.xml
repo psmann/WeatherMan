@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:opacity="opaque">
 
-    <item android:drawable="@drawable/background_gradient" />
+    <item android:drawable="@drawable/background_gradient_day_clear" />
 
     <item
-        android:width="250dp"
-        android:height="250dp"
+        android:width="256dp"
+        android:height="256dp"
         android:drawable="@drawable/ic_launcher_foreground"
         android:gravity="center"
         tools:ignore="UnusedAttribute" />

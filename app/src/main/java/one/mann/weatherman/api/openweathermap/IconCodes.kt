@@ -36,3 +36,9 @@ internal fun nightIcons(code: Int): String = when (code) {
     804 -> "cloudy" // Cloud cover 86%-100%
     else -> "cloud_unknown" // Cloud with question mark for unknown code
 }
+
+/** Check if current weather is overcast */
+internal fun isCloudy(code: Int): Boolean = when(code) {
+    in 200..232, in 500..510, in 512..531, 511, in 602..619, 622, in 700..781 -> true
+    else -> false
+}

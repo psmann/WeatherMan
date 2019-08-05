@@ -8,22 +8,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_main.*
-import kotlinx.android.synthetic.main.fragment_weather.*
 import one.mann.weatherman.R
+import one.mann.weatherman.api.openweathermap.isCloudy
 import one.mann.weatherman.application.WeatherManApp
-import one.mann.weatherman.ui.common.util.getViewModel
-import one.mann.weatherman.ui.common.util.loadIcon
-import one.mann.weatherman.ui.main.MainViewModel.UiModel
-import one.mann.weatherman.ui.main.adapter.MainRecyclerAdapter
+import one.mann.weatherman.ui.common.util.*
 import javax.inject.Inject
 
 internal class MainFragment : Fragment() {
 
     private var position = 0
     private val mainViewModel: MainViewModel by lazy { activity?.run { getViewModel(viewModelFactory) }!! }
-//    private val mainRecyclerAdapter by lazy { MainRecyclerAdapter() }
+    //    private val mainRecyclerAdapter by lazy { MainRecyclerAdapter() }
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -60,6 +56,7 @@ internal class MainFragment : Fragment() {
                 current_temp.text = weather.currentTemp
                 time_updated.text = weather.lastUpdated
                 city_name.text = weather.cityName
+                fragment_main.setBackgroundResource(getBackgroundGradient(weather.sunPosition, isCloudy(weather.iconId)))
 //                mainRecyclerAdapter.update(it[position])
             }
         })

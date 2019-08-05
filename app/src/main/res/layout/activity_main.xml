@@ -5,7 +5,7 @@
         android:id="@+id/activity_main_cl"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/background_gradient"
+
         tools:context=".ui.main.MainActivity">
 
     <androidx.appcompat.widget.Toolbar
