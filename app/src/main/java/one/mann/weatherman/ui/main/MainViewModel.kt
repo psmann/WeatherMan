@@ -1,6 +1,7 @@
 package one.mann.weatherman.ui.main
 
 import android.content.SharedPreferences
+import androidx.core.content.edit
 import androidx.lifecycle.MutableLiveData
 import androidx.work.*
 import kotlinx.coroutines.Dispatchers.Default
@@ -15,7 +16,8 @@ import one.mann.weatherman.framework.service.workers.NotificationWorker
 import one.mann.weatherman.ui.common.base.BaseViewModel
 import one.mann.weatherman.ui.common.util.*
 import java.io.IOException
-import java.util.concurrent.TimeUnit
+import java.util.concurrent.TimeUnit.HOURS
+import java.util.concurrent.TimeUnit.MINUTES
 import javax.inject.Inject
 
 internal class MainViewModel @Inject constructor(
@@ -105,8 +107,8 @@ internal class MainViewModel @Inject constructor(
             workManager.enqueueUniquePeriodicWork(
                     NOTIFICATION_WORKER,
                     ExistingPeriodicWorkPolicy.KEEP,
-                    PeriodicWorkRequestBuilder<NotificationWorker>(frequency, TimeUnit.HOURS, 15, TimeUnit.MINUTES)
-                            .setInitialDelay(frequency, TimeUnit.HOURS) // Show first notification after the duration set
+                    PeriodicWorkRequestBuilder<NotificationWorker>(frequency, HOURS, 15, MINUTES)
+                            .setInitialDelay(frequency, HOURS) // Show first notification after the duration set
                             .addTag(NOTIFICATION_WORKER_TAG)
                             .setConstraints(Constraints.Builder()
                                     .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -118,6 +120,12 @@ internal class MainViewModel @Inject constructor(
 
     private fun stopNotificationWork() {
         launch(Default) { workManager.cancelUniqueWork(NOTIFICATION_WORKER) }
+    }
+
+    fun navigationGuideShown(): Boolean = settingsPrefs.getBoolean(NAVIGATION_GUIDE, false)
+
+    fun setNavigationGuideShown() {
+        launch(IO) { settingsPrefs.edit { putBoolean(NAVIGATION_GUIDE, true) } }
     }
 
     /** Remove listeners and observers at destruction */

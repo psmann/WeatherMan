@@ -1,4 +1,4 @@
-package one.mann.weatherman.ui.main.adapter
+package one.mann.weatherman.ui.detail.adapter
 
 import android.view.View
 import android.widget.ImageView

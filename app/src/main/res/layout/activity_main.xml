@@ -2,10 +2,10 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/activity_main_cl"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/activity_main_coord_ly"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         tools:context=".ui.main.MainActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -13,10 +13,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:elevation="1dp"
-            android:background="@android:color/transparent"/>
+            android:theme="@style/ToolBarTheme"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:background="@android:color/transparent"
+            android:layout_marginTop="24dp"/>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh_ly"
+            android:id="@+id/main_swipe_ly"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -26,5 +29,10 @@
                 android:layout_height="match_parent"/>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <View android:id="@+id/snackbar_anchor"
+          android:layout_width="wrap_content"
+          android:layout_height="48dp"
+          android:layout_gravity="bottom"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

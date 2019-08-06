@@ -2,15 +2,17 @@ package one.mann.weatherman.application.di.component
 
 import dagger.Subcomponent
 import one.mann.weatherman.application.di.annotation.ActivityScope
-import one.mann.weatherman.application.di.module.framework.WorkerModule
+import one.mann.weatherman.ui.detail.DetailActivity
 import one.mann.weatherman.ui.main.MainActivity
 import one.mann.weatherman.ui.main.MainFragment
 
 @ActivityScope
 @Subcomponent
-internal interface MainComponent {
+internal interface WeatherSubComponent {
 
-    fun injectActivity(mainActivity: MainActivity)
+    fun injectMainActivity(mainActivity: MainActivity)
 
-    fun injectFragment(mainFragment: MainFragment)
+    fun injectMainFragment(mainFragment: MainFragment)
+
+    fun injectDetailActivity(detailActivity: DetailActivity)
 }

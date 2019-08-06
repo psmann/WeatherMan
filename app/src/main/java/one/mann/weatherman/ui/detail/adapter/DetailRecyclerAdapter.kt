@@ -1,4 +1,4 @@
-package one.mann.weatherman.ui.main.adapter
+package one.mann.weatherman.ui.detail.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -6,9 +6,9 @@ import one.mann.domain.model.Weather
 import one.mann.weatherman.R
 import one.mann.weatherman.ui.common.util.inflateView
 import one.mann.weatherman.ui.common.util.loadIcon
-import one.mann.weatherman.ui.main.adapter.WeatherViewHolder.*
+import one.mann.weatherman.ui.detail.adapter.WeatherViewHolder.*
 
-internal class MainRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
+internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
 
     companion object {
         private const val VIEW_HOLDER_COUNT = 6

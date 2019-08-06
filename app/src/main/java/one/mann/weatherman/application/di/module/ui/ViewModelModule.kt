@@ -7,6 +7,7 @@ import dagger.Module
 import dagger.multibindings.IntoMap
 import one.mann.weatherman.application.di.annotation.ViewModelKey
 import one.mann.weatherman.ui.common.base.ViewModelFactory
+import one.mann.weatherman.ui.detail.DetailViewModel
 import one.mann.weatherman.ui.main.MainViewModel
 
 @Module
@@ -19,4 +20,9 @@ internal abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(MainViewModel::class)
     abstract fun bindMainViewModel(viewModel: MainViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(DetailViewModel::class)
+    abstract fun bindDetailViewModel(viewModel: DetailViewModel): ViewModel
 }

@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#1a237e</color>
     <color name="colorAccent">#80deea</color>
 
-    // Background colours
+    <!--Background colours-->
     <color name="dayClearStart">#01579B</color>
     <color name="dayClearCenter">#03A9F4</color>
     <color name="dayClearEnd">#B3E5FC</color>

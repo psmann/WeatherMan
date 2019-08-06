@@ -4,8 +4,9 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.view.WindowManager
+import android.view.Gravity
 import androidx.appcompat.app.AlertDialog
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -46,7 +47,6 @@ internal class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
         setContentView(R.layout.activity_main)
         handleLocationPermission { initActivity(it) }
     }
@@ -59,7 +59,7 @@ internal class MainActivity : BaseActivity() {
         }
     }
 
-    override fun injectDependencies() = WeatherManApp.appComponent.getMainComponent().injectActivity(this)
+    override fun injectDependencies() = WeatherManApp.appComponent.getSubComponent().injectMainActivity(this)
 
     private fun initActivity(permissionGranted: Boolean) {
         if (!permissionGranted) { // If permission denied then exit
@@ -84,26 +84,26 @@ internal class MainActivity : BaseActivity() {
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
             override fun onPageSelected(position: Int) {}
             override fun onPageScrollStateChanged(state: Int) { // Fix horizontal scrolling
-                if (!swipe_refresh_ly.isRefreshing) swipe_refresh_ly.isEnabled = state == ViewPager.SCROLL_STATE_IDLE
+                if (!main_swipe_ly.isRefreshing) main_swipe_ly.isEnabled = state == ViewPager.SCROLL_STATE_IDLE
             }
         })
         // Init ViewModel
         mainViewModel.uiModel.observe(this, Observer {
             when (it) {
-                is UiModel.Refreshing -> swipe_refresh_ly.isRefreshing = it.loading
+                is UiModel.Refreshing -> main_swipe_ly.isRefreshing = it.loading
                 is UiModel.ShowError -> toast(R.string.error_has_occurred_try_again)
             }
         })
         mainViewModel.cityCount.observe(this, Observer {
             if (it == 0) handleLocationServiceResult() // If cityCount is 0 then this is the app's the first run
-            else {
-                if (it == 2) navigationGuideSnack().show() // Show Snackbar when user adds a city for the first time
+            else { // Show Snackbar when user adds a city for the first time
+                if (it == 2 && !mainViewModel.navigationGuideShown()) navigationGuideSnack().show()
                 mainPagerAdapter.updatePages(it!!)
                 isFirstRun = false
             }
         })
-        swipe_refresh_ly.setColorSchemeColors(Color.RED, Color.BLUE)
-        swipe_refresh_ly.setOnRefreshListener { handleLocationServiceResult() }
+        main_swipe_ly.setColorSchemeColors(Color.RED, Color.BLUE)
+        main_swipe_ly.setOnRefreshListener { handleLocationServiceResult() }
     }
 
     private fun handleLocationServiceResult() = handleLocationPermission { permissionGranted ->
@@ -111,16 +111,14 @@ internal class MainActivity : BaseActivity() {
             when (it) {
                 NO_NETWORK -> {
                     toast(R.string.no_internet_connection)
-                    swipe_refresh_ly.isRefreshing = false
+                    main_swipe_ly.isRefreshing = false
                 }
-                ENABLED -> {
+                ENABLED ->
                     if (isFirstRun) mainViewModel.addCity()
                     else mainViewModel.updateWeather(DEVICE)
-                }
-                DISABLED -> {
+                DISABLED ->
                     if (isFirstRun) toast(R.string.gps_needed_for_location)
                     else mainViewModel.updateWeather(DB)
-                }
                 UNAVAILABLE -> {
                     toast(R.string.location_settings_not_available)
                     finish()
@@ -144,10 +142,18 @@ internal class MainActivity : BaseActivity() {
             .create()
 
     private fun navigationGuideSnack() = Snackbar
-            .make(activity_main_cl, getString(R.string.swipe_left_or_right), Snackbar.LENGTH_INDEFINITE)
-            .setAction(getString(R.string.got_it)) { }
+            .make(activity_main_coord_ly, getString(R.string.swipe_left_or_right), Snackbar.LENGTH_INDEFINITE)
+            .setAction(getString(R.string.got_it)) { mainViewModel.setNavigationGuideShown() }
             .setBackgroundTint(ContextCompat.getColor(this, R.color.dayClearStart))
-            .setActionTextColor(Color.WHITE)
+            .setActionTextColor(ContextCompat.getColor(this, R.color.sunriseClearCenter))
+            .apply {
+                val params = view.layoutParams as CoordinatorLayout.LayoutParams
+                params.anchorId = R.id.snackbar_anchor // Set it up above navigation bar
+                params.anchorGravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
+                params.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
+                view.elevation = 0f // Remove shadow
+                view.layoutParams = params
+            }
 
     /** Widget for Places Autocomplete API that needs to run in activity scope */
     private fun autocompleteWidget() = try {

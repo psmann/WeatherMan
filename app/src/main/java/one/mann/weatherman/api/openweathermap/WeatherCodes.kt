@@ -1,6 +1,6 @@
 package one.mann.weatherman.api.openweathermap
 
-/** Return file name of vector asset corresponding to the code received from API call */
+/** Return file name of vector asset (day) corresponding to the code received from API call */
 internal fun dayIcons(code: Int): String = when (code) {
     in 200..232 -> "thunder" // Thunderstorm
     in 300..310 -> "rainy_2" // Light rain
@@ -19,6 +19,7 @@ internal fun dayIcons(code: Int): String = when (code) {
     else -> "cloud_unknown" // Cloud with question mark for unknown code
 }
 
+/** Return file name of vector asset (night) corresponding to the code received from API call */
 internal fun nightIcons(code: Int): String = when (code) {
     in 200..232 -> "thunder" // Thunderstorm
     in 300..310 -> "rainy_4" // Light rain
@@ -38,7 +39,7 @@ internal fun nightIcons(code: Int): String = when (code) {
 }
 
 /** Check if current weather is overcast */
-internal fun isCloudy(code: Int): Boolean = when(code) {
-    in 200..232, in 500..510, in 512..531, 511, in 602..619, 622, in 700..781 -> true
+internal fun isOvercast(code: Int): Boolean = when(code) {
+    in 200..232, in 500..510, in 512..531, 511, in 602..619, 622, in 700..781, 804 -> true
     else -> false
 }

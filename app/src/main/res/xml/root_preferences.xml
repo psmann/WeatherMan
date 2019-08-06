@@ -1,4 +1,8 @@
-<androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.preference.PreferenceScreen
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--Added to give padding-->
+    <PreferenceCategory/>
 
     <PreferenceCategory app:title="@string/units_header">
 

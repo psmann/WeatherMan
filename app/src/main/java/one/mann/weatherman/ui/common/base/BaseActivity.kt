@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
+import android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
@@ -17,7 +18,8 @@ import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
-import com.google.android.gms.location.LocationSettingsStatusCodes
+import com.google.android.gms.location.LocationSettingsStatusCodes.RESOLUTION_REQUIRED
+import com.google.android.gms.location.LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE
 import one.mann.domain.model.LocationResponse
 import one.mann.domain.model.LocationResponse.*
 import one.mann.weatherman.ui.common.util.checkNetworkConnection
@@ -35,6 +37,7 @@ internal abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        window.setFlags(FLAG_LAYOUT_NO_LIMITS, FLAG_LAYOUT_NO_LIMITS) // Make navigation bar and status bar transparent
         injectDependencies()
     }
 
@@ -80,13 +83,13 @@ internal abstract class BaseActivity : AppCompatActivity() {
                         networkAndLocationListener(ENABLED)
                     } catch (exception: ApiException) { // Location settings are Off
                         when (exception.statusCode) {
-                            LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> try { // Check result in onActivityResult
+                            RESOLUTION_REQUIRED -> try { // Check result in onActivityResult
                                 val resolvable = exception as ResolvableApiException
                                 resolvable.startResolutionForResult(this, LOCATION_REQUEST_CODE)
                             } catch (ignored: IntentSender.SendIntentException) {
                             } catch (ignored: ClassCastException) {
                             } // Location settings are not available on device
-                            LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> networkAndLocationListener(UNAVAILABLE)
+                            SETTINGS_CHANGE_UNAVAILABLE -> networkAndLocationListener(UNAVAILABLE)
                         }
                     }
                 }

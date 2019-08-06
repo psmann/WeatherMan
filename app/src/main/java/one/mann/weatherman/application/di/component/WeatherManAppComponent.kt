@@ -25,7 +25,7 @@ import javax.inject.Singleton
 ])
 internal interface WeatherManAppComponent {
 
-    fun getMainComponent(): MainComponent
+    fun getSubComponent(): WeatherSubComponent
 
     fun injectApplication(weatherManApp: WeatherManApp)
 }

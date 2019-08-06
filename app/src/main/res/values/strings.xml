@@ -38,6 +38,9 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="forward_slash">/</string>
+    <string name="got_it">Got it</string>
+    <string name="details">Details</string>
+    <string name="swipe_left_or_right">Swipe left or right to toggle between cities</string>
 
     <!-- Preference -->
     <string name="units_header">Units</string>
@@ -47,7 +50,4 @@
     <string name="notification_frequency">Notification Frequency</string>
     <string name="notification_frequency_summary">Set how often you\'d like to receive notifications</string>
     <string name="humidity_notification">Humidity</string>
-    <string name="swipe_left_or_right">Swipe left or right to toggle between cities</string>
-    <string name="got_it">Got it</string>
-    <string name="details">Details</string>
 </resources>
