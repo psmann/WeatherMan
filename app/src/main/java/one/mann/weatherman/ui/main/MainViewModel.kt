@@ -108,7 +108,6 @@ internal class MainViewModel @Inject constructor(
                     NOTIFICATION_WORKER,
                     ExistingPeriodicWorkPolicy.KEEP,
                     PeriodicWorkRequestBuilder<NotificationWorker>(frequency, HOURS, 15, MINUTES)
-                            .setInitialDelay(frequency, HOURS) // Show first notification after the duration set
                             .addTag(NOTIFICATION_WORKER_TAG)
                             .setConstraints(Constraints.Builder()
                                     .setRequiredNetworkType(NetworkType.CONNECTED)

@@ -1,7 +1,5 @@
 package one.mann.domain.logic
 
-import java.math.BigDecimal
-import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.exp
@@ -15,22 +13,20 @@ const val DATE_PATTERN = "d MMM, h:mm aa"
 const val DAY_PATTERN = "E"
 const val HOUR_PATTERN = "h aa"
 const val TIME_PATTERN = "h:mm aa"
-const val CELSIUS = " C"
-const val FAHRENHEIT = " F"
+const val CELSIUS = "C"
+const val FAHRENHEIT = "F"
 const val HECTOPASCAL = " hPa"
 const val PERCENT = " %"
 const val METERS = " m"
 const val METERS_PER_SECOND = " m/s"
-const val DEGREES = " °"
+const val DEGREES = "°"
 const val IMPERIAL = "imperial"
 
 /** Append data with units */
 fun Any.addUnits(units: String): String = this.toString() + units
 
 /** Change temperature units from Metric to Imperial */
-fun Float.setUnitsType(type: String): Float =
-        if (type == IMPERIAL) String.format("%.2f", (this * (9 / 5)) + 32).toFloat()
-        else this
+fun Float.setUnitsType(type: String) = String.format("%.1f", if (type == IMPERIAL) ((this * (9 / 5)) + 32) else this).toFloat()
 
 /** Round off variable to nearest integer value and return as a string */
 fun Float.roundOff(): String = this.roundToInt().toString()
@@ -98,7 +94,5 @@ fun feelsLike(temperature: Float, humidity: Int, wind: Float): Float {
             feelsLike = temperature + (0.33 * e) - (0.7 * wind) - 4
         }
     }
-    return BigDecimal.valueOf(feelsLike)
-            .setScale(2, RoundingMode.HALF_UP)
-            .toFloat() // Set precision to match current temp
+    return String.format("%.1f", feelsLike).toFloat() // Set precision to match current temp
 }

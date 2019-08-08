@@ -1,21 +1,11 @@
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/weather_forecast_cv"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="8dp"
-    android:layout_marginTop="16dp"
-    android:layout_marginEnd="8dp"
-    app:cardBackgroundColor="@color/dayClearEnd"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="16dp">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/cl_forecast_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <View
+    <View
             android:id="@+id/line1"
             android:layout_width="1dp"
             android:layout_height="0dp"
@@ -26,9 +16,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/line2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <View
+    <View
             android:id="@+id/line2"
             android:layout_width="1dp"
             android:layout_height="0dp"
@@ -40,9 +30,9 @@
             app:layout_constraintEnd_toStartOf="@+id/line3"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/line1"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <View
+    <View
             android:id="@+id/line3"
             android:layout_width="1dp"
             android:layout_height="0dp"
@@ -54,9 +44,9 @@
             app:layout_constraintEnd_toStartOf="@+id/line4"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/line2"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <View
+    <View
             android:id="@+id/line4"
             android:layout_width="1dp"
             android:layout_height="0dp"
@@ -68,9 +58,9 @@
             app:layout_constraintEnd_toStartOf="@+id/line5"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/line3"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <View
+    <View
             android:id="@+id/line5"
             android:layout_width="1dp"
             android:layout_height="0dp"
@@ -82,9 +72,9 @@
             app:layout_constraintEnd_toStartOf="@+id/line6"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/line4"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <View
+    <View
             android:id="@+id/line6"
             android:layout_width="1dp"
             android:layout_height="0dp"
@@ -97,22 +87,22 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/line5"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <ImageView
-                android:id="@+id/forecast_1_icon"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="false"
-                android:contentDescription="@string/weather_icon"
-                android:cropToPadding="false"
-                android:src="@android:drawable/sym_def_app_icon"
-                app:layout_constraintEnd_toStartOf="@+id/line1"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/forecast_1_temp"
-                android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"/>
+    <ImageView
+            android:id="@+id/forecast_1_icon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="false"
+            android:contentDescription="@string/weather_icon"
+            android:cropToPadding="false"
+            android:src="@android:drawable/sym_def_app_icon"
+            app:layout_constraintEnd_toStartOf="@+id/line1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/forecast_1_temp"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <TextView
+    <TextView
             android:id="@+id/forecast_1_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -124,9 +114,9 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/line1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <TextView
+    <TextView
             android:id="@+id/forecast_1_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -137,22 +127,22 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/line1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/forecast_1_time" />
+            app:layout_constraintTop_toBottomOf="@+id/forecast_1_time"/>
 
-        <ImageView
-                android:id="@+id/forecast_2_icon"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="false"
-                android:contentDescription="@string/weather_icon"
-                android:cropToPadding="false"
-                android:src="@android:drawable/sym_def_app_icon"
-                app:layout_constraintEnd_toStartOf="@+id/line2"
-                app:layout_constraintStart_toStartOf="@+id/line1"
-                app:layout_constraintTop_toBottomOf="@+id/forecast_2_temp" android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+    <ImageView
+            android:id="@+id/forecast_2_icon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="false"
+            android:contentDescription="@string/weather_icon"
+            android:cropToPadding="false"
+            android:src="@android:drawable/sym_def_app_icon"
+            app:layout_constraintEnd_toStartOf="@+id/line2"
+            app:layout_constraintStart_toStartOf="@+id/line1"
+            app:layout_constraintTop_toBottomOf="@+id/forecast_2_temp" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <TextView
+    <TextView
             android:id="@+id/forecast_2_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -164,9 +154,9 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/line2"
             app:layout_constraintStart_toStartOf="@+id/line1"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <TextView
+    <TextView
             android:id="@+id/forecast_2_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -177,22 +167,22 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/line2"
             app:layout_constraintStart_toStartOf="@+id/line1"
-            app:layout_constraintTop_toBottomOf="@+id/forecast_2_time" />
+            app:layout_constraintTop_toBottomOf="@+id/forecast_2_time"/>
 
-        <ImageView
-                android:id="@+id/forecast_3_icon"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="false"
-                android:contentDescription="@string/weather_icon"
-                android:cropToPadding="false"
-                android:src="@android:drawable/sym_def_app_icon"
-                app:layout_constraintEnd_toStartOf="@+id/line3"
-                app:layout_constraintStart_toStartOf="@+id/line2"
-                app:layout_constraintTop_toBottomOf="@+id/forecast_3_temp" android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+    <ImageView
+            android:id="@+id/forecast_3_icon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="false"
+            android:contentDescription="@string/weather_icon"
+            android:cropToPadding="false"
+            android:src="@android:drawable/sym_def_app_icon"
+            app:layout_constraintEnd_toStartOf="@+id/line3"
+            app:layout_constraintStart_toStartOf="@+id/line2"
+            app:layout_constraintTop_toBottomOf="@+id/forecast_3_temp" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <TextView
+    <TextView
             android:id="@+id/forecast_3_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -204,9 +194,9 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/line3"
             app:layout_constraintStart_toStartOf="@+id/line2"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <TextView
+    <TextView
             android:id="@+id/forecast_3_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -217,22 +207,22 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/line3"
             app:layout_constraintStart_toStartOf="@+id/line2"
-            app:layout_constraintTop_toBottomOf="@+id/forecast_3_time" />
+            app:layout_constraintTop_toBottomOf="@+id/forecast_3_time"/>
 
-        <ImageView
-                android:id="@+id/forecast_4_icon"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="false"
-                android:contentDescription="@string/weather_icon"
-                android:cropToPadding="false"
-                android:src="@android:drawable/sym_def_app_icon"
-                app:layout_constraintEnd_toStartOf="@+id/line4"
-                app:layout_constraintStart_toStartOf="@+id/line3"
-                app:layout_constraintTop_toBottomOf="@+id/forecast_4_temp" android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+    <ImageView
+            android:id="@+id/forecast_4_icon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="false"
+            android:contentDescription="@string/weather_icon"
+            android:cropToPadding="false"
+            android:src="@android:drawable/sym_def_app_icon"
+            app:layout_constraintEnd_toStartOf="@+id/line4"
+            app:layout_constraintStart_toStartOf="@+id/line3"
+            app:layout_constraintTop_toBottomOf="@+id/forecast_4_temp" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <TextView
+    <TextView
             android:id="@+id/forecast_4_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -244,9 +234,9 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/line4"
             app:layout_constraintStart_toStartOf="@+id/line3"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <TextView
+    <TextView
             android:id="@+id/forecast_4_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -257,22 +247,22 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/line4"
             app:layout_constraintStart_toStartOf="@+id/line3"
-            app:layout_constraintTop_toBottomOf="@+id/forecast_4_time" />
+            app:layout_constraintTop_toBottomOf="@+id/forecast_4_time"/>
 
-        <ImageView
-                android:id="@+id/forecast_5_icon"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="false"
-                android:contentDescription="@string/weather_icon"
-                android:cropToPadding="false"
-                android:src="@android:drawable/sym_def_app_icon"
-                app:layout_constraintEnd_toStartOf="@+id/line5"
-                app:layout_constraintStart_toStartOf="@+id/line4"
-                app:layout_constraintTop_toBottomOf="@+id/forecast_5_temp" android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+    <ImageView
+            android:id="@+id/forecast_5_icon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="false"
+            android:contentDescription="@string/weather_icon"
+            android:cropToPadding="false"
+            android:src="@android:drawable/sym_def_app_icon"
+            app:layout_constraintEnd_toStartOf="@+id/line5"
+            app:layout_constraintStart_toStartOf="@+id/line4"
+            app:layout_constraintTop_toBottomOf="@+id/forecast_5_temp" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <TextView
+    <TextView
             android:id="@+id/forecast_5_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -284,9 +274,9 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/line5"
             app:layout_constraintStart_toStartOf="@+id/line4"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <TextView
+    <TextView
             android:id="@+id/forecast_5_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -297,22 +287,22 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/line5"
             app:layout_constraintStart_toStartOf="@+id/line4"
-            app:layout_constraintTop_toBottomOf="@+id/forecast_5_time" />
+            app:layout_constraintTop_toBottomOf="@+id/forecast_5_time"/>
 
-        <ImageView
-                android:id="@+id/forecast_6_icon"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="false"
-                android:contentDescription="@string/weather_icon"
-                android:cropToPadding="false"
-                android:src="@android:drawable/sym_def_app_icon"
-                app:layout_constraintEnd_toStartOf="@+id/line6"
-                app:layout_constraintStart_toStartOf="@+id/line5"
-                app:layout_constraintTop_toBottomOf="@+id/forecast_6_temp" android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+    <ImageView
+            android:id="@+id/forecast_6_icon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="false"
+            android:contentDescription="@string/weather_icon"
+            android:cropToPadding="false"
+            android:src="@android:drawable/sym_def_app_icon"
+            app:layout_constraintEnd_toStartOf="@+id/line6"
+            app:layout_constraintStart_toStartOf="@+id/line5"
+            app:layout_constraintTop_toBottomOf="@+id/forecast_6_temp" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <TextView
+    <TextView
             android:id="@+id/forecast_6_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -324,9 +314,9 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/line6"
             app:layout_constraintStart_toStartOf="@+id/line5"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <TextView
+    <TextView
             android:id="@+id/forecast_6_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -337,22 +327,22 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/line6"
             app:layout_constraintStart_toStartOf="@+id/line5"
-            app:layout_constraintTop_toBottomOf="@+id/forecast_6_time" />
+            app:layout_constraintTop_toBottomOf="@+id/forecast_6_time"/>
 
-        <ImageView
-                android:id="@+id/forecast_7_icon"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="false"
-                android:contentDescription="@string/weather_icon"
-                android:cropToPadding="false"
-                android:src="@android:drawable/sym_def_app_icon"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/line6"
-                app:layout_constraintTop_toBottomOf="@+id/forecast_7_temp" android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+    <ImageView
+            android:id="@+id/forecast_7_icon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="false"
+            android:contentDescription="@string/weather_icon"
+            android:cropToPadding="false"
+            android:src="@android:drawable/sym_def_app_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/line6"
+            app:layout_constraintTop_toBottomOf="@+id/forecast_7_temp" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <TextView
+    <TextView
             android:id="@+id/forecast_7_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -364,9 +354,9 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/line6"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <TextView
+    <TextView
             android:id="@+id/forecast_7_temp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -377,8 +367,6 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/line6"
-            app:layout_constraintTop_toBottomOf="@+id/forecast_7_time" />
+            app:layout_constraintTop_toBottomOf="@+id/forecast_7_time"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,6 +10,7 @@ import android.os.Build
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import one.mann.domain.logic.DEGREES
 import one.mann.domain.logic.roundOff
 import one.mann.interactors.usecases.GetNotificationData
 import one.mann.weatherman.R
@@ -26,22 +27,20 @@ internal class WeatherNotification @Inject constructor(
         val data = getNotificationData.invoke()
         val notificationCollapsed = RemoteViews(context.packageName, R.layout.notification_collapsed)
         val notificationExpanded = RemoteViews(context.packageName, R.layout.notification_expanded)
-        val curTemp = data.currentTemp.replace("C", "").toFloat().roundOff()
-        val maxTemp = data.maxTemp.replace("C", "").toFloat().roundOff()
-        val minTemp = data.minTemp.replace("C", "").toFloat().roundOff()
+        val curTemp = data.currentTemp.replace(DEGREES, "").toFloat().roundOff()
         // Set up layout for collapsed notification
-        notificationCollapsed.setTextViewText(R.id.notification_temp, "$curTemp°")
-        notificationCollapsed.setTextViewText(R.id.notification_max_temp, "$maxTemp°")
-        notificationCollapsed.setTextViewText(R.id.notification_min_temp, "$minTemp°")
+        notificationCollapsed.setTextViewText(R.id.notification_temp, "$curTemp$DEGREES")
+        notificationCollapsed.setTextViewText(R.id.notification_max_temp, data.maxTemp)
+        notificationCollapsed.setTextViewText(R.id.notification_min_temp, data.minTemp)
         notificationCollapsed.setTextViewText(R.id.notification_city_name, data.cityName)
         notificationCollapsed.setTextViewText(R.id.notification_description, data.description)
         notificationCollapsed.setTextViewText(R.id.notification_humidity, data.humidity)
         notificationCollapsed.setImageViewResource(R.id.notification_icon, context.resources
                 .getIdentifier(getUri(data.iconId, data.sunPosition), "drawable", context.packageName))
         // Set up layout for expanded notification
-        notificationExpanded.setTextViewText(R.id.notification_temp, "$curTemp°")
-        notificationExpanded.setTextViewText(R.id.notification_max_temp, "$maxTemp°")
-        notificationExpanded.setTextViewText(R.id.notification_min_temp, "$minTemp°")
+        notificationExpanded.setTextViewText(R.id.notification_temp, "$curTemp$DEGREES")
+        notificationExpanded.setTextViewText(R.id.notification_max_temp, data.maxTemp)
+        notificationExpanded.setTextViewText(R.id.notification_min_temp, data.minTemp)
         notificationExpanded.setTextViewText(R.id.notification_city_name, data.cityName)
         notificationExpanded.setTextViewText(R.id.notification_description, data.description)
         notificationExpanded.setTextViewText(R.id.notification_humidity, data.humidity)
