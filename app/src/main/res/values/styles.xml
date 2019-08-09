@@ -13,8 +13,9 @@
         <item name="android:windowBackground">@drawable/ll_splash</item>
     </style>
 
+    <!--Change accent colour of Alert Dialogs-->
     <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/sunriseCloudsStart</item>
     </style>
 
     <!--To make menu icon colour white, light popup theme added in xml -->
