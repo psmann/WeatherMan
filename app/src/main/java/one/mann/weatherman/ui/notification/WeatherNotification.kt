@@ -72,6 +72,7 @@ internal class WeatherNotification @Inject constructor(
                         Intent(context, MainActivity::class.java), 0))
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setVibrate(LongArray(0))
+                .setAutoCancel(true)
                 .setVisibility(NotificationCompat.VISIBILITY_SECRET)
                 .run { NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, this.build()) }
     }

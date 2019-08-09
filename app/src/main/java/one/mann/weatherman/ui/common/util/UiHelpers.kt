@@ -5,7 +5,7 @@ import one.mann.weatherman.api.openweathermap.dayIcons
 import one.mann.weatherman.api.openweathermap.nightIcons
 
 /** Set layout background depending upon time of day and weather conditions */
-internal fun getGradient(sunPosition: Float, isOvercast: Boolean): Int = when (sunPosition) {
+internal fun getGradient(sunPosition: Float = 0.1f, isOvercast: Boolean = false): Int = when (sunPosition) {
     in -0.050..0.075, in 0.925..1.050 -> // Dawn-Sunrise and Sunset-Twilight
         if (isOvercast) R.drawable.background_gradient_sunrise_clouds
         else R.drawable.background_gradient_sunrise_clear

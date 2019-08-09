@@ -1,7 +1,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/cl_main_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -22,10 +21,11 @@
     <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" app:layout_constraintTop_toBottomOf="@+id/current_temp_result"
+            android:orientation="horizontal"
             android:id="@+id/max_min_lean_ly"
             app:layout_constraintStart_toStartOf="@+id/current_temp_result"
-            app:layout_constraintEnd_toEndOf="@+id/current_temp_result" app:layout_constraintHorizontal_bias="0.37">
+            app:layout_constraintEnd_toEndOf="@+id/current_temp_result" app:layout_constraintHorizontal_bias="0.37"
+            android:layout_marginTop="64dp" app:layout_constraintTop_toTopOf="@+id/current_temp_result">
 
         <TextView
                 android:id="@+id/max_temp_result"
@@ -101,25 +101,26 @@
 
     <TextView
             android:id="@+id/description"
-            android:layout_width="64dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="gfdgdvx"
+            android:textColor="@android:color/white"
             android:textAlignment="center"
             android:textStyle="bold"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/last_updated_result"
-            app:layout_constraintStart_toStartOf="parent" android:visibility="invisible"/>
+            app:layout_constraintStart_toStartOf="@+id/fealslike_lean_ly" android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="@+id/fealslike_lean_ly"
+            app:layout_constraintTop_toBottomOf="@+id/fealslike_lean_ly" android:layout_marginTop="16dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 
     <ImageView
             android:id="@+id/weather_icon"
             android:layout_width="256dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="152dp"
+            android:layout_marginStart="144dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/weather_icon"
             android:scaleType="fitXY"
-            android:src="@drawable/cloudy_day_1"
+            android:src="@drawable/thunder"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-        <!--android:src="@android:drawable/sym_def_app_icon"-->

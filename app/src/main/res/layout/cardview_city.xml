@@ -9,31 +9,13 @@
             android:id="@+id/last_checked_result"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
             android:textSize="12sp"
+            android:textColor="@android:color/white"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/last_checked"
-            app:layout_constraintTop_toBottomOf="@+id/location_result"/>
-
-    <TextView
-            android:id="@+id/last_checked"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="2dp"
-            android:layout_marginBottom="16dp"
-            android:text="@string/last_checked"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/last_checked_result"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/location_result"/>
+            app:layout_constraintTop_toBottomOf="@+id/location_result" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"/>
 
     <TextView
             android:id="@+id/city_name"
@@ -43,9 +25,12 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:textSize="30sp"
+            android:elevation="2dp"
+            android:textColor="@android:color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"/>
 
     <TextView
             android:id="@+id/location_left"
@@ -53,7 +38,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="@string/location_left"
-            android:textSize="12sp"
+            android:textColor="@android:color/white"
+            android:textSize="11sp"
             app:layout_constraintEnd_toStartOf="@+id/location_result"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -65,7 +51,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textSize="12sp"
+            android:textColor="@android:color/white"
+            android:textSize="11sp"
             app:layout_constraintEnd_toStartOf="@+id/location_right"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/location_left"
@@ -76,8 +63,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:textColor="@android:color/white"
             android:text="@string/location_right"
-            android:textSize="12sp"
+            android:textSize="11sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/location_result"
@@ -85,12 +73,11 @@
 
     <TextView
             android:id="@+id/country_flag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="2dp"
-            android:textSize="20sp"
-            app:layout_constraintStart_toEndOf="@+id/city_name"
-            app:layout_constraintTop_toTopOf="@+id/city_name"/>
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:textSize="50sp"
+            app:layout_constraintTop_toTopOf="@+id/city_name" app:layout_constraintStart_toStartOf="@+id/city_name"
+            app:layout_constraintEnd_toEndOf="@+id/city_name" app:layout_constraintBottom_toBottomOf="@+id/city_name"
+            android:visibility="invisible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

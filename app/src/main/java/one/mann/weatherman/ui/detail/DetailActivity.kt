@@ -10,9 +10,9 @@ import one.mann.domain.model.LocationResponse.*
 import one.mann.domain.model.LocationType.DB
 import one.mann.domain.model.LocationType.DEVICE
 import one.mann.weatherman.R
-import one.mann.weatherman.api.openweathermap.isOvercast
 import one.mann.weatherman.application.WeatherManApp
 import one.mann.weatherman.ui.common.base.BaseActivity
+import one.mann.weatherman.ui.common.util.ACTIVITY_BACKGROUND
 import one.mann.weatherman.ui.common.util.PAGER_POSITION
 import one.mann.weatherman.ui.common.util.getGradient
 import one.mann.weatherman.ui.common.util.getViewModel
@@ -25,11 +25,12 @@ internal class DetailActivity : BaseActivity() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val detailViewModel: DetailViewModel by lazy { getViewModel(viewModelFactory) }
     private val detailRecyclerAdapter by lazy { DetailRecyclerAdapter() }
-    private var position = 1
+    private val position: Int by lazy { intent.getIntExtra(PAGER_POSITION, 1) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
+        activity_detail_coord_ly.setBackgroundResource(intent.getIntExtra(ACTIVITY_BACKGROUND, getGradient()))
         handleLocationPermission { initActivity(it) }
     }
 
@@ -41,7 +42,6 @@ internal class DetailActivity : BaseActivity() {
             finish()
             return
         }
-        position = intent.getIntExtra(PAGER_POSITION, 1)
         detail_recyclerview.setHasFixedSize(true)
         detail_recyclerview.layoutManager = LinearLayoutManager(this)
         detail_recyclerview.adapter = detailRecyclerAdapter
@@ -53,11 +53,7 @@ internal class DetailActivity : BaseActivity() {
             }
         })
         detailViewModel.weatherData.observe(this, Observer {
-            if (it.size >= position + 1) {
-                detailRecyclerAdapter.update(it[position])
-                activity_detail_coord_ly.setBackgroundResource(
-                        getGradient(it[position].sunPosition, isOvercast(it[position].iconId)))
-            }
+            if (it.size >= position + 1) detailRecyclerAdapter.update(it[position])
         })
         detail_swipe_ly.setColorSchemeColors(Color.RED, Color.BLUE)
         detail_swipe_ly.setOnRefreshListener { handleLocationServiceResult() }

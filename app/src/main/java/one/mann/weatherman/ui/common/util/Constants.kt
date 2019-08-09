@@ -14,4 +14,5 @@ internal const val NOTIFICATION_CHANNEL_DESCRIPTION = "Shows notifications whene
 internal const val NOTIFICATION_CHANNEL_ID = "WEATHERMAN_NOTIFICATION"
 internal const val NOTIFICATION_ID = 1
 // Bundle
-internal const val PAGER_POSITION = "pager_osition"
+internal const val PAGER_POSITION = "pager_position"
+internal const val ACTIVITY_BACKGROUND = "activity_background"

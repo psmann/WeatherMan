@@ -148,7 +148,7 @@ internal class MainActivity : BaseActivity() {
             .setActionTextColor(ContextCompat.getColor(this, R.color.sunriseClearCenter))
             .apply {
                 val params = view.layoutParams as CoordinatorLayout.LayoutParams
-                params.anchorId = R.id.snackbar_anchor // Set it up above navigation bar
+                params.anchorId = R.id.snackbar_anchor // Add bottom padding for navigation bar
                 params.anchorGravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
                 params.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
                 view.elevation = 0f // Remove shadow
