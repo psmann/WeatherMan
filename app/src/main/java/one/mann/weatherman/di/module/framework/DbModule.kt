@@ -1,4 +1,4 @@
-package one.mann.weatherman.application.di.module.framework
+package one.mann.weatherman.di.module.framework
 
 import android.content.Context
 import androidx.room.Room

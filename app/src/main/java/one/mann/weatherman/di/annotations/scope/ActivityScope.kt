@@ -1,4 +1,4 @@
-package one.mann.weatherman.application.di.annotation
+package one.mann.weatherman.di.annotations.scope
 
 import javax.inject.Scope
 

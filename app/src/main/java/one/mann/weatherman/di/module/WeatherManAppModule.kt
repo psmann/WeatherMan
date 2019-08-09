@@ -1,4 +1,4 @@
-package one.mann.weatherman.application.di.module
+package one.mann.weatherman.di.module
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -6,7 +6,7 @@ import androidx.preference.PreferenceManager
 import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
-import one.mann.weatherman.application.WeatherManApp
+import one.mann.weatherman.WeatherManApp
 import javax.inject.Inject
 import javax.inject.Singleton
 

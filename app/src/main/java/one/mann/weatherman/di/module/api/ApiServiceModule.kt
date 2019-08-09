@@ -1,15 +1,18 @@
-package one.mann.weatherman.application.di.module.api
+package one.mann.weatherman.di.module.api
 
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import one.mann.weatherman.api.common.Keys
-import one.mann.weatherman.api.openweathermap.OwmService
 import one.mann.weatherman.api.common.QueryInterceptor
+import one.mann.weatherman.api.openweathermap.OwmService
 import one.mann.weatherman.api.teleport.TeleportService
+import one.mann.weatherman.di.annotations.qualifier.AppId
+import one.mann.weatherman.di.annotations.qualifier.OpenWeatherMap
+import one.mann.weatherman.di.annotations.qualifier.Teleport
+import one.mann.weatherman.di.annotations.qualifier.Units
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -29,19 +32,17 @@ internal class ApiServiceModule {
 
     @Provides
     @Singleton
-    @Named("AppIdQuery")
+    @AppId
     fun provideAppIdQueryInterceptor(): QueryInterceptor = QueryInterceptor(QUERY_APPID, Keys.OWM_APPID)
 
     @Provides
     @Singleton
-    @Named("UnitsQuery")
+    @Units
     fun provideUnitsQueryInterceptor(): QueryInterceptor = QueryInterceptor(QUERY_UNITS, DEFAULT_UNITS)
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(
-            @Named("AppIdQuery") appIdQueryInterceptor: QueryInterceptor,
-            @Named("UnitsQuery") unitsQueryInterceptor: QueryInterceptor
+    fun provideOkHttpClient(@AppId appIdQueryInterceptor: QueryInterceptor, @Units unitsQueryInterceptor: QueryInterceptor
     ): OkHttpClient = OkHttpClient.Builder()
             .addInterceptor(appIdQueryInterceptor)
             .addInterceptor(unitsQueryInterceptor)
@@ -49,7 +50,7 @@ internal class ApiServiceModule {
 
     @Provides
     @Singleton
-    @Named("OwmInstance")
+    @OpenWeatherMap
     fun provideOwmRestAdapter(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory): Retrofit =
             Retrofit.Builder()
                     .baseUrl(OWM_BASE_URL)
@@ -59,7 +60,7 @@ internal class ApiServiceModule {
 
     @Provides
     @Singleton
-    @Named("TeleportInstance")
+    @Teleport
     fun provideTeleportRestAdapter(gsonConverterFactory: GsonConverterFactory): Retrofit = Retrofit.Builder()
             .baseUrl(TELEPORT_BASE_URL)
             .addConverterFactory(gsonConverterFactory)
@@ -67,11 +68,9 @@ internal class ApiServiceModule {
 
     @Provides
     @Singleton
-    fun provideOwmService(@Named("OwmInstance") retrofit: Retrofit): OwmService =
-            retrofit.create(OwmService::class.java)
+    fun provideOwmService(@OpenWeatherMap retrofit: Retrofit): OwmService = retrofit.create(OwmService::class.java)
 
     @Provides
     @Singleton
-    fun provideTeleportService(@Named("TeleportInstance") retrofit: Retrofit): TeleportService =
-            retrofit.create(TeleportService::class.java)
+    fun provideTeleportService(@Teleport retrofit: Retrofit): TeleportService = retrofit.create(TeleportService::class.java)
 }

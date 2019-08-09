@@ -10,7 +10,7 @@ import one.mann.domain.model.LocationResponse.*
 import one.mann.domain.model.LocationType.DB
 import one.mann.domain.model.LocationType.DEVICE
 import one.mann.weatherman.R
-import one.mann.weatherman.application.WeatherManApp
+import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.ui.common.base.BaseActivity
 import one.mann.weatherman.ui.common.util.ACTIVITY_BACKGROUND
 import one.mann.weatherman.ui.common.util.PAGER_POSITION

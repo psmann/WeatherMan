@@ -1,7 +1,7 @@
-package one.mann.weatherman.application.di.component
+package one.mann.weatherman.di.component
 
 import dagger.Subcomponent
-import one.mann.weatherman.application.di.annotation.ActivityScope
+import one.mann.weatherman.di.annotations.scope.ActivityScope
 import one.mann.weatherman.ui.detail.DetailActivity
 import one.mann.weatherman.ui.main.MainActivity
 import one.mann.weatherman.ui.main.MainFragment

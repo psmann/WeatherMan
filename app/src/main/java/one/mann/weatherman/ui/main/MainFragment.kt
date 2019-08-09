@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.fragment_main.*
 import one.mann.domain.model.Weather
 import one.mann.weatherman.R
 import one.mann.weatherman.api.openweathermap.isOvercast
-import one.mann.weatherman.application.WeatherManApp
+import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.ui.common.util.*
 import one.mann.weatherman.ui.detail.DetailActivity
 import one.mann.weatherman.ui.main.MainViewModel.UiModel

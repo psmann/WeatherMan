@@ -1,10 +1,10 @@
-package one.mann.weatherman.application.di.module.framework
+package one.mann.weatherman.di.module.framework
 
 import androidx.work.WorkerFactory
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
-import one.mann.weatherman.application.di.annotation.WorkerKey
+import one.mann.weatherman.di.annotations.key.WorkerKey
 import one.mann.weatherman.framework.service.workers.NotificationWorker
 import one.mann.weatherman.framework.service.workers.factory.ChildWorkerFactory
 import one.mann.weatherman.framework.service.workers.factory.ParentWorkerFactory
