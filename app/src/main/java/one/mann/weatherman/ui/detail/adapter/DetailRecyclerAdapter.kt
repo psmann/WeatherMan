@@ -35,8 +35,8 @@ internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>()
         is Main -> {
             holder.lastUpdated.text = weather.lastUpdated
             holder.humidity.text = weather.humidity
-            holder.minTemp.text = weather.minTemp
-            holder.maxTemp.text = weather.maxTemp
+            holder.minTemp.text = weather.day1MinTemp
+            holder.maxTemp.text = weather.day1MaxTemp
             holder.feelsLike.text = weather.feelsLike
             holder.currentTemp.text = weather.currentTemp
             holder.description.text = weather.description

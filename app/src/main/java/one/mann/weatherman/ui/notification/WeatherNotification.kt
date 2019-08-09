@@ -22,54 +22,55 @@ internal class WeatherNotification @Inject constructor(
         private val context: Context,
         private val getNotificationData: GetNotificationData
 ) {
-    /** Get updated data, set up custom layouts, create channel, build notification and display */
+    /** Get weather data, set up custom layouts, create channel, build notification and display */
     suspend fun show() {
         val data = getNotificationData.invoke()
-        val notificationCollapsed = RemoteViews(context.packageName, R.layout.notification_collapsed)
-        val notificationExpanded = RemoteViews(context.packageName, R.layout.notification_expanded)
-        val curTemp = data.currentTemp.replace(DEGREES, "").toFloat().roundOff()
-        // Set up layout for collapsed notification
-        notificationCollapsed.setTextViewText(R.id.notification_temp, "$curTemp$DEGREES")
-        notificationCollapsed.setTextViewText(R.id.notification_max_temp, data.maxTemp)
-        notificationCollapsed.setTextViewText(R.id.notification_min_temp, data.minTemp)
-        notificationCollapsed.setTextViewText(R.id.notification_city_name, data.cityName)
-        notificationCollapsed.setTextViewText(R.id.notification_description, data.description)
-        notificationCollapsed.setTextViewText(R.id.notification_humidity, data.humidity)
-        notificationCollapsed.setImageViewResource(R.id.notification_icon, context.resources
-                .getIdentifier(getUri(data.iconId, data.sunPosition), "drawable", context.packageName))
-        // Set up layout for expanded notification
-        notificationExpanded.setTextViewText(R.id.notification_temp, "$curTemp$DEGREES")
-        notificationExpanded.setTextViewText(R.id.notification_max_temp, data.maxTemp)
-        notificationExpanded.setTextViewText(R.id.notification_min_temp, data.minTemp)
-        notificationExpanded.setTextViewText(R.id.notification_city_name, data.cityName)
-        notificationExpanded.setTextViewText(R.id.notification_description, data.description)
-        notificationExpanded.setTextViewText(R.id.notification_humidity, data.humidity)
-        notificationExpanded.setImageViewResource(R.id.notification_icon, context.resources
-                .getIdentifier(getUri(data.iconId, data.sunPosition), "drawable", context.packageName))
-        notificationExpanded.setTextViewText(R.id.notification_temp_forecast1, data.hour03Time)
-        notificationExpanded.setTextViewText(R.id.notification_temp_forecast2, data.hour06Time)
-        notificationExpanded.setTextViewText(R.id.notification_temp_forecast3, data.hour09Time)
-        notificationExpanded.setTextViewText(R.id.notification_temp_forecast4, data.hour12Time)
-        notificationExpanded.setTextViewText(R.id.notification_temp_forecast5, data.hour15Time)
-        notificationExpanded.setImageViewResource(R.id.notification_icon_forecast1, context.resources
-                .getIdentifier(getUri(data.hour03IconId, data.hour03SunPosition), "drawable", context.packageName))
-        notificationExpanded.setImageViewResource(R.id.notification_icon_forecast2, context.resources
-                .getIdentifier(getUri(data.hour06IconId, data.hour06SunPosition), "drawable", context.packageName))
-        notificationExpanded.setImageViewResource(R.id.notification_icon_forecast3, context.resources
-                .getIdentifier(getUri(data.hour09IconId, data.hour09SunPosition), "drawable", context.packageName))
-        notificationExpanded.setImageViewResource(R.id.notification_icon_forecast4, context.resources
-                .getIdentifier(getUri(data.hour12IconId, data.hour12SunPosition), "drawable", context.packageName))
-        notificationExpanded.setImageViewResource(R.id.notification_icon_forecast5, context.resources
-                .getIdentifier(getUri(data.hour15IconId, data.hour15SunPosition), "drawable", context.packageName))
+        val currentTemp = data.currentTemp.replace(DEGREES, "").toFloat().roundOff() + DEGREES
+        // Notification layouts
+        val notificationCollapsed = RemoteViews(context.packageName, R.layout.notification_collapsed).apply {
+            setTextViewText(R.id.notification_temp, currentTemp)
+            setTextViewText(R.id.notification_max_temp, data.day1MaxTemp)
+            setTextViewText(R.id.notification_min_temp, data.day1MinTemp)
+            setTextViewText(R.id.notification_city_name, data.cityName)
+            setTextViewText(R.id.notification_description, data.description)
+            setTextViewText(R.id.notification_humidity, data.humidity)
+            setImageViewResource(R.id.notification_icon, context.resources.getIdentifier(
+                    getUri(data.iconId, data.sunPosition), "drawable", context.packageName))
+        }
+        val notificationExpanded = RemoteViews(context.packageName, R.layout.notification_expanded).apply {
+            setTextViewText(R.id.notification_temp, currentTemp)
+            setTextViewText(R.id.notification_max_temp, data.day1MaxTemp)
+            setTextViewText(R.id.notification_min_temp, data.day1MinTemp)
+            setTextViewText(R.id.notification_city_name, data.cityName)
+            setTextViewText(R.id.notification_description, data.description)
+            setTextViewText(R.id.notification_humidity, data.humidity)
+            setImageViewResource(R.id.notification_icon, context.resources.getIdentifier(
+                    getUri(data.iconId, data.sunPosition), "drawable", context.packageName))
+            setTextViewText(R.id.notification_temp_forecast1, data.hour03Time)
+            setTextViewText(R.id.notification_temp_forecast2, data.hour06Time)
+            setTextViewText(R.id.notification_temp_forecast3, data.hour09Time)
+            setTextViewText(R.id.notification_temp_forecast4, data.hour12Time)
+            setTextViewText(R.id.notification_temp_forecast5, data.hour15Time)
+            setImageViewResource(R.id.notification_icon_forecast1, context.resources.getIdentifier(
+                    getUri(data.hour03IconId, data.hour03SunPosition), "drawable", context.packageName))
+            setImageViewResource(R.id.notification_icon_forecast2, context.resources.getIdentifier(
+                    getUri(data.hour06IconId, data.hour06SunPosition), "drawable", context.packageName))
+            setImageViewResource(R.id.notification_icon_forecast3, context.resources.getIdentifier(
+                    getUri(data.hour09IconId, data.hour09SunPosition), "drawable", context.packageName))
+            setImageViewResource(R.id.notification_icon_forecast4, context.resources.getIdentifier(
+                    getUri(data.hour12IconId, data.hour12SunPosition), "drawable", context.packageName))
+            setImageViewResource(R.id.notification_icon_forecast5, context.resources.getIdentifier(
+                    getUri(data.hour15IconId, data.hour15SunPosition), "drawable", context.packageName))
+        }
         // Create notification channel if necessary
         makeNotificationChannel()
+        // Build notification and show
         NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_notification)
                 .setCustomContentView(notificationCollapsed)
                 .setCustomBigContentView(notificationExpanded)
                 .setStyle(NotificationCompat.DecoratedCustomViewStyle())
-                .setContentIntent(PendingIntent.getActivity(context, 0,
-                        Intent(context, MainActivity::class.java), 0))
+                .setContentIntent(PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0))
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setVibrate(LongArray(0))
                 .setAutoCancel(true)

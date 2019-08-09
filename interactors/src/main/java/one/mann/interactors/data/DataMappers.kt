@@ -30,8 +30,6 @@ internal fun mapToWeather(currentWeather: CurrentWeather, dailyForecast: List<Da
             lengthOfDay(currentWeather.sunrise, currentWeather.sunset),
             epochToDate(System.currentTimeMillis(), timezone),
             sunPositionBias(sunriseTime, sunsetTime, epochToMinutes(System.currentTimeMillis(), timezone)),
-            dailyForecast[0].minTemp.setUnitsType(units).roundOff().addUnits(DEGREES),
-            dailyForecast[0].maxTemp.setUnitsType(units).roundOff().addUnits(DEGREES),
             epochToDay(dailyForecast[0].forecastDate, timezone),
             dailyForecast[0].minTemp.setUnitsType(units).roundOff().addUnits(DEGREES),
             dailyForecast[0].maxTemp.setUnitsType(units).roundOff().addUnits(DEGREES),
