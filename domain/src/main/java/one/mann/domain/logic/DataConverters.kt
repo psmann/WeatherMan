@@ -66,17 +66,13 @@ fun sunPositionBias(sunrise: Float, sunset: Float, time: Float): Float = (time -
 /** Calculate FeelsLike temperature using https://blog.metservice.com/FeelsLikeTemp for reference */
 fun feelsLike(temperature: Float, humidity: Int, wind: Float): Float {
     var feelsLike: Double
-    when {
-        temperature < 14 -> { // = Wind Chill calculated using JAG/TI formula
-            val k = (wind.toDouble() * 3.6).pow(0.16) // Wind speed converted to km/h and raised to the power
-            feelsLike = 13.12 + (0.6215 * temperature) - (11.35 * k) + (0.396 * temperature * k)
-            if (temperature > 10) // Roll-over Zone
-                feelsLike = temperature - (((temperature - feelsLike) * (14 - temperature)) / 4)
-        }
-        else -> { // = Heat Index or Apparent Temperature calculated using the Steadman formula
-            val e = humidity / 100 * 6.105 * exp(17.27 * temperature / (237.7 + temperature)) // Pressure
-            feelsLike = temperature + (0.33 * e) - (0.7 * wind) - 4
-        }
+    if (temperature < 14) { // = Wind Chill calculated using JAG/TI formula
+        val k = (wind.toDouble() * 3.6).pow(0.16) // Wind speed converted to km/h and raised to the power
+        feelsLike = 13.12 + (0.6215 * temperature) - (11.35 * k) + (0.396 * temperature * k)
+        if (temperature > 10) feelsLike = temperature - (((temperature - feelsLike) * (14 - temperature)) / 4) // = Roll-over
+    } else { // = Heat Index or Apparent Temperature calculated using the Steadman formula
+        val e = humidity / 100 * 6.105 * exp(17.27 * temperature / (237.7 + temperature)) // Pressure
+        feelsLike = temperature + (0.33 * e) - (0.7 * wind) - 4
     }
     return String.format("%.1f", feelsLike).toFloat() // Set precision to match current temp
 }
