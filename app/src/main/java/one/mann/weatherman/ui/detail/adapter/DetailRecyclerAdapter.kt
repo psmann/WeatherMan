@@ -11,30 +11,23 @@ import one.mann.weatherman.ui.detail.adapter.WeatherViewHolder.*
 internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
 
     companion object {
-        private const val VIEW_HOLDER_COUNT = 6
+        private const val VIEW_HOLDER_COUNT = 5
     }
 
     private var weather = Weather()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder = when (viewType) {
-        0 -> City(parent.inflateView(R.layout.cardview_city))
-        1 -> Main(parent.inflateView(R.layout.cardview_main))
-        2 -> Sun(parent.inflateView(R.layout.cardview_sun))
-        3 -> Clouds(parent.inflateView(R.layout.cardview_clouds))
-        4 -> HourlyForecast(parent.inflateView(R.layout.cardview_forecast_hourly))
-        else -> DailyForecast(parent.inflateView(R.layout.cardview_forecast_daily))
+        0 -> Main(parent.inflateView(R.layout.weather_current))
+        1 -> Sun(parent.inflateView(R.layout.weather_sun_cycle))
+        2 -> Clouds(parent.inflateView(R.layout.weather_conditions))
+        3 -> HourlyForecast(parent.inflateView(R.layout.weather_forecast_hourly))
+        else -> DailyForecast(parent.inflateView(R.layout.weather_forecast_daily))
     }
 
     override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) = when (holder) {
-        is City -> {
+        is Main -> {
             holder.cityName.text = weather.cityName
             holder.lastChecked.text = weather.lastChecked
-            holder.location.text = weather.locationString
-            holder.flagIcon.text = weather.countryFlag
-        }
-        is Main -> {
-            holder.lastUpdated.text = weather.lastUpdated
-            holder.humidity.text = weather.humidity
             holder.minTemp.text = weather.day1MinTemp
             holder.maxTemp.text = weather.day1MaxTemp
             holder.feelsLike.text = weather.feelsLike
@@ -55,6 +48,10 @@ internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>()
             holder.clouds.text = weather.clouds
             holder.windSpeed.text = weather.windSpeed
             holder.windDirection.text = weather.windDirection
+            holder.location.text = weather.locationString
+            holder.flagIcon.text = weather.countryFlag
+            holder.lastUpdated.text = weather.lastUpdated
+            holder.humidity.text = weather.humidity
         }
         is HourlyForecast -> {
             holder.forecast1Time.text = weather.hour03Time

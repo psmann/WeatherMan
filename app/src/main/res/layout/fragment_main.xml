@@ -7,7 +7,7 @@
         android:layout_height="match_parent">
 
     <ImageView
-            android:layout_width="288dp"
+            android:layout_width="304dp"
             android:layout_height="wrap_content" app:srcCompat="@android:drawable/sym_def_app_icon"
             android:id="@+id/weather_icon" app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="32dp" app:layout_constraintStart_toStartOf="parent"
@@ -20,9 +20,10 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp" android:fontFamily="sans-serif-black" android:textStyle="bold"
-            android:textAlignment="center" android:textSize="36sp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" android:layout_marginTop="248dp"
-            app:layout_constraintTop_toTopOf="@+id/weather_icon"/>
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display3" android:layout_marginTop="272dp"
+            app:layout_constraintTop_toTopOf="@+id/weather_icon" app:layout_constraintHorizontal_bias="0.54"
+    />
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/time_updated"

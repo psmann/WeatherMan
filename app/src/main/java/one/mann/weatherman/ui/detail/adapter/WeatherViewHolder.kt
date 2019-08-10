@@ -9,20 +9,13 @@ import one.mann.weatherman.ui.main.SunGraphView
 
 internal sealed class WeatherViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    class City(itemView: View) : WeatherViewHolder(itemView) {
-        var cityName: TextView = itemView.findViewById(R.id.city_name)
-        var flagIcon: TextView = itemView.findViewById(R.id.country_flag)
-        var lastChecked: TextView = itemView.findViewById(R.id.last_checked_result)
-        var location: TextView = itemView.findViewById(R.id.location_result)
-    }
-
     class Main(itemView: View) : WeatherViewHolder(itemView) {
+        var cityName: TextView = itemView.findViewById(R.id.city_name)
+        var lastChecked: TextView = itemView.findViewById(R.id.last_checked_result)
         var currentTemp: TextView = itemView.findViewById(R.id.current_temp_result)
         var feelsLike: TextView = itemView.findViewById(R.id.feels_like_result)
         var maxTemp: TextView = itemView.findViewById(R.id.max_temp_result)
         var minTemp: TextView = itemView.findViewById(R.id.min_temp_result)
-        var humidity: TextView = itemView.findViewById(R.id.humidity_result)
-        var lastUpdated: TextView = itemView.findViewById(R.id.last_updated_result)
         var description: TextView = itemView.findViewById(R.id.description)
         var weatherIcon: ImageView = itemView.findViewById(R.id.weather_icon)
     }
@@ -40,6 +33,10 @@ internal sealed class WeatherViewHolder(itemView: View) : RecyclerView.ViewHolde
         var windDirection: TextView = itemView.findViewById(R.id.wind_direction_result)
         var pressure: TextView = itemView.findViewById(R.id.pressure_result)
         var visibility: TextView = itemView.findViewById(R.id.visibility_result)
+        var flagIcon: TextView = itemView.findViewById(R.id.country_flag)
+        var location: TextView = itemView.findViewById(R.id.location_result)
+        var lastUpdated: TextView = itemView.findViewById(R.id.last_updated_result)
+        var humidity: TextView = itemView.findViewById(R.id.humidity_result)
     }
 
     class DailyForecast(itemView: View) : WeatherViewHolder(itemView) {

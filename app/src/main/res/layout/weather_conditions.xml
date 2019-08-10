@@ -1,6 +1,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/cl_clouds_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -96,5 +96,71 @@
             android:layout_marginStart="8dp"
             app:layout_constraintStart_toEndOf="@+id/visibility"
             app:layout_constraintTop_toTopOf="@+id/visibility"/>
+
+
+    <TextView
+            android:id="@+id/humidity_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="humidity result"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp" android:layout_marginTop="8dp"
+            android:visibility="invisible" app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+            android:id="@+id/last_updated_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="last updated result"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/humidity_result" android:visibility="invisible"/>
+
+    <TextView
+            android:id="@+id/location_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/location_left"
+            android:textColor="@android:color/white"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toStartOf="@+id/location_result"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="parent" tools:ignore="SmallSp"/>
+
+    <TextView
+            android:id="@+id/location_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@android:color/white"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toStartOf="@+id/location_right"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/location_left"
+            app:layout_constraintTop_toBottomOf="parent" tools:ignore="SmallSp"/>
+
+    <TextView
+            android:id="@+id/location_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@android:color/white"
+            android:text="@string/location_right"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/location_result"
+            app:layout_constraintTop_toBottomOf="parent" tools:ignore="SmallSp"/>
+
+    <TextView
+            android:id="@+id/country_flag"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:textSize="50sp"
+            android:text="flag emoji"
+            app:layout_constraintStart_toEndOf="@+id/location_right"
+            app:layout_constraintTop_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
