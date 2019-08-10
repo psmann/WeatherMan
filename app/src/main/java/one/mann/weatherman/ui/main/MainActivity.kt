@@ -19,13 +19,14 @@ import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import one.mann.domain.logic.truncate
 import one.mann.domain.model.Location
 import one.mann.domain.model.LocationResponse.*
 import one.mann.domain.model.LocationType.DB
 import one.mann.domain.model.LocationType.DEVICE
 import one.mann.weatherman.R
-import one.mann.weatherman.api.common.Keys
 import one.mann.weatherman.WeatherManApp
+import one.mann.weatherman.api.common.Keys
 import one.mann.weatherman.ui.common.base.BaseActivity
 import one.mann.weatherman.ui.common.util.getViewModel
 import one.mann.weatherman.ui.main.MainViewModel.UiModel
@@ -55,7 +56,7 @@ internal class MainActivity : BaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) if (resultCode == Activity.RESULT_OK) {
             val placeLoc = Autocomplete.getPlaceFromIntent(data!!).latLng // Get coordinates from intent
-            mainViewModel.addCity(Location(listOf(placeLoc!!.latitude.toFloat(), placeLoc.longitude.toFloat())))
+            mainViewModel.addCity(Location(listOf(placeLoc!!.latitude.toFloat(), placeLoc.longitude.toFloat())).truncate())
         }
     }
 

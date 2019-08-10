@@ -6,6 +6,7 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import kotlinx.coroutines.suspendCancellableCoroutine
+import one.mann.domain.logic.truncate
 import one.mann.domain.model.Location
 import one.mann.interactors.data.sources.DeviceLocationSource
 import javax.inject.Inject
@@ -22,12 +23,13 @@ internal class LocationDataSource @Inject constructor(private val client: FusedL
             override fun onLocationResult(locationResult: LocationResult) {
                 for (location in locationResult.locations) {
                     client.removeLocationUpdates(this)
-                    continuation.resume(Location(listOf(location.latitude.toFloat(), location.longitude.toFloat()), 1))
+                    continuation.resume(Location(listOf(location.latitude.toFloat(), location.longitude.toFloat()), 1)
+                            .truncate())
                 } // Location id = 1 because this is always the first entry in DB
             }
         } // Check for last location if available else request for an update (drains battery)
         client.lastLocation.addOnSuccessListener {
-            if (it != null) continuation.resume(Location(listOf(it.latitude.toFloat(), it.longitude.toFloat()), 1))
+            if (it != null) continuation.resume(Location(listOf(it.latitude.toFloat(), it.longitude.toFloat()), 1).truncate())
             else client.requestLocationUpdates(locationRequest, locationCallback, null)
         }
     }
