@@ -1,5 +1,6 @@
 package one.mann.domain.logic
 
+import one.mann.domain.model.Location
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.exp
@@ -10,10 +11,19 @@ import kotlin.math.roundToInt
 fun Any.addUnits(units: String): String = this.toString() + units
 
 /** Change temperature units from Metric to Imperial */
-fun Float.setUnitsType(type: String) = String.format("%.1f", if (type == IMPERIAL) ((this * (9 / 5)) + 32) else this).toFloat()
+fun Float.setTempUnits(type: String) = String.format("%.1f", if (type == IMPERIAL) ((this * 1.8) + 32) else this)
+        .toFloat()
+
+/** Set wind speed units Metric (km/h) or Imperial (mph) */
+fun Float.setWindUnits(type: String) = String.format("%.1f", if (type == IMPERIAL) (this * 2.237) else (this * 3.6))
+        .toFloat()
 
 /** Round off variable to nearest integer value and return as a string */
 fun Float.roundOff(): String = this.roundToInt().toString()
+
+/** Truncate location coordinates to 4 decimal places */
+fun Location.truncate(): Location = Location(listOf(String.format("%.4f", coordinates[0]).toFloat(),
+        String.format("%.4f", coordinates[1]).toFloat()), id)
 
 /** Convert location coordinates into a truncated comma separated string */
 fun List<Float>.coordinatesInString(): String = String.format("%.4f", this[0]) + ", " + String.format("%.4f", this[1])
