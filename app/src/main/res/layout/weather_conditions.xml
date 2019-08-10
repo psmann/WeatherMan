@@ -24,7 +24,7 @@
             app:layout_constraintStart_toEndOf="@+id/humidity"
             app:layout_constraintTop_toTopOf="@+id/humidity" app:layout_constraintBottom_toBottomOf="@+id/humidity"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"
-            app:layout_constraintHorizontal_bias="1.0"/>
+            app:layout_constraintHorizontal_bias="1.0" android:textAlignment="viewEnd"/>
 
     <ImageView
             android:layout_width="wrap_content"
@@ -50,7 +50,7 @@
             app:layout_constraintStart_toEndOf="@+id/clouds"
             app:layout_constraintTop_toTopOf="@+id/clouds" app:layout_constraintBottom_toBottomOf="@+id/clouds"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"
-            app:layout_constraintHorizontal_bias="1.0"/>
+            app:layout_constraintHorizontal_bias="1.0" android:textAlignment="viewEnd"/>
     <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" app:srcCompat="@drawable/ic_wi_barometer"
@@ -76,7 +76,7 @@
             app:layout_constraintStart_toEndOf="@+id/pressure"
             app:layout_constraintTop_toTopOf="@+id/pressure"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"
-            app:layout_constraintHorizontal_bias="1.0"/>
+            app:layout_constraintHorizontal_bias="1.0" android:textAlignment="viewEnd"/>
     <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" app:srcCompat="@drawable/ic_wi_wind" android:id="@+id/wind_speed_icon"
@@ -102,7 +102,7 @@
             app:layout_constraintStart_toEndOf="@+id/wind_speed"
             app:layout_constraintTop_toTopOf="@+id/wind_speed"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"
-            app:layout_constraintHorizontal_bias="1.0"/>
+            app:layout_constraintHorizontal_bias="1.0" android:textAlignment="viewEnd"/>
     <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" app:srcCompat="@drawable/ic_wi_wind_deg"
@@ -128,7 +128,7 @@
             app:layout_constraintStart_toEndOf="@+id/wind_direction"
             app:layout_constraintTop_toTopOf="@+id/wind_direction"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"
-            app:layout_constraintHorizontal_bias="1.0"/>
+            app:layout_constraintHorizontal_bias="1.0" android:textAlignment="viewEnd"/>
     <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" app:srcCompat="@drawable/ic_wi_visibility"
@@ -155,7 +155,7 @@
             app:layout_constraintStart_toEndOf="@+id/visibility"
             app:layout_constraintTop_toTopOf="@+id/visibility"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"
-            app:layout_constraintHorizontal_bias="1.0"/>
+            app:layout_constraintHorizontal_bias="1.0" android:textAlignment="viewEnd"/>
 
     <ImageView
             android:layout_width="wrap_content"
@@ -181,50 +181,31 @@
             app:layout_constraintStart_toEndOf="@+id/last_updated"
             app:layout_constraintTop_toTopOf="@+id/last_updated"
             app:layout_constraintBottom_toBottomOf="@+id/last_updated" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="32dp" app:layout_constraintHorizontal_bias="1.0"/>
+            android:layout_marginEnd="32dp" app:layout_constraintHorizontal_bias="1.0" android:textAlignment="viewEnd"/>
     <TextView
             android:id="@+id/country_flag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="32dp"
-            android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/last_update_icon"
-            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="32dp"/>
+            app:layout_constraintBottom_toBottomOf="@+id/location_coords"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/location_coords" android:layout_marginEnd="32dp"
+            app:layout_constraintTop_toTopOf="@+id/location_coords"/>
     <TextView
             android:id="@+id/location_coords"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/location"
             android:textColor="@android:color/white"
-            app:layout_constraintStart_toEndOf="@+id/last_update_icon"
-            android:layout_marginStart="32dp"
-            app:layout_constraintTop_toTopOf="@+id/country_flag"
-            app:layout_constraintBottom_toBottomOf="@+id/country_flag"/>
-    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:orientation="horizontal"
-                  app:layout_constraintStart_toEndOf="@+id/location_coords"
-                  app:layout_constraintTop_toTopOf="@+id/location_coords"
-                  app:layout_constraintBottom_toBottomOf="@+id/location_coords"
-                  app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"
-                  app:layout_constraintHorizontal_bias="1.0">
-        <TextView
-                android:id="@+id/location_left"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/location_left"
-                android:textColor="@android:color/white"/>
-        <TextView
-                android:id="@+id/location_result"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:textColor="@android:color/white" app:layout_constraintStart_toEndOf="@+id/location_left"/>
-        <TextView
-                android:id="@+id/location_right"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/location_right"
-                android:textColor="@android:color/white"/>
-    </LinearLayout>
+            android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/last_updated"
+            app:layout_constraintStart_toStartOf="@+id/last_updated" android:layout_marginBottom="32dp"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.0"/>
+    <TextView
+            android:id="@+id/location_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white" app:layout_constraintStart_toEndOf="@+id/location_coords"
+            app:layout_constraintTop_toTopOf="@+id/location_coords"
+            app:layout_constraintBottom_toBottomOf="@+id/location_coords"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"
+            app:layout_constraintHorizontal_bias="1.0" android:textAlignment="viewEnd"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

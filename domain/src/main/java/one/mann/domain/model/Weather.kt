@@ -15,7 +15,7 @@ data class Weather(
         val countryFlag: String = "",
         val clouds: String = "",
         val windSpeed: String = "",
-        val windDirection: String = "",
+        val windDirection: String = "0",
         val lastUpdated: String = "",
         val visibility: String = "",
         val dayLength: String = "",
