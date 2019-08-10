@@ -3,7 +3,7 @@ package one.mann.domain.model
 data class CurrentWeather(
         val cityName: String,
         val currentTemperature: Float,
-        val pressure: Float,
+        val pressure: Int,
         val humidity: Int,
         val description: String,
         val iconId: Int,

@@ -11,7 +11,7 @@ import one.mann.weatherman.api.openweathermap.dto.HourlyForecast as ApiHourlyFor
 internal fun ApiCurrentWeather.mapToDomain(): DomainCurrentWeather = DomainCurrentWeather(
         name,
         main.temp,
-        main.pressure,
+        main.pressure.toInt(),
         main.humidity.toInt(),
         weather[0].main,
         weather[0].id,
