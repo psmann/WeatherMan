@@ -17,15 +17,15 @@ internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>()
     private var weather = Weather()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder = when (viewType) {
-        0 -> Main(parent.inflateView(R.layout.weather_current))
-        1 -> Clouds(parent.inflateView(R.layout.weather_conditions))
-        2 -> Sun(parent.inflateView(R.layout.weather_sun_cycle))
+        0 -> Current(parent.inflateView(R.layout.weather_current))
+        1 -> Conditions(parent.inflateView(R.layout.weather_conditions))
+        2 -> SunCycle(parent.inflateView(R.layout.weather_sun_cycle))
         3 -> HourlyForecast(parent.inflateView(R.layout.weather_forecast_hourly))
         else -> DailyForecast(parent.inflateView(R.layout.weather_forecast_daily))
     }
 
     override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) = when (holder) {
-        is Main -> {
+        is Current -> {
             holder.cityName.text = weather.cityName
             holder.lastChecked.text = weather.lastChecked
             holder.minTemp.text = weather.day1MinTemp
@@ -35,7 +35,7 @@ internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>()
             holder.description.text = weather.description
             holder.weatherIcon.loadIcon(weather.iconId, weather.sunPosition)
         }
-        is Clouds -> {
+        is Conditions -> {
             holder.visibility.text = weather.visibility
             holder.pressure.text = weather.pressure
             holder.clouds.text = weather.clouds
@@ -46,7 +46,7 @@ internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>()
             holder.lastUpdated.text = weather.lastUpdated
             holder.humidity.text = weather.humidity
         }
-        is Sun -> {
+        is SunCycle -> {
             holder.setIsRecyclable(false) // Force-reload sunGraphView to fix view not updating issue
             holder.dayLength.text = weather.dayLength
             holder.sunrise.text = weather.sunrise

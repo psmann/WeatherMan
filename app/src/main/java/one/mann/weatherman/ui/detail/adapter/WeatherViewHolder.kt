@@ -9,7 +9,7 @@ import one.mann.weatherman.ui.main.SunGraphView
 
 internal sealed class WeatherViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    class Main(itemView: View) : WeatherViewHolder(itemView) {
+    class Current(itemView: View) : WeatherViewHolder(itemView) {
         var cityName: TextView = itemView.findViewById(R.id.city_name)
         var lastChecked: TextView = itemView.findViewById(R.id.last_checked_result)
         var currentTemp: TextView = itemView.findViewById(R.id.current_temp_result)
@@ -20,14 +20,7 @@ internal sealed class WeatherViewHolder(itemView: View) : RecyclerView.ViewHolde
         var weatherIcon: ImageView = itemView.findViewById(R.id.weather_icon)
     }
 
-    class Sun(itemView: View) : WeatherViewHolder(itemView) {
-        var sunrise: TextView = itemView.findViewById(R.id.sunrise_result)
-        var sunset: TextView = itemView.findViewById(R.id.sunset_result)
-        var dayLength: TextView = itemView.findViewById(R.id.day_length_result)
-        var sunGraphView: SunGraphView = itemView.findViewById(R.id.sunlight_graph)
-    }
-
-    class Clouds(itemView: View) : WeatherViewHolder(itemView) {
+    class Conditions(itemView: View) : WeatherViewHolder(itemView) {
         var clouds: TextView = itemView.findViewById(R.id.clouds_result)
         var windSpeed: TextView = itemView.findViewById(R.id.wind_speed_result)
         var windDirection: TextView = itemView.findViewById(R.id.wind_direction_result)
@@ -37,6 +30,37 @@ internal sealed class WeatherViewHolder(itemView: View) : RecyclerView.ViewHolde
         var location: TextView = itemView.findViewById(R.id.location_result)
         var lastUpdated: TextView = itemView.findViewById(R.id.last_updated_result)
         var humidity: TextView = itemView.findViewById(R.id.humidity_result)
+    }
+
+    class SunCycle(itemView: View) : WeatherViewHolder(itemView) {
+        var sunrise: TextView = itemView.findViewById(R.id.sunrise_result)
+        var sunset: TextView = itemView.findViewById(R.id.sunset_result)
+        var dayLength: TextView = itemView.findViewById(R.id.day_length_result)
+        var sunGraphView: SunGraphView = itemView.findViewById(R.id.sunlight_graph)
+    }
+
+    class HourlyForecast(itemView: View) : WeatherViewHolder(itemView) {
+        var forecast1Time: TextView = itemView.findViewById(R.id.forecast_1_time)
+        var forecast1Temp: TextView = itemView.findViewById(R.id.forecast_1_temp)
+        var forecast1Icon: ImageView = itemView.findViewById(R.id.forecast_1_icon)
+        var forecast2Time: TextView = itemView.findViewById(R.id.forecast_2_time)
+        var forecast2Temp: TextView = itemView.findViewById(R.id.forecast_2_temp)
+        var forecast2Icon: ImageView = itemView.findViewById(R.id.forecast_2_icon)
+        var forecast3Time: TextView = itemView.findViewById(R.id.forecast_3_time)
+        var forecast3Temp: TextView = itemView.findViewById(R.id.forecast_3_temp)
+        var forecast3Icon: ImageView = itemView.findViewById(R.id.forecast_3_icon)
+        var forecast4Time: TextView = itemView.findViewById(R.id.forecast_4_time)
+        var forecast4Temp: TextView = itemView.findViewById(R.id.forecast_4_temp)
+        var forecast4Icon: ImageView = itemView.findViewById(R.id.forecast_4_icon)
+        var forecast5Time: TextView = itemView.findViewById(R.id.forecast_5_time)
+        var forecast5Temp: TextView = itemView.findViewById(R.id.forecast_5_temp)
+        var forecast5Icon: ImageView = itemView.findViewById(R.id.forecast_5_icon)
+        var forecast6Time: TextView = itemView.findViewById(R.id.forecast_6_time)
+        var forecast6Temp: TextView = itemView.findViewById(R.id.forecast_6_temp)
+        var forecast6Icon: ImageView = itemView.findViewById(R.id.forecast_6_icon)
+        var forecast7Time: TextView = itemView.findViewById(R.id.forecast_7_time)
+        var forecast7Temp: TextView = itemView.findViewById(R.id.forecast_7_temp)
+        var forecast7Icon: ImageView = itemView.findViewById(R.id.forecast_7_icon)
     }
 
     class DailyForecast(itemView: View) : WeatherViewHolder(itemView) {
@@ -67,30 +91,6 @@ internal sealed class WeatherViewHolder(itemView: View) : RecyclerView.ViewHolde
         var forecast7Day: TextView = itemView.findViewById(R.id.forecast_7_day)
         var forecast7Min: TextView = itemView.findViewById(R.id.forecast_7_min)
         var forecast7Max: TextView = itemView.findViewById(R.id.forecast_7_max)
-        var forecast7Icon: ImageView = itemView.findViewById(R.id.forecast_7_icon)
-    }
-
-    class HourlyForecast(itemView: View) : WeatherViewHolder(itemView) {
-        var forecast1Time: TextView = itemView.findViewById(R.id.forecast_1_time)
-        var forecast1Temp: TextView = itemView.findViewById(R.id.forecast_1_temp)
-        var forecast1Icon: ImageView = itemView.findViewById(R.id.forecast_1_icon)
-        var forecast2Time: TextView = itemView.findViewById(R.id.forecast_2_time)
-        var forecast2Temp: TextView = itemView.findViewById(R.id.forecast_2_temp)
-        var forecast2Icon: ImageView = itemView.findViewById(R.id.forecast_2_icon)
-        var forecast3Time: TextView = itemView.findViewById(R.id.forecast_3_time)
-        var forecast3Temp: TextView = itemView.findViewById(R.id.forecast_3_temp)
-        var forecast3Icon: ImageView = itemView.findViewById(R.id.forecast_3_icon)
-        var forecast4Time: TextView = itemView.findViewById(R.id.forecast_4_time)
-        var forecast4Temp: TextView = itemView.findViewById(R.id.forecast_4_temp)
-        var forecast4Icon: ImageView = itemView.findViewById(R.id.forecast_4_icon)
-        var forecast5Time: TextView = itemView.findViewById(R.id.forecast_5_time)
-        var forecast5Temp: TextView = itemView.findViewById(R.id.forecast_5_temp)
-        var forecast5Icon: ImageView = itemView.findViewById(R.id.forecast_5_icon)
-        var forecast6Time: TextView = itemView.findViewById(R.id.forecast_6_time)
-        var forecast6Temp: TextView = itemView.findViewById(R.id.forecast_6_temp)
-        var forecast6Icon: ImageView = itemView.findViewById(R.id.forecast_6_icon)
-        var forecast7Time: TextView = itemView.findViewById(R.id.forecast_7_time)
-        var forecast7Temp: TextView = itemView.findViewById(R.id.forecast_7_temp)
         var forecast7Icon: ImageView = itemView.findViewById(R.id.forecast_7_icon)
     }
 }
