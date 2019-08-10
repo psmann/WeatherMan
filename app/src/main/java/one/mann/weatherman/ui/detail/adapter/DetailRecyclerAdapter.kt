@@ -18,8 +18,8 @@ internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder = when (viewType) {
         0 -> Main(parent.inflateView(R.layout.weather_current))
-        1 -> Sun(parent.inflateView(R.layout.weather_sun_cycle))
-        2 -> Clouds(parent.inflateView(R.layout.weather_conditions))
+        1 -> Clouds(parent.inflateView(R.layout.weather_conditions))
+        2 -> Sun(parent.inflateView(R.layout.weather_sun_cycle))
         3 -> HourlyForecast(parent.inflateView(R.layout.weather_forecast_hourly))
         else -> DailyForecast(parent.inflateView(R.layout.weather_forecast_daily))
     }
@@ -35,13 +35,6 @@ internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>()
             holder.description.text = weather.description
             holder.weatherIcon.loadIcon(weather.iconId, weather.sunPosition)
         }
-        is Sun -> {
-            holder.setIsRecyclable(false) // Force-reload sunGraphView to fix view not updating issue
-            holder.dayLength.text = weather.dayLength
-            holder.sunrise.text = weather.sunrise
-            holder.sunset.text = weather.sunset
-            holder.sunGraphView.setT(weather.sunPosition)
-        }
         is Clouds -> {
             holder.visibility.text = weather.visibility
             holder.pressure.text = weather.pressure
@@ -52,6 +45,13 @@ internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>()
             holder.flagIcon.text = weather.countryFlag
             holder.lastUpdated.text = weather.lastUpdated
             holder.humidity.text = weather.humidity
+        }
+        is Sun -> {
+            holder.setIsRecyclable(false) // Force-reload sunGraphView to fix view not updating issue
+            holder.dayLength.text = weather.dayLength
+            holder.sunrise.text = weather.sunrise
+            holder.sunset.text = weather.sunset
+            holder.sunGraphView.setT(weather.sunPosition)
         }
         is HourlyForecast -> {
             holder.forecast1Time.text = weather.hour03Time

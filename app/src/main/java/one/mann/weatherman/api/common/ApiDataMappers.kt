@@ -20,9 +20,9 @@ internal fun ApiCurrentWeather.mapToDomain(): DomainCurrentWeather = DomainCurre
         sys.country,
         clouds.all.toInt(),
         wind.speed,
-        wind.deg,
+        wind.deg.toInt(),
         dt * 1000,
-        visibility
+        visibility.toInt()
 )
 
 internal fun ApiDailyForecast.ListObject.mapToDomain(): DomainDailyForecast = DomainDailyForecast(

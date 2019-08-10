@@ -63,8 +63,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_notification" />
-                            <entry key="sourceFile" value="C:\Users\MANN\Desktop\wi-day-cloudy.svg" />
+                            <entry key="outputName" value="ic_wi_time" />
+                            <entry key="sourceFile" value="C:\Users\MANN\Desktop\wi-time-3.svg" />
                           </map>
                         </option>
                       </PersistentState>

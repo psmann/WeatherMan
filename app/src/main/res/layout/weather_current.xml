@@ -19,7 +19,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            android:fontFamily="sans-serif" android:textStyle="bold" android:text="Brampton"/>
+            android:fontFamily="sans-serif" android:textStyle="bold"/>
 
     <TextView
             android:id="@+id/last_checked_result"
@@ -31,14 +31,12 @@
             android:textColor="@android:color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="8dp" app:layout_constraintTop_toTopOf="@+id/city_name"
-            android:text="August 10"/>
+            android:layout_marginStart="8dp" app:layout_constraintTop_toTopOf="@+id/city_name"/>
 
     <TextView
             android:id="@+id/current_temp_result"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="32.5°"
             android:textAppearance="@style/TextAppearance.AppCompat.Display3"
             android:textColor="@android:color/white"
             android:textStyle="bold"
@@ -61,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
-                android:text="37°" android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textSize="23sp" android:textStyle="bold"/>
 
         <TextView
@@ -70,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
                 android:textColor="@android:color/white"
-                android:text="/" android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:text="@string/forward_slash" android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textSize="23sp" android:textStyle="bold"/>
 
         <TextView
@@ -79,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:textColor="@android:color/white"
-                android:text="21°" android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textSize="23sp" android:textStyle="bold"/>
 
     </LinearLayout>
@@ -106,7 +104,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:textColor="@android:color/white"
-                android:text="35.1°" android:textSize="12sp"/>
+                android:textSize="12sp"/>
 
     </LinearLayout>
 
