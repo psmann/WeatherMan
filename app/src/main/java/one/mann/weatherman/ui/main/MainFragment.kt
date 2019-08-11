@@ -12,8 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_main.*
 import one.mann.domain.model.Weather
 import one.mann.weatherman.R
-import one.mann.weatherman.api.openweathermap.isOvercast
 import one.mann.weatherman.WeatherManApp
+import one.mann.weatherman.api.openweathermap.isOvercast
 import one.mann.weatherman.ui.common.util.*
 import one.mann.weatherman.ui.detail.DetailActivity
 import one.mann.weatherman.ui.main.MainViewModel.UiModel
@@ -52,6 +52,11 @@ internal class MainFragment : Fragment() {
             if (it is UiModel.DisplayUi) fragment_main_const_ly.visibility = if (it.display) View.VISIBLE else View.GONE
         })
         mainViewModel.weatherData.observe(this, Observer { if (it.size >= position + 1) setupViews(it[position]) })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mainViewModel.updateUI() // Update UI when returning from DetailActivity
     }
 
     private fun injectDependencies() = WeatherManApp.appComponent.getSubComponent().injectMainFragment(this)

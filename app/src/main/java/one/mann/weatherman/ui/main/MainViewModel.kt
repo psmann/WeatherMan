@@ -81,7 +81,7 @@ internal class MainViewModel @Inject constructor(
         }
     }
 
-    private fun updateUI() {
+    fun updateUI() {
         launch {
             val data = withContext(IO) { getAllWeather.invoke() }
             if (data.isNotEmpty()) {
