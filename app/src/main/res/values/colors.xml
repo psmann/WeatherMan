@@ -8,8 +8,8 @@
     <color name="dayClearStart">#01579B</color>
     <color name="dayClearCenter">#03A9F4</color>
     <color name="dayClearEnd">#B3E5FC</color>
-    <color name="dayCloudsStart">#263238</color>
-    <color name="dayCloudsCenter">#607D8B</color>
+    <color name="dayCloudsStart">#02508D</color>
+    <color name="dayCloudsCenter">#3D7997</color>
     <color name="dayCloudsEnd">#B0BEC5</color>
     <color name="nightClearStart">#211352</color>
     <color name="nightClearCenter">#59497A</color>
@@ -18,8 +18,8 @@
     <color name="nightCloudsCenter">#524B63</color>
     <color name="nightCloudsEnd">#575758</color>
     <color name="sunriseClearStart">#E65100</color>
-    <color name="sunriseClearCenter">#FF9800</color>
-    <color name="sunriseClearEnd">#FFCC80</color>
+    <color name="sunriseClearCenter">#D38005</color>
+    <color name="sunriseClearEnd">#F89833</color>
     <color name="sunriseCloudsStart">#6D2703</color>
     <color name="sunriseCloudsCenter">#BB6F00</color>
     <color name="sunriseCloudsEnd">#E29C32</color>
