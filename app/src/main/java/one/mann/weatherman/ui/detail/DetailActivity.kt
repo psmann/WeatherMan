@@ -11,6 +11,7 @@ import one.mann.domain.model.LocationType.DB
 import one.mann.domain.model.LocationType.DEVICE
 import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
+import one.mann.weatherman.api.openweathermap.isOvercast
 import one.mann.weatherman.ui.common.base.BaseActivity
 import one.mann.weatherman.ui.common.util.ACTIVITY_BACKGROUND
 import one.mann.weatherman.ui.common.util.PAGER_POSITION
@@ -26,11 +27,12 @@ internal class DetailActivity : BaseActivity() {
     private val detailViewModel: DetailViewModel by lazy { getViewModel(viewModelFactory) }
     private val detailRecyclerAdapter by lazy { DetailRecyclerAdapter() }
     private val position: Int by lazy { intent.getIntExtra(PAGER_POSITION, 1) }
+    private val backgroundResource: Int by lazy { intent.getIntExtra(ACTIVITY_BACKGROUND, getGradient()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
-        activity_detail_coord_ly.setBackgroundResource(intent.getIntExtra(ACTIVITY_BACKGROUND, getGradient()))
+        activity_detail_coord_ly.setBackgroundResource(backgroundResource)
         handleLocationPermission { initActivity(it) }
     }
 
@@ -53,7 +55,12 @@ internal class DetailActivity : BaseActivity() {
             }
         })
         detailViewModel.weatherData.observe(this, Observer {
-            if (it.size >= position + 1) detailRecyclerAdapter.update(it[position])
+            if (it.size >= position + 1) {
+                detailRecyclerAdapter.update(it[position])
+                // Update activity background only if it changes after a data refresh
+                val background = getGradient(it[position].sunPosition, isOvercast(it[position].iconId))
+                if (background != backgroundResource) activity_detail_coord_ly.setBackgroundResource(background)
+            }
         })
         detail_swipe_ly.setColorSchemeColors(Color.RED, Color.BLUE)
         detail_swipe_ly.setOnRefreshListener { handleLocationServiceResult() }
