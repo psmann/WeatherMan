@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#1a237e</color>
     <color name="colorAccent">#203CE7</color>
 
+    <color name="highAlphaWhite">#47E0F7FA</color>
+
     <!--Background colours-->
     <color name="dayClearStart">#01579B</color>
     <color name="dayClearCenter">#03A9F4</color>
