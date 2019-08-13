@@ -22,6 +22,7 @@ import javax.inject.Inject
 internal class MainFragment : Fragment() {
 
     private var position = 0
+    private var backgroundResources = 0
     private val intent: Intent by lazy { Intent(context, DetailActivity::class.java) }
     private val mainViewModel: MainViewModel by lazy { activity?.run { getViewModel(viewModelFactory) }!! }
     @Inject
@@ -54,20 +55,19 @@ internal class MainFragment : Fragment() {
         mainViewModel.weatherData.observe(this, Observer { if (it.size >= position + 1) setupViews(it[position]) })
     }
 
-    override fun onResume() {
-        super.onResume()
-        mainViewModel.updateUI() // Update UI when returning from DetailActivity
-    }
-
     private fun injectDependencies() = WeatherManApp.appComponent.getSubComponent().injectMainFragment(this)
 
     private fun setupViews(weather: Weather) {
-        val backgroundResource = getGradient(weather.sunPosition, isOvercast(weather.iconId))
+        val newBackground = getGradient(weather.sunPosition, isOvercast(weather.iconId))
         weather_icon.loadIcon(weather.iconId, weather.sunPosition)
         current_temp.text = weather.currentTemp
         time_updated.text = weather.lastChecked
         city_name.text = weather.cityName
-        fragment_main_const_ly.setBackgroundResource(backgroundResource)
-        intent.putExtra(ACTIVITY_BACKGROUND, backgroundResource) // Add backgroundResourceId to intent for detail activity
+        // Update activity background only if it changes after a data refresh
+        if(backgroundResources != newBackground) {
+            fragment_main_const_ly.setBackgroundResource(newBackground)
+            backgroundResources = newBackground
+        }
+        intent.putExtra(ACTIVITY_BACKGROUND, newBackground) // Add backgroundResourceId to intent for detail activity
     }
 }

@@ -65,7 +65,10 @@ internal class MainViewModel @Inject constructor(
         launch {
             uiModel.value = UiModel.Refreshing(true) // Start refreshing
             try {
-                withContext(IO) { updateWeather.invoke(locationType) }
+                withContext(IO) {
+                    updateWeather.invoke(locationType)
+                    settingsPrefs.edit { putLong(MAIN_REFRESH_KEY, System.currentTimeMillis()) }
+                }
             } catch (e: IOException) {
                 uiModel.value = UiModel.ShowError
             }
@@ -81,7 +84,7 @@ internal class MainViewModel @Inject constructor(
         }
     }
 
-    fun updateUI() {
+    private fun updateUI() {
         launch {
             val data = withContext(IO) { getAllWeather.invoke() }
             if (data.isNotEmpty()) {
@@ -121,10 +124,10 @@ internal class MainViewModel @Inject constructor(
         launch(Default) { workManager.cancelUniqueWork(NOTIFICATION_WORKER) }
     }
 
-    fun navigationGuideShown(): Boolean = settingsPrefs.getBoolean(NAVIGATION_GUIDE, false)
+    fun navigationGuideShown(): Boolean = settingsPrefs.getBoolean(NAVIGATION_GUIDE_KEY, false)
 
     fun setNavigationGuideShown() {
-        launch(IO) { settingsPrefs.edit { putBoolean(NAVIGATION_GUIDE, true) } }
+        launch(IO) { settingsPrefs.edit { putBoolean(NAVIGATION_GUIDE_KEY, true) } }
     }
 
     /** Remove listeners and observers at destruction */
@@ -135,15 +138,18 @@ internal class MainViewModel @Inject constructor(
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        when (key) {
-            SETTINGS_UNITS_KEY -> updateWeather(LocationType.DB) // Update weather and UI when units are changed by user
-            SETTINGS_NOTIFICATIONS_KEY ->
-                if (sharedPreferences!!.getBoolean(key, true)) startNotificationWork(
-                        sharedPreferences.getString(SETTINGS_FREQUENCY_KEY, "1")!!.toLong())
-                else stopNotificationWork()
-            SETTINGS_FREQUENCY_KEY -> {
-                stopNotificationWork() // Cancel old work
-                startNotificationWork(sharedPreferences!!.getString(key, "1")!!.toLong()) // Start new work
+        launch(IO) {
+            when (key) {
+                SETTINGS_UNITS_KEY -> updateWeather(LocationType.DB) // Update weather and UI when units are changed by user
+                SETTINGS_NOTIFICATIONS_KEY -> // Start/Stop notifications
+                    if (sharedPreferences!!.getBoolean(key, true)) startNotificationWork(
+                            sharedPreferences.getString(SETTINGS_FREQUENCY_KEY, "1")!!.toLong())
+                    else stopNotificationWork()
+                SETTINGS_FREQUENCY_KEY -> { // Change notification frequency
+                    stopNotificationWork() // Cancel old work
+                    startNotificationWork(sharedPreferences!!.getString(key, "1")!!.toLong()) // Start new work
+                }
+                DETAIL_REFRESH_KEY -> updateUI() // Update MainFragment when data is refreshed from DetailActivity
             }
         }
     }

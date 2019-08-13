@@ -58,8 +58,8 @@ internal class DetailActivity : BaseActivity() {
             if (it.size >= position + 1) {
                 detailRecyclerAdapter.update(it[position])
                 // Update activity background only if it changes after a data refresh
-                val background = getGradient(it[position].sunPosition, isOvercast(it[position].iconId))
-                if (background != backgroundResource) activity_detail_coord_ly.setBackgroundResource(background)
+                val newBackground = getGradient(it[position].sunPosition, isOvercast(it[position].iconId))
+                if (newBackground != backgroundResource) activity_detail_coord_ly.setBackgroundResource(newBackground)
             }
         })
         detail_swipe_ly.setColorSchemeColors(Color.RED, Color.BLUE)
