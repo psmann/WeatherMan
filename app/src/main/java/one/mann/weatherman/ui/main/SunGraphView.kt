@@ -39,10 +39,12 @@ internal class SunGraphView @JvmOverloads constructor(
     private var pointY = 0f // y coordinate on curve
     private var tValue = 0f // Location on the curve (0 to 1) where coordinates are required
 
-    fun setT(t: Float) { // Update sun position on the graph
+    /** Update sun position on the graph */
+    fun setT(t: Float) {
         tValue = t
     }
 
+    /** Calculate coordinates and set-up the curve */
     private fun updateView() {
         // Set up coordinates
         startX = pxToDip(left.toFloat()) + horizontalPadding
@@ -74,9 +76,11 @@ internal class SunGraphView @JvmOverloads constructor(
         }
     }
 
+    /** Change colour of the graph */
     private fun updatePaintColour(change: Int = 125) =
             paintCurve.setARGB(alphaValue, redValue - change, greenValue - change, blueValue + change)
 
+    /** Convert pixels to density independent pixels */
     private fun pxToDip(value: Float): Float = value / screenDensity
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) =
