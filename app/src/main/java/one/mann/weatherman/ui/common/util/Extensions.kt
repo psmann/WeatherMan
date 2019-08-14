@@ -36,10 +36,7 @@ internal fun Context.checkNetworkConnection(): Boolean =
                     else -> false
                 }
             }
-            else {
-                val networkInfo = activeNetworkInfo
-                return networkInfo != null && networkInfo.isConnected
-            }
+            else activeNetworkInfo.run { return this?.isConnected ?: false }
         }
 
 /** Instantiate ViewModel */
