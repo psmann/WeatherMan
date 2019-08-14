@@ -10,7 +10,7 @@ import one.mann.weatherman.api.openweathermap.dto.HourlyForecast as ApiHourlyFor
 
 /** Map API currentWeather to Domain, all parameters are nullable and are given default values */
 internal fun ApiCurrentWeather.mapToDomain(): DomainCurrentWeather = DomainCurrentWeather(
-        name ?: "",
+        name ?: "Earth",
         main?.temp ?: 0f,
         main?.pressure?.toInt() ?: 0,
         main?.humidity?.toInt() ?: 0,
