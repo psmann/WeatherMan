@@ -16,13 +16,11 @@ internal class OwmDataSource @Inject constructor(private val owmService: OwmServ
 
     override suspend fun getDailyForecast(location: Location): List<DailyForecast> =
             owmService.getDailyForecast(location.coordinates[0], location.coordinates[1])
-                    .list
-                    .map { it.mapToDomain() }
+                    .list?.map { it.mapToDomain() }!!
 
     override suspend fun getHourlyForecast(location: Location): List<HourlyForecast> =
             owmService.getHourlyForecast(location.coordinates[0], location.coordinates[1])
-                    .list
-                    .map { it.mapToDomain() }
+                    .list?.map { it.mapToDomain() }!!
 
     override suspend fun getAllCurrentWeather(locations: List<Location>): List<CurrentWeather> {
         val currentWeathers: MutableList<CurrentWeather> = mutableListOf()
@@ -36,8 +34,7 @@ internal class OwmDataSource @Inject constructor(private val owmService: OwmServ
         val dailyForecasts: MutableList<List<DailyForecast>> = mutableListOf()
         for (location in locations) dailyForecasts.add(
                 owmService.getDailyForecast(location.coordinates[0], location.coordinates[1])
-                        .list
-                        .map { it.mapToDomain() })
+                        .list?.map { it.mapToDomain() }!!)
         return dailyForecasts
     }
 
@@ -45,8 +42,7 @@ internal class OwmDataSource @Inject constructor(private val owmService: OwmServ
         val hourlyForecasts: MutableList<List<HourlyForecast>> = mutableListOf()
         for (location in locations) hourlyForecasts.add(
                 owmService.getHourlyForecast(location.coordinates[0], location.coordinates[1])
-                        .list
-                        .map { it.mapToDomain() })
+                        .list?.map { it.mapToDomain() }!!)
         return hourlyForecasts
     }
 }

@@ -38,7 +38,7 @@ fun countryCodeToEmoji(code: String): String {
 /** Base function to convert Unix epoch time into regular time formats */
 private fun epochToFormat(time: Long, timezone: String, pattern: String): String {
     val format = SimpleDateFormat(pattern, Locale.getDefault())
-    format.timeZone = TimeZone.getTimeZone(timezone)
+    format.timeZone = if (timezone == "") TimeZone.getDefault() else TimeZone.getTimeZone(timezone)
     return format.format(Date(time)).toString()
 }
 
@@ -53,8 +53,8 @@ fun lengthOfDay(sunrise: Long, sunset: Long): String {
 fun epochToMinutes(time: Long, timezone: String): Float {
     val hourFormat = SimpleDateFormat("H", Locale.getDefault())
     val minuteFormat = SimpleDateFormat("m", Locale.getDefault())
-    hourFormat.timeZone = TimeZone.getTimeZone(timezone)
-    minuteFormat.timeZone = TimeZone.getTimeZone(timezone)
+    hourFormat.timeZone = if (timezone == "") TimeZone.getDefault() else TimeZone.getTimeZone(timezone)
+    minuteFormat.timeZone = if (timezone == "") TimeZone.getDefault() else TimeZone.getTimeZone(timezone)
     return (hourFormat.format(Date(time)).toFloat() * 60) + minuteFormat.format(Date(time)).toFloat()
 }
 

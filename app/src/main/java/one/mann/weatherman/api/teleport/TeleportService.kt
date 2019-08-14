@@ -10,5 +10,5 @@ internal interface TeleportService {
     suspend fun getTimezone(
             @Path("lat") latitude: String,
             @Path("long") longitude: String
-    ): Timezone
+    ): Timezone?
 }
