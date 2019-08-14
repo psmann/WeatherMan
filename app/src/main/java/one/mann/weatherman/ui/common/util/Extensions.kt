@@ -2,6 +2,9 @@ package one.mann.weatherman.ui.common.util
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities.*
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -9,7 +12,6 @@ import androidx.annotation.LayoutRes
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import one.mann.weatherman.api.openweathermap.dayIcons
 import one.mann.weatherman.api.openweathermap.nightIcons
 
@@ -23,16 +25,26 @@ internal fun ImageView.loadIcon(iconCode: Int, sunPosition: Float = 1f) {
 internal fun ViewGroup.inflateView(@LayoutRes resource: Int, attachToRoot: Boolean = false) = LayoutInflater.from(context)
         .inflate(resource, this, attachToRoot)
 
-/** Check status of network connection */
-internal fun Context.checkNetworkConnection(): Boolean {
-    val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val networkInfo = connectivityManager.activeNetworkInfo
-    return networkInfo != null && networkInfo.isConnected
-}
+/** Check status of network connection, deprecation being handled */
+@Suppress("DEPRECATION")
+internal fun Context.checkNetworkConnection(): Boolean =
+        (getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).run {
+            if (VERSION.SDK_INT >= VERSION_CODES.M) getNetworkCapabilities(activeNetwork).run {
+                return when {
+                    this == null -> false
+                    hasTransport(TRANSPORT_WIFI) || hasTransport(TRANSPORT_CELLULAR) || hasTransport(TRANSPORT_ETHERNET) -> true
+                    else -> false
+                }
+            }
+            else {
+                val networkInfo = activeNetworkInfo
+                return networkInfo != null && networkInfo.isConnected
+            }
+        }
 
 /** Instantiate ViewModel */
 internal inline fun <reified VM : ViewModel> FragmentActivity.getViewModel(factory: ViewModelProvider.Factory): VM =
-        ViewModelProviders.of(this, factory)[VM::class.java]
+        ViewModelProvider(this, factory)[VM::class.java]
 
 ///** Load resources using GlideApp */
 //internal fun ImageView.loadIcon(iconCode: Int, sunPosition: Float = 1f) {

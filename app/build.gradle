@@ -4,11 +4,11 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "one.mann.weatherman"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -27,7 +27,7 @@ android {
 }
 
 dependencies {
-    def lifecycle_version = '2.2.0-alpha02'
+    def lifecycle_version = '2.2.0-alpha03'
     def room_version = "2.1.0"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
