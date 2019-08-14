@@ -20,7 +20,7 @@ internal class ApiServiceModule {
 
     companion object {
         private const val TELEPORT_BASE_URL = "https://api.teleport.org/api/locations/"
-        private const val OWM_BASE_URL = "http://api.openweathermap.org/data/2.5/"
+        private const val OWM_BASE_URL = "https://api.openweathermap.org/data/2.5/"
         private const val QUERY_APPID = "appid"
         private const val QUERY_UNITS = "units"
         private const val DEFAULT_UNITS = "metric"
