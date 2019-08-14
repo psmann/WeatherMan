@@ -27,8 +27,8 @@ internal fun ViewGroup.inflateView(@LayoutRes resource: Int, attachToRoot: Boole
 
 /** Check status of network connection, deprecation being handled */
 @Suppress("DEPRECATION")
-internal fun Context.checkNetworkConnection(): Boolean =
-        (getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).run {
+internal fun Context.isConnected(): Boolean = (getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+        .run {
             if (VERSION.SDK_INT >= VERSION_CODES.M) getNetworkCapabilities(activeNetwork).run {
                 return when {
                     this == null -> false

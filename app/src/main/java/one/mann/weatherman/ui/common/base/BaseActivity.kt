@@ -22,7 +22,7 @@ import com.google.android.gms.location.LocationSettingsStatusCodes.RESOLUTION_RE
 import com.google.android.gms.location.LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE
 import one.mann.domain.model.LocationResponse
 import one.mann.domain.model.LocationResponse.*
-import one.mann.weatherman.ui.common.util.checkNetworkConnection
+import one.mann.weatherman.ui.common.util.isConnected
 
 /** Base activity for all activities that need location services */
 internal abstract class BaseActivity : AppCompatActivity() {
@@ -70,7 +70,7 @@ internal abstract class BaseActivity : AppCompatActivity() {
 
     /** Check status of location services and handle in lambda */
     protected fun checkLocationService(result: (LocationResponse) -> Unit) {
-        if (!checkNetworkConnection()) {
+        if (!isConnected()) {
             result(NO_NETWORK)
             return
         }
