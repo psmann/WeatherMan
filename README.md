@@ -30,3 +30,10 @@ Code is written in Kotlin and uses Coroutines for asynchronous work.
   * Google Places Autocomplete - Remote city locations
   * Open Weather Map - Weather data
   * Teleport - Timezones
+  
+## Getting Started
+
+1) Create keys for OpenWeatherMap API and Google Places API.
+2) Clone the repository.
+3) Add your keys in a new Kotlin file and rebuild project.
+4) Refactor the paths to API keys in errors.
