@@ -5,14 +5,12 @@ Uses Open Weather Map API for weather data, Teleport API to get timezones and Go
 
 ## Screenshots
 
-<center>
 <img src="https://user-images.githubusercontent.com/42505064/63302701-d9283d80-c2ab-11e9-94e7-c19b06ddecb2.jpg" width="30%"></img> 
 <img src="https://user-images.githubusercontent.com/42505064/63302702-d9283d80-c2ab-11e9-9ab2-ddb93cf2bc58.jpg" width="30%"></img> 
 <img src="https://user-images.githubusercontent.com/42505064/63302703-d9c0d400-c2ab-11e9-9e28-47d7ad8bcb9e.jpg" width="30%"></img> 
 <img src="https://user-images.githubusercontent.com/42505064/63302704-d9c0d400-c2ab-11e9-900c-5e464d627b35.jpg" width="30%"></img> 
 <img src="https://user-images.githubusercontent.com/42505064/63302705-d9c0d400-c2ab-11e9-8aaa-d8b8a0c7bcd6.jpg" width="30%"></img> 
 <img src="https://user-images.githubusercontent.com/42505064/63302706-d9c0d400-c2ab-11e9-88ed-fcdb1ee6042b.jpg" width="30%"></img> 
-</center>
 
 ## Project Structure
 
