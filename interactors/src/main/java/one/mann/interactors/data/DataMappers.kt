@@ -3,7 +3,7 @@ package one.mann.interactors.data
 import one.mann.domain.logic.*
 import one.mann.domain.model.*
 
-// Transform API data and map to domain Weather model
+/** Transform API data and map to domain Weather model */
 internal fun mapToWeather(currentWeather: CurrentWeather, dailyForecast: List<DailyForecast>,
                           hourlyForecast: List<HourlyForecast>, timezone: String, location: Location,
                           units: String): Weather {
