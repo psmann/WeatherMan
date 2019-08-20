@@ -19,7 +19,7 @@ class WeatherRepository @Inject constructor(
     suspend fun dbSize(): Int = dbData.getDbSize()
 
     suspend fun create(apiLocation: Location? = null) {
-        val location = apiLocation ?: deviceLocation.getLocation() // Use value from db if apiLocation is null
+        val location = apiLocation ?: deviceLocation.getLocation() // Use device GPS location if null
         dbData.insertWeather(mapToWeather(weatherData.getCurrentWeather(location), weatherData.getDailyForecast(location),
                 weatherData.getHourlyForecast(location), timezoneData.getTimezone(location), location, prefsData.getUnits()))
     }
