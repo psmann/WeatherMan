@@ -20,9 +20,9 @@ Code is written in Kotlin and uses Coroutines for asynchronous work.
 
 ### Modules
 
-  1) Domain (Kotlin): Contains all the domain level business logic such as entities and data algorithms.
-  2) Interactors (Kotlin): Contains usecases and repository patterns
-  3) App (Android): This is the presentation module. Contains all UI and framework code (including API services).
+  1) domain (Kotlin): Contains all the domain level business logic such as entities and data algorithms.
+  2) interactors (Kotlin): Contains usecases and repository patterns
+  3) app (Android): This is the presentation module. Contains all UI and framework code (including API services).
 
 ### Dependencies
 
@@ -38,7 +38,6 @@ Code is written in Kotlin and uses Coroutines for asynchronous work.
   
 ## Getting Started
 
-1) Create keys for OpenWeatherMap API and Google Places API.
-2) Clone the repository.
-3) Add your keys in a new Kotlin file and rebuild project.
-4) Refactor the paths to API keys in errors.
+1) Clone the repository.
+2) Create new keys for OpenWeatherMap API and Google Places API.
+3) Add your keys in api/common/Keys.kt file located in the app module and rebuild project.
