@@ -39,6 +39,6 @@ Code is written in Kotlin and uses coroutines to handle all asynchronous work.
   
 ## Getting Started
 
-1) Clone the repository.
-2) Create new keys for OpenWeatherMap API and Google Places API.
-3) Add your keys in api/common/Keys.kt file located in the app module and rebuild project.
+1) Clone the project repository
+2) Generate new keys for OpenWeatherMap API and Google Places API
+3) Add your keys to api/common/Keys.kt located inside the app module and rebuild project
