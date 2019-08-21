@@ -23,7 +23,7 @@ internal fun ApiCurrentWeather.mapToDomain(): DomainCurrentWeather = DomainCurre
         wind?.speed ?: 0f,
         wind?.deg?.toInt() ?: 0,
         dt?.times(1000) ?: 1000000000000,
-        visibility?.toInt() ?: 0
+        visibility ?: 0f
 )
 
 /** Map API hourlyForecast to Domain, all parameters are nullable and are given default values */

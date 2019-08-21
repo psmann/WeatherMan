@@ -8,15 +8,19 @@ import kotlin.math.pow
 import kotlin.math.roundToInt
 
 /** Append data with units */
-fun Any.addUnits(units: String): String = this.toString() + units
+fun Any.addSuffix(units: String): String = this.toString() + units
 
 /** Change temperature units from Metric to Imperial */
-fun Float.setTempUnits(type: String) = String.format("%.1f", if (type == IMPERIAL) ((this * 1.8) + 32) else this)
+fun Float.setTempUnits(type: String): Float = String.format("%.1f", if (type == IMPERIAL) ((this * 1.8) + 32) else this)
         .toFloat()
 
-/** Set wind speed units Metric (km/h) or Imperial (mph) */
-fun Float.setWindUnits(type: String) = String.format("%.1f", if (type == IMPERIAL) (this * 2.237) else (this * 3.6))
+/** Set wind speed units in Metric (km/h) or Imperial (mph) */
+fun Float.setWindUnits(type: String): Float = String.format("%.1f", if (type == IMPERIAL) (this * 2.237) else (this * 3.6))
         .toFloat()
+
+/** Set visibility units in Metric (km) or Imperial (mi) */
+fun Float.setVisibilityUnits(type: String): Float = String.format("%.1f",
+        if (type == IMPERIAL) (this / 1609.344) else (this / 1000)).toFloat()
 
 /** Round off variable to nearest integer value and return as a string */
 fun Float.roundOff(): String = this.roundToInt().toString()

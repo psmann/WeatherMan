@@ -14,5 +14,5 @@ data class CurrentWeather(
         val windSpeed: Float,
         val windDirection: Int,
         var lastUpdated: Long,
-        val visibility: Int
+        val visibility: Float
 )
