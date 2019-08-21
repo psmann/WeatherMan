@@ -1,7 +1,7 @@
 # WeatherMan
 
-A weather app that shows present and forecast weather for current user location and other cities.
-Uses Open Weather Map API for weather data, Teleport API to get timezones and Google Places API to get city locations.
+An android weather app that shows current and forecast weather for user location and other cities.
+Uses OpenWeatherMap API for weather data, Teleport API to get timezones and Google Places API to get city locations.
 
 ## Screenshots
 
@@ -14,13 +14,13 @@ Uses Open Weather Map API for weather data, Teleport API to get timezones and Go
 
 ## Project Structure
 
-The project uses an implementation of Clean Architecture. 
-MVVM pattern (Android Architecture Components) is used in the presentation layer.
-Code is written in Kotlin and uses Coroutines for asynchronous work.
+The project has a modular structure and uses an implementation of Clean Architecture. 
+MVVM pattern with the help of Android Architecture Components is used in the presentation layer.
+Code is written in Kotlin and uses coroutines to handle all asynchronous work.
 
 ### Modules
 
-  1) domain (Kotlin): Contains all the domain level business logic such as entities and data algorithms.
+  1) domain (Kotlin): Contains all the domain level business logic such as data entities and algorithms.
   2) interactors (Kotlin): Contains usecases and repository patterns
   3) app (Android): This is the presentation module. Contains all UI and framework code (including API services).
 
@@ -30,10 +30,11 @@ Code is written in Kotlin and uses Coroutines for asynchronous work.
   * Retrofit 2 - API calls
   * OkHttp 3 - API calls
   * Room Persistence Library - Database
+  * Kotlin Coroutines - Asynchronous tasks
   * WorkManager - Background tasks (data sync, notifications)
-  * Google Play Services - GPS location
+  * Google Play Services - Device GPS location
   * Google Places Autocomplete - Remote city locations
-  * Open Weather Map - Weather data
+  * OpenWeatherMap - Weather data
   * Teleport - Timezones
   
 ## Getting Started
