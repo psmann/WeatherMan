@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -68,43 +69,42 @@ internal class MainActivity : BaseActivity() {
             finish()
             return
         }
-        // Init Toolbar
-        main_toolbar.inflateMenu(R.menu.menu_main) // Inflate menu directly into toolbar
-        main_toolbar.setOnMenuItemClickListener {
-            when (it!!.itemId) {
-                R.id.menu_add_city -> if (main_viewPager.adapter!!.count < 10) autocompleteWidget() // Limit cities to 10
-                else toast(R.string.remove_a_city_before_adding)
-                R.id.menu_remove_city -> removeCityAlert().show()
-                R.id.menu_settings -> startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
-            }
-            false
+        var countObserved = false // Stop multiple location alerts on first run
+        main_viewPager.apply {
+            adapter = mainPagerAdapter
+            addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+                override fun onPageSelected(position: Int) {}
+                override fun onPageScrollStateChanged(state: Int) { // Fix horizontal scrolling
+                    if (!main_swipe_ly.isRefreshing) main_swipe_ly.isEnabled = state == ViewPager.SCROLL_STATE_IDLE
+                }
+            })
         }
-        // Init ViewPager
-        main_viewPager.adapter = mainPagerAdapter
-        main_viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
-            override fun onPageSelected(position: Int) {}
-            override fun onPageScrollStateChanged(state: Int) { // Fix horizontal scrolling
-                if (!main_swipe_ly.isRefreshing) main_swipe_ly.isEnabled = state == ViewPager.SCROLL_STATE_IDLE
-            }
-        })
-        // Init ViewModel
-        mainViewModel.uiModel.observe(this, Observer {
-            when (it) {
-                is UiModel.Refreshing -> main_swipe_ly.isRefreshing = it.loading
-                is UiModel.ShowError -> toast(R.string.error_has_occurred_try_again)
-            }
-        })
-        mainViewModel.cityCount.observe(this, Observer {
-            if (it == 0) handleLocationServiceResult() // If cityCount is 0 then this is the app's the first run
-            else { // Show Snackbar when user adds a city for the first time
-                if (it == 2 && !mainViewModel.navigationGuideShown()) navigationGuideSnack().show()
-                mainPagerAdapter.updatePages(it!!)
-                isFirstRun = false
-            }
-        })
-        main_swipe_ly.setColorSchemeColors(Color.RED, Color.BLUE)
-        main_swipe_ly.setOnRefreshListener { handleLocationServiceResult() }
+        mainViewModel.apply {
+            uiModel.observe(this@MainActivity, Observer {
+                when (it) {
+                    is UiModel.Refreshing -> main_swipe_ly.isRefreshing = it.loading
+                    is UiModel.ShowError -> toast(R.string.error_has_occurred_try_again)
+                }
+            })
+            cityCount.observe(this@MainActivity, Observer {
+                if (it == 0) { // If cityCount is 0 then this is the app's the first run
+                    if (!countObserved) {
+                        handleLocationServiceResult()
+                        countObserved = true // This ensures that handleLocationServiceResult() is only called once here
+                    }
+                } else { // Show Snackbar when user adds a city for the first time
+                    if (it == 2 && !mainViewModel.navigationGuideShown()) navigationGuideSnack().show()
+                    mainPagerAdapter.updatePages(it!!)
+                    if (isFirstRun) main_toolbar.init() // isFirstRun is always true when app is started, add toolbar here
+                    isFirstRun = false
+                }
+            })
+        }
+        main_swipe_ly.apply {
+            setColorSchemeColors(Color.RED, Color.BLUE)
+            setOnRefreshListener { handleLocationServiceResult() }
+        }
     }
 
     private fun handleLocationServiceResult() = handleLocationPermission { permissionGranted ->
@@ -125,6 +125,19 @@ internal class MainActivity : BaseActivity() {
                     finish()
                 }
             }
+        }
+    }
+
+    private fun Toolbar.init() = apply {
+        inflateMenu(R.menu.menu_main) // Inflate menu directly into toolbar
+        setOnMenuItemClickListener {
+            when (it!!.itemId) {
+                R.id.menu_add_city -> if (main_viewPager.adapter!!.count < 10) autocompleteWidget() // Limit cities to 10
+                else toast(R.string.remove_a_city_before_adding)
+                R.id.menu_remove_city -> removeCityAlert().show()
+                R.id.menu_settings -> startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
+            }
+            false
         }
     }
 

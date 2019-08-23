@@ -44,26 +44,31 @@ internal class DetailActivity : BaseActivity() {
             finish()
             return
         }
-        detail_recyclerview.setHasFixedSize(true)
-        detail_recyclerview.layoutManager = LinearLayoutManager(this)
-        detail_recyclerview.adapter = detailRecyclerAdapter
-        // Init ViewModel
-        detailViewModel.uiModel.observe(this, Observer {
-            when (it) {
-                is DetailViewModel.UiModel.Refreshing -> detail_swipe_ly.isRefreshing = it.loading
-                is DetailViewModel.UiModel.ShowError -> toast(R.string.error_has_occurred_try_again)
-            }
-        })
-        detailViewModel.weatherData.observe(this, Observer {
-            if (it.size >= position + 1) {
-                detailRecyclerAdapter.update(it[position])
-                // Update activity background only if it changes after a data refresh
-                val newBackground = getGradient(it[position].sunPosition, isOvercast(it[position].iconId))
-                if (newBackground != backgroundResource) activity_detail_coord_ly.setBackgroundResource(newBackground)
-            }
-        })
-        detail_swipe_ly.setColorSchemeColors(Color.RED, Color.BLUE)
-        detail_swipe_ly.setOnRefreshListener { handleLocationServiceResult() }
+        detail_recyclerview.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(this@DetailActivity)
+            adapter = detailRecyclerAdapter
+        }
+        detailViewModel.apply {
+            uiModel.observe(this@DetailActivity, Observer {
+                when (it) {
+                    is DetailViewModel.UiModel.Refreshing -> detail_swipe_ly.isRefreshing = it.loading
+                    is DetailViewModel.UiModel.ShowError -> toast(R.string.error_has_occurred_try_again)
+                }
+            })
+            weatherData.observe(this@DetailActivity, Observer {
+                if (it.size >= position + 1) {
+                    detailRecyclerAdapter.update(it[position])
+                    // Update activity background only if it changes after a data refresh
+                    val newBackground = getGradient(it[position].sunPosition, isOvercast(it[position].iconId))
+                    if (newBackground != backgroundResource) activity_detail_coord_ly.setBackgroundResource(newBackground)
+                }
+            })
+        }
+        detail_swipe_ly.apply {
+            setColorSchemeColors(Color.RED, Color.BLUE)
+            setOnRefreshListener { handleLocationServiceResult() }
+        }
     }
 
     private fun handleLocationServiceResult() = handleLocationPermission { permissionGranted ->
