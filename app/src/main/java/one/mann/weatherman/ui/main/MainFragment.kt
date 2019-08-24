@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_main.*
 import one.mann.domain.model.Weather
@@ -16,7 +15,6 @@ import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.api.openweathermap.isOvercast
 import one.mann.weatherman.ui.common.util.*
 import one.mann.weatherman.ui.detail.DetailActivity
-import one.mann.weatherman.ui.main.MainViewModel.UiModel
 import javax.inject.Inject
 
 internal class MainFragment : Fragment() {
@@ -49,10 +47,11 @@ internal class MainFragment : Fragment() {
         intent.putExtra(PAGER_POSITION, position)
         button_detail.setOnClickListener { startActivity(intent) }
         // Init ViewModel
-        mainViewModel.uiModel.observe(this, Observer {
-            if (it is UiModel.DisplayUi) fragment_main_const_ly.visibility = if (it.display) View.VISIBLE else View.GONE
-        })
-        mainViewModel.weatherData.observe(this, Observer { if (it.size >= position + 1) setupViews(it[position]) })
+        mainViewModel.uiState.observe(this@MainFragment) {
+            val weatherData = it.weatherData
+            fragment_main_const_ly.visibility = if (it.hideUi) View.GONE else View.VISIBLE
+            if (weatherData.size >= position + 1) setupViews(weatherData[position])
+        }
     }
 
     private fun injectDependencies() = WeatherManApp.appComponent.getSubComponent().injectMainFragment(this)
@@ -64,7 +63,7 @@ internal class MainFragment : Fragment() {
         time_updated.text = weather.lastChecked
         city_name.text = weather.cityName
         // Update activity background only if it changes after a data refresh
-        if(backgroundResources != newBackground) {
+        if (backgroundResources != newBackground) {
             fragment_main_const_ly.setBackgroundResource(newBackground)
             backgroundResources = newBackground
         }

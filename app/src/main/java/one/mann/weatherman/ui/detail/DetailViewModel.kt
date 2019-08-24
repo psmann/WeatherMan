@@ -22,29 +22,30 @@ internal class DetailViewModel @Inject constructor(
         private val settingsPrefs: SharedPreferences
 ) : BaseViewModel(), SharedPreferences.OnSharedPreferenceChangeListener {
 
-    val weatherData: MutableLiveData<List<Weather>> = MutableLiveData()
-    val uiModel = MutableLiveData<UiModel>()
+    val uiState = MutableLiveData<ViewState>()
 
     init {
+        uiState.value = ViewState()
         updateUI()
         settingsPrefs.registerOnSharedPreferenceChangeListener(this)
     }
 
-    sealed class UiModel {
-        data class Refreshing(val loading: Boolean) : UiModel()
-        object ShowError : UiModel()
-    }
+    data class ViewState(
+            val isLoading: Boolean = false,
+            val showError: Boolean = false,
+            val weatherData: List<Weather> = listOf()
+    )
 
     fun updateWeather(locationType: LocationType) {
         launch {
-            uiModel.value = UiModel.Refreshing(true) // Start refreshing
+            uiState.value = uiState.value!!.copy(isLoading = true) // Start refreshing
             try {
                 withContext(IO) {
                     updateWeather.invoke(locationType)
                     settingsPrefs.edit { putLong(DETAIL_REFRESH_KEY, System.currentTimeMillis()) }
                 }
             } catch (e: IOException) {
-                uiModel.value = UiModel.ShowError
+                uiState.value = uiState.value!!.copy(showError = true)
             }
             updateUI()
         }
@@ -53,8 +54,8 @@ internal class DetailViewModel @Inject constructor(
     private fun updateUI() {
         launch {
             val data = withContext(IO) { getAllWeather.invoke() }
-            if (data.isNotEmpty()) weatherData.value = data // Update all weather data
-            uiModel.value = UiModel.Refreshing(false) // Stop refreshing
+            if (data.isNotEmpty()) uiState.value = uiState.value!!.copy(weatherData = data) // Update all weather data
+            uiState.value = uiState.value!!.copy(isLoading = false) // Stop refreshing
         }
     }
 

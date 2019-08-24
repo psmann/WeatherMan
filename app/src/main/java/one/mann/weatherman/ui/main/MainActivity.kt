@@ -9,7 +9,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
@@ -30,7 +29,6 @@ import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.api.common.Keys
 import one.mann.weatherman.ui.common.base.BaseActivity
 import one.mann.weatherman.ui.common.util.getViewModel
-import one.mann.weatherman.ui.main.MainViewModel.UiModel
 import one.mann.weatherman.ui.main.adapter.MainPagerAdapter
 import one.mann.weatherman.ui.settings.SettingsActivity
 import javax.inject.Inject
@@ -80,26 +78,21 @@ internal class MainActivity : BaseActivity() {
                 }
             })
         }
-        mainViewModel.apply {
-            uiModel.observe(this@MainActivity, Observer {
-                when (it) {
-                    is UiModel.Refreshing -> main_swipe_ly.isRefreshing = it.loading
-                    is UiModel.ShowError -> toast(R.string.error_has_occurred_try_again)
+        mainViewModel.uiState.observe(this@MainActivity) {
+            val cityCount = it.cityCount
+            main_swipe_ly.isRefreshing = it.isLoading
+            if (it.showError) toast(R.string.error_has_occurred_try_again)
+            if (cityCount == 0) { // If cityCount is 0 then this is the app's first run
+                if (!countObserved) {
+                    handleLocationServiceResult()
+                    countObserved = true // This ensures that handleLocationServiceResult() is only called once here
                 }
-            })
-            cityCount.observe(this@MainActivity, Observer {
-                if (it == 0) { // If cityCount is 0 then this is the app's the first run
-                    if (!countObserved) {
-                        handleLocationServiceResult()
-                        countObserved = true // This ensures that handleLocationServiceResult() is only called once here
-                    }
-                } else { // Show Snackbar when user adds a city for the first time
-                    if (it == 2 && !mainViewModel.navigationGuideShown()) navigationGuideSnack().show()
-                    mainPagerAdapter.updatePages(it!!)
-                    if (isFirstRun) main_toolbar.init() // isFirstRun is always true when app is started, add toolbar here
-                    isFirstRun = false
-                }
-            })
+            } else { // Show Snackbar when user adds a city for the first time
+                if (cityCount == 2 && !mainViewModel.navigationGuideShown()) navigationGuideSnack().show()
+                if (isFirstRun) main_toolbar.init() // Ensures this function is only called once
+                mainPagerAdapter.updatePages(cityCount)
+                isFirstRun = false
+            }
         }
         main_swipe_ly.apply {
             setColorSchemeColors(Color.RED, Color.BLUE)
@@ -129,7 +122,7 @@ internal class MainActivity : BaseActivity() {
     }
 
     private fun Toolbar.init() = apply {
-        inflateMenu(R.menu.menu_main) // Inflate menu directly into toolbar
+        if (!menu.hasVisibleItems()) inflateMenu(R.menu.menu_main) // Inflate menu directly into toolbar
         setOnMenuItemClickListener {
             when (it!!.itemId) {
                 R.id.menu_add_city -> if (main_viewPager.adapter!!.count < 10) autocompleteWidget() // Limit cities to 10

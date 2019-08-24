@@ -31,31 +31,31 @@ internal class MainViewModel @Inject constructor(
 ) : BaseViewModel(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private var showUi = false
-    val weatherData: MutableLiveData<List<Weather>> = MutableLiveData()
-    val cityCount: MutableLiveData<Int> = MutableLiveData()
-    val uiModel = MutableLiveData<UiModel>()
+    val uiState = MutableLiveData<ViewState>()
 
     init {
-        uiModel.value = UiModel.DisplayUi(false)
+        uiState.value = ViewState()
         settingsPrefs.registerOnSharedPreferenceChangeListener(this)
         workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG).observeForever { updateUI() } // Update on change
         enqueueNotificationWork()
         updateUI()
     }
 
-    sealed class UiModel {
-        data class Refreshing(val loading: Boolean) : UiModel()
-        data class DisplayUi(val display: Boolean) : UiModel()
-        object ShowError : UiModel()
-    }
+    data class ViewState(
+            val isLoading: Boolean = false,
+            val hideUi: Boolean = true,
+            val showError: Boolean = false,
+            val cityCount: Int = 0,
+            val weatherData: List<Weather> = listOf()
+    )
 
     fun addCity(apiLocation: Location? = null) {
         launch {
-            uiModel.value = UiModel.Refreshing(true) // Start refreshing
+            uiState.value = uiState.value!!.copy(isLoading = true) // Start refreshing
             try {
                 withContext(IO) { addCity.invoke(apiLocation) }
             } catch (e: IOException) {
-                uiModel.value = UiModel.ShowError
+                uiState.value = uiState.value!!.copy(showError = true)
             }
             updateUI()
         }
@@ -63,21 +63,21 @@ internal class MainViewModel @Inject constructor(
 
     fun updateWeather(locationType: LocationType) {
         launch {
-            uiModel.value = UiModel.Refreshing(true) // Start refreshing
+            uiState.value = uiState.value!!.copy(isLoading = true) // Start refreshing
             try {
                 withContext(IO) {
                     updateWeather.invoke(locationType)
                     settingsPrefs.edit { putLong(MAIN_REFRESH_KEY, System.currentTimeMillis()) }
                 }
             } catch (e: IOException) {
-                uiModel.value = UiModel.ShowError
+                uiState.value = uiState.value!!.copy(showError = true)
             }
             updateUI()
         }
     }
 
     fun removeCity(position: Int) {
-        val cityName = weatherData.value?.get(position)?.cityName ?: return // Return if null
+        val cityName = uiState.value?.weatherData?.get(position)?.cityName ?: return // Return if null
         launch(IO) {
             removeCity.invoke(cityName)
             updateUI()
@@ -88,12 +88,11 @@ internal class MainViewModel @Inject constructor(
         launch {
             val data = withContext(IO) { getAllWeather.invoke() }
             if (data.isNotEmpty()) {
-                weatherData.value = data // Update all weather data
-                if (!showUi) uiModel.value = UiModel.DisplayUi(true) // Show UI if hidden
+                uiState.value = uiState.value!!.copy(weatherData = data) // Update all weather data
+                if (!showUi) uiState.value = uiState.value!!.copy(hideUi = false) // Show UI if hidden
                 showUi = true
-            }
-            uiModel.value = UiModel.Refreshing(false) // Stop refreshing
-            cityCount.value = getCityCount.invoke() // Update viewPager only after updating weatherData (if not null)
+            } // Stop refreshing and update viewPager only after updating weatherData (if not null)
+            uiState.value = uiState.value!!.copy(isLoading = false, cityCount = getCityCount.invoke())
         }
     }
 

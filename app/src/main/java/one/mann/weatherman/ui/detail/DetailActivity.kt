@@ -2,7 +2,6 @@ package one.mann.weatherman.ui.detail
 
 import android.graphics.Color
 import android.os.Bundle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_detail.*
@@ -49,21 +48,16 @@ internal class DetailActivity : BaseActivity() {
             layoutManager = LinearLayoutManager(this@DetailActivity)
             adapter = detailRecyclerAdapter
         }
-        detailViewModel.apply {
-            uiModel.observe(this@DetailActivity, Observer {
-                when (it) {
-                    is DetailViewModel.UiModel.Refreshing -> detail_swipe_ly.isRefreshing = it.loading
-                    is DetailViewModel.UiModel.ShowError -> toast(R.string.error_has_occurred_try_again)
-                }
-            })
-            weatherData.observe(this@DetailActivity, Observer {
-                if (it.size >= position + 1) {
-                    detailRecyclerAdapter.update(it[position])
-                    // Update activity background only if it changes after a data refresh
-                    val newBackground = getGradient(it[position].sunPosition, isOvercast(it[position].iconId))
-                    if (newBackground != backgroundResource) activity_detail_coord_ly.setBackgroundResource(newBackground)
-                }
-            })
+        detailViewModel.uiState.observe(this@DetailActivity) {
+            val weather = it.weatherData
+            detail_swipe_ly.isRefreshing = it.isLoading
+            if (it.showError) toast(R.string.error_has_occurred_try_again)
+            if (weather.size >= position + 1) {
+                detailRecyclerAdapter.update(weather[position])
+                // Update activity background only if it changes after a data refresh
+                val newBackground = getGradient(weather[position].sunPosition, isOvercast(weather[position].iconId))
+                if (newBackground != backgroundResource) activity_detail_coord_ly.setBackgroundResource(newBackground)
+            }
         }
         detail_swipe_ly.apply {
             setColorSchemeColors(Color.RED, Color.BLUE)
