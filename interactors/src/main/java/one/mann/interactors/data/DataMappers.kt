@@ -3,6 +3,10 @@ package one.mann.interactors.data
 import one.mann.domain.logic.*
 import one.mann.domain.model.*
 
+/** Update lastChecked for the Weather model */
+internal fun Weather.updateLastChecked(timezone: String): Weather =
+        copy(lastChecked = epochToDate(System.currentTimeMillis(), timezone))
+
 /** Transform API data and map to domain Weather model */
 internal fun mapToWeather(currentWeather: CurrentWeather, dailyForecast: List<DailyForecast>,
                           hourlyForecast: List<HourlyForecast>, timezone: String, location: Location,

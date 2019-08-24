@@ -12,8 +12,8 @@ import one.mann.domain.model.Weather
 import one.mann.interactors.usecases.GetAllWeather
 import one.mann.interactors.usecases.UpdateWeather
 import one.mann.weatherman.ui.common.base.BaseViewModel
-import one.mann.weatherman.ui.common.util.DETAIL_REFRESH_KEY
-import one.mann.weatherman.ui.common.util.MAIN_REFRESH_KEY
+import one.mann.weatherman.ui.common.util.LAST_CHECKED_KEY
+import one.mann.weatherman.ui.common.util.LAST_UPDATED_KEY
 import java.io.IOException
 import javax.inject.Inject
 
@@ -39,26 +39,33 @@ internal class DetailViewModel @Inject constructor(
             val weatherData: List<Weather> = listOf()
     )
 
+    /**
+     * Invoke updateWeather usecase, if it returns true then data has been updated from the API.
+     * LAST_UPDATED_KEY is given currentTimeMillis() and updateUI() is called from onSharedPreferenceChanged().
+     * This is done because weather can be updated from both MainActivity and DetailActivity.
+     * If it returns false (i.e. not updated from API) then LAST_CHECKED_KEY is updated instead (also updates UI).
+     */
     fun updateWeather(locationType: LocationType) {
         launch {
             _uiState.value = _uiState.value!!.copy(isLoading = true) // Start refreshing
             try {
                 withContext(IO) {
-                    updateWeather.invoke(locationType)
-                    settingsPrefs.edit { putLong(DETAIL_REFRESH_KEY, System.currentTimeMillis()) }
+                    val weatherUpdated = updateWeather.invoke(locationType)
+                    if (weatherUpdated) settingsPrefs.edit { putLong(LAST_UPDATED_KEY, System.currentTimeMillis()) }
+                    else settingsPrefs.edit { putLong(LAST_CHECKED_KEY, System.currentTimeMillis()) }
                 }
-            } catch (e: IOException) {
-                _uiState.value = _uiState.value!!.copy(showError = true)
+            } catch (e: IOException) { // Stop refreshing, show error and change the state back
+                _uiState.value = _uiState.value!!.copy(isLoading = false, showError = true)
+                _uiState.value = _uiState.value!!.copy(showError = false)
             }
-            updateUI()
         }
     }
 
     private fun updateUI() {
         launch {
             val data = withContext(IO) { getAllWeather.invoke() }
-            if (data.isNotEmpty()) _uiState.value = _uiState.value!!.copy(weatherData = data, showError = false)
-            _uiState.value = _uiState.value!!.copy(isLoading = false, showError = false) // Stop refreshing
+            if (data.isNotEmpty()) _uiState.value = _uiState.value!!.copy(weatherData = data)
+            _uiState.value = _uiState.value!!.copy(isLoading = false) // Stop refreshing
         }
     }
 
@@ -69,6 +76,6 @@ internal class DetailViewModel @Inject constructor(
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
-        launch(IO) { if (key == MAIN_REFRESH_KEY) updateUI() }  // Update DetailActivity when data is refreshed from fragment
+        launch(IO) { if (key == LAST_UPDATED_KEY || key == LAST_CHECKED_KEY) updateUI() }
     }
 }

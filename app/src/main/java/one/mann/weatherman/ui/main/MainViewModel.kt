@@ -57,25 +57,33 @@ internal class MainViewModel @Inject constructor(
             _uiState.value = _uiState.value!!.copy(isLoading = true) // Start refreshing
             try {
                 withContext(IO) { addCity.invoke(apiLocation) }
-            } catch (e: IOException) {
-                _uiState.value = _uiState.value!!.copy(showError = true)
+                updateUI()
+            } catch (e: IOException) { // Stop refreshing, show error and change the state back
+                _uiState.value = _uiState.value!!.copy(isLoading = false, showError = true)
+                _uiState.value = _uiState.value!!.copy(showError = false)
             }
-            updateUI()
         }
     }
 
+    /**
+     * Invoke updateWeather usecase, if it returns true then data has been updated from the API.
+     * LAST_UPDATED_KEY is given currentTimeMillis() and updateUI() is called from onSharedPreferenceChanged().
+     * This is done because weather can be updated from both MainActivity and DetailActivity.
+     * If it returns false (i.e. not updated from API) then LAST_CHECKED_KEY is updated instead (also updates UI).
+     */
     fun updateWeather(locationType: LocationType) {
         launch {
             _uiState.value = _uiState.value!!.copy(isLoading = true) // Start refreshing
             try {
                 withContext(IO) {
-                    updateWeather.invoke(locationType)
-                    settingsPrefs.edit { putLong(MAIN_REFRESH_KEY, System.currentTimeMillis()) }
+                    val weatherUpdated = updateWeather.invoke(locationType)
+                    if (weatherUpdated) settingsPrefs.edit { putLong(LAST_UPDATED_KEY, System.currentTimeMillis()) }
+                    else settingsPrefs.edit { putLong(LAST_CHECKED_KEY, System.currentTimeMillis()) }
                 }
-            } catch (e: IOException) {
-                _uiState.value = _uiState.value!!.copy(showError = true)
+            } catch (e: IOException) { // Stop refreshing, show error and change the state back
+                _uiState.value = _uiState.value!!.copy(isLoading = false, showError = true)
+                _uiState.value = _uiState.value!!.copy(showError = false)
             }
-            updateUI()
         }
     }
 
@@ -91,12 +99,12 @@ internal class MainViewModel @Inject constructor(
         launch {
             val data = withContext(IO) { getAllWeather.invoke() }
             if (data.isNotEmpty()) {
-                _uiState.value = _uiState.value!!.copy(weatherData = data, showError = false) // Update all weather data
-                if (!showUi) _uiState.value = _uiState.value!!.copy(hideUi = false, showError = false) // Show UI if hidden
+                _uiState.value = _uiState.value!!.copy(weatherData = data) // Update all weather data
+                if (!showUi) _uiState.value = _uiState.value!!.copy(hideUi = false) // Show UI if hidden
                 showUi = true
             } // Stop refreshing and update viewPager only after updating weatherData (if not null)
             val count = withContext(IO) { getCityCount.invoke() }
-            _uiState.value = _uiState.value!!.copy(isLoading = false, showError = false, cityCount = count)
+            _uiState.value = _uiState.value!!.copy(isLoading = false, cityCount = count)
         }
     }
 
@@ -152,7 +160,7 @@ internal class MainViewModel @Inject constructor(
                     stopNotificationWork() // Cancel old work
                     startNotificationWork(sharedPreferences!!.getString(key, "1")!!.toLong()) // Start new work
                 }
-                DETAIL_REFRESH_KEY -> updateUI() // Update MainFragment when data is refreshed from DetailActivity
+                LAST_UPDATED_KEY, LAST_CHECKED_KEY -> updateUI() // Update UI when weather is updated from Main or Detail
             }
         }
     }

@@ -6,6 +6,7 @@ import one.mann.domain.model.NotificationData
 import one.mann.domain.model.Weather
 import one.mann.interactors.data.mapToWeather
 import one.mann.interactors.data.sources.*
+import one.mann.interactors.data.updateLastChecked
 import javax.inject.Inject
 
 class WeatherRepository @Inject constructor(
@@ -15,6 +16,10 @@ class WeatherRepository @Inject constructor(
         private val dbData: DatabaseDataSource,
         private val prefsData: PreferencesDataSource
 ) {
+
+    companion object {
+        private const val FIFTEEN_MINUTES = 900000
+    }
 
     suspend fun dbSize(): Int = dbData.getDbSize()
 
@@ -28,18 +33,28 @@ class WeatherRepository @Inject constructor(
 
     suspend fun readAll(): List<Weather> = dbData.getAllWeather()
 
-    suspend fun updateAll(locationType: LocationType) {
+    /** Update weather from API if it has been more than 15 minutes since last update, else only update lastChecked value */
+    suspend fun updateAll(locationType: LocationType): Boolean {
         val locations = dbData.getAllLocations().toMutableList()
-        if (locationType == LocationType.DEVICE) locations[0] = deviceLocation.getLocation()
-        val currentWeathers = weatherData.getAllCurrentWeather(locations)
-        val dailyForecasts = weatherData.getAllDailyForecast(locations)
-        val hourlyForecasts = weatherData.getAllHourlyForecast(locations)
         val timezones = timezoneData.getAllTimezone(locations)
-        val weathers: MutableList<Weather> = mutableListOf()
-        for (i in 0 until locations.size) weathers.add(mapToWeather(currentWeathers[i], dailyForecasts[i],
-                hourlyForecasts[i], timezones[i], locations[i], prefsData.getUnits()))
-        dbData.updateAllWeather(weathers)
+        return if (syncFromServer()) {
+            if (locationType == LocationType.DEVICE) locations[0] = deviceLocation.getLocation()
+            val currentWeathers = weatherData.getAllCurrentWeather(locations)
+            val dailyForecasts = weatherData.getAllDailyForecast(locations)
+            val hourlyForecasts = weatherData.getAllHourlyForecast(locations)
+            val weathers: MutableList<Weather> = mutableListOf()
+            for (i in 0 until locations.size) weathers.add(mapToWeather(currentWeathers[i], dailyForecasts[i],
+                    hourlyForecasts[i], timezones[i], locations[i], prefsData.getUnits()))
+            dbData.updateAllWeather(weathers)
+            true
+        } else { // This still uses the Teleport API for getting timezones sadly
+            dbData.updateAllWeather(readAll().mapIndexed { i, it -> it.updateLastChecked(timezones[i]) })
+            false
+        }
     }
 
     suspend fun delete(name: String) = dbData.deleteWeather(name)
+
+    /** Checks if it has been more than 15 minutes since last update */
+    private suspend fun syncFromServer(): Boolean = System.currentTimeMillis() - prefsData.getLastChecked() > FIFTEEN_MINUTES
 }

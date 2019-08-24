@@ -6,5 +6,5 @@ import javax.inject.Inject
 
 class UpdateWeather @Inject constructor(private val weatherRepository: WeatherRepository) {
 
-    suspend fun invoke(locationType: LocationType) = weatherRepository.updateAll(locationType)
+    suspend fun invoke(locationType: LocationType): Boolean = weatherRepository.updateAll(locationType)
 }

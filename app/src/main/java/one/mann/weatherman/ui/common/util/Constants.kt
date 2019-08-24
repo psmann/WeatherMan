@@ -5,9 +5,9 @@ internal const val SETTINGS_UNITS_KEY = "units"
 internal const val SETTINGS_NOTIFICATIONS_KEY = "notification"
 internal const val SETTINGS_FREQUENCY_KEY = "notification_frequency"
 internal const val NAVIGATION_GUIDE_KEY = "navigation_guide"
-internal const val MAIN_REFRESH_KEY = "main_refresh_time"
-internal const val DETAIL_REFRESH_KEY = "detail_refresh_time"
-// WorkerManager
+internal const val LAST_UPDATED_KEY = "last_updated_time"
+internal const val LAST_CHECKED_KEY = "last_checked_time"
+// WorkManager
 internal const val NOTIFICATION_WORKER = "NOTIFICATION_WORKER"
 internal const val NOTIFICATION_WORKER_TAG = "WORK_COMPLETED"
 // Notification Channel
