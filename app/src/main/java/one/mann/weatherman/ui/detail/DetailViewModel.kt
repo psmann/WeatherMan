@@ -55,7 +55,7 @@ internal class DetailViewModel @Inject constructor(
         launch {
             val data = withContext(IO) { getAllWeather.invoke() }
             if (data.isNotEmpty()) uiState.value = uiState.value!!.copy(weatherData = data) // Update all weather data
-            uiState.value = uiState.value!!.copy(isLoading = false) // Stop refreshing
+            uiState.value = uiState.value!!.copy(isLoading = false, showError = false) // Stop refreshing
         }
     }
 
