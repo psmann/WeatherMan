@@ -48,21 +48,11 @@ internal class DetailActivity : BaseActivity() {
             layoutManager = LinearLayoutManager(this@DetailActivity)
             adapter = detailRecyclerAdapter
         }
-        detailViewModel.uiState.observe(this@DetailActivity) {
-            val weather = it.weatherData
-            detail_swipe_ly.isRefreshing = it.isLoading
-            if (it.showError) toast(R.string.error_has_occurred_try_again)
-            if (weather.size >= position + 1) {
-                detailRecyclerAdapter.update(weather[position])
-                // Update activity background only if it changes after a data refresh
-                val newBackground = getGradient(weather[position].sunPosition, isOvercast(weather[position].iconId))
-                if (newBackground != backgroundResource) activity_detail_coord_ly.setBackgroundResource(newBackground)
-            }
-        }
         detail_swipe_ly.apply {
             setColorSchemeColors(Color.RED, Color.BLUE)
             setOnRefreshListener { handleLocationServiceResult() }
         }
+        detailViewModel.uiState.observe(this@DetailActivity) { observeUiState(it) }
     }
 
     private fun handleLocationServiceResult() = handleLocationPermission { permissionGranted ->
@@ -79,6 +69,18 @@ internal class DetailActivity : BaseActivity() {
                     finish()
                 }
             }
+        }
+    }
+
+    private fun observeUiState(state: DetailViewModel.ViewState) {
+        val weather = state.weatherData
+        detail_swipe_ly.isRefreshing = state.isLoading
+        if (state.showError) toast(R.string.error_has_occurred_try_again)
+        if (weather.size >= position + 1) {
+            detailRecyclerAdapter.update(weather[position])
+            // Update activity background only if it changes after a data refresh
+            val newBackground = getGradient(weather[position].sunPosition, isOvercast(weather[position].iconId))
+            if (newBackground != backgroundResource) activity_detail_coord_ly.setBackgroundResource(newBackground)
         }
     }
 }

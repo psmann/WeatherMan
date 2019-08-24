@@ -39,11 +39,12 @@ internal class MainActivity : BaseActivity() {
         private const val AUTOCOMPLETE_REQUEST_CODE = 1021
     }
 
-    private var isFirstRun = true
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val mainViewModel: MainViewModel by lazy { getViewModel(viewModelFactory) }
     private val mainPagerAdapter by lazy { MainPagerAdapter(supportFragmentManager) }
+    private var countObserved = false // Stop multiple location alerts on first run
+    private var isFirstRun = true // Check if this is the first time app is running
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +68,6 @@ internal class MainActivity : BaseActivity() {
             finish()
             return
         }
-        var countObserved = false // Stop multiple location alerts on first run
         main_viewPager.apply {
             adapter = mainPagerAdapter
             addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -78,26 +78,11 @@ internal class MainActivity : BaseActivity() {
                 }
             })
         }
-        mainViewModel.uiState.observe(this@MainActivity) {
-            val cityCount = it.cityCount
-            main_swipe_ly.isRefreshing = it.isLoading
-            if (it.showError) toast(R.string.error_has_occurred_try_again)
-            if (cityCount == 0) { // If cityCount is 0 then this is the app's first run
-                if (!countObserved) {
-                    handleLocationServiceResult()
-                    countObserved = true // This ensures that handleLocationServiceResult() is only called once here
-                }
-            } else { // Show Snackbar when user adds a city for the first time
-                if (cityCount == 2 && !mainViewModel.navigationGuideShown()) navigationGuideSnack().show()
-                if (isFirstRun) main_toolbar.init() // Ensures this function is only called once
-                mainPagerAdapter.updatePages(cityCount)
-                isFirstRun = false
-            }
-        }
         main_swipe_ly.apply {
             setColorSchemeColors(Color.RED, Color.BLUE)
             setOnRefreshListener { handleLocationServiceResult() }
         }
+        mainViewModel.uiState.observe(this@MainActivity) { observeUiState(it) }
     }
 
     private fun handleLocationServiceResult() = handleLocationPermission { permissionGranted ->
@@ -117,6 +102,24 @@ internal class MainActivity : BaseActivity() {
                     toast(R.string.location_settings_not_available)
                     finish()
                 }
+            }
+        }
+    }
+
+    private fun observeUiState(state: MainViewModel.ViewState) {
+        main_swipe_ly.isRefreshing = state.isLoading
+        if (state.showError) toast(R.string.error_has_occurred_try_again)
+        when (val count = state.cityCount) {
+            -1 -> return
+            0 -> if (!countObserved) { // If cityCount is 0 then this is the app's first run
+                handleLocationServiceResult()
+                countObserved = true // This ensures that handleLocationServiceResult() is only called once here
+            }
+            else -> { // Show Snackbar when user adds a city for the first time
+                if (count == 2 && !mainViewModel.navigationGuideShown()) navigationGuideSnack().show()
+                if (isFirstRun) main_toolbar.init() // Ensures this function is only called once
+                mainPagerAdapter.updatePages(count)
+                isFirstRun = false
             }
         }
     }

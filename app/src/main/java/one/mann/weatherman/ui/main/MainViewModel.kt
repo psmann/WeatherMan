@@ -48,7 +48,7 @@ internal class MainViewModel @Inject constructor(
             val isLoading: Boolean = false,
             val hideUi: Boolean = true,
             val showError: Boolean = false,
-            val cityCount: Int = 0,
+            val cityCount: Int = -1,
             val weatherData: List<Weather> = listOf()
     )
 
