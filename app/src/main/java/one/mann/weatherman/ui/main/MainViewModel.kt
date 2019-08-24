@@ -2,6 +2,7 @@ package one.mann.weatherman.ui.main
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.work.*
 import kotlinx.coroutines.Dispatchers.Default
@@ -31,10 +32,12 @@ internal class MainViewModel @Inject constructor(
 ) : BaseViewModel(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private var showUi = false
-    val uiState = MutableLiveData<ViewState>()
+    private val _uiState = MutableLiveData<ViewState>()
+    val uiState: LiveData<ViewState>
+        get() = _uiState
 
     init {
-        uiState.value = ViewState()
+        _uiState.value = ViewState()
         settingsPrefs.registerOnSharedPreferenceChangeListener(this)
         workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG).observeForever { updateUI() } // Update on change
         enqueueNotificationWork()
@@ -51,11 +54,11 @@ internal class MainViewModel @Inject constructor(
 
     fun addCity(apiLocation: Location? = null) {
         launch {
-            uiState.value = uiState.value!!.copy(isLoading = true) // Start refreshing
+            _uiState.value = _uiState.value!!.copy(isLoading = true) // Start refreshing
             try {
                 withContext(IO) { addCity.invoke(apiLocation) }
             } catch (e: IOException) {
-                uiState.value = uiState.value!!.copy(showError = true)
+                _uiState.value = _uiState.value!!.copy(showError = true)
             }
             updateUI()
         }
@@ -63,21 +66,21 @@ internal class MainViewModel @Inject constructor(
 
     fun updateWeather(locationType: LocationType) {
         launch {
-            uiState.value = uiState.value!!.copy(isLoading = true) // Start refreshing
+            _uiState.value = _uiState.value!!.copy(isLoading = true) // Start refreshing
             try {
                 withContext(IO) {
                     updateWeather.invoke(locationType)
                     settingsPrefs.edit { putLong(MAIN_REFRESH_KEY, System.currentTimeMillis()) }
                 }
             } catch (e: IOException) {
-                uiState.value = uiState.value!!.copy(showError = true)
+                _uiState.value = _uiState.value!!.copy(showError = true)
             }
             updateUI()
         }
     }
 
     fun removeCity(position: Int) {
-        val cityName = uiState.value?.weatherData?.get(position)?.cityName ?: return // Return if null
+        val cityName = _uiState.value?.weatherData?.get(position)?.cityName ?: return // Return if null
         launch(IO) {
             removeCity.invoke(cityName)
             updateUI()
@@ -88,11 +91,11 @@ internal class MainViewModel @Inject constructor(
         launch {
             val data = withContext(IO) { getAllWeather.invoke() }
             if (data.isNotEmpty()) {
-                uiState.value = uiState.value!!.copy(weatherData = data) // Update all weather data
-                if (!showUi) uiState.value = uiState.value!!.copy(hideUi = false) // Show UI if hidden
+                _uiState.value = _uiState.value!!.copy(weatherData = data, showError = false) // Update all weather data
+                if (!showUi) _uiState.value = _uiState.value!!.copy(hideUi = false, showError = false) // Show UI if hidden
                 showUi = true
             } // Stop refreshing and update viewPager only after updating weatherData (if not null)
-            uiState.value = uiState.value!!.copy(isLoading = false, showError = false, cityCount = getCityCount.invoke())
+            _uiState.value = _uiState.value!!.copy(isLoading = false, showError = false, cityCount = getCityCount.invoke())
         }
     }
 

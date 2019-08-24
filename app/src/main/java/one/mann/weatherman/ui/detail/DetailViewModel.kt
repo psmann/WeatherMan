@@ -2,6 +2,7 @@ package one.mann.weatherman.ui.detail
 
 import android.content.SharedPreferences
 import androidx.core.content.edit
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
@@ -22,10 +23,12 @@ internal class DetailViewModel @Inject constructor(
         private val settingsPrefs: SharedPreferences
 ) : BaseViewModel(), SharedPreferences.OnSharedPreferenceChangeListener {
 
-    val uiState = MutableLiveData<ViewState>()
+    private val _uiState = MutableLiveData<ViewState>()
+    val uiState: LiveData<ViewState>
+        get() = _uiState
 
     init {
-        uiState.value = ViewState()
+        _uiState.value = ViewState()
         updateUI()
         settingsPrefs.registerOnSharedPreferenceChangeListener(this)
     }
@@ -38,14 +41,14 @@ internal class DetailViewModel @Inject constructor(
 
     fun updateWeather(locationType: LocationType) {
         launch {
-            uiState.value = uiState.value!!.copy(isLoading = true) // Start refreshing
+            _uiState.value = _uiState.value!!.copy(isLoading = true) // Start refreshing
             try {
                 withContext(IO) {
                     updateWeather.invoke(locationType)
                     settingsPrefs.edit { putLong(DETAIL_REFRESH_KEY, System.currentTimeMillis()) }
                 }
             } catch (e: IOException) {
-                uiState.value = uiState.value!!.copy(showError = true)
+                _uiState.value = _uiState.value!!.copy(showError = true)
             }
             updateUI()
         }
@@ -54,8 +57,8 @@ internal class DetailViewModel @Inject constructor(
     private fun updateUI() {
         launch {
             val data = withContext(IO) { getAllWeather.invoke() }
-            if (data.isNotEmpty()) uiState.value = uiState.value!!.copy(weatherData = data) // Update all weather data
-            uiState.value = uiState.value!!.copy(isLoading = false, showError = false) // Stop refreshing
+            if (data.isNotEmpty()) _uiState.value = _uiState.value!!.copy(weatherData = data, showError = false)
+            _uiState.value = _uiState.value!!.copy(isLoading = false, showError = false) // Stop refreshing
         }
     }
 
