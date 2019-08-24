@@ -52,6 +52,7 @@ internal class MainActivity : BaseActivity() {
         handleLocationPermission { initActivity(it) }
     }
 
+    /** Check result of Autocomplete API widget's request */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) if (resultCode == Activity.RESULT_OK) {
