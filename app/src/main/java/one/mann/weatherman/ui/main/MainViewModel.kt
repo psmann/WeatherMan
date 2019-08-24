@@ -95,7 +95,8 @@ internal class MainViewModel @Inject constructor(
                 if (!showUi) _uiState.value = _uiState.value!!.copy(hideUi = false, showError = false) // Show UI if hidden
                 showUi = true
             } // Stop refreshing and update viewPager only after updating weatherData (if not null)
-            _uiState.value = _uiState.value!!.copy(isLoading = false, showError = false, cityCount = getCityCount.invoke())
+            val count = withContext(IO) { getCityCount.invoke() }
+            _uiState.value = _uiState.value!!.copy(isLoading = false, showError = false, cityCount = count)
         }
     }
 
