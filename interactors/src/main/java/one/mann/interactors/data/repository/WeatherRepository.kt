@@ -18,7 +18,7 @@ class WeatherRepository @Inject constructor(
 ) {
 
     companion object {
-        private const val FIFTEEN_MINUTES = 900000 // 15 minutes (= 15 * 60 * 1000)
+        private const val TIME_OUT = 1000000 // ~16.6 minutes (= 16.667 * 60 * 1000)
     }
 
     /** Returns number of rows in Db (i.e. number of cities) */
@@ -64,6 +64,6 @@ class WeatherRepository @Inject constructor(
         }
     }
 
-    /** Returns true if it has been more than 15 minutes since last update */
-    private suspend fun syncFromServer(): Boolean = System.currentTimeMillis() - prefsData.getLastChecked() > FIFTEEN_MINUTES
+    /** Returns true if it has been longer than time-out period since last update */
+    private suspend fun syncFromServer(): Boolean = System.currentTimeMillis() - prefsData.getLastChecked() > TIME_OUT
 }
