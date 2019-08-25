@@ -43,7 +43,7 @@ internal class DetailViewModel @Inject constructor(
      * Invoke updateWeather usecase, if it returns true then data has been updated from the API.
      * LAST_UPDATED_KEY is given currentTimeMillis() and updateUI() is called from onSharedPreferenceChanged().
      * This is done because weather can be updated from both MainActivity and DetailActivity.
-     * If it returns false (i.e. not updated from API) then LAST_CHECKED_KEY is updated instead (also updates UI).
+     * If it returns false (i.e. not updated from API) then LAST_CHECKED_KEY is changed and updateUI() is called in listener.
      */
     fun updateWeather(locationType: LocationType) {
         launch {

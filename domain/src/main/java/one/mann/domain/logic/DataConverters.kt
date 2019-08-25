@@ -1,6 +1,8 @@
 package one.mann.domain.logic
 
 import one.mann.domain.model.Location
+import one.mann.domain.model.UnitsType
+import one.mann.domain.model.UnitsType.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.exp
@@ -10,17 +12,19 @@ import kotlin.math.roundToInt
 /** Append data with units */
 fun Any.addSuffix(units: String): String = this.toString() + units
 
-/** Change temperature units from Metric to Imperial */
-fun Float.setTempUnits(type: String): Float = String.format("%.1f", if (type == IMPERIAL) ((this * 1.8) + 32) else this)
-        .toFloat()
+/** Set units to Imperial or Metric when data is fetched from API */
+fun Float.setUnits(units: String, type: UnitsType) = when (type) {
+    TEMPERATURE -> String.format("%.1f", if (units == IMPERIAL) ((this * 1.8) + 32) else this).toFloat()
+    WIND -> String.format("%.1f", if (units == IMPERIAL) (this * 2.237) else (this * 3.6)).toFloat()
+    VISIBILITY -> String.format("%.1f", if (units == IMPERIAL) (this / 1609.344) else (this / 1000)).toFloat()
+}
 
-/** Set wind speed units in Metric (km/h) or Imperial (mph) */
-fun Float.setWindUnits(type: String): Float = String.format("%.1f", if (type == IMPERIAL) (this * 2.237) else (this * 3.6))
-        .toFloat()
-
-/** Set visibility units in Metric (km) or Imperial (mi) */
-fun Float.setVisibilityUnits(type: String): Float = String.format("%.1f",
-        if (type == IMPERIAL) (this / 1609.344) else (this / 1000)).toFloat()
+/** Change units to Imperial or Metric when changed from Settings */
+fun Float.changeUnits(units: String, type: UnitsType) = when (type) {
+    TEMPERATURE -> String.format("%.1f", if (units == IMPERIAL) ((this * 1.8) + 32) else (this - 32) * 0.556).toFloat()
+    WIND -> String.format("%.1f", if (units == IMPERIAL) (this / 1.609) else (this * 1.609)).toFloat()
+    VISIBILITY -> String.format("%.1f", if (units == IMPERIAL) (this / 1.609) else (this * 1.609)).toFloat()
+}
 
 /** Round off variable to nearest integer value and return as a string */
 fun Float.roundOff(): String = this.roundToInt().toString()
