@@ -22,7 +22,7 @@
     <string name="gps_needed_for_location">GPS is needed for current location detection</string>
     <string name="permission_required">Permission is required for location detection</string>
     <string name="server_not_found">Could not connect to the server</string>
-    <string name="no_internet_connection">No active internet connection found</string>
+    <string name="no_internet_connection">No internet connection</string>
     <string name="no_gps_updating_previous_location">Weather updated for previous location</string>
     <string name="weather_icon">Weather Icon</string>
     <string name="location_settings_not_available">Location settings are not available on this device</string>
@@ -44,7 +44,7 @@
     <string name="humidity_notification">Humidity</string>
     <string name="forward_slash">/</string>
 
-    <!-- Preference -->
+    <!-- Preferences -->
     <string name="units_header">Units</string>
     <string name="notification_header">Notifications</string>
     <string name="weather_units">Weather Units</string>

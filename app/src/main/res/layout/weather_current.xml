@@ -121,15 +121,16 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
 
     <ImageView
-            android:id="@+id/weather_icon"
-            android:layout_width="256dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="144dp"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/weather_icon"
-            android:scaleType="fitXY"
-            android:src="@drawable/cloudy_day_1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/city_name" android:layout_marginTop="16dp"/>
+        android:id="@+id/weather_icon"
+        android:layout_width="256dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="152dp"
+        android:layout_marginTop="16dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/weather_icon"
+        android:scaleType="fitXY"
+        android:src="@drawable/cloudy_day_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/city_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

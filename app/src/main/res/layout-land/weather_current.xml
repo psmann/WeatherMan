@@ -127,7 +127,7 @@
             android:adjustViewBounds="true"
             android:contentDescription="@string/weather_icon"
             android:scaleType="fitXY"
-            android:src="@drawable/cloudy_day_1"
+            android:src="@drawable/cloud_unknown"
             app:layout_constraintTop_toTopOf="@+id/city_name" android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="24dp"/>
 

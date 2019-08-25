@@ -1,7 +1,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools" android:id="@+id/cl_forecast_layout"
+        android:id="@+id/cl_forecast_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     <TextView
@@ -24,7 +24,7 @@
             android:src="@drawable/cloudy_day_1"
             app:layout_constraintTop_toTopOf="@+id/forecast_1_linear"
             app:layout_constraintBottom_toBottomOf="@+id/forecast_1_linear"
-            android:layout_marginEnd="72dp" app:layout_constraintEnd_toEndOf="@+id/forecast_1_linear"/>
+            android:layout_marginEnd="76dp" app:layout_constraintEnd_toEndOf="@+id/forecast_1_linear"/>
     <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
                   android:orientation="horizontal"
                   android:id="@+id/forecast_1_linear"
@@ -66,10 +66,9 @@
             android:contentDescription="@string/weather_icon"
             android:src="@drawable/cloudy_day_1" app:layout_constraintTop_toTopOf="@+id/forecast_2_linear"
             app:layout_constraintBottom_toBottomOf="@+id/forecast_2_linear"
-            android:layout_marginEnd="72dp" app:layout_constraintEnd_toEndOf="@+id/forecast_2_linear"/>
+            android:layout_marginEnd="76dp" app:layout_constraintEnd_toEndOf="@+id/forecast_2_linear"/>
     <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:orientation="horizontal" tools:layout_editor_absoluteY="495dp"
-                  tools:layout_editor_absoluteX="244dp" android:id="@+id/forecast_2_linear"
+                  android:orientation="horizontal" android:id="@+id/forecast_2_linear"
                   app:layout_constraintTop_toTopOf="@+id/forecast_2_day"
                   app:layout_constraintBottom_toBottomOf="@+id/forecast_2_day" app:layout_constraintEnd_toEndOf="parent"
                   android:layout_marginEnd="32dp">
@@ -108,10 +107,9 @@
             android:contentDescription="@string/weather_icon"
             android:src="@drawable/cloudy_day_1" app:layout_constraintTop_toTopOf="@+id/forecast_3_linear"
             app:layout_constraintBottom_toBottomOf="@+id/forecast_3_linear"
-            android:layout_marginEnd="72dp" app:layout_constraintEnd_toEndOf="@+id/forecast_3_linear"/>
+            android:layout_marginEnd="76dp" app:layout_constraintEnd_toEndOf="@+id/forecast_3_linear"/>
     <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:orientation="horizontal" tools:layout_editor_absoluteY="541dp"
-                  tools:layout_editor_absoluteX="244dp" android:id="@+id/forecast_3_linear"
+                  android:orientation="horizontal" android:id="@+id/forecast_3_linear"
                   app:layout_constraintTop_toTopOf="@+id/forecast_3_day"
                   app:layout_constraintBottom_toBottomOf="@+id/forecast_3_day" app:layout_constraintEnd_toEndOf="parent"
                   android:layout_marginEnd="32dp">
@@ -150,10 +148,9 @@
             android:contentDescription="@string/weather_icon"
             android:src="@drawable/cloudy_day_1" app:layout_constraintTop_toTopOf="@+id/forecast_4_linear"
             app:layout_constraintBottom_toBottomOf="@+id/forecast_4_linear"
-            android:layout_marginEnd="72dp" app:layout_constraintEnd_toEndOf="@+id/forecast_4_linear"/>
+            android:layout_marginEnd="76dp" app:layout_constraintEnd_toEndOf="@+id/forecast_4_linear"/>
     <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:orientation="horizontal" tools:layout_editor_absoluteY="574dp"
-                  tools:layout_editor_absoluteX="241dp" android:id="@+id/forecast_4_linear"
+                  android:orientation="horizontal" android:id="@+id/forecast_4_linear"
                   app:layout_constraintTop_toTopOf="@+id/forecast_4_day"
                   app:layout_constraintBottom_toBottomOf="@+id/forecast_4_day" app:layout_constraintEnd_toEndOf="parent"
                   android:layout_marginEnd="32dp">
@@ -192,10 +189,9 @@
             android:contentDescription="@string/weather_icon"
             android:src="@drawable/cloudy_day_1" app:layout_constraintTop_toTopOf="@+id/forecast_5_linear"
             app:layout_constraintBottom_toBottomOf="@+id/forecast_5_linear"
-            android:layout_marginEnd="72dp" app:layout_constraintEnd_toEndOf="@+id/forecast_5_linear"/>
+            android:layout_marginEnd="76dp" app:layout_constraintEnd_toEndOf="@+id/forecast_5_linear"/>
     <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:orientation="horizontal" tools:layout_editor_absoluteY="607dp"
-                  tools:layout_editor_absoluteX="232dp" android:id="@+id/forecast_5_linear"
+                  android:orientation="horizontal" android:id="@+id/forecast_5_linear"
                   app:layout_constraintTop_toTopOf="@+id/forecast_5_day"
                   app:layout_constraintBottom_toBottomOf="@+id/forecast_5_day" app:layout_constraintEnd_toEndOf="parent"
                   android:layout_marginEnd="32dp">
@@ -234,17 +230,15 @@
             android:contentDescription="@string/weather_icon"
             android:src="@drawable/cloudy_day_1" app:layout_constraintTop_toTopOf="@+id/forecast_6_linear"
             app:layout_constraintBottom_toBottomOf="@+id/forecast_6_linear"
-            android:layout_marginEnd="72dp" app:layout_constraintEnd_toEndOf="@+id/forecast_6_linear"/>
+            android:layout_marginEnd="76dp" app:layout_constraintEnd_toEndOf="@+id/forecast_6_linear"/>
     <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:orientation="horizontal" tools:layout_editor_absoluteY="649dp"
-                  tools:layout_editor_absoluteX="211dp" android:id="@+id/forecast_6_linear"
+                  android:orientation="horizontal" android:id="@+id/forecast_6_linear"
                   app:layout_constraintTop_toTopOf="@+id/forecast_6_day"
                   app:layout_constraintBottom_toBottomOf="@+id/forecast_6_day" app:layout_constraintEnd_toEndOf="parent"
                   android:layout_marginEnd="32dp">
         <TextView
                 android:id="@+id/forecast_6_max"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:textStyle="bold" android:textColor="@android:color/white"/>
         <TextView
@@ -253,8 +247,7 @@
                 android:layout_height="wrap_content" android:id="@+id/forecast_6_slash"/>
         <TextView
                 android:id="@+id/forecast_6_min"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:textSize="18sp" android:layout_marginStart="2dp"
                 android:textStyle="bold" android:textColor="@android:color/white"/>
     </LinearLayout>
@@ -271,23 +264,19 @@
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.0"/>
     <ImageView
             android:id="@+id/forecast_7_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="false"
-            android:contentDescription="@string/weather_icon"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:adjustViewBounds="false" android:contentDescription="@string/weather_icon"
             android:src="@drawable/cloudy_day_1" app:layout_constraintTop_toTopOf="@+id/forecast_7_linear"
             app:layout_constraintBottom_toBottomOf="@+id/forecast_7_linear"
-            android:layout_marginEnd="72dp" app:layout_constraintEnd_toEndOf="@+id/forecast_7_linear"/>
+            android:layout_marginEnd="76dp" app:layout_constraintEnd_toEndOf="@+id/forecast_7_linear"/>
     <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:orientation="horizontal" tools:layout_editor_absoluteY="701dp"
-                  tools:layout_editor_absoluteX="202dp" android:id="@+id/forecast_7_linear"
+                  android:orientation="horizontal" android:id="@+id/forecast_7_linear"
                   app:layout_constraintTop_toTopOf="@+id/forecast_7_day"
                   app:layout_constraintBottom_toBottomOf="@+id/forecast_7_day" app:layout_constraintEnd_toEndOf="parent"
                   android:layout_marginEnd="32dp">
         <TextView
                 android:id="@+id/forecast_7_max"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:textStyle="bold" android:textColor="@android:color/white"/>
         <TextView
@@ -296,8 +285,7 @@
                 android:layout_height="wrap_content" android:id="@+id/forecast_7_slash"/>
         <TextView
                 android:id="@+id/forecast_7_min"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:textSize="18sp" android:layout_marginStart="2dp"
                 android:textStyle="bold" android:textColor="@android:color/white"/>
     </LinearLayout>
