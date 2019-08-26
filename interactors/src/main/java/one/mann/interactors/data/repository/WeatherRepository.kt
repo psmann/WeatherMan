@@ -35,7 +35,7 @@ class WeatherRepository @Inject constructor(
     suspend fun read(): List<Weather> = dbData.getAllWeather()
 
     /** Update all rows in Db with new data */
-    suspend fun updateDb(weatherData: List<Weather>) = dbData.updateAllWeather(weatherData)
+    suspend fun update(weatherData: List<Weather>) = dbData.updateAllWeather(weatherData)
 
     /** Remove a row from Db */
     suspend fun delete(name: String) = dbData.deleteWeather(name)
@@ -56,10 +56,10 @@ class WeatherRepository @Inject constructor(
             val units = prefsData.getUnits()
             for (i in 0 until locations.size) weathers.add(mapToWeather(currentWeathers[i], dailyForecasts[i],
                     hourlyForecasts[i], timezones[i], locations[i], units))
-            updateDb(weathers)
+            update(weathers)
             true
         } else { // This still uses the Teleport API for getting timezones sadly
-            updateDb(read().mapIndexed { i, it -> it.updateLastChecked(timezones[i]) })
+            update(read().mapIndexed { i, it -> it.updateLastChecked(timezones[i]) })
             false
         }
     }

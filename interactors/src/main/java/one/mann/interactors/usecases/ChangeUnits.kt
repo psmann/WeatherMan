@@ -12,6 +12,6 @@ class ChangeUnits @Inject constructor(
 
     suspend fun invoke() {
         val units = prefsData.getUnits()
-        weatherRepository.updateDb(weatherRepository.read().map { it.changeUnits(units) })
+        weatherRepository.update(weatherRepository.read().map { it.changeUnits(units) })
     }
 }
