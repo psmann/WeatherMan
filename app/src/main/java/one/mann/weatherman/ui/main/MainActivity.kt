@@ -107,8 +107,8 @@ internal class MainActivity : BaseActivity() {
         }
     }
 
-    private fun observeUiState(state: MainViewModel.ViewState) {
-        main_swipe_ly.isRefreshing = state.isLoading
+    private fun observeUiState(state: MainViewState) {
+        main_swipe_ly.isRefreshing = state.isRefreshing
         if (state.showError) toast(R.string.error_has_occurred_try_again)
         when (val count = state.cityCount) {
             -1 -> return

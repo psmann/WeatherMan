@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import one.mann.domain.model.Location
 import one.mann.domain.model.LocationType
-import one.mann.domain.model.Weather
 import one.mann.interactors.usecases.*
 import one.mann.weatherman.framework.service.workers.NotificationWorker
 import one.mann.weatherman.ui.common.base.BaseViewModel
@@ -32,35 +31,26 @@ internal class MainViewModel @Inject constructor(
         private val workManager: WorkManager
 ) : BaseViewModel(), SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private var showUi = false
-    private val _uiState = MutableLiveData<ViewState>()
-    val uiState: LiveData<ViewState>
+    private val _uiState = MutableLiveData<MainViewState>()
+    val uiState: LiveData<MainViewState>
         get() = _uiState
 
     init {
-        _uiState.value = ViewState()
+        _uiState.value = MainViewState()
         settingsPrefs.registerOnSharedPreferenceChangeListener(this)
         workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG).observeForever { updateUI() } // Update on change
         enqueueNotificationWork()
         updateUI()
     }
 
-    data class ViewState(
-            val isLoading: Boolean = false,
-            val hideUi: Boolean = true,
-            val showError: Boolean = false,
-            val cityCount: Int = -1,
-            val weatherData: List<Weather> = listOf()
-    )
-
     fun addCity(apiLocation: Location? = null) {
         launch {
-            _uiState.value = _uiState.value!!.copy(isLoading = true) // Start refreshing
             try {
+                _uiState.value = _uiState.value!!.copy(isRefreshing = true) // Start refreshing
                 withContext(IO) { addCity.invoke(apiLocation) }
                 updateUI()
             } catch (e: IOException) { // Stop refreshing, show error and change the state back
-                _uiState.value = _uiState.value!!.copy(isLoading = false, showError = true)
+                _uiState.value = _uiState.value!!.copy(isRefreshing = false, showError = true)
                 _uiState.value = _uiState.value!!.copy(showError = false)
             }
         }
@@ -74,15 +64,15 @@ internal class MainViewModel @Inject constructor(
      */
     fun updateWeather(locationType: LocationType) {
         launch {
-            _uiState.value = _uiState.value!!.copy(isLoading = true) // Start refreshing
             try {
+                _uiState.value = _uiState.value!!.copy(isRefreshing = true) // Start refreshing
                 withContext(IO) {
                     val weatherUpdated = updateWeather.invoke(locationType)
                     if (weatherUpdated) settingsPrefs.edit { putLong(LAST_UPDATED_KEY, System.currentTimeMillis()) }
                     else settingsPrefs.edit { putLong(LAST_CHECKED_KEY, System.currentTimeMillis()) }
                 }
             } catch (e: IOException) { // Stop refreshing, show error and change the state back
-                _uiState.value = _uiState.value!!.copy(isLoading = false, showError = true)
+                _uiState.value = _uiState.value!!.copy(isRefreshing = false, showError = true)
                 _uiState.value = _uiState.value!!.copy(showError = false)
             }
         }
@@ -99,13 +89,9 @@ internal class MainViewModel @Inject constructor(
     private fun updateUI() {
         launch {
             val data = withContext(IO) { getAllWeather.invoke() }
-            if (data.isNotEmpty()) {
-                _uiState.value = _uiState.value!!.copy(weatherData = data) // Update all weather data
-                if (!showUi) _uiState.value = _uiState.value!!.copy(hideUi = false) // Show UI if hidden
-                showUi = true
-            } // Stop refreshing and update viewPager only after updating weatherData (if not null)
             val count = withContext(IO) { getCityCount.invoke() }
-            _uiState.value = _uiState.value!!.copy(isLoading = false, cityCount = count)
+            _uiState.value = if (data.isEmpty()) _uiState.value!!.copy(isRefreshing = false, cityCount = count)
+            else _uiState.value!!.copy(weatherData = data, isLoading = false, isRefreshing = false, cityCount = count)
         }
     }
 

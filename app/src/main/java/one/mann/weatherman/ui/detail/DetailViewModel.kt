@@ -8,7 +8,6 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import one.mann.domain.model.LocationType
-import one.mann.domain.model.Weather
 import one.mann.interactors.usecases.GetAllWeather
 import one.mann.interactors.usecases.UpdateWeather
 import one.mann.weatherman.ui.common.base.BaseViewModel
@@ -23,21 +22,15 @@ internal class DetailViewModel @Inject constructor(
         private val settingsPrefs: SharedPreferences
 ) : BaseViewModel(), SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private val _uiState = MutableLiveData<ViewState>()
-    val uiState: LiveData<ViewState>
+    private val _uiState = MutableLiveData<DetailViewState>()
+    val uiState: LiveData<DetailViewState>
         get() = _uiState
 
     init {
-        _uiState.value = ViewState()
+        _uiState.value = DetailViewState()
         updateUI()
         settingsPrefs.registerOnSharedPreferenceChangeListener(this)
     }
-
-    data class ViewState(
-            val isLoading: Boolean = false,
-            val showError: Boolean = false,
-            val weatherData: List<Weather> = listOf()
-    )
 
     /**
      * Invoke updateWeather usecase, if it returns true then data has been updated from the API.
@@ -47,15 +40,15 @@ internal class DetailViewModel @Inject constructor(
      */
     fun updateWeather(locationType: LocationType) {
         launch {
-            _uiState.value = _uiState.value!!.copy(isLoading = true) // Start refreshing
             try {
+                _uiState.value = _uiState.value!!.copy(isRefreshing = true) // Start refreshing
                 withContext(IO) {
                     val weatherUpdated = updateWeather.invoke(locationType)
                     if (weatherUpdated) settingsPrefs.edit { putLong(LAST_UPDATED_KEY, System.currentTimeMillis()) }
                     else settingsPrefs.edit { putLong(LAST_CHECKED_KEY, System.currentTimeMillis()) }
                 }
             } catch (e: IOException) { // Stop refreshing, show error and change the state back
-                _uiState.value = _uiState.value!!.copy(isLoading = false, showError = true)
+                _uiState.value = _uiState.value!!.copy(isRefreshing = false, showError = true)
                 _uiState.value = _uiState.value!!.copy(showError = false)
             }
         }
@@ -64,8 +57,8 @@ internal class DetailViewModel @Inject constructor(
     private fun updateUI() {
         launch {
             val data = withContext(IO) { getAllWeather.invoke() }
-            if (data.isNotEmpty()) _uiState.value = _uiState.value!!.copy(weatherData = data)
-            _uiState.value = _uiState.value!!.copy(isLoading = false) // Stop refreshing
+            _uiState.value = if (data.isEmpty()) _uiState.value!!.copy(isRefreshing = false)
+            else _uiState.value!!.copy(isRefreshing = false, weatherData = data)
         }
     }
 

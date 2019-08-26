@@ -72,9 +72,9 @@ internal class DetailActivity : BaseActivity() {
         }
     }
 
-    private fun observeUiState(state: DetailViewModel.ViewState) {
+    private fun observeUiState(state: DetailViewState) {
         val weather = state.weatherData
-        detail_swipe_ly.isRefreshing = state.isLoading
+        detail_swipe_ly.isRefreshing = state.isRefreshing
         if (state.showError) toast(R.string.error_has_occurred_try_again)
         if (weather.size >= position + 1) {
             detailRecyclerAdapter.update(weather[position])

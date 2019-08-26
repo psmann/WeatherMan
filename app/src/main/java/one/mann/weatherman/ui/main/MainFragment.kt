@@ -46,15 +46,16 @@ internal class MainFragment : Fragment() {
         injectDependencies()
         intent.putExtra(PAGER_POSITION, position)
         button_detail.setOnClickListener { startActivity(intent) }
-        // Init ViewModel
-        mainViewModel.uiState.observe(this@MainFragment) {
-            val weatherData = it.weatherData
-            fragment_main_const_ly.visibility = if (it.hideUi) View.GONE else View.VISIBLE
-            if (weatherData.size >= position + 1) setupViews(weatherData[position])
-        }
+        mainViewModel.uiState.observe(this@MainFragment) { observeUiState(it) }
     }
 
     private fun injectDependencies() = WeatherManApp.appComponent.getSubComponent().injectMainFragment(this)
+
+    private fun observeUiState(state: MainViewState) {
+        val weatherData = state.weatherData
+        fragment_main_const_ly.visibility = if (state.isLoading) View.GONE else View.VISIBLE
+        if (weatherData.size >= position + 1) setupViews(weatherData[position])
+    }
 
     private fun setupViews(weather: Weather) {
         val newBackground = getGradient(weather.sunPosition, isOvercast(weather.iconId))
