@@ -11,6 +11,7 @@ import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import one.mann.domain.logic.DEGREES
+import one.mann.domain.logic.removeUnits
 import one.mann.domain.logic.roundOff
 import one.mann.interactors.usecases.GetNotificationData
 import one.mann.weatherman.R
@@ -25,7 +26,7 @@ internal class WeatherNotification @Inject constructor(
     /** Get weather data, set up custom layouts, create channel, build notification and display */
     suspend fun show() {
         val data = getNotificationData.invoke()
-        val currentTemp = data.currentTemp.replace(DEGREES, "").toFloat().roundOff() + DEGREES
+        val currentTemp = data.currentTemp.removeUnits(DEGREES).toFloat().roundOff() + DEGREES
         // Notification layouts
         val notificationCollapsed = RemoteViews(context.packageName, R.layout.notification_collapsed).apply {
             setTextViewText(R.id.notification_temp, currentTemp)

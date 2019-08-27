@@ -99,54 +99,54 @@ internal fun mapToWeather(currentWeather: CurrentWeather, dailyForecast: List<Da
 
 /** Convert units to Imperial-Metric in a not so efficient way */
 internal fun Weather.changeUnits(units: String) = copy(
-        currentTemp = currentTemp.replace(DEGREES, "").toFloat()
+        currentTemp = currentTemp.removeUnits(DEGREES).toFloat()
                 .changeUnits(units, TEMPERATURE).addSuffix(DEGREES),
-        feelsLike = feelsLike.replace(DEGREES, "").toFloat()
+        feelsLike = feelsLike.removeUnits(DEGREES).toFloat()
                 .changeUnits(units, TEMPERATURE).addSuffix(DEGREES),
-        windSpeed = windSpeed.replace(if (units == IMPERIAL) KM_PER_HOUR else MILES_PER_HOUR, "").toFloat()
+        windSpeed = windSpeed.removeUnits(KM_PER_HOUR, MILES_PER_HOUR).toFloat()
                 .changeUnits(units, WIND).addSuffix(if (units == IMPERIAL) MILES_PER_HOUR else KM_PER_HOUR),
-        visibility = visibility.replace(if (units == IMPERIAL) KILO_METERS else MILES, "").toFloat()
+        visibility = visibility.removeUnits(KILO_METERS, MILES).toFloat()
                 .changeUnits(units, VISIBILITY).addSuffix(if (units == IMPERIAL) MILES else KILO_METERS),
-        day1MinTemp = day1MinTemp.replace(DEGREES, "").toFloat()
+        day1MinTemp = day1MinTemp.removeUnits(DEGREES).toFloat()
                 .changeUnits(units, TEMPERATURE).roundOff().addSuffix(DEGREES),
-        day1MaxTemp = day1MaxTemp.replace(DEGREES, "").toFloat()
+        day1MaxTemp = day1MaxTemp.removeUnits(DEGREES).toFloat()
                 .changeUnits(units, TEMPERATURE).roundOff().addSuffix(DEGREES),
-        day2MinTemp = day2MinTemp.replace(DEGREES, "").toFloat()
+        day2MinTemp = day2MinTemp.removeUnits(DEGREES).toFloat()
                 .changeUnits(units, TEMPERATURE).roundOff().addSuffix(DEGREES),
-        day2MaxTemp = day2MaxTemp.replace(DEGREES, "").toFloat()
+        day2MaxTemp = day2MaxTemp.removeUnits(DEGREES).toFloat()
                 .changeUnits(units, TEMPERATURE).roundOff().addSuffix(DEGREES),
-        day3MinTemp = day3MinTemp.replace(DEGREES, "").toFloat()
+        day3MinTemp = day3MinTemp.removeUnits(DEGREES).toFloat()
                 .changeUnits(units, TEMPERATURE).roundOff().addSuffix(DEGREES),
-        day3MaxTemp = day3MaxTemp.replace(DEGREES, "").toFloat()
+        day3MaxTemp = day3MaxTemp.removeUnits(DEGREES).toFloat()
                 .changeUnits(units, TEMPERATURE).roundOff().addSuffix(DEGREES),
-        day4MinTemp = day4MinTemp.replace(DEGREES, "").toFloat()
+        day4MinTemp = day4MinTemp.removeUnits(DEGREES).toFloat()
                 .changeUnits(units, TEMPERATURE).roundOff().addSuffix(DEGREES),
-        day4MaxTemp = day4MaxTemp.replace(DEGREES, "").toFloat()
+        day4MaxTemp = day4MaxTemp.removeUnits(DEGREES).toFloat()
                 .changeUnits(units, TEMPERATURE).roundOff().addSuffix(DEGREES),
-        day5MinTemp = day5MinTemp.replace(DEGREES, "").toFloat()
+        day5MinTemp = day5MinTemp.removeUnits(DEGREES).toFloat()
                 .changeUnits(units, TEMPERATURE).roundOff().addSuffix(DEGREES),
-        day5MaxTemp = day5MaxTemp.replace(DEGREES, "").toFloat()
+        day5MaxTemp = day5MaxTemp.removeUnits(DEGREES).toFloat()
                 .changeUnits(units, TEMPERATURE).roundOff().addSuffix(DEGREES),
-        day6MinTemp = day6MinTemp.replace(DEGREES, "").toFloat()
+        day6MinTemp = day6MinTemp.removeUnits(DEGREES).toFloat()
                 .changeUnits(units, TEMPERATURE).roundOff().addSuffix(DEGREES),
-        day6MaxTemp = day6MaxTemp.replace(DEGREES, "").toFloat()
+        day6MaxTemp = day6MaxTemp.removeUnits(DEGREES).toFloat()
                 .changeUnits(units, TEMPERATURE).roundOff().addSuffix(DEGREES),
-        day7MinTemp = day7MinTemp.replace(DEGREES, "").toFloat()
+        day7MinTemp = day7MinTemp.removeUnits(DEGREES).toFloat()
                 .changeUnits(units, TEMPERATURE).roundOff().addSuffix(DEGREES),
-        day7MaxTemp = day7MaxTemp.replace(DEGREES, "").toFloat()
+        day7MaxTemp = day7MaxTemp.removeUnits(DEGREES).toFloat()
                 .changeUnits(units, TEMPERATURE).roundOff().addSuffix(DEGREES),
-        hour03Temp = hour03Temp.replace(DEGREES, "").toFloat()
+        hour03Temp = hour03Temp.removeUnits(DEGREES).toFloat()
                 .changeUnits(units, TEMPERATURE).roundOff().addSuffix(DEGREES),
-        hour06Temp = hour06Temp.replace(DEGREES, "").toFloat()
+        hour06Temp = hour06Temp.removeUnits(DEGREES).toFloat()
                 .changeUnits(units, TEMPERATURE).roundOff().addSuffix(DEGREES),
-        hour09Temp = hour09Temp.replace(DEGREES, "").toFloat()
+        hour09Temp = hour09Temp.removeUnits(DEGREES).toFloat()
                 .changeUnits(units, TEMPERATURE).roundOff().addSuffix(DEGREES),
-        hour12Temp = hour12Temp.replace(DEGREES, "").toFloat()
+        hour12Temp = hour12Temp.removeUnits(DEGREES).toFloat()
                 .changeUnits(units, TEMPERATURE).roundOff().addSuffix(DEGREES),
-        hour15Temp = hour15Temp.replace(DEGREES, "").toFloat()
+        hour15Temp = hour15Temp.removeUnits(DEGREES).toFloat()
                 .changeUnits(units, TEMPERATURE).roundOff().addSuffix(DEGREES),
-        hour18Temp = hour18Temp.replace(DEGREES, "").toFloat()
+        hour18Temp = hour18Temp.removeUnits(DEGREES).toFloat()
                 .changeUnits(units, TEMPERATURE).roundOff().addSuffix(DEGREES),
-        hour21Temp = hour21Temp.replace(DEGREES, "").toFloat()
+        hour21Temp = hour21Temp.removeUnits(DEGREES).toFloat()
                 .changeUnits(units, TEMPERATURE).roundOff().addSuffix(DEGREES)
 )
