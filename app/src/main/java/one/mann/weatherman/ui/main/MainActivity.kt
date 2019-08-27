@@ -55,7 +55,7 @@ internal class MainActivity : BaseActivity() {
     /** Check result of Autocomplete API widget's request */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) if (resultCode == Activity.RESULT_OK) {
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val placeLoc = Autocomplete.getPlaceFromIntent(data!!).latLng // Get coordinates from intent
             mainViewModel.addCity(Location(listOf(placeLoc!!.latitude.toFloat(), placeLoc.longitude.toFloat())).truncate())
         }
@@ -69,7 +69,7 @@ internal class MainActivity : BaseActivity() {
             finish()
             return
         }
-        main_viewPager.apply {
+        main_view_pager.apply {
             adapter = mainPagerAdapter
             addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
                 override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
@@ -127,9 +127,9 @@ internal class MainActivity : BaseActivity() {
 
     private fun Toolbar.init() = apply {
         if (!menu.hasVisibleItems()) inflateMenu(R.menu.menu_main) // Inflate menu directly into toolbar
-        setOnMenuItemClickListener {
-            when (it!!.itemId) {
-                R.id.menu_add_city -> if (main_viewPager.adapter!!.count < 10) autocompleteWidget() // Limit cities to 10
+        setOnMenuItemClickListener { menuItem ->
+            when (menuItem!!.itemId) {
+                R.id.menu_add_city -> if (main_view_pager.adapter!!.count < 10) autocompleteWidget() // Limit cities to 10
                 else toast(R.string.remove_a_city_before_adding)
                 R.id.menu_remove_city -> removeCityAlert().show()
                 R.id.menu_settings -> startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
@@ -142,7 +142,7 @@ internal class MainActivity : BaseActivity() {
             .setTitle(getString(R.string.remove_city_location))
             .setMessage(getString(R.string.do_you_want_to_remove_location))
             .setPositiveButton(getString(R.string.yes)) { _, _ ->
-                val position = main_viewPager.currentItem
+                val position = main_view_pager.currentItem
                 if (position == 0) toast(R.string.cant_remove_first_location)
                 else {
                     mainViewModel.removeCity(position)
