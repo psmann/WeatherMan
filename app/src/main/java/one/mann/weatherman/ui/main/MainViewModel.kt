@@ -137,7 +137,7 @@ internal class MainViewModel @Inject constructor(
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         launch(IO) {
-            when (key) { // All Settings are handled here, ideally should be handled in a separate ViewModel
+            when (key) { // All Settings are handled here, ideally this should be done in SettingsActivity
                 SETTINGS_UNITS_KEY -> { // Change units and update UI
                     changeUnits.invoke()
                     updateUI()
