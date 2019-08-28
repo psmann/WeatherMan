@@ -15,7 +15,7 @@ fun Any.addSuffix(units: String): String = this.toString() + units
 /** Remove units from data */
 fun String.removeUnits(vararg units: String): String {
     var result = this
-    units.forEach { unit -> result = result.replace(unit, "") }
+    units.forEach { result = result.replace(it, "") }
     return result
 }
 
