@@ -9,8 +9,13 @@ import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import one.mann.domain.model.Errors.*
 import one.mann.domain.model.Location
+import one.mann.domain.model.LocationResponse
+import one.mann.domain.model.LocationResponse.*
 import one.mann.domain.model.LocationType
+import one.mann.domain.model.LocationType.DB
+import one.mann.domain.model.LocationType.DEVICE
 import one.mann.interactors.usecases.*
 import one.mann.weatherman.framework.service.workers.NotificationWorker
 import one.mann.weatherman.ui.common.base.BaseViewModel
@@ -43,6 +48,16 @@ internal class MainViewModel @Inject constructor(
         updateUI()
     }
 
+    fun handleRefreshing(response: LocationResponse, firstRun: Boolean) {
+        when (response) {
+            NO_NETWORK -> _uiState.value = _uiState.value!!.copy(isRefreshing = false, error = NO_INTERNET)
+            ENABLED -> if (firstRun) addCity() else updateWeather(DEVICE)
+            DISABLED -> if (firstRun) _uiState.value = _uiState.value!!.copy(error = NO_GPS) else updateWeather(DB)
+            UNAVAILABLE -> _uiState.value = _uiState.value!!.copy(error = NO_LOCATION)
+        }
+        _uiState.value = _uiState.value!!.copy(error = NO_ERROR) // Change error state back
+    }
+
     fun addCity(apiLocation: Location? = null) {
         launch {
             try {
@@ -50,8 +65,8 @@ internal class MainViewModel @Inject constructor(
                 withContext(IO) { addCity.invoke(apiLocation) }
                 updateUI()
             } catch (e: IOException) { // Stop refreshing, show error and change the state back
-                _uiState.value = _uiState.value!!.copy(isRefreshing = false, showError = true)
-                _uiState.value = _uiState.value!!.copy(showError = false)
+                _uiState.value = _uiState.value!!.copy(isRefreshing = false, error = NO_RESPONSE)
+                _uiState.value = _uiState.value!!.copy(error = NO_ERROR)
             }
         }
     }
@@ -62,7 +77,7 @@ internal class MainViewModel @Inject constructor(
      * This is done because weather can be updated from both MainActivity and DetailActivity.
      * If it returns false (i.e. not updated from API) then LAST_CHECKED_KEY is changed and updateUI() is called in listener.
      */
-    fun updateWeather(locationType: LocationType) {
+    private fun updateWeather(locationType: LocationType) {
         launch {
             try {
                 _uiState.value = _uiState.value!!.copy(isRefreshing = true) // Start refreshing
@@ -72,8 +87,8 @@ internal class MainViewModel @Inject constructor(
                     else settingsPrefs.edit { putLong(LAST_CHECKED_KEY, System.currentTimeMillis()) }
                 }
             } catch (e: IOException) { // Stop refreshing, show error and change the state back
-                _uiState.value = _uiState.value!!.copy(isRefreshing = false, showError = true)
-                _uiState.value = _uiState.value!!.copy(showError = false)
+                _uiState.value = _uiState.value!!.copy(isRefreshing = false, error = NO_RESPONSE)
+                _uiState.value = _uiState.value!!.copy(error = NO_ERROR)
             }
         }
     }

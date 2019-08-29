@@ -3,6 +3,7 @@ package one.mann.weatherman.ui.detail.adapter
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import one.mann.domain.logic.DEGREES
+import one.mann.domain.logic.removeUnits
 import one.mann.domain.model.Weather
 import one.mann.weatherman.R
 import one.mann.weatherman.ui.common.util.inflateView
@@ -42,7 +43,7 @@ internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>()
             holder.clouds.text = weather.clouds
             holder.windSpeed.text = weather.windSpeed
             holder.windDirection.text = weather.windDirection
-            holder.windDirectionIcon.rotation = weather.windDirection.replace(DEGREES, "").toFloat()
+            holder.windDirectionIcon.rotation = weather.windDirection.removeUnits(DEGREES).toFloat() // Rotate icon
             holder.location.text = weather.locationString
             holder.flagIcon.text = weather.countryFlag
             holder.lastUpdated.text = weather.lastUpdated

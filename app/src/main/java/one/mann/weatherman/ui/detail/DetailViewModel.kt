@@ -7,7 +7,12 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import one.mann.domain.model.Errors.*
+import one.mann.domain.model.LocationResponse
+import one.mann.domain.model.LocationResponse.*
 import one.mann.domain.model.LocationType
+import one.mann.domain.model.LocationType.DB
+import one.mann.domain.model.LocationType.DEVICE
 import one.mann.interactors.usecases.GetAllWeather
 import one.mann.interactors.usecases.UpdateWeather
 import one.mann.weatherman.ui.common.base.BaseViewModel
@@ -32,13 +37,23 @@ internal class DetailViewModel @Inject constructor(
         settingsPrefs.registerOnSharedPreferenceChangeListener(this)
     }
 
+    fun handleRefreshing(response: LocationResponse) = when (response) {
+        NO_NETWORK -> {
+            _uiState.value = _uiState.value!!.copy(isRefreshing = false, error = NO_INTERNET)
+            _uiState.value = _uiState.value!!.copy(error = NO_ERROR) // Change error state back
+        }
+        ENABLED -> updateWeather(DEVICE)
+        DISABLED -> updateWeather(DB)
+        else -> run { return@run } // Workaround for lack of break support inside when statements
+    }
+
     /**
      * Invoke updateWeather usecase, if it returns true then data has been updated from the API.
      * LAST_UPDATED_KEY is given currentTimeMillis() and updateUI() is called from onSharedPreferenceChanged().
      * This is done because weather can be updated from both MainActivity and DetailActivity.
      * If it returns false (i.e. not updated from API) then LAST_CHECKED_KEY is changed and updateUI() is called in listener.
      */
-    fun updateWeather(locationType: LocationType) {
+    private fun updateWeather(locationType: LocationType) {
         launch {
             try {
                 _uiState.value = _uiState.value!!.copy(isRefreshing = true) // Start refreshing
@@ -48,8 +63,8 @@ internal class DetailViewModel @Inject constructor(
                     else settingsPrefs.edit { putLong(LAST_CHECKED_KEY, System.currentTimeMillis()) }
                 }
             } catch (e: IOException) { // Stop refreshing, show error and change the state back
-                _uiState.value = _uiState.value!!.copy(isRefreshing = false, showError = true)
-                _uiState.value = _uiState.value!!.copy(showError = false)
+                _uiState.value = _uiState.value!!.copy(isRefreshing = false, error = NO_RESPONSE)
+                _uiState.value = _uiState.value!!.copy(error = NO_ERROR)
             }
         }
     }

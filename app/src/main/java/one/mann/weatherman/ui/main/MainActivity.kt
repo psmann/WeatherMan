@@ -20,10 +20,8 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import one.mann.domain.logic.truncate
+import one.mann.domain.model.Errors.*
 import one.mann.domain.model.Location
-import one.mann.domain.model.LocationResponse.*
-import one.mann.domain.model.LocationType.DB
-import one.mann.domain.model.LocationType.DEVICE
 import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.api.common.Keys
@@ -87,33 +85,22 @@ internal class MainActivity : BaseActivity() {
     }
 
     private fun handleLocationServiceResult() = handleLocationPermission { permissionGranted ->
-        if (permissionGranted) checkLocationService {
-            when (it) {
-                NO_NETWORK -> {
-                    toast(R.string.no_internet_connection)
-                    main_swipe_ly.isRefreshing = false
-                }
-                ENABLED ->
-                    if (isFirstRun) mainViewModel.addCity()
-                    else mainViewModel.updateWeather(DEVICE)
-                DISABLED ->
-                    if (isFirstRun) toast(R.string.gps_needed_for_location)
-                    else mainViewModel.updateWeather(DB)
-                UNAVAILABLE -> {
-                    toast(R.string.location_settings_not_available)
-                    finish()
-                }
-            }
-        }
+        if (permissionGranted) checkLocationService { mainViewModel.handleRefreshing(it, isFirstRun) }
     }
 
     private fun observeUiState(state: MainViewState) {
         main_swipe_ly.isRefreshing = state.isRefreshing
-        if (state.showError) toast(R.string.error_has_occurred_try_again)
+        when (state.error) {
+            NO_INTERNET -> toast(R.string.no_internet_connection)
+            NO_GPS -> toast(R.string.gps_needed_for_location)
+            NO_LOCATION -> toast(R.string.location_settings_not_available)
+            NO_RESPONSE -> toast(R.string.error_has_occurred_try_again)
+            NO_ERROR -> run { return@run } // A workaround for no break support inside when statements
+        }
         when (val count = state.cityCount) {
-            -1 -> return
+            -1 -> run { return@run }
             0 -> if (!countObserved) { // If cityCount is 0 then this is the app's first run
-                handleLocationServiceResult()
+                handleLocationServiceResult() // Add current user location
                 countObserved = true // This ensures that handleLocationServiceResult() is only called once here
             }
             else -> { // Show Snackbar when user adds a city for the first time
@@ -166,7 +153,7 @@ internal class MainActivity : BaseActivity() {
                 view.layoutParams = params
             }
 
-    /** Widget for Places Autocomplete API that needs to run in activity scope */
+    /** Widget for Places Autocomplete API which needs to run in activity scope */
     private fun autocompleteWidget() = try {
         if (!Places.isInitialized()) Places.initialize(applicationContext, Keys.PLACES_APP_KEY)
         val filter: List<Place.Field> = listOf(Place.Field.LAT_LNG)

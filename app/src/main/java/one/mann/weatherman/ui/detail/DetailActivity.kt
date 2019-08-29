@@ -5,9 +5,7 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_detail.*
-import one.mann.domain.model.LocationResponse.*
-import one.mann.domain.model.LocationType.DB
-import one.mann.domain.model.LocationType.DEVICE
+import one.mann.domain.model.Errors
 import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.api.openweathermap.isOvercast
@@ -56,26 +54,17 @@ internal class DetailActivity : BaseActivity() {
     }
 
     private fun handleLocationServiceResult() = handleLocationPermission { permissionGranted ->
-        if (permissionGranted) checkLocationService {
-            when (it) {
-                NO_NETWORK -> {
-                    toast(R.string.no_internet_connection)
-                    detail_swipe_ly.isRefreshing = false
-                }
-                ENABLED -> detailViewModel.updateWeather(DEVICE)
-                DISABLED -> detailViewModel.updateWeather(DB)
-                UNAVAILABLE -> {
-                    toast(R.string.location_settings_not_available)
-                    finish()
-                }
-            }
-        }
+        if (permissionGranted) checkLocationService { detailViewModel.handleRefreshing(it) }
     }
 
     private fun observeUiState(state: DetailViewState) {
         val weather = state.weatherData
         detail_swipe_ly.isRefreshing = state.isRefreshing
-        if (state.showError) toast(R.string.error_has_occurred_try_again)
+        when (state.error) {
+            Errors.NO_INTERNET -> toast(R.string.no_internet_connection)
+            Errors.NO_RESPONSE -> toast(R.string.error_has_occurred_try_again)
+            else -> run { return@run } // Workaround for lack of break support inside when statements
+        }
         if (weather.size >= position + 1) {
             detailRecyclerAdapter.update(weather[position])
             // Update activity background only if it changes after a data refresh
