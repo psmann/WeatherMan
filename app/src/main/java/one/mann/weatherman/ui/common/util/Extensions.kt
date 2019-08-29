@@ -43,7 +43,7 @@ internal fun Context.isConnected(): Boolean = (getSystemService(Context.CONNECTI
 internal inline fun <reified VM : ViewModel> FragmentActivity.getViewModel(factory: ViewModelProvider.Factory): VM =
         ViewModelProvider(this, factory)[VM::class.java]
 
-///** Load resources using GlideApp */
+///** Load resources using GlideApp */ // Not being used, images are loaded directly for improved performance
 //internal fun ImageView.loadIcon(iconCode: Int, sunPosition: Float = 1f) {
 //    val uri = if (sunPosition in 0.0..1.0) dayIcons(iconCode) else nightIcons(iconCode)
 //    GlideApp.with(context)
