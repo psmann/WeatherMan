@@ -21,7 +21,7 @@ internal class MainFragment : Fragment() {
 
     private var position = 0
     private var backgroundResources = 0
-    private val intent: Intent by lazy { Intent(context, DetailActivity::class.java) }
+    private val detailIntent: Intent by lazy { Intent(context, DetailActivity::class.java) }
     private val mainViewModel: MainViewModel by lazy { activity?.run { getViewModel(viewModelFactory) }!! }
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -41,11 +41,10 @@ internal class MainFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_main, container, false)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         injectDependencies()
-        intent.putExtra(PAGER_POSITION, position)
-        button_detail.setOnClickListener { startActivity(intent) }
+        button_detail.setOnClickListener { startActivity(detailIntent) } // Button is hidden until data is loaded in views
         mainViewModel.uiState.observe(this@MainFragment) { observeUiState(it) }
     }
 
@@ -63,11 +62,15 @@ internal class MainFragment : Fragment() {
         current_temp.text = weather.currentTemp
         time_updated.text = weather.lastChecked
         city_name.text = weather.cityName
-        // Update activity background only if it changes after a data refresh
-        if (backgroundResources != newBackground) {
+        if (backgroundResources != newBackground) { // Update layout background only if it changes after a data refresh
             fragment_main_const_ly.setBackgroundResource(newBackground)
             backgroundResources = newBackground
         }
-        intent.putExtra(ACTIVITY_BACKGROUND, newBackground) // Add backgroundResourceId to intent for detail activity
+        setupIntent(newBackground)
+    }
+
+    private fun setupIntent(backgroundId: Int) {
+        detailIntent.putExtra(PAGER_POSITION, position) // City to show details for
+        detailIntent.putExtra(ACTIVITY_BACKGROUND, backgroundId) // Add backgroundResourceId to for detail activity
     }
 }
