@@ -50,7 +50,7 @@ internal class MainViewModel @Inject constructor(
 
     fun handleRefreshing(response: LocationResponse, firstRun: Boolean) {
         when (response) {
-            NO_NETWORK -> _uiState.value = _uiState.value!!.copy(isRefreshing = false, error = NO_INTERNET)
+            NO_NETWORK -> _uiState.value = _uiState.value!!.copy(error = NO_INTERNET)
             ENABLED -> if (firstRun) addCity() else updateWeather(DEVICE)
             DISABLED -> if (firstRun) _uiState.value = _uiState.value!!.copy(error = NO_GPS) else updateWeather(DB)
             UNAVAILABLE -> _uiState.value = _uiState.value!!.copy(error = NO_LOCATION)
