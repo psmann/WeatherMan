@@ -50,7 +50,7 @@ internal class DetailActivity : BaseActivity() {
             setColorSchemeColors(Color.RED, Color.BLUE)
             setOnRefreshListener { handleLocationServiceResult() }
         }
-        detailViewModel.uiState.observe(this@DetailActivity) { observeUiState(it) }
+        detailViewModel.uiState.observe(::getLifecycle, ::observeUiState)
     }
 
     private fun handleLocationServiceResult() = handleLocationPermission { permissionGranted ->

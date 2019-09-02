@@ -1,0 +1,294 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cl_forecast_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <TextView
+            android:id="@+id/forecast_1_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:textAllCaps="true"
+            android:textSize="14sp"
+            android:textStyle="bold" android:textColor="@android:color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:id="@+id/forecast_1_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="144dp"
+        android:adjustViewBounds="false"
+        android:contentDescription="@string/weather_icon"
+        android:src="@drawable/cloudy_day_1"
+        app:layout_constraintBottom_toBottomOf="@+id/forecast_1_linear"
+        app:layout_constraintEnd_toEndOf="@+id/forecast_1_linear"
+        app:layout_constraintTop_toTopOf="@+id/forecast_1_linear" />
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:id="@+id/forecast_1_linear"
+                  app:layout_constraintTop_toTopOf="@+id/forecast_1_day"
+                  app:layout_constraintBottom_toBottomOf="@+id/forecast_1_day" app:layout_constraintEnd_toEndOf="parent"
+                  android:layout_marginEnd="32dp">
+        <TextView
+                android:id="@+id/forecast_1_max"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold" android:textColor="@android:color/white"/>
+        <TextView
+                android:text="@string/forward_slash" android:layout_marginStart="2dp" android:textSize="18sp"
+                android:layout_width="wrap_content" android:textColor="@android:color/white"
+                android:layout_height="wrap_content" android:id="@+id/forecast_1_slash"/>
+        <TextView
+                android:id="@+id/forecast_1_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold" android:textColor="@android:color/white" android:layout_marginStart="2dp"/>
+    </LinearLayout>
+    <TextView
+            android:id="@+id/forecast_2_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textSize="14sp"
+            android:textStyle="bold" android:textColor="@android:color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="32dp" app:layout_constraintTop_toBottomOf="@+id/forecast_1_day"
+            android:layout_marginTop="24dp"/>
+    <ImageView
+            android:id="@+id/forecast_2_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="false"
+            android:contentDescription="@string/weather_icon"
+            android:src="@drawable/cloudy_day_1" app:layout_constraintTop_toTopOf="@+id/forecast_2_linear"
+            app:layout_constraintBottom_toBottomOf="@+id/forecast_2_linear"
+            android:layout_marginEnd="144dp" app:layout_constraintEnd_toEndOf="@+id/forecast_2_linear"/>
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:orientation="horizontal" android:id="@+id/forecast_2_linear"
+                  app:layout_constraintTop_toTopOf="@+id/forecast_2_day"
+                  app:layout_constraintBottom_toBottomOf="@+id/forecast_2_day" app:layout_constraintEnd_toEndOf="parent"
+                  android:layout_marginEnd="32dp">
+        <TextView
+                android:id="@+id/forecast_2_max"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold" android:textColor="@android:color/white"/>
+        <TextView
+                android:text="@string/forward_slash" android:layout_marginStart="2dp" android:textSize="18sp"
+                android:layout_width="wrap_content" android:textColor="@android:color/white"
+                android:layout_height="wrap_content" android:id="@+id/forecast_2_slash"/>
+        <TextView
+                android:id="@+id/forecast_2_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp" android:layout_marginStart="2dp"
+                android:textStyle="bold" android:textColor="@android:color/white"/>
+    </LinearLayout>
+    <TextView
+            android:id="@+id/forecast_3_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textSize="14sp"
+            android:textStyle="bold" android:textColor="@android:color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="32dp" app:layout_constraintTop_toBottomOf="@+id/forecast_2_day"
+            android:layout_marginTop="24dp"/>
+    <ImageView
+            android:id="@+id/forecast_3_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="false"
+            android:contentDescription="@string/weather_icon"
+            android:src="@drawable/cloudy_day_1" app:layout_constraintTop_toTopOf="@+id/forecast_3_linear"
+            app:layout_constraintBottom_toBottomOf="@+id/forecast_3_linear"
+            android:layout_marginEnd="144dp" app:layout_constraintEnd_toEndOf="@+id/forecast_3_linear"/>
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:orientation="horizontal" android:id="@+id/forecast_3_linear"
+                  app:layout_constraintTop_toTopOf="@+id/forecast_3_day"
+                  app:layout_constraintBottom_toBottomOf="@+id/forecast_3_day" app:layout_constraintEnd_toEndOf="parent"
+                  android:layout_marginEnd="32dp">
+        <TextView
+                android:id="@+id/forecast_3_max"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold" android:textColor="@android:color/white"/>
+        <TextView
+                android:text="@string/forward_slash" android:layout_marginStart="2dp" android:textSize="18sp"
+                android:layout_width="wrap_content" android:textColor="@android:color/white"
+                android:layout_height="wrap_content" android:id="@+id/forecast_3_slash"/>
+        <TextView
+                android:id="@+id/forecast_3_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp" android:layout_marginStart="2dp"
+                android:textStyle="bold" android:textColor="@android:color/white"/>
+    </LinearLayout>
+    <TextView
+            android:id="@+id/forecast_4_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textSize="14sp"
+            android:textStyle="bold" android:textColor="@android:color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="32dp" app:layout_constraintTop_toBottomOf="@+id/forecast_3_day"
+            android:layout_marginTop="24dp"/>
+    <ImageView
+            android:id="@+id/forecast_4_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="false"
+            android:contentDescription="@string/weather_icon"
+            android:src="@drawable/cloudy_day_1" app:layout_constraintTop_toTopOf="@+id/forecast_4_linear"
+            app:layout_constraintBottom_toBottomOf="@+id/forecast_4_linear"
+            android:layout_marginEnd="144dp" app:layout_constraintEnd_toEndOf="@+id/forecast_4_linear"/>
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:orientation="horizontal" android:id="@+id/forecast_4_linear"
+                  app:layout_constraintTop_toTopOf="@+id/forecast_4_day"
+                  app:layout_constraintBottom_toBottomOf="@+id/forecast_4_day" app:layout_constraintEnd_toEndOf="parent"
+                  android:layout_marginEnd="32dp">
+        <TextView
+                android:id="@+id/forecast_4_max"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold" android:textColor="@android:color/white"/>
+        <TextView
+                android:text="@string/forward_slash" android:layout_marginStart="2dp" android:textSize="18sp"
+                android:layout_width="wrap_content" android:textColor="@android:color/white"
+                android:layout_height="wrap_content" android:id="@+id/forecast_4_slash"/>
+        <TextView
+                android:id="@+id/forecast_4_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp" android:layout_marginStart="2dp"
+                android:textStyle="bold" android:textColor="@android:color/white"/>
+    </LinearLayout>
+    <TextView
+            android:id="@+id/forecast_5_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textSize="14sp"
+            android:textStyle="bold" android:textColor="@android:color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="32dp" app:layout_constraintTop_toBottomOf="@+id/forecast_4_day"
+            android:layout_marginTop="24dp"/>
+    <ImageView
+            android:id="@+id/forecast_5_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="false"
+            android:contentDescription="@string/weather_icon"
+            android:src="@drawable/cloudy_day_1" app:layout_constraintTop_toTopOf="@+id/forecast_5_linear"
+            app:layout_constraintBottom_toBottomOf="@+id/forecast_5_linear"
+            android:layout_marginEnd="144dp" app:layout_constraintEnd_toEndOf="@+id/forecast_5_linear"/>
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:orientation="horizontal" android:id="@+id/forecast_5_linear"
+                  app:layout_constraintTop_toTopOf="@+id/forecast_5_day"
+                  app:layout_constraintBottom_toBottomOf="@+id/forecast_5_day" app:layout_constraintEnd_toEndOf="parent"
+                  android:layout_marginEnd="32dp">
+        <TextView
+                android:id="@+id/forecast_5_max"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold" android:textColor="@android:color/white"/>
+        <TextView
+                android:text="@string/forward_slash" android:layout_marginStart="2dp" android:textSize="18sp"
+                android:layout_width="wrap_content" android:textColor="@android:color/white"
+                android:layout_height="wrap_content" android:id="@+id/forecast_5_slash"/>
+        <TextView
+                android:id="@+id/forecast_5_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp" android:layout_marginStart="2dp"
+                android:textStyle="bold" android:textColor="@android:color/white"/>
+    </LinearLayout>
+    <TextView
+            android:id="@+id/forecast_6_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textSize="14sp"
+            android:textStyle="bold" android:textColor="@android:color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="32dp" app:layout_constraintTop_toBottomOf="@+id/forecast_5_day"
+            android:layout_marginTop="24dp"/>
+    <ImageView
+            android:id="@+id/forecast_6_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="false"
+            android:contentDescription="@string/weather_icon"
+            android:src="@drawable/cloudy_day_1" app:layout_constraintTop_toTopOf="@+id/forecast_6_linear"
+            app:layout_constraintBottom_toBottomOf="@+id/forecast_6_linear"
+            android:layout_marginEnd="144dp" app:layout_constraintEnd_toEndOf="@+id/forecast_6_linear"/>
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:orientation="horizontal" android:id="@+id/forecast_6_linear"
+                  app:layout_constraintTop_toTopOf="@+id/forecast_6_day"
+                  app:layout_constraintBottom_toBottomOf="@+id/forecast_6_day" app:layout_constraintEnd_toEndOf="parent"
+                  android:layout_marginEnd="32dp">
+        <TextView
+                android:id="@+id/forecast_6_max"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold" android:textColor="@android:color/white"/>
+        <TextView
+                android:text="@string/forward_slash" android:layout_marginStart="2dp" android:textSize="18sp"
+                android:layout_width="wrap_content" android:textColor="@android:color/white"
+                android:layout_height="wrap_content" android:id="@+id/forecast_6_slash"/>
+        <TextView
+                android:id="@+id/forecast_6_min"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:textSize="18sp" android:layout_marginStart="2dp"
+                android:textStyle="bold" android:textColor="@android:color/white"/>
+    </LinearLayout>
+    <TextView
+            android:id="@+id/forecast_7_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textSize="14sp"
+            android:textStyle="bold" android:textColor="@android:color/white"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="32dp" app:layout_constraintTop_toBottomOf="@+id/forecast_6_day"
+            android:layout_marginTop="24dp" android:layout_marginBottom="48dp"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.0"/>
+    <ImageView
+            android:id="@+id/forecast_7_icon"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:adjustViewBounds="false" android:contentDescription="@string/weather_icon"
+            android:src="@drawable/cloudy_day_1" app:layout_constraintTop_toTopOf="@+id/forecast_7_linear"
+            app:layout_constraintBottom_toBottomOf="@+id/forecast_7_linear"
+            android:layout_marginEnd="144dp" app:layout_constraintEnd_toEndOf="@+id/forecast_7_linear"/>
+    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:orientation="horizontal" android:id="@+id/forecast_7_linear"
+                  app:layout_constraintTop_toTopOf="@+id/forecast_7_day"
+                  app:layout_constraintBottom_toBottomOf="@+id/forecast_7_day" app:layout_constraintEnd_toEndOf="parent"
+                  android:layout_marginEnd="32dp">
+        <TextView
+                android:id="@+id/forecast_7_max"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold" android:textColor="@android:color/white"/>
+        <TextView
+                android:text="@string/forward_slash" android:layout_marginStart="2dp" android:textSize="18sp"
+                android:layout_width="wrap_content" android:textColor="@android:color/white"
+                android:layout_height="wrap_content" android:id="@+id/forecast_7_slash"/>
+        <TextView
+                android:id="@+id/forecast_7_min"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:textSize="18sp" android:layout_marginStart="2dp"
+                android:textStyle="bold" android:textColor="@android:color/white"/>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

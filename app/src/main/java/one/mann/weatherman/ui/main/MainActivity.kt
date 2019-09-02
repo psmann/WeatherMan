@@ -81,7 +81,7 @@ internal class MainActivity : BaseActivity() {
             setColorSchemeColors(Color.RED, Color.BLUE)
             setOnRefreshListener { handleLocationServiceResult() }
         }
-        mainViewModel.uiState.observe(this@MainActivity) { observeUiState(it) }
+        mainViewModel.uiState.observe(::getLifecycle, ::observeUiState)
     }
 
     private fun handleLocationServiceResult() = handleLocationPermission { permissionGranted ->

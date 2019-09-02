@@ -41,11 +41,11 @@ internal class MainFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_main, container, false)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         injectDependencies()
         button_detail.setOnClickListener { startActivity(detailIntent) } // Button is hidden until data is loaded in views
-        mainViewModel.uiState.observe(this@MainFragment) { observeUiState(it) }
+        mainViewModel.uiState.observe(viewLifecycleOwner, ::observeUiState)
     }
 
     private fun injectDependencies() = WeatherManApp.appComponent.getSubComponent().injectMainFragment(this)
