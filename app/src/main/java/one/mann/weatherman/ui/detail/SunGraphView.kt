@@ -1,4 +1,4 @@
-package one.mann.weatherman.ui.main
+package one.mann.weatherman.ui.detail
 
 import android.content.Context
 import android.graphics.BitmapFactory

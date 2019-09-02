@@ -5,7 +5,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import one.mann.weatherman.R
-import one.mann.weatherman.ui.main.SunGraphView
+import one.mann.weatherman.ui.detail.SunGraphView
 
 internal sealed class WeatherViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 

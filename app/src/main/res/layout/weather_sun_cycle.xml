@@ -49,7 +49,7 @@
             app:layout_constraintEnd_toStartOf="@+id/sunset"
             app:layout_constraintStart_toEndOf="@+id/sunrise"
             app:layout_constraintTop_toTopOf="@+id/sunrise"/>
-    <one.mann.weatherman.ui.main.SunGraphView
+    <one.mann.weatherman.ui.detail.SunGraphView
             android:id="@+id/sunlight_graph"
             android:layout_width="0dp"
             android:layout_height="100dp"
