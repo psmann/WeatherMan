@@ -2,7 +2,7 @@ package one.mann.weatherman.ui.main
 
 import one.mann.domain.model.Errors
 import one.mann.domain.model.Errors.NO_ERROR
-import one.mann.domain.model.Weather
+import one.mann.domain.model.weather.Weather
 
 internal data class MainViewState(
         val isRefreshing: Boolean = false,

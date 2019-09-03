@@ -1,6 +1,6 @@
 package one.mann.weatherman.api.teleport
 
-import one.mann.domain.model.Location
+import one.mann.domain.model.location.Location
 import one.mann.interactors.data.sources.TimezoneDataSource
 import one.mann.weatherman.api.common.mapToString
 import javax.inject.Inject

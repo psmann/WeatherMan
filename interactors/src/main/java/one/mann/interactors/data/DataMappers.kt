@@ -1,8 +1,12 @@
 package one.mann.interactors.data
 
 import one.mann.domain.logic.*
-import one.mann.domain.model.*
 import one.mann.domain.model.UnitsType.*
+import one.mann.domain.model.location.Location
+import one.mann.domain.model.weather.CurrentWeather
+import one.mann.domain.model.weather.DailyForecast
+import one.mann.domain.model.weather.HourlyForecast
+import one.mann.domain.model.weather.Weather
 
 /** Update lastChecked for the Weather model */
 internal fun Weather.updateLastChecked(timezone: String): Weather =

@@ -1,10 +1,10 @@
 package one.mann.weatherman.framework.data.database
 
-import one.mann.domain.model.Location
+import one.mann.domain.model.location.Location
 import one.mann.domain.model.NotificationData
 import one.mann.weatherman.framework.data.database.model.LocationTuple
 import one.mann.weatherman.framework.data.database.model.NotificationTuple
-import one.mann.domain.model.Weather as DomainWeather
+import one.mann.domain.model.weather.Weather as DomainWeather
 import one.mann.weatherman.framework.data.database.model.Weather as DbWeather
 
 internal fun LocationTuple.mapToDomain(): Location = Location(listOf(coordinatesLat, coordinatesLong), id)

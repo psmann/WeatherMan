@@ -1,6 +1,6 @@
 package one.mann.domain.logic
 
-import one.mann.domain.model.Location
+import one.mann.domain.model.location.Location
 import one.mann.domain.model.UnitsType
 import one.mann.domain.model.UnitsType.*
 import java.text.SimpleDateFormat

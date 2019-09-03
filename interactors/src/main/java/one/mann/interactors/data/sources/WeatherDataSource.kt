@@ -1,9 +1,9 @@
 package one.mann.interactors.data.sources
 
-import one.mann.domain.model.CurrentWeather
-import one.mann.domain.model.DailyForecast
-import one.mann.domain.model.HourlyForecast
-import one.mann.domain.model.Location
+import one.mann.domain.model.weather.CurrentWeather
+import one.mann.domain.model.weather.DailyForecast
+import one.mann.domain.model.weather.HourlyForecast
+import one.mann.domain.model.location.Location
 
 interface WeatherDataSource {
 

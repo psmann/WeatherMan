@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import one.mann.domain.logic.DEGREES
 import one.mann.domain.logic.removeUnits
-import one.mann.domain.model.Weather
+import one.mann.domain.model.weather.Weather
 import one.mann.weatherman.R
 import one.mann.weatherman.ui.common.util.inflateView
 import one.mann.weatherman.ui.common.util.loadIcon
@@ -50,14 +50,14 @@ internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>()
             holder.humidity.text = weather.humidity
         }
         is SunCycle -> {
-            holder.setIsRecyclable(false) // Force-reload sunGraphView to fix view not updating issue
+            holder.setIsRecyclable(false) // This force reloads sunGraphView to fix view not updating issue
             holder.dayLength.text = weather.dayLength
             holder.sunrise.text = weather.sunrise
             holder.sunset.text = weather.sunset
             holder.sunGraphView.setT(weather.sunPosition)
         }
         is HourlyForecast -> {
-            val list = listOf(
+            val forecastList = listOf( // This can be moved to the ViewHolder
                     weather.hour03Temp.removeUnits(DEGREES).toFloat(),
                     weather.hour06Temp.removeUnits(DEGREES).toFloat(),
                     weather.hour09Temp.removeUnits(DEGREES).toFloat(),
@@ -66,6 +66,7 @@ internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>()
                     weather.hour18Temp.removeUnits(DEGREES).toFloat(),
                     weather.hour21Temp.removeUnits(DEGREES).toFloat()
             )
+            holder.setIsRecyclable(false) // This force reloads ForecastView to fix view not updating issue
             holder.forecast1Time.text = weather.hour03Time
             holder.forecast1Temp.text = weather.hour03Temp
             holder.forecast2Time.text = weather.hour06Time
@@ -87,7 +88,7 @@ internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>()
             holder.forecast5Icon.loadIcon(weather.hour15IconId, weather.hour15SunPosition)
             holder.forecast6Icon.loadIcon(weather.hour18IconId, weather.hour18SunPosition)
             holder.forecast7Icon.loadIcon(weather.hour21IconId, weather.hour21SunPosition)
-            holder.forecastGraph.setPoints(list) // Set points for forecast graph
+            holder.forecastGraph.setPoints(forecastList) // Set points for forecast graph
         }
         is DailyForecast -> {
             holder.forecast1Day.text = weather.day1Date

@@ -20,8 +20,8 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes.RESOLUTION_REQUIRED
 import com.google.android.gms.location.LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE
-import one.mann.domain.model.LocationResponse
-import one.mann.domain.model.LocationResponse.*
+import one.mann.domain.model.location.LocationResponse
+import one.mann.domain.model.location.LocationResponse.*
 import one.mann.weatherman.ui.common.util.isConnected
 
 /** Base activity for all activities that need location services */

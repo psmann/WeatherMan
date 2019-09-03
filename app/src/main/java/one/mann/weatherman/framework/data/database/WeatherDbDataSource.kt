@@ -1,8 +1,8 @@
 package one.mann.weatherman.framework.data.database
 
-import one.mann.domain.model.Location
+import one.mann.domain.model.location.Location
 import one.mann.domain.model.NotificationData
-import one.mann.domain.model.Weather
+import one.mann.domain.model.weather.Weather
 import one.mann.interactors.data.sources.DatabaseDataSource
 import javax.inject.Inject
 

@@ -8,11 +8,11 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import one.mann.domain.model.Errors.*
-import one.mann.domain.model.LocationResponse
-import one.mann.domain.model.LocationResponse.*
-import one.mann.domain.model.LocationType
-import one.mann.domain.model.LocationType.DB
-import one.mann.domain.model.LocationType.DEVICE
+import one.mann.domain.model.location.LocationResponse
+import one.mann.domain.model.location.LocationResponse.*
+import one.mann.domain.model.location.LocationType
+import one.mann.domain.model.location.LocationType.DB
+import one.mann.domain.model.location.LocationType.DEVICE
 import one.mann.interactors.usecases.GetAllWeather
 import one.mann.interactors.usecases.UpdateWeather
 import one.mann.weatherman.ui.common.base.BaseViewModel

@@ -1,9 +1,9 @@
 package one.mann.weatherman.api.common
 
 import one.mann.weatherman.api.teleport.dto.Timezone
-import one.mann.domain.model.CurrentWeather as DomainCurrentWeather
-import one.mann.domain.model.DailyForecast as DomainDailyForecast
-import one.mann.domain.model.HourlyForecast as DomainHourlyForecast
+import one.mann.domain.model.weather.CurrentWeather as DomainCurrentWeather
+import one.mann.domain.model.weather.DailyForecast as DomainDailyForecast
+import one.mann.domain.model.weather.HourlyForecast as DomainHourlyForecast
 import one.mann.weatherman.api.openweathermap.dto.CurrentWeather as ApiCurrentWeather
 import one.mann.weatherman.api.openweathermap.dto.DailyForecast as ApiDailyForecast
 import one.mann.weatherman.api.openweathermap.dto.HourlyForecast as ApiHourlyForecast

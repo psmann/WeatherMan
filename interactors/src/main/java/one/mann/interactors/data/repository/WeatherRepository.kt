@@ -1,9 +1,9 @@
 package one.mann.interactors.data.repository
 
-import one.mann.domain.model.Location
-import one.mann.domain.model.LocationType
+import one.mann.domain.model.location.Location
+import one.mann.domain.model.location.LocationType
 import one.mann.domain.model.NotificationData
-import one.mann.domain.model.Weather
+import one.mann.domain.model.weather.Weather
 import one.mann.interactors.data.mapToWeather
 import one.mann.interactors.data.sources.*
 import one.mann.interactors.data.updateLastChecked

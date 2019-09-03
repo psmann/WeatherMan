@@ -1,4 +1,4 @@
-package one.mann.weatherman.ui.detail
+package one.mann.weatherman.ui.detail.views
 
 import android.content.Context
 import android.graphics.BitmapFactory
@@ -86,8 +86,9 @@ internal class SunGraphView @JvmOverloads constructor(
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) =
             setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec))
 
+    /** Update parameters only after correct height and width are known */
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        updateView() // Update parameters only after correct height and width are known
+        updateView()
         super.onSizeChanged(w, h, oldw, oldh)
     }
 

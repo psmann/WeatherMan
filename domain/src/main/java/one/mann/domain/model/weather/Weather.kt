@@ -1,4 +1,4 @@
-package one.mann.domain.model
+package one.mann.domain.model.weather
 
 data class Weather(
         // Current Weather

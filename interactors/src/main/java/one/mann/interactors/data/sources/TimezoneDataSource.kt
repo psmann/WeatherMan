@@ -1,6 +1,6 @@
 package one.mann.interactors.data.sources
 
-import one.mann.domain.model.Location
+import one.mann.domain.model.location.Location
 
 interface TimezoneDataSource {
 

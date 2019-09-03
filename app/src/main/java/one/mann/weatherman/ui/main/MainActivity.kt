@@ -21,7 +21,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import one.mann.domain.logic.truncate
 import one.mann.domain.model.Errors.*
-import one.mann.domain.model.Location
+import one.mann.domain.model.location.Location
 import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.api.common.Keys
