@@ -89,6 +89,19 @@
             app:layout_constraintStart_toEndOf="@+id/line5"
             app:layout_constraintTop_toTopOf="parent"/>
 
+    <one.mann.weatherman.ui.detail.ForecastGraphView
+        android:id="@+id/forecast_graph"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="54dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/forecast_1_icon" />
+
     <ImageView
             android:id="@+id/forecast_1_icon"
             android:layout_width="0dp"

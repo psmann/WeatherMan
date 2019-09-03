@@ -5,6 +5,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import one.mann.weatherman.R
+import one.mann.weatherman.ui.detail.ForecastGraphView
 import one.mann.weatherman.ui.detail.SunGraphView
 
 internal sealed class WeatherViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -41,6 +42,7 @@ internal sealed class WeatherViewHolder(itemView: View) : RecyclerView.ViewHolde
     }
 
     class HourlyForecast(itemView: View) : WeatherViewHolder(itemView) {
+        val forecastGraph: ForecastGraphView = itemView.findViewById(R.id.forecast_graph)
         val forecast1Time: TextView = itemView.findViewById(R.id.forecast_1_time)
         val forecast1Temp: TextView = itemView.findViewById(R.id.forecast_1_temp)
         val forecast1Icon: ImageView = itemView.findViewById(R.id.forecast_1_icon)
