@@ -10,7 +10,7 @@ import kotlin.coroutines.CoroutineContext
 
 internal abstract class BaseViewModel : ViewModel(), CoroutineScope {
 
-    private var job: Job = SupervisorJob() // Doesn't get cancelled when a child coroutine crashes
+    private val job: Job = SupervisorJob() // Doesn't get cancelled when a child coroutine crashes
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
