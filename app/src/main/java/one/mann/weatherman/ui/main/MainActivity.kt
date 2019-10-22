@@ -79,13 +79,13 @@ internal class MainActivity : BaseActivity() {
         }
         main_swipe_ly.apply {
             setColorSchemeColors(Color.RED, Color.BLUE)
-            setOnRefreshListener { handleLocationServiceResult() }
+            setOnRefreshListener { handleLocationServiceResult() } // Prompt for location update if it is first run
         }
         mainViewModel.uiState.observe(::getLifecycle, ::observeUiState)
     }
 
     private fun handleLocationServiceResult() = handleLocationPermission { permissionGranted ->
-        if (permissionGranted) checkLocationService { mainViewModel.handleRefreshing(it, isFirstRun) }
+        if (permissionGranted) checkLocationService(isFirstRun) { mainViewModel.handleRefreshing(it, isFirstRun) }
     }
 
     private fun observeUiState(state: MainViewState) {
@@ -100,7 +100,7 @@ internal class MainActivity : BaseActivity() {
         when (val count = state.cityCount) {
             -1 -> run { return@run }
             0 -> if (!countObserved) { // If cityCount is 0 then this is the app's first run
-                handleLocationServiceResult() // Add current user location
+                handleLocationServiceResult() // Add current user location, prompt for location update
                 countObserved = true // This ensures that handleLocationServiceResult() is only called once here
             }
             else -> { // Show Snackbar when user adds a city for the first time
