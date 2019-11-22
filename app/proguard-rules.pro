@@ -19,3 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-dontwarn org.conscrypt.**
+-keep class one.mann.domain.model** { *; }
+-keep class one.mann.weatherman.framework.data.database.model** { *; }

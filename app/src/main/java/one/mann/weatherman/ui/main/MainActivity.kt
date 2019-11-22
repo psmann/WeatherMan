@@ -33,6 +33,20 @@ import javax.inject.Inject
 
 internal class MainActivity : BaseActivity() {
 
+    /*
+    TODO:
+     Update Database model, make it adhere to single responsibility principle (split into multiple tables) and Atomicity
+     ^ Make Weather model less repetitive by getting rid of redundant operations (As suggested on Reddit)
+     Update all dependencies
+     Make coroutine context injectable (?)
+     Change APIs to Dark Sky and TomTom
+     Implement Coroutine Flow for TomTom
+     Add tests for all modules
+     Handle all network responses from API calls
+     Add more weather data parameters (detailed forecasts, maps, etc)
+     Implement CI/CD (Jenkins)
+     */
+
     companion object {
         private const val AUTOCOMPLETE_REQUEST_CODE = 1021
     }
@@ -79,13 +93,13 @@ internal class MainActivity : BaseActivity() {
         }
         main_swipe_ly.apply {
             setColorSchemeColors(Color.RED, Color.BLUE)
-            setOnRefreshListener { handleLocationServiceResult() }
+            setOnRefreshListener { handleLocationServiceResult() } // Prompt for location update only if it is first run
         }
         mainViewModel.uiState.observe(::getLifecycle, ::observeUiState)
     }
 
     private fun handleLocationServiceResult() = handleLocationPermission { permissionGranted ->
-        if (permissionGranted) checkLocationService { mainViewModel.handleRefreshing(it, isFirstRun) }
+        if (permissionGranted) checkLocationService(isFirstRun) { mainViewModel.handleRefreshing(it, isFirstRun) }
     }
 
     private fun observeUiState(state: MainViewState) {
@@ -100,7 +114,7 @@ internal class MainActivity : BaseActivity() {
         when (val count = state.cityCount) {
             -1 -> run { return@run }
             0 -> if (!countObserved) { // If cityCount is 0 then this is the app's first run
-                handleLocationServiceResult() // Add current user location
+                handleLocationServiceResult() // Add current user location, prompt for location update
                 countObserved = true // This ensures that handleLocationServiceResult() is only called once here
             }
             else -> { // Show Snackbar when user adds a city for the first time

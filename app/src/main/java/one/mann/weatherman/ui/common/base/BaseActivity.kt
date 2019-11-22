@@ -69,7 +69,7 @@ internal abstract class BaseActivity : AppCompatActivity() {
     }
 
     /** Check status of location services and handle in lambda */
-    protected fun checkLocationService(result: (LocationResponse) -> Unit) {
+    protected fun checkLocationService(prompt: Boolean = false, result: (LocationResponse) -> Unit) {
         if (!isConnected()) {
             result(NO_NETWORK)
             return
@@ -82,7 +82,7 @@ internal abstract class BaseActivity : AppCompatActivity() {
                         it.getResult(ApiException::class.java)
                         networkAndLocationListener(ENABLED)
                     } catch (exception: ApiException) { // Location settings are Off
-                        when (exception.statusCode) {
+                        if (prompt) when (exception.statusCode) {
                             RESOLUTION_REQUIRED -> try { // Check result in onActivityResult
                                 val resolvable = exception as ResolvableApiException
                                 resolvable.startResolutionForResult(this, LOCATION_REQUEST_CODE)
@@ -90,7 +90,7 @@ internal abstract class BaseActivity : AppCompatActivity() {
                             } catch (ignored: ClassCastException) {
                             } // Location settings are not available on device
                             SETTINGS_CHANGE_UNAVAILABLE -> networkAndLocationListener(UNAVAILABLE)
-                        }
+                        } else networkAndLocationListener(DISABLED)
                     }
                 }
     }
