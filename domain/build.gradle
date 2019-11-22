@@ -7,5 +7,5 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // jUnit
-    testImplementation 'junit:junit:4.13-beta-3'
+    testImplementation 'junit:junit:4.13-rc-1'
 }
