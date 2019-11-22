@@ -93,7 +93,7 @@ internal class MainActivity : BaseActivity() {
         }
         main_swipe_ly.apply {
             setColorSchemeColors(Color.RED, Color.BLUE)
-            setOnRefreshListener { handleLocationServiceResult() } // Prompt for location update only if it is first run
+            setOnRefreshListener { handleLocationServiceResult() } // Prompt for location update if it is first run
         }
         mainViewModel.uiState.observe(::getLifecycle, ::observeUiState)
     }
