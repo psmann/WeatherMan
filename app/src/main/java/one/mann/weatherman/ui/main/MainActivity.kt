@@ -25,25 +25,29 @@ import one.mann.domain.model.location.Location
 import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.api.common.Keys
-import one.mann.weatherman.ui.common.base.BaseActivity
+import one.mann.weatherman.ui.common.base.BaseLocationActivity
 import one.mann.weatherman.ui.common.util.getViewModel
 import one.mann.weatherman.ui.main.adapter.MainPagerAdapter
 import one.mann.weatherman.ui.settings.SettingsActivity
 import javax.inject.Inject
 
-internal class MainActivity : BaseActivity() {
+internal class MainActivity : BaseLocationActivity() {
 
     /*
     TODO:
      Update Database model, make it adhere to single responsibility principle (split into multiple tables) and Atomicity
-     ^ Make Weather model less repetitive by getting rid of redundant operations (As suggested on Reddit)
+     ^ Make Weather data model less repetitive by getting rid of redundant operations
      Update all dependencies
-     Make coroutine context injectable (?)
-     Change APIs to Dark Sky and TomTom
+     Make coroutine context injectable (?) or replace it with kotlin lifecycle extension (?)
+     Change data APIs to Dark Sky and TomTom
      Implement Coroutine Flow for TomTom
      Add tests for all modules
      Handle all network responses from API calls
+     Migrate to ViewPager2
      Add more weather data parameters (detailed forecasts, maps, etc)
+     Implement View Binding and remove Kotlin synthetics
+     Handle navBar hidden usecase (views should resize accordingly)
+     Align and center ForecastGraphView lines to forecast columns
      Implement CI/CD (Jenkins)
      */
 

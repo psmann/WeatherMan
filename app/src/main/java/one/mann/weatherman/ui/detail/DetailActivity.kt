@@ -9,7 +9,7 @@ import one.mann.domain.model.Errors
 import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.api.openweathermap.isOvercast
-import one.mann.weatherman.ui.common.base.BaseActivity
+import one.mann.weatherman.ui.common.base.BaseLocationActivity
 import one.mann.weatherman.ui.common.util.ACTIVITY_BACKGROUND
 import one.mann.weatherman.ui.common.util.PAGER_POSITION
 import one.mann.weatherman.ui.common.util.getGradient
@@ -17,7 +17,7 @@ import one.mann.weatherman.ui.common.util.getViewModel
 import one.mann.weatherman.ui.detail.adapter.DetailRecyclerAdapter
 import javax.inject.Inject
 
-internal class DetailActivity : BaseActivity() {
+internal class DetailActivity : BaseLocationActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory

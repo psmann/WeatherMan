@@ -26,18 +26,17 @@ internal fun ViewGroup.inflateView(@LayoutRes resource: Int, attachToRoot: Boole
         .inflate(resource, this, attachToRoot)
 
 /** Check status of network connection, deprecation being handled */
-@Suppress("DEPRECATION")
-internal fun Context.isConnected(): Boolean = (getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
-        .run {
-            if (VERSION.SDK_INT >= VERSION_CODES.M) getNetworkCapabilities(activeNetwork).run {
-                return when {
-                    this == null -> false
-                    hasTransport(TRANSPORT_WIFI) || hasTransport(TRANSPORT_CELLULAR) || hasTransport(TRANSPORT_ETHERNET) -> true
-                    else -> false
-                }
-            }
-            else activeNetworkInfo.run { return this?.isConnected ?: false }
+@Suppress("DEPRECATION") // activeNetworkInfo is deprecated in API 29 and its only being called below API 23
+internal fun Context.isConnected(): Boolean = (getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).run {
+    if (VERSION.SDK_INT >= VERSION_CODES.M) getNetworkCapabilities(activeNetwork).run {
+        return when {
+            this == null -> false
+            hasTransport(TRANSPORT_WIFI) || hasTransport(TRANSPORT_CELLULAR) || hasTransport(TRANSPORT_ETHERNET) -> true
+            else -> false
         }
+    }
+    else activeNetworkInfo.run { return this?.isConnected ?: false }
+}
 
 /** Instantiate ViewModel */
 internal inline fun <reified VM : ViewModel> FragmentActivity.getViewModel(factory: ViewModelProvider.Factory): VM =

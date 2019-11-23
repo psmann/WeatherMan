@@ -25,7 +25,7 @@ import one.mann.domain.model.location.LocationResponse.*
 import one.mann.weatherman.ui.common.util.isConnected
 
 /** Base activity for all activities that need location services */
-internal abstract class BaseActivity : AppCompatActivity() {
+internal abstract class BaseLocationActivity : AppCompatActivity() {
 
     companion object {
         private const val LOCATION_REQUEST_CODE = 1011

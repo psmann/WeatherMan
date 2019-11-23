@@ -10,8 +10,7 @@ import android.view.View
 import one.mann.weatherman.R
 import kotlin.math.pow
 
-internal class SunGraphView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+internal class SunGraphView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
     companion object {
@@ -93,8 +92,8 @@ internal class SunGraphView @JvmOverloads constructor(
     }
 
     override fun onDraw(canvas: Canvas?) {
+        pathCurve.reset() // Reset previous path if any
         canvas?.drawPath(pathCurve, paintCurve)
         if (displaySun) canvas?.drawBitmap(sunImage, pointX, pointY, paintBitmap)
-        //canvas?.drawCircle(pointX + offset, pointY + offset, 25f, paintCurve) // Remove offset
     }
 }
