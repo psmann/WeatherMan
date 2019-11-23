@@ -47,6 +47,7 @@ internal class MainActivity : BaseLocationActivity() {
      Migrate to ViewPager2
      Add more weather data parameters (detailed forecasts, maps, etc)
      Implement View Binding and remove Kotlin synthetics
+     Follow standardised naming convention for views [refactor]
      Handle navBar hidden usecase (views should resize accordingly)
      Align and center ForecastGraphView lines to forecast columns
      Implement CI/CD (Jenkins)
