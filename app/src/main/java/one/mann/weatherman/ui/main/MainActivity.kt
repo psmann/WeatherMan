@@ -33,20 +33,6 @@ import javax.inject.Inject
 
 internal class MainActivity : BaseActivity() {
 
-    /*
-    TODO:
-     Update Database model, make it adhere to single responsibility principle (split into multiple tables) and Atomicity
-     ^ Make Weather model less repetitive by getting rid of redundant operations (As suggested on Reddit)
-     Update all dependencies
-     Make coroutine context injectable (?)
-     Change APIs to Dark Sky and TomTom
-     Implement Coroutine Flow for TomTom
-     Add tests for all modules
-     Handle all network responses from API calls
-     Add more weather data parameters (detailed forecasts, maps, etc)
-     Implement CI/CD (Jenkins)
-     */
-
     companion object {
         private const val AUTOCOMPLETE_REQUEST_CODE = 1021
     }
