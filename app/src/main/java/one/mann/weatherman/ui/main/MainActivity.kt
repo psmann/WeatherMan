@@ -43,6 +43,7 @@ internal class MainActivity : BaseLocationActivity() {
      Implement Coroutine Flow for TomTom
      Add tests for all modules
      Handle all network responses from API calls
+     Write and test Proguard rules
      Migrate to ViewPager2
      Add more weather data parameters (detailed forecasts, maps, etc)
      Implement View Binding and remove Kotlin synthetics
