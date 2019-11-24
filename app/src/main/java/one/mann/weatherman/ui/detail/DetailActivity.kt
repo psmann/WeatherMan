@@ -4,11 +4,11 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_detail.*
 import one.mann.domain.model.Errors
 import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.api.openweathermap.isOvercast
+import one.mann.weatherman.databinding.ActivityDetailBinding
 import one.mann.weatherman.ui.common.base.BaseLocationActivity
 import one.mann.weatherman.ui.common.util.ACTIVITY_BACKGROUND
 import one.mann.weatherman.ui.common.util.PAGER_POSITION
@@ -21,6 +21,7 @@ internal class DetailActivity : BaseLocationActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val binding by lazy { ActivityDetailBinding.inflate(layoutInflater) }
     private val detailViewModel: DetailViewModel by lazy { getViewModel(viewModelFactory) }
     private val detailRecyclerAdapter by lazy { DetailRecyclerAdapter() }
     private val position: Int by lazy { intent.getIntExtra(PAGER_POSITION, 1) }
@@ -28,8 +29,8 @@ internal class DetailActivity : BaseLocationActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail)
-        activity_detail_coord_ly.setBackgroundResource(backgroundResource)
+        setContentView(binding.root)
+        binding.root.setBackgroundResource(backgroundResource)
         handleLocationPermission { initActivity(it) }
     }
 
@@ -41,12 +42,12 @@ internal class DetailActivity : BaseLocationActivity() {
             finish()
             return
         }
-        detail_recyclerview.apply {
+        binding.detailRecyclerView.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(this@DetailActivity)
             adapter = detailRecyclerAdapter
         }
-        detail_swipe_ly.apply {
+        binding.detailSwipeLayout.apply {
             setColorSchemeColors(Color.RED, Color.BLUE)
             setOnRefreshListener { handleLocationServiceResult() }
         }
@@ -59,7 +60,7 @@ internal class DetailActivity : BaseLocationActivity() {
 
     private fun observeUiState(state: DetailViewState) {
         val weather = state.weatherData
-        detail_swipe_ly.isRefreshing = state.isRefreshing
+        binding.detailSwipeLayout.isRefreshing = state.isRefreshing
         when (state.error) {
             Errors.NO_INTERNET -> toast(R.string.no_internet_connection)
             Errors.NO_RESPONSE -> toast(R.string.error_has_occurred_try_again)
@@ -69,7 +70,7 @@ internal class DetailActivity : BaseLocationActivity() {
             detailRecyclerAdapter.update(weather[position])
             // Update activity background only if it changes after a data refresh
             val newBackground = getGradient(weather[position].sunPosition, isOvercast(weather[position].iconId))
-            if (newBackground != backgroundResource) activity_detail_coord_ly.setBackgroundResource(newBackground)
+            if (newBackground != backgroundResource) binding.root.setBackgroundResource(newBackground)
         }
     }
 }

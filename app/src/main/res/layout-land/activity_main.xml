@@ -18,7 +18,7 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_layout"
+        android:id="@+id/main_swipe_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

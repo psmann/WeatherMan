@@ -53,6 +53,7 @@ internal class SunGraphView @JvmOverloads constructor(context: Context, attrs: A
         controlX2 = (endX + startX) * 0.75f // = three-fourth distance
 
         // Set up Cubic Bezier curve
+        pathCurve.reset() // Reset previous path if any
         pathCurve.moveTo(startX, startEndY) // (x0, y0)
         pathCurve.cubicTo(controlX1, controlY, controlX2, controlY, endX, startEndY) // (x1, y1, x2, y2, x3, y3)
 
@@ -65,7 +66,6 @@ internal class SunGraphView @JvmOverloads constructor(context: Context, attrs: A
                     + (3 * k * tValue.pow(2) * controlX2) + (tValue.pow(3) * endX)) - offset
             pointY = ((k.pow(3) * startEndY) + (3 * k.pow(2) * tValue * controlY)
                     + (3 * k * tValue.pow(2) * controlY) + (tValue.pow(3) * startEndY)) - offset
-
             // Colour transition according to amount of day light left. 0 = yellow; 100 = purple
             updatePaintColour((tValue * 100).toInt())
             displaySun = true
@@ -92,7 +92,6 @@ internal class SunGraphView @JvmOverloads constructor(context: Context, attrs: A
     }
 
     override fun onDraw(canvas: Canvas?) {
-        pathCurve.reset() // Reset previous path if any
         canvas?.drawPath(pathCurve, paintCurve)
         if (displaySun) canvas?.drawBitmap(sunImage, pointX, pointY, paintBitmap)
     }

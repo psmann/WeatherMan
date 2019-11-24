@@ -74,11 +74,12 @@ internal class MainActivity : BaseLocationActivity() {
                 override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
                 override fun onPageSelected(position: Int) {}
                 override fun onPageScrollStateChanged(state: Int) { // Fix horizontal scrolling
-                    if (!binding.swipeLayout.isRefreshing) binding.swipeLayout.isEnabled = state == ViewPager.SCROLL_STATE_IDLE
+                    if (!binding.mainSwipeLayout.isRefreshing) binding.mainSwipeLayout
+                            .isEnabled = state == ViewPager.SCROLL_STATE_IDLE
                 }
             })
         }
-        binding.swipeLayout.apply {
+        binding.mainSwipeLayout.apply {
             setColorSchemeColors(Color.RED, Color.BLUE)
             setOnRefreshListener { handleLocationServiceResult() } // Prompt for location update if it is first run
         }
@@ -90,7 +91,7 @@ internal class MainActivity : BaseLocationActivity() {
     }
 
     private fun observeUiState(state: MainViewState) {
-        binding.swipeLayout.isRefreshing = state.isRefreshing
+        binding.mainSwipeLayout.isRefreshing = state.isRefreshing
         when (state.error) {
             NO_INTERNET -> toast(R.string.no_internet_connection)
             NO_GPS -> toast(R.string.gps_needed_for_location)

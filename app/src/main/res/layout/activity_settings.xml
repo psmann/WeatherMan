@@ -4,7 +4,8 @@
     android:background="@color/quantum_white_100">
 
     <FrameLayout
-        android:id="@+id/settings"
+        android:id="@+id/settings_frame_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
 </LinearLayout>

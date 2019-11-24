@@ -19,11 +19,11 @@ internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>()
     private var weather = Weather()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder = when (viewType) {
-        0 -> Current(parent.inflateView(R.layout.weather_current))
-        1 -> Conditions(parent.inflateView(R.layout.weather_conditions))
-        2 -> SunCycle(parent.inflateView(R.layout.weather_sun_cycle))
-        3 -> HourlyForecast(parent.inflateView(R.layout.weather_forecast_hourly))
-        else -> DailyForecast(parent.inflateView(R.layout.weather_forecast_daily))
+        0 -> Current(parent.inflateView(R.layout.item_weather_current))
+        1 -> Conditions(parent.inflateView(R.layout.item_weather_conditions))
+        2 -> SunCycle(parent.inflateView(R.layout.item_weather_sun_cycle))
+        3 -> HourlyForecast(parent.inflateView(R.layout.item_weather_forecast_hourly))
+        else -> DailyForecast(parent.inflateView(R.layout.item_weather_forecast_daily))
     }
 
     override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) = when (holder) {

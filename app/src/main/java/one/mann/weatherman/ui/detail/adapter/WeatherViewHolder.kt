@@ -11,27 +11,27 @@ import one.mann.weatherman.ui.detail.views.SunGraphView
 internal sealed class WeatherViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     class Current(itemView: View) : WeatherViewHolder(itemView) {
-        val cityName: TextView = itemView.findViewById(R.id.city_name)
+        val cityName: TextView = itemView.findViewById(R.id.city_name_text_view)
         val lastChecked: TextView = itemView.findViewById(R.id.last_checked_result)
         val currentTemp: TextView = itemView.findViewById(R.id.current_temp_result)
         val feelsLike: TextView = itemView.findViewById(R.id.feels_like_result)
         val maxTemp: TextView = itemView.findViewById(R.id.max_temp_result)
         val minTemp: TextView = itemView.findViewById(R.id.min_temp_result)
         val description: TextView = itemView.findViewById(R.id.description)
-        val weatherIcon: ImageView = itemView.findViewById(R.id.weather_icon)
+        val weatherIcon: ImageView = itemView.findViewById(R.id.weather_icon_image_view)
     }
 
     class Conditions(itemView: View) : WeatherViewHolder(itemView) {
-        val clouds: TextView = itemView.findViewById(R.id.clouds_result)
-        val windSpeed: TextView = itemView.findViewById(R.id.wind_speed_result)
-        val windDirection: TextView = itemView.findViewById(R.id.wind_direction_result)
-        val windDirectionIcon: ImageView = itemView.findViewById(R.id.wind_dir_icon)
-        val pressure: TextView = itemView.findViewById(R.id.pressure_result)
-        val visibility: TextView = itemView.findViewById(R.id.visibility_result)
-        val flagIcon: TextView = itemView.findViewById(R.id.country_flag)
-        val location: TextView = itemView.findViewById(R.id.location_result)
-        val lastUpdated: TextView = itemView.findViewById(R.id.last_updated_result)
-        val humidity: TextView = itemView.findViewById(R.id.humidity_result)
+        val clouds: TextView = itemView.findViewById(R.id.conditions_clouds_result_text_view)
+        val windSpeed: TextView = itemView.findViewById(R.id.conditions_wind_speed_result_text_view)
+        val windDirection: TextView = itemView.findViewById(R.id.conditions_wind_direction_result_text_view)
+        val windDirectionIcon: ImageView = itemView.findViewById(R.id.conditions_wind_dir_icon_image_view)
+        val pressure: TextView = itemView.findViewById(R.id.conditions_pressure_result_text_view)
+        val visibility: TextView = itemView.findViewById(R.id.conditions_visibility_result_text_view)
+        val flagIcon: TextView = itemView.findViewById(R.id.conditions_country_flag_text_view)
+        val location: TextView = itemView.findViewById(R.id.conditions_location_result_text_view)
+        val lastUpdated: TextView = itemView.findViewById(R.id.conditions_last_updated_result_text_view)
+        val humidity: TextView = itemView.findViewById(R.id.conditions_humidity_result_text_view)
     }
 
     class SunCycle(itemView: View) : WeatherViewHolder(itemView) {

@@ -29,38 +29,38 @@ internal class WeatherNotification @Inject constructor(
         val currentTemp = data.currentTemp.removeUnits(DEGREES).toFloat().roundOff() + DEGREES
         // Notification layouts
         val notificationCollapsed = RemoteViews(context.packageName, R.layout.notification_collapsed).apply {
-            setTextViewText(R.id.notification_temp, currentTemp)
-            setTextViewText(R.id.notification_max_temp, data.day1MaxTemp)
-            setTextViewText(R.id.notification_min_temp, data.day1MinTemp)
-            setTextViewText(R.id.notification_city_name, data.cityName)
-            setTextViewText(R.id.notification_description, data.description)
-            setTextViewText(R.id.notification_humidity, data.humidity)
-            setImageViewResource(R.id.notification_icon, context.resources.getIdentifier(
+            setTextViewText(R.id.notification_current_temp_text_view, currentTemp)
+            setTextViewText(R.id.notification_max_temp_text_view, data.day1MaxTemp)
+            setTextViewText(R.id.notification_min_temp_text_view, data.day1MinTemp)
+            setTextViewText(R.id.notification_city_name_text_view, data.cityName)
+            setTextViewText(R.id.notification_description_text_view, data.description)
+            setTextViewText(R.id.notification_humidity_text_view, data.humidity)
+            setImageViewResource(R.id.notification_icon_image_view, context.resources.getIdentifier(
                     getUri(data.iconId, data.sunPosition), "drawable", context.packageName))
         }
         val notificationExpanded = RemoteViews(context.packageName, R.layout.notification_expanded).apply {
-            setTextViewText(R.id.notification_temp, currentTemp)
-            setTextViewText(R.id.notification_max_temp, data.day1MaxTemp)
-            setTextViewText(R.id.notification_min_temp, data.day1MinTemp)
-            setTextViewText(R.id.notification_city_name, data.cityName)
-            setTextViewText(R.id.notification_description, data.description)
-            setTextViewText(R.id.notification_humidity, data.humidity)
-            setImageViewResource(R.id.notification_icon, context.resources.getIdentifier(
+            setTextViewText(R.id.notification_current_temp_text_view, currentTemp)
+            setTextViewText(R.id.notification_max_temp_text_view, data.day1MaxTemp)
+            setTextViewText(R.id.notification_min_temp_text_view, data.day1MinTemp)
+            setTextViewText(R.id.notification_city_name_text_view, data.cityName)
+            setTextViewText(R.id.notification_description_text_view, data.description)
+            setTextViewText(R.id.notification_humidity_text_view, data.humidity)
+            setImageViewResource(R.id.notification_icon_image_view, context.resources.getIdentifier(
                     getUri(data.iconId, data.sunPosition), "drawable", context.packageName))
-            setTextViewText(R.id.notification_temp_forecast1, data.hour03Time)
-            setTextViewText(R.id.notification_temp_forecast2, data.hour06Time)
-            setTextViewText(R.id.notification_temp_forecast3, data.hour09Time)
-            setTextViewText(R.id.notification_temp_forecast4, data.hour12Time)
-            setTextViewText(R.id.notification_temp_forecast5, data.hour15Time)
-            setImageViewResource(R.id.notification_icon_forecast1, context.resources.getIdentifier(
+            setTextViewText(R.id.notification_temp_forecast1_text_view, data.hour03Time)
+            setTextViewText(R.id.notification_temp_forecast2_text_view, data.hour06Time)
+            setTextViewText(R.id.notification_temp_forecast3_text_view, data.hour09Time)
+            setTextViewText(R.id.notification_temp_forecast4_text_view, data.hour12Time)
+            setTextViewText(R.id.notification_temp_forecast5_text_view, data.hour15Time)
+            setImageViewResource(R.id.notification_icon_forecast1_image_view, context.resources.getIdentifier(
                     getUri(data.hour03IconId, data.hour03SunPosition), "drawable", context.packageName))
-            setImageViewResource(R.id.notification_icon_forecast2, context.resources.getIdentifier(
+            setImageViewResource(R.id.notification_icon_forecast2_image_view, context.resources.getIdentifier(
                     getUri(data.hour06IconId, data.hour06SunPosition), "drawable", context.packageName))
-            setImageViewResource(R.id.notification_icon_forecast3, context.resources.getIdentifier(
+            setImageViewResource(R.id.notification_icon_forecast3_image_view, context.resources.getIdentifier(
                     getUri(data.hour09IconId, data.hour09SunPosition), "drawable", context.packageName))
-            setImageViewResource(R.id.notification_icon_forecast4, context.resources.getIdentifier(
+            setImageViewResource(R.id.notification_icon_forecast4_image_view, context.resources.getIdentifier(
                     getUri(data.hour12IconId, data.hour12SunPosition), "drawable", context.packageName))
-            setImageViewResource(R.id.notification_icon_forecast5, context.resources.getIdentifier(
+            setImageViewResource(R.id.notification_icon_forecast5_image_view, context.resources.getIdentifier(
                     getUri(data.hour15IconId, data.hour15SunPosition), "drawable", context.packageName))
         }
         // Create notification channel if necessary
