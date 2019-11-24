@@ -86,7 +86,7 @@ internal class WeatherNotification @Inject constructor(
                 val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME,
                         NotificationManager.IMPORTANCE_DEFAULT)
                         .apply {
-                            this.description = NOTIFICATION_CHANNEL_DESCRIPTION
+                            this.description = context.getString(R.string.notification_channel_description)
                             this.lockscreenVisibility = Notification.VISIBILITY_SECRET
                         }
                 this?.createNotificationChannel(channel)
