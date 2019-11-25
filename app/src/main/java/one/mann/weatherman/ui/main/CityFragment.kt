@@ -46,7 +46,7 @@ internal class CityFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         injectDependencies()
-        binding.cityDetailButton.setOnClickListener { startActivity(detailIntent) } // Button is hidden until data is loaded in views
+        binding.cityDetailButton.setOnClickListener { startActivity(detailIntent) } // Hidden until data is loaded in views
         mainViewModel.uiState.observe(viewLifecycleOwner, ::observeUiState)
     }
 
