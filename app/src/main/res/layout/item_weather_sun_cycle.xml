@@ -1,62 +1,68 @@
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/cl_sun_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sun_cycle_constraint_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
     <TextView
-            android:id="@+id/sunrise"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="@string/sunrise"
-            android:textColor="@android:color/white"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sunlight_graph"/>
+        android:id="@+id/sun_cycle_sunrise_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/sunrise"
+        android:textColor="@android:color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sun_cycle_sun_graph_view" />
+
     <TextView
-            android:id="@+id/sunset"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:text="@string/sunset"
-            android:textColor="@android:color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sunlight_graph"/>
+        android:id="@+id/sun_cycle_sunset_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="@string/sunset"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sun_cycle_sun_graph_view" />
+
     <TextView
-            android:id="@+id/sunrise_result"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            android:textColor="@android:color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/sunrise"
-            app:layout_constraintTop_toBottomOf="@+id/sunrise"/>
+        android:id="@+id/sun_cycle_sunrise_result_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/sun_cycle_sunrise_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/sun_cycle_sunrise_text_view" />
+
     <TextView
-            android:id="@+id/sunset_result"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAlignment="viewEnd"
-            android:textColor="@android:color/white"
-            app:layout_constraintEnd_toEndOf="@+id/sunset"
-            app:layout_constraintTop_toBottomOf="@+id/sunset"/>
+        android:id="@+id/sun_cycle_sunset_result_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="viewEnd"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="@+id/sun_cycle_sunset_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/sun_cycle_sunset_text_view" />
+
     <TextView
-            android:id="@+id/day_length_result"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:textColor="@android:color/white"
-            app:layout_constraintEnd_toStartOf="@+id/sunset"
-            app:layout_constraintStart_toEndOf="@+id/sunrise"
-            app:layout_constraintTop_toTopOf="@+id/sunrise"/>
+        android:id="@+id/sun_cycle_day_length_result_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toStartOf="@+id/sun_cycle_sunset_text_view"
+        app:layout_constraintStart_toEndOf="@+id/sun_cycle_sunrise_text_view"
+        app:layout_constraintTop_toTopOf="@+id/sun_cycle_sunrise_text_view" />
+
     <one.mann.weatherman.ui.detail.views.SunGraphView
-            android:id="@+id/sunlight_graph"
-            android:layout_width="0dp"
-            android:layout_height="100dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+        android:id="@+id/sun_cycle_sun_graph_view"
+        android:layout_width="0dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

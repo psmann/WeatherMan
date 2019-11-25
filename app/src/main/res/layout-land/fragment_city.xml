@@ -5,73 +5,64 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/weather_icon_image_view"
+        android:id="@+id/city_weather_icon_image_view"
         android:layout_width="304dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:adjustViewBounds="true"
         android:contentDescription="@string/weather_icon"
         android:scaleType="fitXY"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/sym_def_app_icon" />
 
     <TextView
-        android:id="@+id/current_temp_text_view"
+        android:id="@+id/city_current_temp_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="272dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="128dp"
+        android:layout_marginTop="64dp"
         android:fontFamily="sans-serif-black"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Display3"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.54"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/weather_icon_image_view" />
+        app:layout_constraintStart_toEndOf="@+id/city_weather_icon_image_view"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/time_updated_text_view"
+        android:id="@+id/city_time_updated_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="112dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="48dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/current_temp_text_view" />
+        app:layout_constraintEnd_toEndOf="@+id/city_current_temp_text_view"
+        app:layout_constraintStart_toStartOf="@+id/city_current_temp_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/city_current_temp_text_view" />
 
     <TextView
         android:id="@+id/city_name_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time_updated_text_view" />
+        app:layout_constraintEnd_toEndOf="@+id/city_time_updated_text_view"
+        app:layout_constraintStart_toStartOf="@+id/city_time_updated_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/city_time_updated_text_view" />
 
     <Button
-        android:id="@+id/detail_button"
+        android:id="@+id/city_detail_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginBottom="64dp"
         android:backgroundTint="@android:color/transparent"
         android:gravity="center_horizontal|center_vertical"
         android:text="@string/details"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="@+id/city_name_text_view"
+        app:layout_constraintStart_toStartOf="@+id/city_name_text_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

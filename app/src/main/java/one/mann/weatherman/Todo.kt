@@ -2,7 +2,7 @@ package one.mann.weatherman
 
 /*
 TODO:
- Update Database model -> Atomize and make it adhere to single responsibility principle (split-up into multiple tables)
+ Update Database model: Atomize and make it adhere to single responsibility principle (split-up into multiple tables)
  Make Weather data model less repetitive by getting rid of redundant operations (replace with arrays/lists)
  Use relevant data types in Weather model and database instead of using strings everywhere
  Make coroutine context injectable (?) or replace it with kotlin lifecycle extension (?)
@@ -15,8 +15,8 @@ TODO:
  Write and test Proguard rules
  Migrate to ViewPager2
  Add more weather data parameters (detailed forecasts, maps, etc)
- Implement View Binding and remove Kotlin synthetics
- Follow standardised naming convention for views [refactor]
+ Implement View Binding and remove Kotlin synthetics -> DONE (except recycler view adapter and viewHolder)
+ Follow standardised naming convention for views (refactor) -> DONE
  Handle navBar hidden usecase (views should resize accordingly)
  Align and center ForecastGraphView lines to forecast columns
  Implement CI/CD (Jenkins)

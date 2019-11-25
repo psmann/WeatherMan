@@ -11,16 +11,16 @@ import androidx.lifecycle.ViewModelProvider
 import one.mann.domain.model.weather.Weather
 import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.api.openweathermap.isOvercast
-import one.mann.weatherman.databinding.FragmentMainBinding
+import one.mann.weatherman.databinding.FragmentCityBinding
 import one.mann.weatherman.ui.common.util.*
 import one.mann.weatherman.ui.detail.DetailActivity
 import javax.inject.Inject
 
-internal class MainFragment : Fragment() {
+internal class CityFragment : Fragment() {
 
     private var position = 0
     private var backgroundResources = 0
-    private lateinit var binding: FragmentMainBinding
+    private lateinit var binding: FragmentCityBinding
     private val detailIntent: Intent by lazy { Intent(context, DetailActivity::class.java) }
     private val mainViewModel: MainViewModel by lazy { activity?.run { getViewModel(viewModelFactory) }!! }
     @Inject
@@ -28,7 +28,7 @@ internal class MainFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(position: Int) = MainFragment().apply {
+        fun newInstance(position: Int) = CityFragment().apply {
             arguments = Bundle().apply { putInt(PAGER_POSITION, position) }
         }
     }
@@ -39,14 +39,14 @@ internal class MainFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentMainBinding.inflate(layoutInflater, container, false)
+        binding = FragmentCityBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         injectDependencies()
-        binding.detailButton.setOnClickListener { startActivity(detailIntent) } // Button is hidden until data is loaded in views
+        binding.cityDetailButton.setOnClickListener { startActivity(detailIntent) } // Button is hidden until data is loaded in views
         mainViewModel.uiState.observe(viewLifecycleOwner, ::observeUiState)
     }
 
@@ -60,9 +60,9 @@ internal class MainFragment : Fragment() {
 
     private fun setupViews(weather: Weather) {
         val newBackground = getGradient(weather.sunPosition, isOvercast(weather.iconId))
-        binding.weatherIconImageView.loadIcon(weather.iconId, weather.sunPosition)
-        binding.currentTempTextView.text = weather.currentTemp
-        binding.timeUpdatedTextView.text = weather.lastChecked
+        binding.cityWeatherIconImageView.loadIcon(weather.iconId, weather.sunPosition)
+        binding.cityCurrentTempTextView.text = weather.currentTemp
+        binding.cityTimeUpdatedTextView.text = weather.lastChecked
         binding.cityNameTextView.text = weather.cityName
         if (backgroundResources != newBackground) { // Update layout background only if it changes after a data refresh
             binding.root.setBackgroundResource(newBackground)
