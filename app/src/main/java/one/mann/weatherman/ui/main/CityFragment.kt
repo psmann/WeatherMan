@@ -22,7 +22,7 @@ internal class CityFragment : Fragment() {
     private var backgroundResources = 0
     private lateinit var binding: FragmentCityBinding
     private val detailIntent: Intent by lazy { Intent(context, DetailActivity::class.java) }
-    private val mainViewModel: MainViewModel by lazy { activity?.run { getViewModel(viewModelFactory) }!! }
+    private val mainViewModel: MainViewModel by lazy { activity!!.getViewModel(viewModelFactory) } // No nice way to handle !!
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
@@ -46,7 +46,7 @@ internal class CityFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         injectDependencies()
-        binding.cityDetailButton.setOnClickListener { startActivity(detailIntent) } // Hidden until data is loaded in views
+        binding.cityDetailButton.setOnClickListener { startActivity(detailIntent) }
         mainViewModel.uiState.observe(viewLifecycleOwner, ::observeUiState)
     }
 
@@ -54,7 +54,7 @@ internal class CityFragment : Fragment() {
 
     private fun observeUiState(state: MainViewState) {
         val weatherData = state.weatherData
-        binding.root.visibility = if (state.isLoading) View.GONE else View.VISIBLE
+        binding.root.visibility = if (state.isLoading) View.GONE else View.VISIBLE // Layout is hidden until data is loaded
         if (weatherData.size >= position + 1) setupViews(weatherData[position])
     }
 
@@ -73,6 +73,6 @@ internal class CityFragment : Fragment() {
 
     private fun setupIntent(backgroundId: Int) {
         detailIntent.putExtra(PAGER_POSITION, position) // City to show details for
-        detailIntent.putExtra(ACTIVITY_BACKGROUND, backgroundId) // Add backgroundResourceId to for detail activity
+        detailIntent.putExtra(ACTIVITY_BACKGROUND, backgroundId) // Background to be used in detail activity
     }
 }
