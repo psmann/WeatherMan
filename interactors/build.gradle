@@ -9,9 +9,9 @@ dependencies {
     //noinspection DifferentStdlibGradleVersion
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     // Dagger 2
-    implementation 'com.google.dagger:dagger:2.25.2'
-    kapt 'com.google.dagger:dagger-compiler:2.25.2'
+    implementation 'com.google.dagger:dagger:2.25.4'
+    kapt 'com.google.dagger:dagger-compiler:2.25.4'
 
     // jUnit
-    testImplementation 'junit:junit:4.13-rc-2'
+    testImplementation 'junit:junit:4.13'
 }
