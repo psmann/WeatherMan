@@ -22,7 +22,7 @@ internal class CityFragment : Fragment() {
     private var backgroundResources = 0
     private lateinit var binding: FragmentCityBinding
     private val detailIntent: Intent by lazy { Intent(context, DetailActivity::class.java) }
-    private val mainViewModel: MainViewModel by lazy { activity!!.getViewModel(viewModelFactory) } // No nice way to handle !!
+    private val mainViewModel: MainViewModel by lazy { requireActivity().getViewModel(viewModelFactory) } // No nice way to handle !!
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
