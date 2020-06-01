@@ -39,8 +39,8 @@ internal class DetailViewModel @Inject constructor(
 
     fun handleRefreshing(response: LocationResponse) = when (response) {
         NO_NETWORK -> {
-            _uiState.value = _uiState.value!!.copy(isRefreshing = false, error = NO_INTERNET)
-            _uiState.value = _uiState.value!!.copy(error = NO_ERROR) // Change error state back
+            _uiState.value = _uiState.value?.copy(isRefreshing = false, error = NO_INTERNET)
+            _uiState.value = _uiState.value?.copy(error = NO_ERROR) // Change error state back
         }
         ENABLED -> updateWeather(DEVICE)
         DISABLED -> updateWeather(DB)
@@ -56,15 +56,15 @@ internal class DetailViewModel @Inject constructor(
     private fun updateWeather(locationType: LocationType) {
         launch {
             try {
-                _uiState.value = _uiState.value!!.copy(isRefreshing = true) // Start refreshing
+                _uiState.value = _uiState.value?.copy(isRefreshing = true) // Start refreshing
                 withContext(IO) {
                     val weatherUpdated = updateWeather.invoke(locationType)
                     if (weatherUpdated) settingsPrefs.edit { putLong(LAST_UPDATED_KEY, System.currentTimeMillis()) }
                     else settingsPrefs.edit { putLong(LAST_CHECKED_KEY, System.currentTimeMillis()) }
                 }
             } catch (e: IOException) { // Stop refreshing, show error and change the state back
-                _uiState.value = _uiState.value!!.copy(isRefreshing = false, error = NO_RESPONSE)
-                _uiState.value = _uiState.value!!.copy(error = NO_ERROR)
+                _uiState.value = _uiState.value?.copy(isRefreshing = false, error = NO_RESPONSE)
+                _uiState.value = _uiState.value?.copy(error = NO_ERROR)
             }
         }
     }
@@ -72,8 +72,8 @@ internal class DetailViewModel @Inject constructor(
     private fun updateUI() {
         launch {
             val data = withContext(IO) { getAllWeather.invoke() }
-            _uiState.value = if (data.isEmpty()) _uiState.value!!.copy(isRefreshing = false)
-            else _uiState.value!!.copy(isRefreshing = false, weatherData = data)
+            _uiState.value = if (data.isEmpty()) _uiState.value?.copy(isRefreshing = false)
+            else _uiState.value?.copy(isRefreshing = false, weatherData = data)
         }
     }
 

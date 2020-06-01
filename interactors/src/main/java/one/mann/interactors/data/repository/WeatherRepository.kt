@@ -18,7 +18,7 @@ class WeatherRepository @Inject constructor(
 ) {
 
     companion object {
-        private const val TIME_OUT = 1000000 // ~16.6 minutes (= 16.667 * 60 * 1000)
+        private const val TIME_OUT = 1000000 // ~ 16.6 minutes (= 16.667 * 60 * 1000)
     }
 
     /** Returns number of rows in Db (i.e. number of cities) */

@@ -57,7 +57,7 @@ internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>()
             sunCycleSunGraphView.setT(weather.sunPosition)
         }.run { return@run }
         is HourlyForecast -> holder.binding.apply {
-            val forecastList = listOf( // This can be moved to the ViewHolder
+            val forecastList = listOf(
                     weather.hour03Temp.removeUnits(DEGREES).toFloat(),
                     weather.hour06Temp.removeUnits(DEGREES).toFloat(),
                     weather.hour09Temp.removeUnits(DEGREES).toFloat(),
