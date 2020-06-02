@@ -20,6 +20,6 @@ TODO:
  Align and center ForecastGraphView lines (by increasing lengths by the amount they are being clipped at intersections)
  Implement CI/CD (Jenkins or CircleCI)
  Implement Crashlytics (Firebase)
-// Implement View Binding and remove Kotlin synthetics -> DONE (except recycler view adapter and viewHolder)
+// Implement View Binding and remove Kotlin synthetics -> DONE
 // Follow standardised naming convention for views (refactor) -> DONE
  */
