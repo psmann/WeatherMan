@@ -27,18 +27,17 @@ Code is written in Kotlin and uses coroutines to handle all asynchronous work.
 ### Dependencies
 
   * Dagger 2 - Dependency Injection
-  * Retrofit 2 - API calls
-  * OkHttp 3 - API calls
+  * Retrofit 2 - Network calls
+  * OkHttp 3 - Network calls
   * Room Persistence Library - Database
   * Kotlin Coroutines - Asynchronous tasks
   * WorkManager - Background tasks (data sync, notifications)
   * Google Play Services - Device GPS location
-  * Google Places Autocomplete - Remote city locations
-  * OpenWeatherMap - Weather data
-  * Teleport - Timezones
-  
+  * TomTom API - City names and locations
+  * Dark Sky API - Weather data
+
 ## Getting Started
 
 1) Clone the project repository
-2) Generate new keys for OpenWeatherMap API and Google Places API
+2) Generate new keys for Dark Sky API and TomTom API
 3) Add your keys to api/common/Keys.kt located inside the app module and rebuild project
