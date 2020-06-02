@@ -50,23 +50,23 @@ internal class MainViewModel @Inject constructor(
 
     fun handleRefreshing(response: LocationResponse, firstRun: Boolean) {
         when (response) {
-            NO_NETWORK -> _uiState.value = _uiState.value!!.copy(error = NO_INTERNET)
+            NO_NETWORK -> _uiState.value = _uiState.value?.copy(error = NO_INTERNET)
             ENABLED -> if (firstRun) addCity() else updateWeather(DEVICE)
-            DISABLED -> if (firstRun) _uiState.value = _uiState.value!!.copy(error = NO_GPS) else updateWeather(DB)
-            UNAVAILABLE -> _uiState.value = _uiState.value!!.copy(error = NO_LOCATION)
+            DISABLED -> if (firstRun) _uiState.value = _uiState.value?.copy(error = NO_GPS) else updateWeather(DB)
+            UNAVAILABLE -> _uiState.value = _uiState.value?.copy(error = NO_LOCATION)
         }
-        _uiState.value = _uiState.value!!.copy(error = NO_ERROR) // Change error state back
+        _uiState.value = _uiState.value?.copy(error = NO_ERROR) // Change error state back
     }
 
     fun addCity(apiLocation: Location? = null) {
         launch {
             try {
-                _uiState.value = _uiState.value!!.copy(isRefreshing = true) // Start refreshing
+                _uiState.value = _uiState.value?.copy(isRefreshing = true) // Start refreshing
                 withContext(IO) { addCity.invoke(apiLocation) }
                 updateUI()
             } catch (e: IOException) { // Stop refreshing, show error and change the state back
-                _uiState.value = _uiState.value!!.copy(isRefreshing = false, error = NO_RESPONSE)
-                _uiState.value = _uiState.value!!.copy(error = NO_ERROR)
+                _uiState.value = _uiState.value?.copy(isRefreshing = false, error = NO_RESPONSE)
+                _uiState.value = _uiState.value?.copy(error = NO_ERROR)
             }
         }
     }
@@ -80,15 +80,15 @@ internal class MainViewModel @Inject constructor(
     private fun updateWeather(locationType: LocationType) {
         launch {
             try {
-                _uiState.value = _uiState.value!!.copy(isRefreshing = true) // Start refreshing
+                _uiState.value = _uiState.value?.copy(isRefreshing = true) // Start refreshing
                 withContext(IO) {
                     val weatherUpdated = updateWeather.invoke(locationType)
                     if (weatherUpdated) settingsPrefs.edit { putLong(LAST_UPDATED_KEY, System.currentTimeMillis()) }
                     else settingsPrefs.edit { putLong(LAST_CHECKED_KEY, System.currentTimeMillis()) }
                 }
             } catch (e: IOException) { // Stop refreshing, show error and change the state back
-                _uiState.value = _uiState.value!!.copy(isRefreshing = false, error = NO_RESPONSE)
-                _uiState.value = _uiState.value!!.copy(error = NO_ERROR)
+                _uiState.value = _uiState.value?.copy(isRefreshing = false, error = NO_RESPONSE)
+                _uiState.value = _uiState.value?.copy(error = NO_ERROR)
             }
         }
     }
@@ -105,8 +105,8 @@ internal class MainViewModel @Inject constructor(
         launch {
             val data = withContext(IO) { getAllWeather.invoke() }
             val count = withContext(IO) { getCityCount.invoke() }
-            _uiState.value = if (data.isEmpty()) _uiState.value!!.copy(isRefreshing = false, cityCount = count)
-            else _uiState.value!!.copy(weatherData = data, isLoading = false, isRefreshing = false, cityCount = count)
+            _uiState.value = if (data.isEmpty()) _uiState.value?.copy(isRefreshing = false, cityCount = count)
+            else _uiState.value?.copy(weatherData = data, isLoading = false, isRefreshing = false, cityCount = count)
         }
     }
 

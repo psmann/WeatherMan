@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.PagerAdapter
-import one.mann.weatherman.ui.main.MainFragment
+import one.mann.weatherman.ui.main.CityFragment
 
 @Suppress("DEPRECATION") // BEHAVIOR_SET_USER used because BEHAVIOR_RESUME_ONLY has issues
 internal class MainPagerAdapter(fm: FragmentManager
@@ -13,7 +13,7 @@ internal class MainPagerAdapter(fm: FragmentManager
     private var pages = 1
     private var fragmentRemoved = false
 
-    override fun getItem(position: Int): Fragment = MainFragment.newInstance(position)
+    override fun getItem(position: Int): Fragment = CityFragment.newInstance(position)
 
     override fun getCount(): Int = pages
 

@@ -1,85 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <RelativeLayout android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="64dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:orientation="horizontal">
 
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
-                      android:orientation="vertical"
-                      android:layout_alignParentStart="true"
-                      android:layout_marginEnd="8dp">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical">
 
-            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                      android:id="@+id/notification_city_name"
-                      android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
-                      android:textAlignment="center"
-                      android:textSize="12sp" android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/notification_city_name_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                          android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                <ImageView android:layout_width="40dp" android:layout_height="wrap_content"
-                           android:id="@+id/notification_icon"
-                           android:src="@android:drawable/sym_def_app_icon"
-                           android:contentDescription="@string/weather_icon"/>
+                <ImageView
+                    android:id="@+id/notification_icon_image_view"
+                    android:layout_width="40dp"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/weather_icon"
+                    android:src="@android:drawable/sym_def_app_icon" />
 
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                          android:id="@+id/notification_temp"
-                          android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
-                          android:gravity="center_vertical" android:layout_gravity="center_vertical"
-                          android:layout_marginStart="8dp" android:layout_marginEnd="8dp" android:textSize="12sp"/>
+                <TextView
+                    android:id="@+id/notification_current_temp_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:gravity="center_vertical"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textSize="12sp" />
 
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                          android:id="@+id/notification_max_temp"
-                          android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
-                          android:gravity="center_vertical" android:layout_gravity="center_vertical"
-                          android:layout_marginStart="8dp" android:textSize="12sp"/>
+                <TextView
+                    android:id="@+id/notification_max_temp_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="8dp"
+                    android:gravity="center_vertical"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textSize="12sp" />
 
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                          android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
-                          android:text="@string/forward_slash"
-                          android:gravity="center_vertical" android:layout_gravity="center_vertical"
-                          android:layout_marginStart="4dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="4dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/forward_slash"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title" />
 
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                          android:id="@+id/notification_min_temp"
-                          android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
-                          android:gravity="center_vertical" android:layout_gravity="center_vertical"
-                          android:layout_marginStart="4dp" android:textSize="12sp"/>
+                <TextView
+                    android:id="@+id/notification_min_temp_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="4dp"
+                    android:gravity="center_vertical"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textSize="12sp" />
 
             </LinearLayout>
 
         </LinearLayout>
 
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
-                      android:orientation="vertical" android:layout_gravity="end"
-                      android:layout_alignParentEnd="true">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="end"
+            android:orientation="vertical">
 
-            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                      android:id="@+id/notification_description"
-                      android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
-                      android:textSize="12sp"
-                      android:textAlignment="center" android:layout_marginBottom="6dp"/>
+            <TextView
+                android:id="@+id/notification_description_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                android:textSize="12sp" />
 
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                          android:orientation="horizontal"
-                          android:layout_marginTop="8dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
 
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                          android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
-                          android:gravity="start" android:textSize="12sp" android:textAlignment="viewStart"
-                          android:paddingEnd="32dp" tools:ignore="RtlSymmetry"
-                          android:text="@string/humidity_notification"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:paddingEnd="32dp"
+                    android:text="@string/humidity_notification"
+                    android:textAlignment="viewStart"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textSize="12sp"
+                    tools:ignore="RtlSymmetry" />
 
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                          android:id="@+id/notification_humidity"
-                          android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
-                          android:textSize="12sp"
-                          android:textAlignment="textEnd" android:layout_gravity="end"/>
+                <TextView
+                    android:id="@+id/notification_humidity_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:textAlignment="textEnd"
+                    android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+                    android:textSize="12sp" />
 
             </LinearLayout>
 
@@ -87,101 +130,139 @@
 
     </RelativeLayout>
 
-    <LinearLayout android:layout_width="match_parent" android:layout_height="68dp"
-                  android:orientation="horizontal" tools:ignore="UseCompoundDrawables">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
 
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
-                      android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <ImageView android:layout_width="50dp" android:layout_height="50dp"
-                       android:id="@+id/notification_icon_forecast1"
-                       android:src="@android:drawable/sym_def_app_icon"
-                       android:contentDescription="@string/weather_icon"/>
+            <ImageView
+                android:id="@+id/notification_icon_forecast1_image_view"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:contentDescription="@string/weather_icon"
+                android:src="@android:drawable/sym_def_app_icon" />
 
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:id="@+id/notification_temp_forecast1"
-                      android:textAppearance="@style/TextAppearance.Compat.Notification.Time"
-                      android:layout_gravity="center_horizontal" android:textSize="12sp"/>
-
-        </LinearLayout>
-
-        <TextView
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"/>
-
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
-                      android:orientation="vertical">
-
-            <ImageView android:layout_width="50dp" android:layout_height="50dp"
-                       android:id="@+id/notification_icon_forecast2"
-                       android:src="@android:drawable/sym_def_app_icon"
-                       android:contentDescription="@string/weather_icon"/>
-
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:id="@+id/notification_temp_forecast2"
-                      android:textAppearance="@style/TextAppearance.Compat.Notification.Time"
-                      android:layout_gravity="center_horizontal" android:textSize="12sp"/>
+            <TextView
+                android:id="@+id/notification_temp_forecast1_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textAppearance="@style/TextAppearance.Compat.Notification.Time"
+                android:textSize="12sp" />
 
         </LinearLayout>
 
         <TextView
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"/>
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
 
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
-                      android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <ImageView android:layout_width="50dp" android:layout_height="50dp"
-                       android:id="@+id/notification_icon_forecast3"
-                       android:src="@android:drawable/sym_def_app_icon"
-                       android:contentDescription="@string/weather_icon"/>
+            <ImageView
+                android:id="@+id/notification_icon_forecast2_image_view"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:contentDescription="@string/weather_icon"
+                android:src="@android:drawable/sym_def_app_icon" />
 
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:id="@+id/notification_temp_forecast3"
-                      android:textAppearance="@style/TextAppearance.Compat.Notification.Time"
-                      android:layout_gravity="center_horizontal" android:textSize="12sp"/>
-
-        </LinearLayout>
-
-        <TextView
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"/>
-
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
-                      android:orientation="vertical">
-
-            <ImageView android:layout_width="50dp" android:layout_height="50dp"
-                       android:id="@+id/notification_icon_forecast4"
-                       android:src="@android:drawable/sym_def_app_icon"
-                       android:contentDescription="@string/weather_icon"/>
-
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:id="@+id/notification_temp_forecast4"
-                      android:textAppearance="@style/TextAppearance.Compat.Notification.Time"
-                      android:layout_gravity="center_horizontal" android:textSize="12sp"/>
+            <TextView
+                android:id="@+id/notification_temp_forecast2_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textAppearance="@style/TextAppearance.Compat.Notification.Time"
+                android:textSize="12sp" />
 
         </LinearLayout>
 
         <TextView
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"/>
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
 
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
-                      android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <ImageView android:layout_width="50dp" android:layout_height="50dp"
-                       android:id="@+id/notification_icon_forecast5"
-                       android:src="@android:drawable/sym_def_app_icon"
-                       android:contentDescription="@string/weather_icon"/>
+            <ImageView
+                android:id="@+id/notification_icon_forecast3_image_view"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:contentDescription="@string/weather_icon"
+                android:src="@android:drawable/sym_def_app_icon" />
 
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:id="@+id/notification_temp_forecast5"
-                      android:textAppearance="@style/TextAppearance.Compat.Notification.Time"
-                      android:layout_gravity="center_horizontal" android:textSize="12sp"/>
+            <TextView
+                android:id="@+id/notification_temp_forecast3_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textAppearance="@style/TextAppearance.Compat.Notification.Time"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/notification_icon_forecast4_image_view"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:contentDescription="@string/weather_icon"
+                android:src="@android:drawable/sym_def_app_icon" />
+
+            <TextView
+                android:id="@+id/notification_temp_forecast4_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textAppearance="@style/TextAppearance.Compat.Notification.Time"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/notification_icon_forecast5_image_view"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:contentDescription="@string/weather_icon"
+                android:src="@android:drawable/sym_def_app_icon" />
+
+            <TextView
+                android:id="@+id/notification_temp_forecast5_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textAppearance="@style/TextAppearance.Compat.Notification.Time"
+                android:textSize="12sp" />
 
         </LinearLayout>
 

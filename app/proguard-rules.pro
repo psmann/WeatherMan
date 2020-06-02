@@ -23,3 +23,5 @@
 -dontwarn org.conscrypt.**
 -keep class one.mann.domain.model** { *; }
 -keep class one.mann.weatherman.framework.data.database.model** { *; }
+-keep class one.mann.weatherman.api.openweathermap.dto** { *; }
+-keep class one.mann.weatherman.api.teleport.dto** { *; }

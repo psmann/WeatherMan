@@ -6,8 +6,7 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 
-internal class ForecastGraphView @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+internal class ForecastGraphView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
     companion object {

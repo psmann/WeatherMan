@@ -1,0 +1,398 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/forecast_hourly_constraint_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/forecast_hourly_line_1"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/highAlphaWhite"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/forecast_hourly_line_2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/forecast_hourly_line_2"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/highAlphaWhite"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/forecast_hourly_line_3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/forecast_hourly_line_1"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/forecast_hourly_line_3"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/highAlphaWhite"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/forecast_hourly_line_4"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/forecast_hourly_line_2"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/forecast_hourly_line_4"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/highAlphaWhite"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/forecast_hourly_line_5"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/forecast_hourly_line_3"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/forecast_hourly_line_5"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/highAlphaWhite"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/forecast_hourly_line_6"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/forecast_hourly_line_4"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/forecast_hourly_line_6"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="16dp"
+        android:background="@color/highAlphaWhite"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/forecast_hourly_line_5"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <one.mann.weatherman.ui.detail.views.ForecastGraphView
+        android:id="@+id/forecast_hourly_forecast_graph_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="54dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/forecast_hourly_1_icon_image_view" />
+
+    <ImageView
+        android:id="@+id/forecast_hourly_1_icon_image_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="false"
+        android:contentDescription="@string/weather_icon"
+        android:cropToPadding="false"
+        android:src="@android:drawable/sym_def_app_icon"
+        app:layout_constraintEnd_toStartOf="@+id/forecast_hourly_line_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/forecast_hourly_1_time_text_view" />
+
+    <TextView
+        android:id="@+id/forecast_hourly_1_time_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="2dp"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/forecast_hourly_line_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/forecast_hourly_1_temp_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="32dp"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/forecast_hourly_line_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/forecast_hourly_1_icon_image_view" />
+
+    <ImageView
+        android:id="@+id/forecast_hourly_2_icon_image_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="false"
+        android:contentDescription="@string/weather_icon"
+        android:cropToPadding="false"
+        android:src="@android:drawable/sym_def_app_icon"
+        app:layout_constraintEnd_toStartOf="@+id/forecast_hourly_line_2"
+        app:layout_constraintStart_toStartOf="@+id/forecast_hourly_line_1"
+        app:layout_constraintTop_toBottomOf="@+id/forecast_hourly_2_time_text_view" />
+
+    <TextView
+        android:id="@+id/forecast_hourly_2_time_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="2dp"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/forecast_hourly_line_2"
+        app:layout_constraintStart_toStartOf="@+id/forecast_hourly_line_1"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/forecast_hourly_2_temp_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="32dp"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/forecast_hourly_line_2"
+        app:layout_constraintStart_toStartOf="@+id/forecast_hourly_line_1"
+        app:layout_constraintTop_toBottomOf="@+id/forecast_hourly_2_icon_image_view" />
+
+    <ImageView
+        android:id="@+id/forecast_hourly_3_icon_image_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="false"
+        android:contentDescription="@string/weather_icon"
+        android:cropToPadding="false"
+        android:src="@android:drawable/sym_def_app_icon"
+        app:layout_constraintEnd_toStartOf="@+id/forecast_hourly_line_3"
+        app:layout_constraintStart_toStartOf="@+id/forecast_hourly_line_2"
+        app:layout_constraintTop_toBottomOf="@+id/forecast_hourly_3_time_text_view" />
+
+    <TextView
+        android:id="@+id/forecast_hourly_3_time_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="2dp"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/forecast_hourly_line_3"
+        app:layout_constraintStart_toStartOf="@+id/forecast_hourly_line_2"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/forecast_hourly_3_temp_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="32dp"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/forecast_hourly_line_3"
+        app:layout_constraintStart_toStartOf="@+id/forecast_hourly_line_2"
+        app:layout_constraintTop_toBottomOf="@+id/forecast_hourly_3_icon_image_view" />
+
+    <ImageView
+        android:id="@+id/forecast_hourly_4_icon_image_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="false"
+        android:contentDescription="@string/weather_icon"
+        android:cropToPadding="false"
+        android:src="@android:drawable/sym_def_app_icon"
+        app:layout_constraintEnd_toStartOf="@+id/forecast_hourly_line_4"
+        app:layout_constraintStart_toStartOf="@+id/forecast_hourly_line_3"
+        app:layout_constraintTop_toBottomOf="@+id/forecast_hourly_4_time_text_view" />
+
+    <TextView
+        android:id="@+id/forecast_hourly_4_time_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="2dp"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/forecast_hourly_line_4"
+        app:layout_constraintStart_toStartOf="@+id/forecast_hourly_line_3"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/forecast_hourly_4_temp_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="32dp"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/forecast_hourly_line_4"
+        app:layout_constraintStart_toStartOf="@+id/forecast_hourly_line_3"
+        app:layout_constraintTop_toBottomOf="@+id/forecast_hourly_4_icon_image_view" />
+
+    <ImageView
+        android:id="@+id/forecast_hourly_5_icon_image_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="false"
+        android:contentDescription="@string/weather_icon"
+        android:cropToPadding="false"
+        android:src="@android:drawable/sym_def_app_icon"
+        app:layout_constraintEnd_toStartOf="@+id/forecast_hourly_line_5"
+        app:layout_constraintStart_toStartOf="@+id/forecast_hourly_line_4"
+        app:layout_constraintTop_toBottomOf="@+id/forecast_hourly_5_time_text_view" />
+
+    <TextView
+        android:id="@+id/forecast_hourly_5_time_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="2dp"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/forecast_hourly_line_5"
+        app:layout_constraintStart_toStartOf="@+id/forecast_hourly_line_4"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/forecast_hourly_5_temp_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="32dp"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/forecast_hourly_line_5"
+        app:layout_constraintStart_toStartOf="@+id/forecast_hourly_line_4"
+        app:layout_constraintTop_toBottomOf="@+id/forecast_hourly_5_icon_image_view" />
+
+    <ImageView
+        android:id="@+id/forecast_hourly_6_icon_image_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="false"
+        android:contentDescription="@string/weather_icon"
+        android:cropToPadding="false"
+        android:src="@android:drawable/sym_def_app_icon"
+        app:layout_constraintEnd_toStartOf="@+id/forecast_hourly_line_6"
+        app:layout_constraintStart_toStartOf="@+id/forecast_hourly_line_5"
+        app:layout_constraintTop_toBottomOf="@+id/forecast_hourly_6_time_text_view" />
+
+    <TextView
+        android:id="@+id/forecast_hourly_6_time_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="2dp"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/forecast_hourly_line_6"
+        app:layout_constraintStart_toStartOf="@+id/forecast_hourly_line_5"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/forecast_hourly_6_temp_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="32dp"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/forecast_hourly_line_6"
+        app:layout_constraintStart_toStartOf="@+id/forecast_hourly_line_5"
+        app:layout_constraintTop_toBottomOf="@+id/forecast_hourly_6_icon_image_view" />
+
+    <ImageView
+        android:id="@+id/forecast_hourly_7_icon_image_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="false"
+        android:contentDescription="@string/weather_icon"
+        android:cropToPadding="false"
+        android:src="@android:drawable/sym_def_app_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/forecast_hourly_line_6"
+        app:layout_constraintTop_toBottomOf="@+id/forecast_hourly_7_time_text_view" />
+
+    <TextView
+        android:id="@+id/forecast_hourly_7_time_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="2dp"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/forecast_hourly_line_6"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/forecast_hourly_7_temp_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="32dp"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/forecast_hourly_line_6"
+        app:layout_constraintTop_toBottomOf="@+id/forecast_hourly_7_icon_image_view" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

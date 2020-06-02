@@ -51,4 +51,5 @@
     <string name="display_notification">Turn Notifications On and Off</string>
     <string name="notification_frequency">Notification Frequency</string>
     <string name="notification_frequency_summary">Set how often you\'d like to receive notifications</string>
+    <string name="notification_channel_description">Shows notifications whenever current weather is updated</string>
 </resources>

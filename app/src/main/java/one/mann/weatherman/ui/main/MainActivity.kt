@@ -18,20 +18,20 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_main.*
 import one.mann.domain.logic.truncate
 import one.mann.domain.model.Errors.*
 import one.mann.domain.model.location.Location
 import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.api.common.Keys
-import one.mann.weatherman.ui.common.base.BaseActivity
+import one.mann.weatherman.databinding.ActivityMainBinding
+import one.mann.weatherman.ui.common.base.BaseLocationActivity
 import one.mann.weatherman.ui.common.util.getViewModel
 import one.mann.weatherman.ui.main.adapter.MainPagerAdapter
 import one.mann.weatherman.ui.settings.SettingsActivity
 import javax.inject.Inject
 
-internal class MainActivity : BaseActivity() {
+internal class MainActivity : BaseLocationActivity() {
 
     companion object {
         private const val AUTOCOMPLETE_REQUEST_CODE = 1021
@@ -39,6 +39,7 @@ internal class MainActivity : BaseActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val mainViewModel: MainViewModel by lazy { getViewModel(viewModelFactory) }
     private val mainPagerAdapter by lazy { MainPagerAdapter(supportFragmentManager) }
     private var countObserved = false // Stop multiple location alerts on first run
@@ -46,7 +47,7 @@ internal class MainActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(binding.root)
         handleLocationPermission { initActivity(it) }
     }
 
@@ -67,17 +68,18 @@ internal class MainActivity : BaseActivity() {
             finish()
             return
         }
-        main_view_pager.apply {
+        binding.viewPager.apply {
             adapter = mainPagerAdapter
             addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
                 override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
                 override fun onPageSelected(position: Int) {}
                 override fun onPageScrollStateChanged(state: Int) { // Fix horizontal scrolling
-                    if (!main_swipe_ly.isRefreshing) main_swipe_ly.isEnabled = state == ViewPager.SCROLL_STATE_IDLE
+                    if (!binding.mainSwipeLayout.isRefreshing) binding.mainSwipeLayout
+                            .isEnabled = state == ViewPager.SCROLL_STATE_IDLE
                 }
             })
         }
-        main_swipe_ly.apply {
+        binding.mainSwipeLayout.apply {
             setColorSchemeColors(Color.RED, Color.BLUE)
             setOnRefreshListener { handleLocationServiceResult() } // Prompt for location update if it is first run
         }
@@ -89,7 +91,7 @@ internal class MainActivity : BaseActivity() {
     }
 
     private fun observeUiState(state: MainViewState) {
-        main_swipe_ly.isRefreshing = state.isRefreshing
+        binding.mainSwipeLayout.isRefreshing = state.isRefreshing
         when (state.error) {
             NO_INTERNET -> toast(R.string.no_internet_connection)
             NO_GPS -> toast(R.string.gps_needed_for_location)
@@ -105,7 +107,7 @@ internal class MainActivity : BaseActivity() {
             }
             else -> { // Show Snackbar when user adds a city for the first time
                 if (count == 2 && !mainViewModel.navigationGuideShown()) navigationGuideSnack().show()
-                if (isFirstRun) main_toolbar.init() // Ensures this function is only called once
+                if (isFirstRun) binding.toolbar.init() // Ensures this function is only called once
                 mainPagerAdapter.updatePages(count)
                 isFirstRun = false
             }
@@ -116,7 +118,7 @@ internal class MainActivity : BaseActivity() {
         if (!menu.hasVisibleItems()) inflateMenu(R.menu.menu_main) // Inflate menu directly into toolbar
         setOnMenuItemClickListener { menuItem ->
             when (menuItem!!.itemId) {
-                R.id.menu_add_city -> if (main_view_pager.adapter!!.count < 10) autocompleteWidget() // Limit cities to 10
+                R.id.menu_add_city -> if (binding.viewPager.adapter!!.count < 10) autocompleteWidget() // Limit cities to 10
                 else toast(R.string.remove_a_city_before_adding)
                 R.id.menu_remove_city -> removeCityAlert().show()
                 R.id.menu_settings -> startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
@@ -129,7 +131,7 @@ internal class MainActivity : BaseActivity() {
             .setTitle(getString(R.string.remove_city_location))
             .setMessage(getString(R.string.do_you_want_to_remove_location))
             .setPositiveButton(getString(R.string.yes)) { _, _ ->
-                val position = main_view_pager.currentItem
+                val position = binding.viewPager.currentItem
                 if (position == 0) toast(R.string.cant_remove_first_location)
                 else {
                     mainViewModel.removeCity(position)
@@ -140,7 +142,7 @@ internal class MainActivity : BaseActivity() {
             .create()
 
     private fun navigationGuideSnack() = Snackbar
-            .make(activity_main_coord_ly, getString(R.string.swipe_left_or_right), Snackbar.LENGTH_INDEFINITE)
+            .make(binding.root, getString(R.string.swipe_left_or_right), Snackbar.LENGTH_INDEFINITE)
             .setAction(getString(R.string.got_it)) { mainViewModel.setNavigationGuideShown() }
             .setBackgroundTint(ContextCompat.getColor(this, R.color.dayClearStart))
             .setActionTextColor(ContextCompat.getColor(this, R.color.sunriseClearCenter))

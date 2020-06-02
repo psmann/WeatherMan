@@ -19,45 +19,45 @@ internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>()
     private var weather = Weather()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder = when (viewType) {
-        0 -> Current(parent.inflateView(R.layout.weather_current))
-        1 -> Conditions(parent.inflateView(R.layout.weather_conditions))
-        2 -> SunCycle(parent.inflateView(R.layout.weather_sun_cycle))
-        3 -> HourlyForecast(parent.inflateView(R.layout.weather_forecast_hourly))
-        else -> DailyForecast(parent.inflateView(R.layout.weather_forecast_daily))
+        0 -> Current(parent.inflateView(R.layout.item_weather_current))
+        1 -> Conditions(parent.inflateView(R.layout.item_weather_conditions))
+        2 -> SunCycle(parent.inflateView(R.layout.item_weather_sun_cycle))
+        3 -> HourlyForecast(parent.inflateView(R.layout.item_weather_forecast_hourly))
+        else -> DailyForecast(parent.inflateView(R.layout.item_weather_forecast_daily))
     }
 
     override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) = when (holder) {
-        is Current -> {
-            holder.cityName.text = weather.cityName
-            holder.lastChecked.text = weather.lastChecked
-            holder.minTemp.text = weather.day1MinTemp
-            holder.maxTemp.text = weather.day1MaxTemp
-            holder.feelsLike.text = weather.feelsLike
-            holder.currentTemp.text = weather.currentTemp
-            holder.description.text = weather.description
-            holder.weatherIcon.loadIcon(weather.iconId, weather.sunPosition)
-        }
-        is Conditions -> {
-            holder.visibility.text = weather.visibility
-            holder.pressure.text = weather.pressure
-            holder.clouds.text = weather.clouds
-            holder.windSpeed.text = weather.windSpeed
-            holder.windDirection.text = weather.windDirection
-            holder.windDirectionIcon.rotation = weather.windDirection.removeUnits(DEGREES).toFloat() // Rotate icon
-            holder.location.text = weather.locationString
-            holder.flagIcon.text = weather.countryFlag
-            holder.lastUpdated.text = weather.lastUpdated
-            holder.humidity.text = weather.humidity
-        }
-        is SunCycle -> {
+        is Current -> holder.binding.apply {
+            currentCityNameTextView.text = weather.cityName
+            currentLastCheckedResultTextView.text = weather.lastChecked
+            currentMinTempResultTextView.text = weather.day1MinTemp
+            currentMaxTempResultTextView.text = weather.day1MaxTemp
+            currentFeelsLikeResultTextView.text = weather.feelsLike
+            currentCurrentTempResultTextView.text = weather.currentTemp
+            currentDescriptionTextView.text = weather.description
+            currentWeatherIconImageView.loadIcon(weather.iconId, weather.sunPosition)
+        }.run { return@run }
+        is Conditions -> holder.binding.apply {
+            conditionsVisibilityResultTextView.text = weather.visibility
+            conditionsPressureResultTextView.text = weather.pressure
+            conditionsCloudsResultTextView.text = weather.clouds
+            conditionsWindSpeedResultTextView.text = weather.windSpeed
+            conditionsWindDirectionResultTextView.text = weather.windDirection
+            conditionsWindDirIconImageView.rotation = weather.windDirection.removeUnits(DEGREES).toFloat() // Rotate icon
+            conditionsLocationResultTextView.text = weather.locationString
+            conditionsCountryFlagTextView.text = weather.countryFlag
+            conditionsLastUpdatedResultTextView.text = weather.lastUpdated
+            conditionsHumidityResultTextView.text = weather.humidity
+        }.run { return@run }
+        is SunCycle -> holder.binding.apply {
             holder.setIsRecyclable(false) // This force reloads sunGraphView to fix view not updating issue
-            holder.dayLength.text = weather.dayLength
-            holder.sunrise.text = weather.sunrise
-            holder.sunset.text = weather.sunset
-            holder.sunGraphView.setT(weather.sunPosition)
-        }
-        is HourlyForecast -> {
-            val forecastList = listOf( // This can be moved to the ViewHolder
+            sunCycleDayLengthResultTextView.text = weather.dayLength
+            sunCycleSunriseResultTextView.text = weather.sunrise
+            sunCycleSunsetResultTextView.text = weather.sunset
+            sunCycleSunGraphView.setT(weather.sunPosition)
+        }.run { return@run }
+        is HourlyForecast -> holder.binding.apply {
+            val forecastList = listOf(
                     weather.hour03Temp.removeUnits(DEGREES).toFloat(),
                     weather.hour06Temp.removeUnits(DEGREES).toFloat(),
                     weather.hour09Temp.removeUnits(DEGREES).toFloat(),
@@ -67,59 +67,59 @@ internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>()
                     weather.hour21Temp.removeUnits(DEGREES).toFloat()
             )
             holder.setIsRecyclable(false) // This force reloads ForecastView to fix view not updating issue
-            holder.forecast1Time.text = weather.hour03Time
-            holder.forecast1Temp.text = weather.hour03Temp
-            holder.forecast2Time.text = weather.hour06Time
-            holder.forecast2Temp.text = weather.hour06Temp
-            holder.forecast3Time.text = weather.hour09Time
-            holder.forecast3Temp.text = weather.hour09Temp
-            holder.forecast4Time.text = weather.hour12Time
-            holder.forecast4Temp.text = weather.hour12Temp
-            holder.forecast5Time.text = weather.hour15Time
-            holder.forecast5Temp.text = weather.hour15Temp
-            holder.forecast6Time.text = weather.hour18Time
-            holder.forecast6Temp.text = weather.hour18Temp
-            holder.forecast7Time.text = weather.hour21Time
-            holder.forecast7Temp.text = weather.hour21Temp
-            holder.forecast1Icon.loadIcon(weather.hour03IconId, weather.hour03SunPosition)
-            holder.forecast2Icon.loadIcon(weather.hour06IconId, weather.hour06SunPosition)
-            holder.forecast3Icon.loadIcon(weather.hour09IconId, weather.hour09SunPosition)
-            holder.forecast4Icon.loadIcon(weather.hour12IconId, weather.hour12SunPosition)
-            holder.forecast5Icon.loadIcon(weather.hour15IconId, weather.hour15SunPosition)
-            holder.forecast6Icon.loadIcon(weather.hour18IconId, weather.hour18SunPosition)
-            holder.forecast7Icon.loadIcon(weather.hour21IconId, weather.hour21SunPosition)
-            holder.forecastGraph.setPoints(forecastList) // Set points for forecast graph
-        }
-        is DailyForecast -> {
-            holder.forecast1Day.text = weather.day1Date
-            holder.forecast1Min.text = weather.day1MinTemp
-            holder.forecast1Max.text = weather.day1MaxTemp
-            holder.forecast2Day.text = weather.day2Date
-            holder.forecast2Min.text = weather.day2MinTemp
-            holder.forecast2Max.text = weather.day2MaxTemp
-            holder.forecast3Day.text = weather.day3Date
-            holder.forecast3Min.text = weather.day3MinTemp
-            holder.forecast3Max.text = weather.day3MaxTemp
-            holder.forecast4Day.text = weather.day4Date
-            holder.forecast4Min.text = weather.day4MinTemp
-            holder.forecast4Max.text = weather.day4MaxTemp
-            holder.forecast5Day.text = weather.day5Date
-            holder.forecast5Min.text = weather.day5MinTemp
-            holder.forecast5Max.text = weather.day5MaxTemp
-            holder.forecast6Day.text = weather.day6Date
-            holder.forecast6Min.text = weather.day6MinTemp
-            holder.forecast6Max.text = weather.day6MaxTemp
-            holder.forecast7Day.text = weather.day7Date
-            holder.forecast7Min.text = weather.day7MinTemp
-            holder.forecast7Max.text = weather.day7MaxTemp
-            holder.forecast1Icon.loadIcon(weather.day1IconId)
-            holder.forecast2Icon.loadIcon(weather.day2IconId)
-            holder.forecast3Icon.loadIcon(weather.day3IconId)
-            holder.forecast4Icon.loadIcon(weather.day4IconId)
-            holder.forecast5Icon.loadIcon(weather.day5IconId)
-            holder.forecast6Icon.loadIcon(weather.day6IconId)
-            holder.forecast7Icon.loadIcon(weather.day7IconId)
-        }
+            forecastHourly1TimeTextView.text = weather.hour03Time
+            forecastHourly1TempTextView.text = weather.hour03Temp
+            forecastHourly2TimeTextView.text = weather.hour06Time
+            forecastHourly2TempTextView.text = weather.hour06Temp
+            forecastHourly3TimeTextView.text = weather.hour09Time
+            forecastHourly3TempTextView.text = weather.hour09Temp
+            forecastHourly4TimeTextView.text = weather.hour12Time
+            forecastHourly4TempTextView.text = weather.hour12Temp
+            forecastHourly5TimeTextView.text = weather.hour15Time
+            forecastHourly5TempTextView.text = weather.hour15Temp
+            forecastHourly6TimeTextView.text = weather.hour18Time
+            forecastHourly6TempTextView.text = weather.hour18Temp
+            forecastHourly7TimeTextView.text = weather.hour21Time
+            forecastHourly7TempTextView.text = weather.hour21Temp
+            forecastHourly1IconImageView.loadIcon(weather.hour03IconId, weather.hour03SunPosition)
+            forecastHourly2IconImageView.loadIcon(weather.hour06IconId, weather.hour06SunPosition)
+            forecastHourly3IconImageView.loadIcon(weather.hour09IconId, weather.hour09SunPosition)
+            forecastHourly4IconImageView.loadIcon(weather.hour12IconId, weather.hour12SunPosition)
+            forecastHourly5IconImageView.loadIcon(weather.hour15IconId, weather.hour15SunPosition)
+            forecastHourly6IconImageView.loadIcon(weather.hour18IconId, weather.hour18SunPosition)
+            forecastHourly7IconImageView.loadIcon(weather.hour21IconId, weather.hour21SunPosition)
+            forecastHourlyForecastGraphView.setPoints(forecastList) // Set points for forecast graph
+        }.run { return@run }
+        is DailyForecast -> holder.binding.apply {
+            forecastDaily1DayTextView.text = weather.day1Date
+            forecastDaily1MinTextView.text = weather.day1MinTemp
+            forecastDaily1MaxTextView.text = weather.day1MaxTemp
+            forecastDaily2DayTextView.text = weather.day2Date
+            forecastDaily2MinTextView.text = weather.day2MinTemp
+            forecastDaily2MaxTextView.text = weather.day2MaxTemp
+            forecastDaily3DayTextView.text = weather.day3Date
+            forecastDaily3MinTextView.text = weather.day3MinTemp
+            forecastDaily3MaxTextView.text = weather.day3MaxTemp
+            forecastDaily4DayTextView.text = weather.day4Date
+            forecastDaily4MinTextView.text = weather.day4MinTemp
+            forecastDaily4MaxTextView.text = weather.day4MaxTemp
+            forecastDaily5DayTextView.text = weather.day5Date
+            forecastDaily5MinTextView.text = weather.day5MinTemp
+            forecastDaily5MaxTextView.text = weather.day5MaxTemp
+            forecastDaily6DayTextView.text = weather.day6Date
+            forecastDaily6MinTextView.text = weather.day6MinTemp
+            forecastDaily6MaxTextView.text = weather.day6MaxTemp
+            forecastDaily7DayTextView.text = weather.day7Date
+            forecastDaily7MinTextView.text = weather.day7MinTemp
+            forecastDaily7MaxTextView.text = weather.day7MaxTemp
+            forecastDaily1IconImageView.loadIcon(weather.day1IconId)
+            forecastDaily2IconImageView.loadIcon(weather.day2IconId)
+            forecastDaily3IconImageView.loadIcon(weather.day3IconId)
+            forecastDaily4IconImageView.loadIcon(weather.day4IconId)
+            forecastDaily5IconImageView.loadIcon(weather.day5IconId)
+            forecastDaily6IconImageView.loadIcon(weather.day6IconId)
+            forecastDaily7IconImageView.loadIcon(weather.day7IconId)
+        }.run { return@run }
     }
 
     override fun getItemCount(): Int = VIEW_HOLDER_COUNT
