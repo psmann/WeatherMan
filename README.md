@@ -1,7 +1,7 @@
 # WeatherMan
 
 An Android weather app that shows current and forecast weather for user location and other cities.
-Uses OpenWeatherMap API for weather data, Teleport API to get timezones and Google Places API to get city locations.
+Uses Dark SKy API for weather data and TomTom API to get cities.
 
 ## Screenshots
 
