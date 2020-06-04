@@ -26,18 +26,18 @@ Code is written in Kotlin and uses coroutines to handle all asynchronous work.
 
 ### Dependencies
 
-  * Dagger 2 - Dependency Injection
-  * Retrofit 2 - Network calls
-  * OkHttp 3 - Network calls
-  * Room Persistence Library - Database
-  * Kotlin Coroutines - Asynchronous tasks
-  * WorkManager - Background tasks (data sync, notifications)
-  * Google Play Services - Device GPS location
-  * TomTom API - City names and locations
-  * Dark Sky API - Weather data
+  * <a href="https://dagger.dev/">Dagger 2</a> - Dependency Injection
+  * <a href="https://square.github.io/retrofit/">Retrofit 2</a> - Network calls
+  * <a href="https://square.github.io/okhttp/">OkHttp 3</a> - Network calls
+  * <a href="https://developer.android.com/topic/libraries/architecture/room">Room Persistence Library</a> - SQLite Database
+  * <a href="https://kotlinlang.org/docs/reference/coroutines-overview.html">Kotlin Coroutines</a> - Asynchronous tasks
+  * <a href="https://developer.android.com/topic/libraries/architecture/workmanager">WorkManager</a> - Background tasks (data sync, notifications)
+  * <a href="https://developers.google.com/android/reference/com/google/android/gms/location/package-summary">Google Play Services</a> - Device GPS location
+  * <a href="https://developer.tomtom.com/">TomTom API</a> - City names and locations
+  * <a href="https://darksky.net/dev">Dark Sky API</a> - Weather data
 
 ## Getting Started
 
 1) Clone the project repository
-2) Generate new keys for <a href="https://darksky.net/dev">Dark Sky API</a> and <a href="https://developer.tomtom.com/">TomTom API</a>
+2) Generate keys for Dark Sky API and TomTom API
 3) Add your keys to api/common/Keys.kt located inside the app module and rebuild project
