@@ -39,5 +39,5 @@ Code is written in Kotlin and uses coroutines to handle all asynchronous work.
 ## Getting Started
 
 1) Clone the project repository
-2) Generate new keys for Dark Sky API and TomTom API
+2) Generate new keys for <a href="https://darksky.net/dev">Dark Sky API</a> and <a href="https://developer.tomtom.com/">TomTom API</a>
 3) Add your keys to api/common/Keys.kt located inside the app module and rebuild project
