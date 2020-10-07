@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -18,6 +19,7 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CoroutineExceptionHandler
 import one.mann.domain.logic.truncate
 import one.mann.domain.model.Errors.*
 import one.mann.domain.model.location.Location
@@ -32,6 +34,8 @@ import one.mann.weatherman.ui.settings.SettingsActivity
 import javax.inject.Inject
 
 internal class MainActivity : BaseLocationActivity() {
+
+    //CoroutineExceptionHandler
 
     companion object {
         private const val AUTOCOMPLETE_REQUEST_CODE = 1021
@@ -118,7 +122,7 @@ internal class MainActivity : BaseLocationActivity() {
         if (!menu.hasVisibleItems()) inflateMenu(R.menu.menu_main) // Inflate menu directly into toolbar
         setOnMenuItemClickListener { menuItem ->
             when (menuItem!!.itemId) {
-                R.id.menu_add_city -> if (binding.viewPager.adapter!!.count < 10) autocompleteWidget() // Limit cities to 10
+                R.id.menu_add_city -> if (binding.viewPager.adapter!!.count < 10) binding.itemSearchCityConstraintLayout?.citySearchView?.visibility = View.VISIBLE//autocompleteWidget() // Limit cities to 10
                 else toast(R.string.remove_a_city_before_adding)
                 R.id.menu_remove_city -> removeCityAlert().show()
                 R.id.menu_settings -> startActivity(Intent(this@MainActivity, SettingsActivity::class.java))

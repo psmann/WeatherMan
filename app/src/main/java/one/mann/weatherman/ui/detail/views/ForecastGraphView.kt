@@ -31,8 +31,8 @@ internal class ForecastGraphView @JvmOverloads constructor(context: Context, att
     /** Calculates coordinates for lines in the graph using seven given input points (for six lines) */
     private fun updateView() {
         // Set up all the coordinates
-        val min = points.min() ?: return // Minimum value in the list, return if null
-        val max = points.max() ?: return // Maximum value in the list, return if null
+        val min = points.minOrNull() ?: return // Minimum value in the list, return if null
+        val max = points.maxOrNull() ?: return // Maximum value in the list, return if null
         val heightGraph = height - bottomOffset // Height of the graph
         val gap = max - min // Used as a metric to calculate percentages within its scope
         val line1StartX = left.toFloat() // startX coordinate of line 1
