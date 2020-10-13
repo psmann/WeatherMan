@@ -6,6 +6,7 @@ dependencies {
     //noinspection DifferentStdlibGradleVersion
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    // jUnit
-    testImplementation 'junit:junit:4.13'
+    // Testing APIs
+    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'com.google.truth:truth:1.0.1'
 }

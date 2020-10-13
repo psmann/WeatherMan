@@ -16,6 +16,11 @@
         android:theme="@style/ToolBarTheme"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
+    <include
+        android:id="@+id/item_search_city_constraint_layout"
+        layout="@layout/item_search_city"
+        android:visibility="gone" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/main_swipe_layout"
         android:layout_width="match_parent"
