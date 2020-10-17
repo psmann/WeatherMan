@@ -6,13 +6,12 @@ dependencies {
     implementation project(":domain")
 
     // Kotlin
-    //noinspection DifferentStdlibGradleVersion
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     // Dagger 2
     implementation 'com.google.dagger:dagger:2.29.1'
     kapt 'com.google.dagger:dagger-compiler:2.29.1'
 
     // Testing APIs
-    testImplementation 'junit:junit:4.13.1'
-    testImplementation 'com.google.truth:truth:1.0.1'
+    testImplementation 'junit:junit:4.13.1' // JUnit
+    testImplementation 'com.google.truth:truth:1.0.1' // Truth
 }

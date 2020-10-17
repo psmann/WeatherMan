@@ -38,12 +38,12 @@ dependencies {
     implementation project(":interactors")
 
     // Android Framework
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.3.0-alpha03'
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
-    implementation 'androidx.preference:preference-ktx:1.1.1'
-    implementation 'androidx.core:core-ktx:1.5.0-alpha04' // Core framework extensions
+    implementation 'androidx.appcompat:appcompat:1.2.0' // AppCompat
+    implementation 'com.google.android.material:material:1.2.1' // Material design
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0' // SwipeRefresh layout
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.2' // Constraint layout
+    implementation 'androidx.preference:preference-ktx:1.1.1' // Shared Preferences
+    implementation 'androidx.core:core-ktx:1.3.2' // Kotlin framework extensions
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     // Coroutines
@@ -71,9 +71,9 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
 
     // Testing APIs
-    testImplementation 'junit:junit:4.13.1'
-    androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.9'
-    androidTestImplementation 'androidx.test:runner:1.3.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    androidTestImplementation 'com.google.truth:truth:1.0.1'
+    testImplementation 'junit:junit:4.13.1' // JUnit
+    androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.9' // Coroutine tests
+    androidTestImplementation 'androidx.test:runner:1.3.0' // Runner
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0' // Espresso
+    androidTestImplementation 'com.google.truth:truth:1.0.1' // Truth
 }
