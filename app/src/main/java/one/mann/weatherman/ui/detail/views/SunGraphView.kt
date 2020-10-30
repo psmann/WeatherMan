@@ -10,8 +10,8 @@ import android.view.View
 import one.mann.weatherman.R
 import kotlin.math.pow
 
-internal class SunGraphView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
+internal class SunGraphView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
+    : View(context, attrs, defStyleAttr) {
 
     companion object {
         private const val controlY = -37f // y control points 1 and 2 (y1 and y2) = height of curve
@@ -76,14 +76,16 @@ internal class SunGraphView @JvmOverloads constructor(context: Context, attrs: A
     }
 
     /** Change colour of the graph */
-    private fun updatePaintColour(change: Int = 125) =
-            paintCurve.setARGB(alphaValue, redValue - change, greenValue - change, blueValue + change)
+    private fun updatePaintColour(change: Int = 125) {
+        paintCurve.setARGB(alphaValue, redValue - change, greenValue - change, blueValue + change)
+    }
 
     /** Convert pixels to density independent pixels */
     private fun pxToDip(value: Float): Float = value / screenDensity
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) =
-            setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec))
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec))
+    }
 
     /** Update parameters only after correct height and width are known */
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
