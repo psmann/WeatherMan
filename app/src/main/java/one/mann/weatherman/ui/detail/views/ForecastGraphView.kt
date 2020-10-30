@@ -6,8 +6,8 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 
-internal class ForecastGraphView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
+internal class ForecastGraphView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
+    : View(context, attrs, defStyleAttr) {
 
     companion object {
         private const val alphaValue = 73 // Alpha for paintLine
@@ -47,12 +47,12 @@ internal class ForecastGraphView @JvmOverloads constructor(context: Context, att
 
         // Add calculated coordinates to the array used for drawing
         coordinates = floatArrayOf(
-                line1StartX, line1StartY, percentX * 1, line2StartY, // Line 1
-                percentX * 1, line2StartY, percentX * 2, line3StartY, // Line 2
-                percentX * 2, line3StartY, percentX * 3, line4StartY, // Line 3
-                percentX * 3, line4StartY, percentX * 4, line5StartY, // Line 4
-                percentX * 4, line5StartY, percentX * 5, line6StartY, // Line 5
-                percentX * 5, line6StartY, percentX * 6, line6EndY // Line 6
+                line1StartX, line1StartY, percentX * 1 + lineWidth, line2StartY, // Line 1
+                percentX * 1 + lineWidth, line2StartY, percentX * 2 + lineWidth, line3StartY, // Line 2
+                percentX * 2 + lineWidth, line3StartY, percentX * 3 + lineWidth, line4StartY, // Line 3
+                percentX * 3 + lineWidth, line4StartY, percentX * 4 + lineWidth, line5StartY, // Line 4
+                percentX * 4 + lineWidth, line5StartY, percentX * 5 + lineWidth, line6StartY, // Line 5
+                percentX * 5 + lineWidth, line6StartY, percentX * 6, line6EndY // Line 6
         )
         setupPaint()
     }
@@ -64,8 +64,9 @@ internal class ForecastGraphView @JvmOverloads constructor(context: Context, att
         paintLine.setARGB(alphaValue, redValue, greenValue, blueValue)
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) =
-            setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec))
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        setMeasuredDimension(MeasureSpec.getSize(widthMeasureSpec), MeasureSpec.getSize(heightMeasureSpec))
+    }
 
     /** Update parameters only after correct height and width are known */
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
