@@ -17,9 +17,9 @@ TODO:
  Migrate ViewPager to ViewPager2
  Add more weather data parameters (detailed forecasts, maps, UV index, etc)
  Handle navBar hidden usecase (screen layouts should resize accordingly to fill the empty space)
- Align and center ForecastGraphView lines (by increasing lengths by the amount they are being clipped at intersections)
  Implement CI/CD (Jenkins or CircleCI)
  Implement Crashlytics (Firebase)
 // Implement View Binding and remove Kotlin synthetics -> DONE
 // Follow standardised naming convention for views (refactor) -> DONE
+// Center ForecastGraphView lines (by increasing lengths by the amount they are being clipped at intersections) -> DONE
  */
