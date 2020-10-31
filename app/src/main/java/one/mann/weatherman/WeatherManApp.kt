@@ -4,9 +4,9 @@ import android.app.Application
 import androidx.work.Configuration
 import androidx.work.WorkManager
 import androidx.work.WorkerFactory
-import one.mann.weatherman.di.component.DaggerWeatherManAppComponent
-import one.mann.weatherman.di.component.WeatherManAppComponent
-import one.mann.weatherman.di.module.WeatherManAppModule
+import one.mann.weatherman.di.components.DaggerWeatherManAppComponent
+import one.mann.weatherman.di.components.WeatherManAppComponent
+import one.mann.weatherman.di.modules.WeatherManAppModule
 import javax.inject.Inject
 
 internal class WeatherManApp : Application() {

@@ -1,4 +1,4 @@
-package one.mann.weatherman.di.module.framework
+package one.mann.weatherman.di.modules.framework
 
 import androidx.work.WorkerFactory
 import dagger.Binds

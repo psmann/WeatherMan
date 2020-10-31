@@ -1,4 +1,4 @@
-package one.mann.weatherman.di.module.framework
+package one.mann.weatherman.di.modules.framework
 
 import android.content.Context
 import androidx.room.Room
@@ -16,6 +16,5 @@ internal class DbModule {
 
     @Provides
     @Singleton
-    fun provideDb(context: Context): WeatherDb =
-            Room.databaseBuilder(context, WeatherDb::class.java, DB_NAME).build()
+    fun provideDb(context: Context): WeatherDb = Room.databaseBuilder(context, WeatherDb::class.java, DB_NAME).build()
 }

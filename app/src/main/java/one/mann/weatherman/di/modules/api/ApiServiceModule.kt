@@ -1,4 +1,4 @@
-package one.mann.weatherman.di.module.api
+package one.mann.weatherman.di.modules.api
 
 import dagger.Module
 import dagger.Provides
@@ -42,29 +42,36 @@ internal class ApiServiceModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(@AppId appIdQueryInterceptor: QueryInterceptor, @Units unitsQueryInterceptor: QueryInterceptor
-    ): OkHttpClient = OkHttpClient.Builder()
-            .addInterceptor(appIdQueryInterceptor)
-            .addInterceptor(unitsQueryInterceptor)
-            .build()
+    fun provideOkHttpClient(
+            @AppId appIdQueryInterceptor: QueryInterceptor,
+            @Units unitsQueryInterceptor: QueryInterceptor
+    ): OkHttpClient {
+        return OkHttpClient.Builder()
+                .addInterceptor(appIdQueryInterceptor)
+                .addInterceptor(unitsQueryInterceptor)
+                .build()
+    }
 
     @Provides
     @Singleton
     @OpenWeatherMap
-    fun provideOwmRestAdapter(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory): Retrofit =
-            Retrofit.Builder()
-                    .baseUrl(OWM_BASE_URL)
-                    .addConverterFactory(gsonConverterFactory)
-                    .client(client)
-                    .build()
+    fun provideOwmRestAdapter(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory): Retrofit {
+        return Retrofit.Builder()
+                .baseUrl(OWM_BASE_URL)
+                .addConverterFactory(gsonConverterFactory)
+                .client(client)
+                .build()
+    }
 
     @Provides
     @Singleton
     @Teleport
-    fun provideTeleportRestAdapter(gsonConverterFactory: GsonConverterFactory): Retrofit = Retrofit.Builder()
-            .baseUrl(TELEPORT_BASE_URL)
-            .addConverterFactory(gsonConverterFactory)
-            .build()
+    fun provideTeleportRestAdapter(gsonConverterFactory: GsonConverterFactory): Retrofit {
+        return Retrofit.Builder()
+                .baseUrl(TELEPORT_BASE_URL)
+                .addConverterFactory(gsonConverterFactory)
+                .build()
+    }
 
     @Provides
     @Singleton

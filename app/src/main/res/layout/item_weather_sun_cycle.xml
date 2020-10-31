@@ -12,7 +12,7 @@
         android:text="@string/sunrise"
         android:textColor="@android:color/white"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sun_cycle_sun_graph_view" />
+        app:layout_constraintTop_toBottomOf="@+id/sun_cycle_sun_position_view" />
 
     <TextView
         android:id="@+id/sun_cycle_sunset_text_view"
@@ -22,7 +22,7 @@
         android:text="@string/sunset"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sun_cycle_sun_graph_view" />
+        app:layout_constraintTop_toBottomOf="@+id/sun_cycle_sun_position_view" />
 
     <TextView
         android:id="@+id/sun_cycle_sunrise_result_text_view"
@@ -54,8 +54,8 @@
         app:layout_constraintStart_toEndOf="@+id/sun_cycle_sunrise_text_view"
         app:layout_constraintTop_toTopOf="@+id/sun_cycle_sunrise_text_view" />
 
-    <one.mann.weatherman.ui.detail.views.SunGraphView
-        android:id="@+id/sun_cycle_sun_graph_view"
+    <one.mann.weatherman.ui.detail.views.SunPositionView
+        android:id="@+id/sun_cycle_sun_position_view"
         android:layout_width="0dp"
         android:layout_height="100dp"
         android:layout_marginStart="16dp"

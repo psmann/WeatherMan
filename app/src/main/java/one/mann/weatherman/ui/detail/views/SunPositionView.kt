@@ -10,7 +10,7 @@ import android.view.View
 import one.mann.weatherman.R
 import kotlin.math.pow
 
-internal class SunGraphView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
+internal class SunPositionView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
     : View(context, attrs, defStyleAttr) {
 
     companion object {

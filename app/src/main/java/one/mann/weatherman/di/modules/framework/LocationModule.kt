@@ -1,4 +1,4 @@
-package one.mann.weatherman.di.module.framework
+package one.mann.weatherman.di.modules.framework
 
 import android.content.Context
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -12,6 +12,7 @@ class LocationModule {
 
     @Provides
     @Singleton
-    fun provideFusedLocationProvider(context: Context): FusedLocationProviderClient =
-            LocationServices.getFusedLocationProviderClient(context)
+    fun provideFusedLocationProvider(context: Context): FusedLocationProviderClient {
+        return LocationServices.getFusedLocationProviderClient(context)
+    }
 }

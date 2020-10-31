@@ -1,4 +1,4 @@
-package one.mann.weatherman.di.module.ui
+package one.mann.weatherman.di.modules.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

@@ -1,4 +1,4 @@
-package one.mann.weatherman.di.component
+package one.mann.weatherman.di.components
 
 import dagger.Subcomponent
 import one.mann.weatherman.di.annotations.scope.ActivityScope

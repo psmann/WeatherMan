@@ -1,4 +1,4 @@
-package one.mann.weatherman.di.module.api
+package one.mann.weatherman.di.modules.api
 
 import dagger.Binds
 import dagger.Module
