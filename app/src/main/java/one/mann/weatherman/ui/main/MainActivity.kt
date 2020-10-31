@@ -1,6 +1,5 @@
 package one.mann.weatherman.ui.main
 
-import android.app.Activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -12,20 +11,10 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException
-import com.google.android.gms.common.GooglePlayServicesRepairableException
-import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.widget.Autocomplete
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.CoroutineExceptionHandler
-import one.mann.domain.logic.truncate
 import one.mann.domain.model.Errors.*
-import one.mann.domain.model.location.Location
 import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
-import one.mann.weatherman.api.common.Keys
 import one.mann.weatherman.databinding.ActivityMainBinding
 import one.mann.weatherman.ui.common.base.BaseLocationActivity
 import one.mann.weatherman.ui.common.util.getViewModel
@@ -35,11 +24,8 @@ import javax.inject.Inject
 
 internal class MainActivity : BaseLocationActivity() {
 
-    //CoroutineExceptionHandler
-
-    companion object {
-        private const val AUTOCOMPLETE_REQUEST_CODE = 1021
-    }
+    // import kotlinx.coroutines.CoroutineExceptionHandler -> CoroutineExceptionHandler // handle exceptions?
+    // mainViewModel.addCity(Location(listOf(placeLoc!!.latitude.toFloat(), placeLoc.longitude.toFloat())).truncate()) // Adds new city
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -53,15 +39,6 @@ internal class MainActivity : BaseLocationActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         handleLocationPermission { initActivity(it) }
-    }
-
-    /** Check result of Autocomplete API widget's request */
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == AUTOCOMPLETE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val placeLoc = Autocomplete.getPlaceFromIntent(data!!).latLng // Get coordinates from intent
-            mainViewModel.addCity(Location(listOf(placeLoc!!.latitude.toFloat(), placeLoc.longitude.toFloat())).truncate())
-        }
     }
 
     override fun injectDependencies() = WeatherManApp.appComponent.getSubComponent().injectMainActivity(this)
@@ -158,14 +135,4 @@ internal class MainActivity : BaseLocationActivity() {
                 view.elevation = 0f // Remove shadow
                 view.layoutParams = params
             }
-
-    /** Widget for Places Autocomplete API which needs to run in activity scope */
-    private fun autocompleteWidget() = try {
-        if (!Places.isInitialized()) Places.initialize(applicationContext, Keys.PLACES_APP_KEY)
-        val filter: List<Place.Field> = listOf(Place.Field.LAT_LNG)
-        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, filter).build(this)
-        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
-    } catch (ignored: GooglePlayServicesRepairableException) {
-    } catch (ignored: GooglePlayServicesNotAvailableException) {
-    }
 }
