@@ -26,7 +26,7 @@ internal class SunPositionView @JvmOverloads constructor(context: Context, attrs
     private val pathCurve = Path()
     private val paintCurve = Paint()
     private val paintBitmap = Paint()
-    private val sunImage = BitmapFactory.decodeResource(resources, R.drawable.sun_cropped)
+    private val sunImage = BitmapFactory.decodeResource(resources, R.drawable.weather_parameter_sun_position)
     private val screenDensity = resources.displayMetrics.density
     private var displaySun = false
     private var startX = 0f // x start point (x0)

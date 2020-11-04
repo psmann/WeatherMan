@@ -17,7 +17,7 @@
 
     <item
         android:id="@+id/menu_add_city"
-        android:icon="@drawable/ic_round_add_circle_outline_24px"
+        android:icon="@drawable/ic_menu_add"
         android:orderInCategory="10"
         android:title="@string/add_city"
         android:visible="true"
@@ -25,7 +25,7 @@
 
     <item
         android:id="@+id/menu_remove_city"
-        android:icon="@drawable/ic_outline_remove_circle_outline_24px"
+        android:icon="@drawable/ic_menu_remove"
         android:orderInCategory="20"
         android:title="@string/remove_city"
         android:visible="true"
@@ -33,7 +33,7 @@
 
     <item
         android:id="@+id/menu_settings"
-        android:icon="@drawable/ic_outline_settings_24px"
+        android:icon="@drawable/ic_menu_settings"
         android:orderInCategory="30"
         android:title="@string/settings"
         app:showAsAction="never" />

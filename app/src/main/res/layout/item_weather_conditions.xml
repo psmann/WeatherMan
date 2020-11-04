@@ -13,7 +13,7 @@
         android:contentDescription="@string/weather_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_wi_humidity" />
+        app:srcCompat="@drawable/weather_parameter_humidity" />
 
     <TextView
         android:id="@+id/conditions_humidity_text_view"
@@ -48,7 +48,7 @@
         android:contentDescription="@string/weather_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/conditions_humidity_icon_image_view"
-        app:srcCompat="@drawable/ic_wi_clouds" />
+        app:srcCompat="@drawable/weather_parameter_cloud_cover" />
 
     <TextView
         android:id="@+id/conditions_clouds_text_view"
@@ -83,7 +83,7 @@
         android:contentDescription="@string/weather_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/conditions_clouds_icon_image_view"
-        app:srcCompat="@drawable/ic_wi_barometer" />
+        app:srcCompat="@drawable/weather_parameter_pressure" />
 
     <TextView
         android:id="@+id/conditions_pressure_text_view"
@@ -117,7 +117,7 @@
         android:contentDescription="@string/weather_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/conditions_pressure_icon_image_view"
-        app:srcCompat="@drawable/ic_wi_wind" />
+        app:srcCompat="@drawable/weather_parameter_wind_speed" />
 
     <TextView
         android:id="@+id/conditions_wind_speed_text_view"
@@ -151,7 +151,7 @@
         android:contentDescription="@string/weather_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/conditions_wind_speed_icon_image_view"
-        app:srcCompat="@drawable/ic_wi_wind_deg" />
+        app:srcCompat="@drawable/weather_parameter_wind_deg" />
 
     <TextView
         android:id="@+id/conditions_wind_direction_text_view"
@@ -185,7 +185,7 @@
         android:contentDescription="@string/weather_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/conditions_wind_dir_icon_image_view"
-        app:srcCompat="@drawable/ic_wi_visibility" />
+        app:srcCompat="@drawable/weather_parameter_visibility" />
 
     <TextView
         android:id="@+id/conditions_visibility_text_view"
@@ -219,7 +219,7 @@
         android:contentDescription="@string/weather_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/conditions_visibility_icon_image_view"
-        app:srcCompat="@drawable/ic_wi_time" />
+        app:srcCompat="@drawable/weather_parameter_time" />
 
     <TextView
         android:id="@+id/conditions_last_updated_text_view"

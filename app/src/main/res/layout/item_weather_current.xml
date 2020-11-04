@@ -143,7 +143,7 @@
         android:adjustViewBounds="true"
         android:contentDescription="@string/weather_icon"
         android:scaleType="fitXY"
-        android:src="@drawable/cloudy_day_1"
+        android:src="@drawable/weather_type_cloudy_day_1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/current_city_name_text_view" />
 

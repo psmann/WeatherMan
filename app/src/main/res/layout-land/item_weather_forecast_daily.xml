@@ -24,7 +24,7 @@
         android:layout_marginEnd="144dp"
         android:adjustViewBounds="false"
         android:contentDescription="@string/weather_icon"
-        android:src="@drawable/cloudy_day_1"
+        android:src="@drawable/weather_type_cloudy_day_1"
         app:layout_constraintBottom_toBottomOf="@+id/forecast_daily_1_linear_layout"
         app:layout_constraintEnd_toEndOf="@+id/forecast_daily_1_linear_layout"
         app:layout_constraintTop_toTopOf="@+id/forecast_daily_1_linear_layout" />
@@ -86,7 +86,7 @@
         android:layout_marginEnd="144dp"
         android:adjustViewBounds="false"
         android:contentDescription="@string/weather_icon"
-        android:src="@drawable/cloudy_day_1"
+        android:src="@drawable/weather_type_cloudy_day_1"
         app:layout_constraintBottom_toBottomOf="@+id/forecast_daily_2_linear_layout"
         app:layout_constraintEnd_toEndOf="@+id/forecast_daily_2_linear_layout"
         app:layout_constraintTop_toTopOf="@+id/forecast_daily_2_linear_layout" />
@@ -148,7 +148,7 @@
         android:layout_marginEnd="144dp"
         android:adjustViewBounds="false"
         android:contentDescription="@string/weather_icon"
-        android:src="@drawable/cloudy_day_1"
+        android:src="@drawable/weather_type_cloudy_day_1"
         app:layout_constraintBottom_toBottomOf="@+id/forecast_daily_3_linear_layout"
         app:layout_constraintEnd_toEndOf="@+id/forecast_daily_3_linear_layout"
         app:layout_constraintTop_toTopOf="@+id/forecast_daily_3_linear_layout" />
@@ -210,7 +210,7 @@
         android:layout_marginEnd="144dp"
         android:adjustViewBounds="false"
         android:contentDescription="@string/weather_icon"
-        android:src="@drawable/cloudy_day_1"
+        android:src="@drawable/weather_type_cloudy_day_1"
         app:layout_constraintBottom_toBottomOf="@+id/forecast_daily_4_linear_layout"
         app:layout_constraintEnd_toEndOf="@+id/forecast_daily_4_linear_layout"
         app:layout_constraintTop_toTopOf="@+id/forecast_daily_4_linear_layout" />
@@ -272,7 +272,7 @@
         android:layout_marginEnd="144dp"
         android:adjustViewBounds="false"
         android:contentDescription="@string/weather_icon"
-        android:src="@drawable/cloudy_day_1"
+        android:src="@drawable/weather_type_cloudy_day_1"
         app:layout_constraintBottom_toBottomOf="@+id/forecast_daily_5_linear_layout"
         app:layout_constraintEnd_toEndOf="@+id/forecast_daily_5_linear_layout"
         app:layout_constraintTop_toTopOf="@+id/forecast_daily_5_linear_layout" />
@@ -334,7 +334,7 @@
         android:layout_marginEnd="144dp"
         android:adjustViewBounds="false"
         android:contentDescription="@string/weather_icon"
-        android:src="@drawable/cloudy_day_1"
+        android:src="@drawable/weather_type_cloudy_day_1"
         app:layout_constraintBottom_toBottomOf="@+id/forecast_daily_6_linear_layout"
         app:layout_constraintEnd_toEndOf="@+id/forecast_daily_6_linear_layout"
         app:layout_constraintTop_toTopOf="@+id/forecast_daily_6_linear_layout" />
@@ -399,7 +399,7 @@
         android:layout_marginEnd="144dp"
         android:adjustViewBounds="false"
         android:contentDescription="@string/weather_icon"
-        android:src="@drawable/cloudy_day_1"
+        android:src="@drawable/weather_type_cloudy_day_1"
         app:layout_constraintBottom_toBottomOf="@+id/forecast_daily_7_linear_layout"
         app:layout_constraintEnd_toEndOf="@+id/forecast_daily_7_linear_layout"
         app:layout_constraintTop_toTopOf="@+id/forecast_daily_7_linear_layout" />
