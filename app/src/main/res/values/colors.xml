@@ -5,6 +5,7 @@
     <color name="colorAccent">#203CE7</color>
 
     <color name="highAlphaWhite">#47E0F7FA</color>
+    <color name="highAlphaGrey">#79AAAAAA</color>
 
     <!--Background colours-->
     <color name="dayClearStart">#01579B</color>

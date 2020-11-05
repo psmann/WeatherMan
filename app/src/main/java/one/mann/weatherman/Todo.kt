@@ -10,10 +10,10 @@ TODO:
  Bug: 1) The same city can be added multiple times 2) Deleting one city also removes any other city having the same name
  Replace OpenWeatherMap API and Google Places API with Dark Sky and TomTom respectively, remove Teleport API if possible
  Get weather for current location (instead of previous saved location) in notifications if GPS is enabled on device
- Implement Coroutine Flow for TomTom
+ Implement Coroutine Flow for LiveData
  Add tests for all modules
  Handle all network responses from API calls explicitly
- Write and test Proguard rules
+ Write and test Proguard rules - WEP
  Migrate ViewPager to ViewPager2
  Add more weather data parameters (detailed forecasts, maps, UV index, etc)
  Handle navBar hidden usecase (screen layouts should resize accordingly to fill the empty space)

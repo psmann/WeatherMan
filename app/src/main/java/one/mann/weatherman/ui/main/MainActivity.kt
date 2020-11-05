@@ -1,10 +1,12 @@
 package one.mann.weatherman.ui.main
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -12,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.snackbar.Snackbar
+import one.mann.domain.model.CitySearch
 import one.mann.domain.model.Errors.*
 import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
@@ -19,6 +22,7 @@ import one.mann.weatherman.databinding.ActivityMainBinding
 import one.mann.weatherman.ui.common.base.BaseLocationActivity
 import one.mann.weatherman.ui.common.util.getViewModel
 import one.mann.weatherman.ui.main.adapter.MainPagerAdapter
+import one.mann.weatherman.ui.main.adapter.SearchCityRecyclerAdapter
 import one.mann.weatherman.ui.settings.SettingsActivity
 import javax.inject.Inject
 
@@ -32,8 +36,11 @@ internal class MainActivity : BaseLocationActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val mainViewModel: MainViewModel by lazy { getViewModel(viewModelFactory) }
     private val mainPagerAdapter by lazy { MainPagerAdapter(supportFragmentManager) }
+    private val inputMethodManager by lazy { getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
     private var countObserved = false // Stop multiple location alerts on first run
     private var isFirstRun = true // Check if this is the first time app is running
+
+    private val searchCityRecyclerAdapter = SearchCityRecyclerAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,8 +106,35 @@ internal class MainActivity : BaseLocationActivity() {
         if (!menu.hasVisibleItems()) inflateMenu(R.menu.menu_main) // Inflate menu directly into toolbar
         setOnMenuItemClickListener { menuItem ->
             when (menuItem!!.itemId) {
-                R.id.menu_add_city -> if (binding.viewPager.adapter!!.count < 10) binding.itemSearchCityConstraintLayout?.citySearchView?.visibility = View.VISIBLE//autocompleteWidget() // Limit cities to 10
-                else toast(R.string.remove_a_city_before_adding)
+                R.id.menu_add_city -> // Limit cities to 10
+                    if (binding.viewPager.adapter!!.count < 10) {
+
+                        binding.itemSearchCityConstraintLayout?.let {
+                            // Mock Recycler View data
+                            it.searchResultRecyclerView.apply {
+                                adapter = searchCityRecyclerAdapter
+                                setHasFixedSize(true)
+                            }
+                            searchCityRecyclerAdapter.update(listOf<CitySearch>(
+                                    CitySearch("Toronto", "ON"),
+                                    CitySearch("Buffalo", "NY"),
+                                    CitySearch("Rohini", "New Delhi"),
+                                    CitySearch("Mumbai", "Maharashtra"),
+                                    CitySearch("London", "England"),
+                                    CitySearch("Vancouver", "BC"),
+                                    CitySearch("Sydney", "NSW")))
+
+                            if (it.root.visibility == View.GONE) {
+                                it.root.visibility = View.VISIBLE
+                                it.citySearchView.requestFocus()
+                                inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+                                it.backgroundTouchListenerView.setOnClickListener { _ ->
+                                    it.citySearchView.clearFocus()
+                                    it.root.visibility = View.GONE
+                                }
+                            }
+                        }
+                    } else toast(R.string.remove_a_city_before_adding)
                 R.id.menu_remove_city -> removeCityAlert().show()
                 R.id.menu_settings -> startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
             }
