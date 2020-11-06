@@ -123,8 +123,6 @@ internal class MainActivity : BaseLocationActivity() {
                             searchCityRecyclerAdapter.update(listOf(
                                     CitySearch("Toronto", "ON"),
                                     CitySearch("Buffalo", "NY"),
-                                    CitySearch("Rohini", "New Delhi"),
-                                    CitySearch("Mumbai", "Maharashtra"),
                                     CitySearch("London", "England"),
                                     CitySearch("Vancouver", "BC"),
                                     CitySearch("Sydney", "NSW")))
