@@ -6,15 +6,6 @@
     android:layout_height="match_parent"
     android:elevation="2dp">
 
-    <View
-        android:id="@+id/background_touch_listener_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.appcompat.widget.SearchView
         android:id="@+id/city_search_view"
         android:layout_width="match_parent"

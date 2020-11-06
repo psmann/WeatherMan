@@ -7,29 +7,29 @@
 
     <ImageView
         android:id="@+id/location_pin_image_view"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:contentDescription="@string/location_pin"
         android:src="@drawable/location_pin"
-        app:layout_constraintBottom_toTopOf="@+id/horizontal_line_view"
+        app:layout_constraintBottom_toBottomOf="@+id/city_result_1_text_view"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/city_result_1_text_view" />
 
     <TextView
         android:id="@+id/city_result_1_text_view"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:textAlignment="textStart"
         android:textColor="@android:color/black"
-        android:textSize="24sp"
+        android:textSize="23sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/location_pin_image_view"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/location_pin_image_view"
-        app:layout_constraintTop_toTopOf="@+id/location_pin_image_view" />
+        app:layout_constraintTop_toBottomOf="@+id/horizontal_line_view" />
 
     <TextView
         android:id="@+id/city_result_2_text_view"
@@ -48,8 +48,8 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/highAlphaGrey"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

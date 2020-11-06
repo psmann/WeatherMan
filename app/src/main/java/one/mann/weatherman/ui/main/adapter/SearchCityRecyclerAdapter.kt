@@ -8,7 +8,8 @@ import one.mann.weatherman.R
 import one.mann.weatherman.databinding.ItemCitySearchBinding
 import one.mann.weatherman.ui.common.util.inflateView
 
-internal class SearchCityRecyclerAdapter : RecyclerView.Adapter<SearchCityRecyclerAdapter.CitySearchViewHolder>() {
+internal class SearchCityRecyclerAdapter(val onClick: () -> Unit)
+    : RecyclerView.Adapter<SearchCityRecyclerAdapter.CitySearchViewHolder>() {
 
     private var citySearchList = listOf<CitySearch>()
 
@@ -20,6 +21,7 @@ internal class SearchCityRecyclerAdapter : RecyclerView.Adapter<SearchCityRecycl
         holder.binding.apply {
             cityResult1TextView.text = citySearchList[position].cityLine1
             cityResult2TextView.text = citySearchList[position].cityLine2
+            root.setOnClickListener { onClick() }
         }
     }
 

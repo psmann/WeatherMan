@@ -40,7 +40,7 @@ internal class MainActivity : BaseLocationActivity() {
     private var countObserved = false // Stop multiple location alerts on first run
     private var isFirstRun = true // Check if this is the first time app is running
 
-    private val searchCityRecyclerAdapter = SearchCityRecyclerAdapter()
+    private val searchCityRecyclerAdapter = SearchCityRecyclerAdapter {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +49,11 @@ internal class MainActivity : BaseLocationActivity() {
     }
 
     override fun injectDependencies() = WeatherManApp.appComponent.getSubComponent().injectMainActivity(this)
+
+    /** Hide the searchView if it is visible instead of exiting activity */
+    override fun onBackPressed() {
+        if (binding.itemSearchCityConstraintLayout?.root?.visibility == View.VISIBLE) hideSearchView() else super.onBackPressed()
+    }
 
     private fun initActivity(permissionGranted: Boolean) {
         if (!permissionGranted) { // If permission denied then exit
@@ -94,7 +99,7 @@ internal class MainActivity : BaseLocationActivity() {
                 countObserved = true // This ensures that handleLocationServiceResult() is only called once here
             }
             else -> { // Show Snackbar when user adds a city for the first time
-                if (count == 2 && !mainViewModel.navigationGuideShown()) navigationGuideSnack().show()
+                if (count == 2 && !mainViewModel.navigationGuideShown()) appNavigationGuideSnack().show()
                 if (isFirstRun) binding.toolbar.init() // Ensures this function is only called once
                 mainPagerAdapter.updatePages(count)
                 isFirstRun = false
@@ -115,7 +120,7 @@ internal class MainActivity : BaseLocationActivity() {
                                 adapter = searchCityRecyclerAdapter
                                 setHasFixedSize(true)
                             }
-                            searchCityRecyclerAdapter.update(listOf<CitySearch>(
+                            searchCityRecyclerAdapter.update(listOf(
                                     CitySearch("Toronto", "ON"),
                                     CitySearch("Buffalo", "NY"),
                                     CitySearch("Rohini", "New Delhi"),
@@ -127,11 +132,8 @@ internal class MainActivity : BaseLocationActivity() {
                             if (it.root.visibility == View.GONE) {
                                 it.root.visibility = View.VISIBLE
                                 it.citySearchView.requestFocus()
-                                inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
-                                it.backgroundTouchListenerView.setOnClickListener { _ ->
-                                    it.citySearchView.clearFocus()
-                                    it.root.visibility = View.GONE
-                                }
+                                inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0) // Force show keyboard
+                                it.root.setOnClickListener { hideSearchView() } // Hide searchView when clicked outside
                             }
                         }
                     } else toast(R.string.remove_a_city_before_adding)
@@ -140,6 +142,13 @@ internal class MainActivity : BaseLocationActivity() {
             }
             false
         }
+    }
+
+    /** Hide searchView and clear query */
+    private fun hideSearchView() = binding.itemSearchCityConstraintLayout.let {
+        it?.root?.visibility = View.GONE
+        it?.citySearchView?.clearFocus()
+        it?.citySearchView?.setQuery("", false)
     }
 
     private fun removeCityAlert() = AlertDialog.Builder(this, R.style.AlertDialogTheme)
@@ -156,7 +165,7 @@ internal class MainActivity : BaseLocationActivity() {
             .setNegativeButton(getString(R.string.no)) { _, _ -> }
             .create()
 
-    private fun navigationGuideSnack() = Snackbar
+    private fun appNavigationGuideSnack() = Snackbar
             .make(binding.root, getString(R.string.swipe_left_or_right), Snackbar.LENGTH_INDEFINITE)
             .setAction(getString(R.string.got_it)) { mainViewModel.setNavigationGuideShown() }
             .setBackgroundTint(ContextCompat.getColor(this, R.color.dayClearStart))
