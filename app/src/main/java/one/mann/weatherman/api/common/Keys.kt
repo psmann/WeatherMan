@@ -1,10 +1,9 @@
 package one.mann.weatherman.api.common
 
-internal class Keys {
-    companion object {
-        // API key for OpenWeatherMap
-        const val OWM_APPID = ""
-        // API key for Google Places Autocomplete
-        const val PLACES_APP_KEY = ""
-    }
+internal object Keys {
+    /** API key for OpenWeatherMap */
+    const val OWM_APPID = ""
+
+    /** API key for TomTom Search */
+    const val TOMTOM_KEY = ""
 }
