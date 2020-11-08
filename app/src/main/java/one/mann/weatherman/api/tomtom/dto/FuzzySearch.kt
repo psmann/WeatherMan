@@ -11,7 +11,7 @@ internal data class FuzzySearch(val result: List<Result>?) {
     data class Result(
             val entityType: String?,
             val address: Address?,
-            val position: Position
+            val position: Position?
     )
 
     data class Address(
