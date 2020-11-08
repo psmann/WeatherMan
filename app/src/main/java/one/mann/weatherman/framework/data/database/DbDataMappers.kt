@@ -7,6 +7,8 @@ import one.mann.weatherman.framework.data.database.model.NotificationTuple
 import one.mann.domain.model.weather.Weather as DomainWeather
 import one.mann.weatherman.framework.data.database.model.Weather as DbWeather
 
+/* Created by Psmann. */
+
 internal fun LocationTuple.mapToDomain(): Location = Location(listOf(coordinatesLat, coordinatesLong), id)
 
 internal fun NotificationTuple.mapToDomain(): NotificationData = NotificationData(

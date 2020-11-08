@@ -19,6 +19,8 @@ import one.mann.weatherman.ui.common.util.*
 import one.mann.weatherman.ui.main.MainActivity
 import javax.inject.Inject
 
+/* Created by Psmann. */
+
 internal class WeatherNotification @Inject constructor(
         private val context: Context,
         private val getNotificationData: GetNotificationData

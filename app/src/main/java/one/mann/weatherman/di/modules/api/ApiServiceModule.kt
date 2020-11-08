@@ -15,6 +15,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
+/* Created by Psmann. */
+
 @Module
 internal class ApiServiceModule {
 

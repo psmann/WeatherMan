@@ -1,5 +1,7 @@
 package one.mann.domain.logic
 
+/* Created by Psmann. */
+
 const val FLAG_OFFSET = 0x1F1E6 // Regional Indicator Symbol for letter A
 const val ASCII_OFFSET = 0x41 // Uppercase letter A
 const val DURATION_PATTERN = "H 'Hours and' m 'Minutes'"

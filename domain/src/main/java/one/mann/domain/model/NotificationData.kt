@@ -1,5 +1,7 @@
 package one.mann.domain.model
 
+/* Created by Psmann. */
+
 data class NotificationData(
         val cityName: String,
         val description: String,

@@ -16,6 +16,8 @@ import one.mann.weatherman.ui.common.util.*
 import one.mann.weatherman.ui.detail.DetailActivity
 import javax.inject.Inject
 
+/* Created by Psmann. */
+
 internal class CityFragment : Fragment() {
 
     private var position = 0

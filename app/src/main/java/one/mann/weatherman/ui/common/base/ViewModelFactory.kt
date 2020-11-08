@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModelProvider
 import javax.inject.Inject
 import javax.inject.Provider
 
+/* Created by Psmann. */
+
 internal class ViewModelFactory @Inject constructor(
         private val viewModel: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>
 ) : ViewModelProvider.Factory {

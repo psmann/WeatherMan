@@ -7,6 +7,8 @@ import dagger.Provides
 import one.mann.weatherman.framework.data.database.WeatherDb
 import javax.inject.Singleton
 
+/* Created by Psmann. */
+
 @Module
 internal class DbModule {
 

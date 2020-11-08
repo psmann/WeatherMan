@@ -4,6 +4,8 @@ import one.mann.domain.model.location.Location
 import one.mann.domain.model.NotificationData
 import one.mann.domain.model.weather.Weather
 
+/* Created by Psmann. */
+
 interface DatabaseDataSource {
 
     suspend fun insertWeather(weather: Weather)

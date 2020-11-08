@@ -17,6 +17,8 @@ import one.mann.weatherman.ui.common.util.getViewModel
 import one.mann.weatherman.ui.detail.adapter.DetailRecyclerAdapter
 import javax.inject.Inject
 
+/* Created by Psmann. */
+
 internal class DetailActivity : BaseLocationActivity() {
 
     @Inject

@@ -4,6 +4,8 @@ import one.mann.weatherman.api.teleport.dto.Timezone
 import retrofit2.http.GET
 import retrofit2.http.Path
 
+/* Created by Psmann. */
+
 internal interface TeleportService {
 
     @GET("{lat},{long}/?embed=location:nearest-cities/location:nearest-city/city:timezone")

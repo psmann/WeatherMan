@@ -1,5 +1,7 @@
 package one.mann.domain.model.weather
 
+/* Created by Psmann. */
+
 data class CurrentWeather(
         val cityName: String,
         val currentTemperature: Float,

@@ -24,6 +24,8 @@ import one.mann.domain.model.location.LocationResponse
 import one.mann.domain.model.location.LocationResponse.*
 import one.mann.weatherman.ui.common.util.isConnected
 
+/* Created by Psmann. */
+
 /** Base activity for all activities that need location services */
 internal abstract class BaseLocationActivity : AppCompatActivity() {
 
@@ -63,9 +65,9 @@ internal abstract class BaseLocationActivity : AppCompatActivity() {
     /** Give permissions for NETWORK_PROVIDER (COARSE_LOCATION) and GPS_PROVIDER (FINE_LOCATION) */
     protected fun handleLocationPermission(result: (Boolean) -> Unit) {
         locationPermissionListener = result
-        if (checkSelfPermission(this, ACCESS_FINE_LOCATION) != PERMISSION_GRANTED)
+        if (checkSelfPermission(this, ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
             requestPermissions(this, arrayOf(ACCESS_FINE_LOCATION), LOCATION_REQUEST_CODE)
-        else locationPermissionListener(true)
+        } else locationPermissionListener(true)
     }
 
     /** Check status of location services and handle in lambda */

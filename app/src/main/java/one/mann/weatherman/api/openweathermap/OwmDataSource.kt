@@ -8,6 +8,8 @@ import one.mann.interactors.data.sources.WeatherDataSource
 import one.mann.weatherman.api.common.mapToDomain
 import javax.inject.Inject
 
+/* Created by Psmann. */
+
 internal class OwmDataSource @Inject constructor(private val owmService: OwmService) : WeatherDataSource {
 
     override suspend fun getCurrentWeather(location: Location): CurrentWeather =

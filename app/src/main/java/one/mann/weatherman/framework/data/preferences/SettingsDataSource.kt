@@ -7,6 +7,8 @@ import one.mann.weatherman.ui.common.util.LAST_UPDATED_KEY
 import one.mann.weatherman.ui.common.util.SETTINGS_UNITS_KEY
 import javax.inject.Inject
 
+/* Created by Psmann. */
+
 internal class SettingsDataSource @Inject constructor(private val preferences: SharedPreferences) : PreferencesDataSource {
 
     companion object {

@@ -9,6 +9,8 @@ import one.mann.weatherman.framework.service.workers.factory.ChildWorkerFactory
 import one.mann.weatherman.ui.notification.WeatherNotification
 import javax.inject.Inject
 
+/* Created by Psmann. */
+
 internal class NotificationWorker(
         private val updateWeather: UpdateWeather,
         private val weatherNotification: WeatherNotification,

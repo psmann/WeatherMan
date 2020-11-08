@@ -1,5 +1,7 @@
 package one.mann.weatherman.framework.data.database.model
 
+/* Created by Psmann. */
+
 internal data class NotificationTuple(
         val cityName: String,
         val description: String,

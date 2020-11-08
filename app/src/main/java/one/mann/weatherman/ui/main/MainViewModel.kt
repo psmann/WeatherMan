@@ -25,6 +25,8 @@ import java.util.concurrent.TimeUnit.HOURS
 import java.util.concurrent.TimeUnit.MINUTES
 import javax.inject.Inject
 
+/* Created by Psmann. */
+
 internal class MainViewModel @Inject constructor(
         private val addCity: AddCity,
         private val getAllWeather: GetAllWeather,

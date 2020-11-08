@@ -26,6 +26,8 @@ import one.mann.weatherman.ui.main.adapter.SearchCityRecyclerAdapter
 import one.mann.weatherman.ui.settings.SettingsActivity
 import javax.inject.Inject
 
+/* Created by Psmann. */
+
 internal class MainActivity : BaseLocationActivity() {
 
     // import kotlinx.coroutines.CoroutineExceptionHandler -> CoroutineExceptionHandler // handle exceptions?

@@ -1,5 +1,7 @@
 package one.mann.weatherman.ui.common.util
 
+/* Created by Psmann. */
+
 /** Preferences */
 internal const val SETTINGS_UNITS_KEY = "units"
 internal const val SETTINGS_NOTIFICATIONS_KEY = "notification"

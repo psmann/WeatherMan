@@ -10,6 +10,8 @@ import one.mann.weatherman.WeatherManApp
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/* Created by Psmann. */
+
 @Module
 internal class WeatherManAppModule @Inject constructor(private val application: WeatherManApp) {
 

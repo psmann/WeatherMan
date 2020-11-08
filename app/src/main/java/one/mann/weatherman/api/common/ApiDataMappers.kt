@@ -8,6 +8,8 @@ import one.mann.weatherman.api.openweathermap.dto.CurrentWeather as ApiCurrentWe
 import one.mann.weatherman.api.openweathermap.dto.DailyForecast as ApiDailyForecast
 import one.mann.weatherman.api.openweathermap.dto.HourlyForecast as ApiHourlyForecast
 
+/* Created by Psmann. */
+
 /** Map API currentWeather to Domain, all parameters are nullable and are given default values */
 internal fun ApiCurrentWeather.mapToDomain(): DomainCurrentWeather = DomainCurrentWeather(
         name ?: "Earth",

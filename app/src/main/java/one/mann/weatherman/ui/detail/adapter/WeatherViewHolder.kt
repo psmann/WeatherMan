@@ -4,6 +4,8 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import one.mann.weatherman.databinding.*
 
+/* Created by Psmann. */
+
 internal sealed class WeatherViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     class Current(

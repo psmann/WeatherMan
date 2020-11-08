@@ -5,6 +5,8 @@ import one.mann.domain.model.weather.DailyForecast
 import one.mann.domain.model.weather.HourlyForecast
 import one.mann.domain.model.location.Location
 
+/* Created by Psmann. */
+
 interface WeatherDataSource {
 
     suspend fun getCurrentWeather(location: Location): CurrentWeather

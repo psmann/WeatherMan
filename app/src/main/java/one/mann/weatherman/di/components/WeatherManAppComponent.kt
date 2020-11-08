@@ -12,6 +12,8 @@ import one.mann.weatherman.di.modules.framework.WorkerModule
 import one.mann.weatherman.di.modules.ui.ViewModelModule
 import javax.inject.Singleton
 
+/* Created by Psmann. */
+
 @Singleton
 @Component(modules = [
     WeatherManAppModule::class,

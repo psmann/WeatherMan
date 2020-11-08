@@ -3,6 +3,8 @@ package one.mann.weatherman.framework.data.database.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
+/* Created by Psmann. */
+
 @Entity
 internal data class Weather(
         @PrimaryKey val id: Int?, // when null SQLite's default ROWID increment system is used

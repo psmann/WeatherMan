@@ -9,6 +9,8 @@ import one.mann.interactors.data.sources.*
 import one.mann.interactors.data.updateLastChecked
 import javax.inject.Inject
 
+/* Created by Psmann. */
+
 class WeatherRepository @Inject constructor(
         private val weatherData: WeatherDataSource,
         private val timezoneData: TimezoneDataSource,

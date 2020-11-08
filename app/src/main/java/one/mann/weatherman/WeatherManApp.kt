@@ -9,6 +9,8 @@ import one.mann.weatherman.di.components.WeatherManAppComponent
 import one.mann.weatherman.di.modules.WeatherManAppModule
 import javax.inject.Inject
 
+/* Created by Psmann. */
+
 internal class WeatherManApp : Application() {
 
     companion object {

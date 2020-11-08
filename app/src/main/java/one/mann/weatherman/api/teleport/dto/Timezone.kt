@@ -2,8 +2,11 @@ package one.mann.weatherman.api.teleport.dto
 
 import com.google.gson.annotations.SerializedName
 
+/* Created by Psmann. */
+
 /** Model class for API timezone
- * All parameters are set to nullable to make sure Kotlin null-safety never breaks */
+ * All parameters are set to nullable to make sure Kotlin null-safety never breaks
+ */
 internal data class Timezone(@SerializedName("_embedded") val embedded1: Embedded1?) {
 
     data class CityTimezone(

@@ -1,13 +1,15 @@
 package one.mann.domain.logic
 
-import one.mann.domain.model.location.Location
 import one.mann.domain.model.UnitsType
 import one.mann.domain.model.UnitsType.*
+import one.mann.domain.model.location.Location
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.exp
 import kotlin.math.pow
 import kotlin.math.roundToInt
+
+/* Created by Psmann. */
 
 /** Append data with units */
 fun Any.addSuffix(units: String): String = this.toString() + units
@@ -37,8 +39,9 @@ fun Float.changeUnits(units: String, type: UnitsType) = when (type) {
 fun Float.roundOff(): String = this.roundToInt().toString()
 
 /** Truncate location coordinates to 4 decimal places */
-fun Location.truncate(): Location = Location(listOf(String.format("%.4f", coordinates[0]).toFloat(),
-        String.format("%.4f", coordinates[1]).toFloat()), id)
+fun Location.truncate(): Location {
+    return Location(listOf(String.format("%.4f", coordinates[0]).toFloat(), String.format("%.4f", coordinates[1]).toFloat()), id)
+}
 
 /** Convert location coordinates into a truncated comma separated string */
 fun List<Float>.coordinatesInString(): String = String.format("%.4f", this[0]) + ", " + String.format("%.4f", this[1])

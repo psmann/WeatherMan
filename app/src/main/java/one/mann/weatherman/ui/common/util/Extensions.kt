@@ -15,6 +15,8 @@ import androidx.lifecycle.ViewModelProvider
 import one.mann.weatherman.api.openweathermap.dayIcons
 import one.mann.weatherman.api.openweathermap.nightIcons
 
+/* Created by Psmann. */
+
 /** Load vector resources directly for improved performance. Uses nightIcons after sunset, dayIcons used by default */
 internal fun ImageView.loadIcon(iconCode: Int, sunPosition: Float = 1f) {
     val uri = if (sunPosition in 0.0..1.0) dayIcons(iconCode) else nightIcons(iconCode)

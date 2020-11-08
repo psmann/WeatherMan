@@ -21,6 +21,8 @@ import one.mann.weatherman.ui.common.util.LAST_UPDATED_KEY
 import java.io.IOException
 import javax.inject.Inject
 
+/* Created by Psmann. */
+
 internal class DetailViewModel @Inject constructor(
         private val getAllWeather: GetAllWeather,
         private val updateWeather: UpdateWeather,

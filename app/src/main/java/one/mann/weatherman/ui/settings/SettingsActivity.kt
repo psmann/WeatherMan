@@ -6,6 +6,8 @@ import androidx.preference.PreferenceFragmentCompat
 import one.mann.weatherman.R
 import one.mann.weatherman.databinding.ActivitySettingsBinding
 
+/* Created by Psmann. */
+
 internal class SettingsActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivitySettingsBinding.inflate(layoutInflater) }

@@ -8,14 +8,22 @@ import one.mann.domain.model.weather.DailyForecast
 import one.mann.domain.model.weather.HourlyForecast
 import one.mann.domain.model.weather.Weather
 
+/* Created by Psmann. */
+
 /** Update lastChecked for the Weather model */
-internal fun Weather.updateLastChecked(timezone: String): Weather =
-        copy(lastChecked = epochToDate(System.currentTimeMillis(), timezone))
+internal fun Weather.updateLastChecked(timezone: String): Weather {
+    return copy(lastChecked = epochToDate(System.currentTimeMillis(), timezone))
+}
 
 /** Transform API data and map to domain Weather model */
-internal fun mapToWeather(currentWeather: CurrentWeather, dailyForecast: List<DailyForecast>,
-                          hourlyForecast: List<HourlyForecast>, timezone: String, location: Location,
-                          units: String): Weather {
+internal fun mapToWeather(
+        currentWeather: CurrentWeather,
+        dailyForecast: List<DailyForecast>,
+        hourlyForecast: List<HourlyForecast>,
+        timezone: String,
+        location: Location,
+        units: String
+): Weather {
     val sunriseTime = epochToMinutes(currentWeather.sunrise, timezone)
     val sunsetTime = epochToMinutes(currentWeather.sunset, timezone)
     return Weather(

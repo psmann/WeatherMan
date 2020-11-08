@@ -7,6 +7,8 @@ import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
+/* Created by Psmann. */
+
 @Module
 class LocationModule {
 

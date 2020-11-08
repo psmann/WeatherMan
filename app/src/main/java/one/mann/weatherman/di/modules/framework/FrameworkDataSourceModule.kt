@@ -9,6 +9,8 @@ import one.mann.weatherman.framework.data.database.WeatherDbDataSource
 import one.mann.weatherman.framework.data.location.LocationDataSource
 import one.mann.weatherman.framework.data.preferences.SettingsDataSource
 
+/* Created by Psmann. */
+
 @Module
 internal abstract class FrameworkDataSourceModule {
 

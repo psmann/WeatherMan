@@ -8,6 +8,8 @@ import one.mann.weatherman.R
 import one.mann.weatherman.databinding.ItemCitySearchBinding
 import one.mann.weatherman.ui.common.util.inflateView
 
+/* Created by Psmann. */
+
 internal class SearchCityRecyclerAdapter(val onClick: () -> Unit)
     : RecyclerView.Adapter<SearchCityRecyclerAdapter.CitySearchViewHolder>() {
 

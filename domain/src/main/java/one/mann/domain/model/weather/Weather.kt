@@ -1,5 +1,7 @@
 package one.mann.domain.model.weather
 
+/* Created by Psmann. */
+
 data class Weather(
         // Current Weather
         val id: Int? = null,

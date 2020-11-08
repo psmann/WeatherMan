@@ -7,6 +7,8 @@ import one.mann.interactors.data.sources.WeatherDataSource
 import one.mann.weatherman.api.openweathermap.OwmDataSource
 import one.mann.weatherman.api.teleport.TeleportDataSource
 
+/* Created by Psmann. */
+
 @Module
 internal abstract class ApiDataSourceModule {
 

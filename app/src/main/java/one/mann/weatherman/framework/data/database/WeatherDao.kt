@@ -5,6 +5,8 @@ import one.mann.weatherman.framework.data.database.model.LocationTuple
 import one.mann.weatherman.framework.data.database.model.NotificationTuple
 import one.mann.weatherman.framework.data.database.model.Weather
 
+/* Created by Psmann. */
+
 @Dao
 internal interface WeatherDao {
 

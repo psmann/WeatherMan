@@ -6,6 +6,8 @@ import one.mann.weatherman.api.openweathermap.dto.HourlyForecast
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+/* Created by Psmann. */
+
 internal interface OwmService {
 
     @GET("weather")

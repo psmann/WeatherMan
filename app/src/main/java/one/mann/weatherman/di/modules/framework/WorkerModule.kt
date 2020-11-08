@@ -9,6 +9,8 @@ import one.mann.weatherman.framework.service.workers.NotificationWorker
 import one.mann.weatherman.framework.service.workers.factory.ChildWorkerFactory
 import one.mann.weatherman.framework.service.workers.factory.ParentWorkerFactory
 
+/* Created by Psmann. */
+
 @Module
 internal abstract class WorkerModule {
 

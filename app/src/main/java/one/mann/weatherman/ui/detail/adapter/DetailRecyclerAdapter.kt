@@ -10,6 +10,8 @@ import one.mann.weatherman.ui.common.util.inflateView
 import one.mann.weatherman.ui.common.util.loadIcon
 import one.mann.weatherman.ui.detail.adapter.WeatherViewHolder.*
 
+/* Created by Psmann. */
+
 internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
 
     companion object {

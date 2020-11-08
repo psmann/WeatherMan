@@ -12,6 +12,8 @@ import one.mann.interactors.data.sources.DeviceLocationSource
 import javax.inject.Inject
 import kotlin.coroutines.resume
 
+/* Created by Psmann. */
+
 internal class LocationDataSource @Inject constructor(private val client: FusedLocationProviderClient) :
         DeviceLocationSource {
 

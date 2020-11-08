@@ -1,7 +1,10 @@
 package one.mann.weatherman.api.openweathermap.dto
 
+/* Created by Psmann. */
+
 /** Model class for API currentWeather
- * All parameters are set to nullable to make sure Kotlin null-safety never breaks */
+ * All parameters are set to nullable to make sure Kotlin null-safety never breaks
+ */
 internal data class CurrentWeather(
         val main: Main?,
         val sys: Sys?,

@@ -1,5 +1,7 @@
 package one.mann.weatherman.api.openweathermap
 
+/* Created by Psmann. */
+
 /** Return file name of vector asset (day) corresponding to the code received from API call */
 internal fun dayIcons(code: Int): String = when (code) {
     in 200..232 -> "weather_type_thunder" // Thunderstorm

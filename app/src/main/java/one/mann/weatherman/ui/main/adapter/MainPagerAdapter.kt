@@ -6,6 +6,8 @@ import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.PagerAdapter
 import one.mann.weatherman.ui.main.CityFragment
 
+/* Created by Psmann. */
+
 @Suppress("DEPRECATION") // BEHAVIOR_SET_USER used because BEHAVIOR_RESUME_ONLY has issues
 internal class MainPagerAdapter(fm: FragmentManager
 ) : FragmentStatePagerAdapter(fm, BEHAVIOR_SET_USER_VISIBLE_HINT) {

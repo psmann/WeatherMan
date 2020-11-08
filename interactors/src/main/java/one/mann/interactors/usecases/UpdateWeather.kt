@@ -4,6 +4,8 @@ import one.mann.domain.model.location.LocationType
 import one.mann.interactors.data.repository.WeatherRepository
 import javax.inject.Inject
 
+/* Created by Psmann. */
+
 class UpdateWeather @Inject constructor(private val weatherRepository: WeatherRepository) {
 
     suspend fun invoke(locationType: LocationType): Boolean = weatherRepository.updateAll(locationType)
