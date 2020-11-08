@@ -2,8 +2,9 @@ package one.mann.weatherman.api.tomtom.dto
 
 /* Created by Psmann. */
 
-/** Model class for API TomTom Fuzzy Search
- * All parameters are set to nullable to make sure Kotlin null-safety never breaks
+/**
+ * Data Transfer Object (model) for TomTom Fuzzy Search API
+ * All parameters are nullable to maintain Kotlin null-safety
  */
 internal data class FuzzySearch(val result: List<Result>?) {
 
@@ -11,20 +12,19 @@ internal data class FuzzySearch(val result: List<Result>?) {
             val entityType: String?,
             val address: Address?,
             val position: Position
-    ) {
+    )
 
-        data class Address(
-                val country: String?,
-                val countrySubdivision: String?,
-                val countrySecondarySubdivision: String?,
-                val countryTertiarySubdivision: String?,
-                val municipality: String?,
-                val municipalitySubdivision: String?
-        )
+    data class Address(
+            val country: String?,
+            val countrySubdivision: String?,
+            val countrySecondarySubdivision: String?,
+            val countryTertiarySubdivision: String?,
+            val municipality: String?,
+            val municipalitySubdivision: String?
+    )
 
-        data class Position(
-                val lat: Float?,
-                val lon: Float?
-        )
-    }
+    data class Position(
+            val lat: Float?,
+            val lon: Float?
+    )
 }

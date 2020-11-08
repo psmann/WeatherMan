@@ -4,8 +4,9 @@ import com.google.gson.annotations.SerializedName
 
 /* Created by Psmann. */
 
-/** Model class for API timezone
- * All parameters are set to nullable to make sure Kotlin null-safety never breaks
+/**
+ * Data Transfer Object (model) for Teleport TimeZone API
+ * All parameters are nullable to maintain Kotlin null-safety
  */
 internal data class Timezone(
         @SerializedName("_embedded")

@@ -2,8 +2,9 @@ package one.mann.weatherman.api.openweathermap.dto
 
 /* Created by Psmann. */
 
-/** Model class for API hourlyForecast
- * All parameters are set to nullable to make sure Kotlin null-safety never breaks
+/**
+ * Data Transfer Object (model) for OpenWeatherMap HourlyForecast API
+ * All parameters are nullable to maintain Kotlin null-safety
  */
 internal data class HourlyForecast(val list: List<ListObject>?) {
 
