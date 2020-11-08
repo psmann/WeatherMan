@@ -15,6 +15,7 @@ internal data class CurrentWeather(
         val dt: Long?,
         val visibility: Float?
 ) {
+
     data class Clouds(val all: Float?)
 
     data class Main(

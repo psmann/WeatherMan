@@ -7,7 +7,10 @@ import com.google.gson.annotations.SerializedName
 /** Model class for API timezone
  * All parameters are set to nullable to make sure Kotlin null-safety never breaks
  */
-internal data class Timezone(@SerializedName("_embedded") val embedded1: Embedded1?) {
+internal data class Timezone(
+        @SerializedName("_embedded")
+        val embedded1: Embedded1?
+) {
 
     data class CityTimezone(
             @SerializedName("iana_name")
