@@ -8,13 +8,14 @@ import com.google.android.gms.location.LocationResult
 import kotlinx.coroutines.suspendCancellableCoroutine
 import one.mann.domain.logic.truncate
 import one.mann.domain.model.location.Location
-import one.mann.interactors.data.sources.DeviceLocationSource
+import one.mann.interactors.data.sources.framework.DeviceLocationSource
 import javax.inject.Inject
 import kotlin.coroutines.resume
 
 /* Created by Psmann. */
 
-internal class LocationDataSource @Inject constructor(private val client: FusedLocationProviderClient) :
+/** Data source for device GPS location */
+internal class FusedLocationDataSource @Inject constructor(private val client: FusedLocationProviderClient) :
         DeviceLocationSource {
 
     @SuppressLint("MissingPermission") // Already being checked

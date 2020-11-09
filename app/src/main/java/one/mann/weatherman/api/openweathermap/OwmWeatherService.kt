@@ -8,7 +8,7 @@ import retrofit2.http.Query
 
 /* Created by Psmann. */
 
-internal interface OwmService {
+internal interface OwmWeatherService {
 
     @GET("weather")
     suspend fun getCurrentWeather(

@@ -1,4 +1,4 @@
-package one.mann.interactors.data.sources
+package one.mann.interactors.data.sources.framework
 
 /* Created by Psmann. */
 

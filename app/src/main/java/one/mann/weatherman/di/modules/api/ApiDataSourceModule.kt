@@ -2,10 +2,10 @@ package one.mann.weatherman.di.modules.api
 
 import dagger.Binds
 import dagger.Module
-import one.mann.interactors.data.sources.TimezoneDataSource
-import one.mann.interactors.data.sources.WeatherDataSource
-import one.mann.weatherman.api.openweathermap.OwmDataSource
-import one.mann.weatherman.api.teleport.TeleportDataSource
+import one.mann.interactors.data.sources.api.TimezoneDataSource
+import one.mann.interactors.data.sources.api.WeatherDataSource
+import one.mann.weatherman.api.openweathermap.OwmWeatherDataSource
+import one.mann.weatherman.api.teleport.TeleportTimezoneDataSource
 
 /* Created by Psmann. */
 
@@ -13,8 +13,8 @@ import one.mann.weatherman.api.teleport.TeleportDataSource
 internal abstract class ApiDataSourceModule {
 
     @Binds
-    abstract fun bindOwmDataSource(owmDataSource: OwmDataSource): WeatherDataSource
+    abstract fun bindWeatherDataSource(owmWeatherDataSource: OwmWeatherDataSource): WeatherDataSource
 
     @Binds
-    abstract fun bindTeleportDataSource(teleportDataSource: TeleportDataSource): TimezoneDataSource
+    abstract fun bindTimezoneDataSource(teleportTimezoneDataSource: TeleportTimezoneDataSource): TimezoneDataSource
 }

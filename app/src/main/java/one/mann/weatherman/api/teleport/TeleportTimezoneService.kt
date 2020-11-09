@@ -6,7 +6,7 @@ import retrofit2.http.Path
 
 /* Created by Psmann. */
 
-internal interface TeleportService {
+internal interface TeleportTimezoneService {
 
     @GET("{lat},{long}/?embed=location:nearest-cities/location:nearest-city/city:timezone")
     suspend fun getTimezone(

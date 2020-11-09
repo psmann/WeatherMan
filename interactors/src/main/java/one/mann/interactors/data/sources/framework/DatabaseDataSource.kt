@@ -1,4 +1,4 @@
-package one.mann.interactors.data.sources
+package one.mann.interactors.data.sources.framework
 
 import one.mann.domain.model.location.Location
 import one.mann.domain.model.NotificationData

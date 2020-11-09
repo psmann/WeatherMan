@@ -5,8 +5,8 @@ import dagger.Provides
 import okhttp3.OkHttpClient
 import one.mann.weatherman.api.common.Keys
 import one.mann.weatherman.api.common.QueryInterceptor
-import one.mann.weatherman.api.openweathermap.OwmService
-import one.mann.weatherman.api.teleport.TeleportService
+import one.mann.weatherman.api.openweathermap.OwmWeatherService
+import one.mann.weatherman.api.teleport.TeleportTimezoneService
 import one.mann.weatherman.di.annotations.qualifier.AppId
 import one.mann.weatherman.di.annotations.qualifier.OpenWeatherMap
 import one.mann.weatherman.di.annotations.qualifier.Teleport
@@ -77,9 +77,9 @@ internal class ApiServiceModule {
 
     @Provides
     @Singleton
-    fun provideOwmService(@OpenWeatherMap retrofit: Retrofit): OwmService = retrofit.create(OwmService::class.java)
+    fun provideOwmService(@OpenWeatherMap retrofit: Retrofit): OwmWeatherService = retrofit.create(OwmWeatherService::class.java)
 
     @Provides
     @Singleton
-    fun provideTeleportService(@Teleport retrofit: Retrofit): TeleportService = retrofit.create(TeleportService::class.java)
+    fun provideTeleportService(@Teleport retrofit: Retrofit): TeleportTimezoneService = retrofit.create(TeleportTimezoneService::class.java)
 }

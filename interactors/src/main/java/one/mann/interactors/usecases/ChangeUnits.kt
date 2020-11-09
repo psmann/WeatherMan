@@ -1,8 +1,8 @@
 package one.mann.interactors.usecases
 
 import one.mann.interactors.data.changeUnits
-import one.mann.interactors.data.repository.WeatherRepository
-import one.mann.interactors.data.sources.PreferencesDataSource
+import one.mann.interactors.data.repositories.WeatherRepository
+import one.mann.interactors.data.sources.framework.PreferencesDataSource
 import javax.inject.Inject
 
 /* Created by Psmann. */

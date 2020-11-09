@@ -1,4 +1,4 @@
-package one.mann.interactors.data.sources
+package one.mann.interactors.data.sources.api
 
 import one.mann.domain.model.weather.CurrentWeather
 import one.mann.domain.model.weather.DailyForecast

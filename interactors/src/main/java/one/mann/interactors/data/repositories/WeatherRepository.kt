@@ -1,11 +1,15 @@
-package one.mann.interactors.data.repository
+package one.mann.interactors.data.repositories
 
 import one.mann.domain.model.location.Location
 import one.mann.domain.model.location.LocationType
 import one.mann.domain.model.NotificationData
 import one.mann.domain.model.weather.Weather
 import one.mann.interactors.data.mapToWeather
-import one.mann.interactors.data.sources.*
+import one.mann.interactors.data.sources.api.TimezoneDataSource
+import one.mann.interactors.data.sources.api.WeatherDataSource
+import one.mann.interactors.data.sources.framework.DatabaseDataSource
+import one.mann.interactors.data.sources.framework.DeviceLocationSource
+import one.mann.interactors.data.sources.framework.PreferencesDataSource
 import one.mann.interactors.data.updateLastChecked
 import javax.inject.Inject
 
