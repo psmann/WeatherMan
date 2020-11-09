@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import androidx.core.view.marginRight
 
 /* Created by Psmann. */
 
@@ -21,6 +22,7 @@ internal class ForecastGraphView @JvmOverloads constructor(context: Context, att
         private const val topOffset = lineWidth / 2 // Top offset to remove cropping of line
     }
 
+    private val widthOffset by lazy { marginRight / resources.displayMetrics.density } // Right offset to fix graph width
     private val paintLine = Paint()
     private lateinit var coordinates: FloatArray
     private var points = listOf(0f, 0f, 0f, 0f, 0f, 0f, 0f)
@@ -45,7 +47,7 @@ internal class ForecastGraphView @JvmOverloads constructor(context: Context, att
         val line5StartY = (((max - points[4]) / gap) * heightGraph) + topOffset // startY coordinate of line 5
         val line6StartY = (((max - points[5]) / gap) * heightGraph) + topOffset // startY coordinate of line 6
         val line6EndY = (((max - points[6]) / gap) * heightGraph) + topOffset // endY coordinate of line 6
-        val percentX = (width - line1StartX) / 6 // Width of graph divided into 6 equal segments (startX for lines)
+        val percentX = (width - line1StartX - widthOffset) / 6 // Width of graph divided into 6 equal parts (startX for lines)
 
         // Add calculated coordinates to the array used for drawing
         coordinates = floatArrayOf(
@@ -54,7 +56,7 @@ internal class ForecastGraphView @JvmOverloads constructor(context: Context, att
                 percentX * 2 + lineWidth, line3StartY, percentX * 3 + lineWidth, line4StartY, // Line 3
                 percentX * 3 + lineWidth, line4StartY, percentX * 4 + lineWidth, line5StartY, // Line 4
                 percentX * 4 + lineWidth, line5StartY, percentX * 5 + lineWidth, line6StartY, // Line 5
-                percentX * 5 + lineWidth, line6StartY, percentX * 6, line6EndY // Line 6
+                percentX * 5 + lineWidth, line6StartY, percentX * 6 + widthOffset, line6EndY // Line 6
         )
         setupPaint()
     }
