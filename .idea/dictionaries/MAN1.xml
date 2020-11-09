@@ -2,8 +2,10 @@
   <dictionary name="MAN1">
     <words>
       <w>coords</w>
+      <w>freeform</w>
       <w>psmann</w>
       <w>tomtom</w>
+      <w>typeahead</w>
     </words>
   </dictionary>
 </component>

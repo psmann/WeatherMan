@@ -1,8 +1,8 @@
 package one.mann.interactors.data.repositories
 
+import one.mann.domain.model.NotificationData
 import one.mann.domain.model.location.Location
 import one.mann.domain.model.location.LocationType
-import one.mann.domain.model.NotificationData
 import one.mann.domain.model.weather.Weather
 import one.mann.interactors.data.mapToWeather
 import one.mann.interactors.data.sources.api.TimezoneDataSource
@@ -33,8 +33,16 @@ class WeatherRepository @Inject constructor(
     /** Insert new city in Db */
     suspend fun create(apiLocation: Location? = null) {
         val location = apiLocation ?: deviceLocation.getLocation() // Use device GPS location if null
-        dbData.insertWeather(mapToWeather(weatherData.getCurrentWeather(location), weatherData.getDailyForecast(location),
-                weatherData.getHourlyForecast(location), timezoneData.getTimezone(location), location, prefsData.getUnits()))
+        dbData.insertWeather(
+                mapToWeather(
+                        weatherData.getCurrentWeather(location),
+                        weatherData.getDailyForecast(location),
+                        weatherData.getHourlyForecast(location),
+                        timezoneData.getTimezone(location),
+                        location,
+                        prefsData.getUnits()
+                )
+        )
     }
 
     /** Returns a list of all Weather data in Db */
@@ -60,8 +68,16 @@ class WeatherRepository @Inject constructor(
             val hourlyForecasts = weatherData.getAllHourlyForecast(locations)
             val weathers: MutableList<Weather> = mutableListOf()
             val units = prefsData.getUnits()
-            for (i in 0 until locations.size) weathers.add(mapToWeather(currentWeathers[i], dailyForecasts[i],
-                    hourlyForecasts[i], timezones[i], locations[i], units))
+            for (i in 0 until locations.size) weathers.add(
+                    mapToWeather(
+                            currentWeathers[i],
+                            dailyForecasts[i],
+                            hourlyForecasts[i],
+                            timezones[i],
+                            locations[i],
+                            units
+                    )
+            )
             update(weathers)
             true
         } else { // This still uses the Teleport API for getting timezones sadly

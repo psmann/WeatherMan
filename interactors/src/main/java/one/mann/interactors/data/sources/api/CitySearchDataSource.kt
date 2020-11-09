@@ -6,5 +6,5 @@ import one.mann.domain.model.CitySearchResult
 
 interface CitySearchDataSource {
 
-    suspend fun getCitySearch(cityNameQuery: String): CitySearchResult
+    suspend fun getCitySearch(cityNameQuery: String): List<CitySearchResult>
 }

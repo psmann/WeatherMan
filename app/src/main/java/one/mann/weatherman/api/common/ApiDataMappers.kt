@@ -12,7 +12,7 @@ import one.mann.weatherman.api.openweathermap.dto.HourlyForecast as ApiHourlyFor
 
 /* Created by Psmann. */
 
-/** Map API currentWeather to Domain, all parameters are nullable and are given default values */
+/** Map API OWM CurrentWeather to Domain, all parameters are nullable and are given default values */
 internal fun ApiCurrentWeather.mapToDomain(): DomainCurrentWeather = DomainCurrentWeather(
         name ?: "Earth",
         main?.temp ?: 0f,
@@ -30,14 +30,14 @@ internal fun ApiCurrentWeather.mapToDomain(): DomainCurrentWeather = DomainCurre
         visibility ?: 0f
 )
 
-/** Map API hourlyForecast to Domain, all parameters are nullable and are given default values */
+/** Map API OWM HourlyForecast to Domain, all parameters are nullable and are given default values */
 internal fun ApiHourlyForecast.ListObject?.mapToDomain(): DomainHourlyForecast = DomainHourlyForecast(
         this?.dt?.times(1000) ?: 1000000000000,
         this?.main?.temp ?: 0f,
         this?.weather?.get(0)?.id ?: 0
 )
 
-/** Map API dailyForecast to Domain, all parameters are nullable and are given default values */
+/** Map API OWM DailyForecast to Domain, all parameters are nullable and are given default values */
 internal fun ApiDailyForecast.ListObject?.mapToDomain(): DomainDailyForecast = DomainDailyForecast(
         this?.dt?.times(1000) ?: 1000000000000,
         this?.temp?.min ?: 0f,
@@ -45,11 +45,19 @@ internal fun ApiDailyForecast.ListObject?.mapToDomain(): DomainDailyForecast = D
         this?.weather?.get(0)?.id ?: 0
 )
 
+/** Map API Teleport Timezone to String to be used in Domain logic, parameter is nullable and is given a default value */
 internal fun Timezone?.mapToString(): String {
-    return this?.embedded1?.locationNearestCities?.get(0)?.embedded2?.locationNearestCity?.embedded3?.cityTimezone?.ianaName ?: ""
+    return this?.embedded1?.locationNearestCities?.get(0)?.embedded2?.locationNearestCity?.embedded3?.cityTimezone
+            ?.ianaName ?: ""
 }
 
-internal fun FuzzySearch.mapToDomain(): CitySearchResult {
-    // TODO: Implement functionality
-    return CitySearchResult()
+/** Map API TomTom Search to Domain, all parameters are nullable and are given default values */
+internal fun FuzzySearch.mapToDomain(): List<CitySearchResult> {
+    val citySearchResultList = mutableListOf<CitySearchResult>()
+    result?.forEach {
+        val splitName: List<String>? = it.address?.freeformAddress?.split(",") // Split string in two parts
+        citySearchResultList.add(CitySearchResult(splitName?.get(0) ?: "", splitName?.get(1) ?: "", it.position?.lat
+                ?: 0f, it.position?.lon ?: 0f))
+    }
+    return citySearchResultList
 }

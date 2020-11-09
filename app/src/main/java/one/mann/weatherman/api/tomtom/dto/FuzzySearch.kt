@@ -9,19 +9,11 @@ package one.mann.weatherman.api.tomtom.dto
 internal data class FuzzySearch(val result: List<Result>?) {
 
     data class Result(
-            val entityType: String?,
             val address: Address?,
             val position: Position?
     )
 
-    data class Address(
-            val country: String?,
-            val countrySubdivision: String?,
-            val countrySecondarySubdivision: String?,
-            val countryTertiarySubdivision: String?,
-            val municipality: String?,
-            val municipalitySubdivision: String?
-    )
+    data class Address(val freeformAddress: String?)
 
     data class Position(
             val lat: Float?,
