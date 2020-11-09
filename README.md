@@ -1,7 +1,7 @@
 # WeatherMan
 
 An Android weather app that shows current and forecast weather for user location and other cities.
-Uses OpenWeatherMap API for weather data and TomTom API to get cities.
+Uses OpenWeatherMap API for weather data and TomTom Search API to get cities.
 
 ## Screenshots
 
@@ -33,11 +33,12 @@ Code is written in Kotlin and uses coroutines to handle all asynchronous work.
   * <a href="https://kotlinlang.org/docs/reference/coroutines-overview.html">Kotlin Coroutines</a> - Asynchronous tasks
   * <a href="https://developer.android.com/topic/libraries/architecture/workmanager">WorkManager</a> - Background tasks (data sync, notifications)
   * <a href="https://developers.google.com/android/reference/com/google/android/gms/location/package-summary">Google Play Services</a> - Device GPS location
-  * <a href="https://developer.tomtom.com/">TomTom API</a> - City names and locations
+  * <a href="https://developer.tomtom.com/search-api">TomTom Search API</a> - City names and locations
   * <a href="https://openweathermap.org/api">OpenWeatherMap API</a> - Weather data
+  * <a href="https://developers.teleport.org/api/resources/Timezone/">Teleport Timezone API</a> - Time zones
 
 ## Getting Started
 
 1) Clone the project repository
-2) Generate keys for OpenWeatherMap API and TomTom API
-3) Add your keys to api/common/Keys.kt located inside the app module and rebuild project
+2) Generate keys for OpenWeatherMap API and TomTom Search API
+3) Add your keys to ../api/common/Keys.kt located inside the app module and rebuild project
