@@ -1,4 +1,4 @@
-package one.mann.weatherman.ui.detail.adapter
+package one.mann.weatherman.ui.detail.adapters
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView

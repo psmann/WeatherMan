@@ -14,7 +14,7 @@ import one.mann.weatherman.ui.common.util.ACTIVITY_BACKGROUND
 import one.mann.weatherman.ui.common.util.PAGER_POSITION
 import one.mann.weatherman.ui.common.util.getGradient
 import one.mann.weatherman.ui.common.util.getViewModel
-import one.mann.weatherman.ui.detail.adapter.DetailRecyclerAdapter
+import one.mann.weatherman.ui.detail.adapters.DetailRecyclerAdapter
 import javax.inject.Inject
 
 /* Created by Psmann. */

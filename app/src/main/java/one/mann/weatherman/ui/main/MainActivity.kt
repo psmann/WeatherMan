@@ -21,8 +21,8 @@ import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.databinding.ActivityMainBinding
 import one.mann.weatherman.ui.common.base.BaseLocationActivity
 import one.mann.weatherman.ui.common.util.getViewModel
-import one.mann.weatherman.ui.main.adapter.MainPagerAdapter
-import one.mann.weatherman.ui.main.adapter.SearchCityRecyclerAdapter
+import one.mann.weatherman.ui.main.adapters.MainPagerAdapter
+import one.mann.weatherman.ui.main.adapters.SearchCityRecyclerAdapter
 import one.mann.weatherman.ui.settings.SettingsActivity
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package one.mann.weatherman.ui.detail.adapter
+package one.mann.weatherman.ui.detail.adapters
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,7 +8,7 @@ import one.mann.domain.model.weather.Weather
 import one.mann.weatherman.R
 import one.mann.weatherman.ui.common.util.inflateView
 import one.mann.weatherman.ui.common.util.loadIcon
-import one.mann.weatherman.ui.detail.adapter.WeatherViewHolder.*
+import one.mann.weatherman.ui.detail.adapters.WeatherViewHolder.*
 
 /* Created by Psmann. */
 
