@@ -3,7 +3,7 @@ package one.mann.weatherman.ui.main.adapter
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import one.mann.domain.model.CitySearch
+import one.mann.domain.model.CitySearchResult
 import one.mann.weatherman.R
 import one.mann.weatherman.databinding.ItemCitySearchBinding
 import one.mann.weatherman.ui.common.util.inflateView
@@ -13,7 +13,7 @@ import one.mann.weatherman.ui.common.util.inflateView
 internal class SearchCityRecyclerAdapter(val onClick: () -> Unit)
     : RecyclerView.Adapter<SearchCityRecyclerAdapter.CitySearchViewHolder>() {
 
-    private var citySearchList = listOf<CitySearch>()
+    private var citySearchList = listOf<CitySearchResult>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CitySearchViewHolder {
         return CitySearchViewHolder(parent.inflateView(R.layout.item_city_search))
@@ -29,7 +29,7 @@ internal class SearchCityRecyclerAdapter(val onClick: () -> Unit)
 
     override fun getItemCount(): Int = citySearchList.size
 
-    fun update(searchList: List<CitySearch>) {
+    fun update(searchList: List<CitySearchResult>) {
         citySearchList = searchList
         notifyDataSetChanged()
     }

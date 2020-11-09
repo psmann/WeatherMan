@@ -1,6 +1,8 @@
 package one.mann.weatherman.api.common
 
+import one.mann.domain.model.CitySearchResult
 import one.mann.weatherman.api.teleport.dto.Timezone
+import one.mann.weatherman.api.tomtom.dto.FuzzySearch
 import one.mann.domain.model.weather.CurrentWeather as DomainCurrentWeather
 import one.mann.domain.model.weather.DailyForecast as DomainDailyForecast
 import one.mann.domain.model.weather.HourlyForecast as DomainHourlyForecast
@@ -43,5 +45,11 @@ internal fun ApiDailyForecast.ListObject?.mapToDomain(): DomainDailyForecast = D
         this?.weather?.get(0)?.id ?: 0
 )
 
-internal fun Timezone?.mapToString(): String =
-        this?.embedded1?.locationNearestCities?.get(0)?.embedded2?.locationNearestCity?.embedded3?.cityTimezone?.ianaName ?: ""
+internal fun Timezone?.mapToString(): String {
+    return this?.embedded1?.locationNearestCities?.get(0)?.embedded2?.locationNearestCity?.embedded3?.cityTimezone?.ianaName ?: ""
+}
+
+internal fun FuzzySearch.mapToDomain(): CitySearchResult {
+    // TODO: Implement functionality
+    return CitySearchResult()
+}

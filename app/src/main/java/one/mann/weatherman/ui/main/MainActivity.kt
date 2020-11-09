@@ -14,7 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.snackbar.Snackbar
-import one.mann.domain.model.CitySearch
+import one.mann.domain.model.CitySearchResult
 import one.mann.domain.model.Errors.*
 import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
@@ -123,11 +123,11 @@ internal class MainActivity : BaseLocationActivity() {
                                 setHasFixedSize(true)
                             }
                             searchCityRecyclerAdapter.update(listOf(
-                                    CitySearch("Toronto", "ON"),
-                                    CitySearch("Buffalo", "NY"),
-                                    CitySearch("London", "England"),
-                                    CitySearch("Vancouver", "BC"),
-                                    CitySearch("Sydney", "NSW")))
+                                    CitySearchResult("Toronto", "ON"),
+                                    CitySearchResult("Buffalo", "NY"),
+                                    CitySearchResult("London", "England"),
+                                    CitySearchResult("Vancouver", "BC"),
+                                    CitySearchResult("Sydney", "NSW")))
 
                             if (it.root.visibility == View.GONE) {
                                 it.root.visibility = View.VISIBLE
