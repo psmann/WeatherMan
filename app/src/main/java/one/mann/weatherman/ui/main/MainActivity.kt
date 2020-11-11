@@ -64,43 +64,44 @@ internal class MainActivity : BaseLocationActivity() {
             finish()
             return
         }
-        binding.viewPager.apply {
-            adapter = mainPagerAdapter
-            addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
-                override fun onPageSelected(position: Int) {}
-                override fun onPageScrollStateChanged(state: Int) { // Fix horizontal scrolling
-                    if (!binding.mainSwipeLayout.isRefreshing) binding.mainSwipeLayout
-                            .isEnabled = state == ViewPager.SCROLL_STATE_IDLE
-                }
-            })
-        }
-        binding.mainSwipeLayout.apply {
-            setColorSchemeColors(Color.RED, Color.BLUE)
-            setOnRefreshListener { handleLocationServiceResult() } // Prompt for location update if it is first run
-        }
         mainViewModel.uiState.observe(::getLifecycle, ::observeUiState)
-        binding.itemSearchCityConstraintLayout?.let {
-            it.searchResultRecyclerView.apply {
-                adapter = searchCityRecyclerAdapter
-                setHasFixedSize(true)
-            }
-            it.citySearchView.setOnQueryTextListener(object : OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    return false
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    newText?.let { searchQuery ->
-                        if (searchQuery == "" || searchQuery.length < 3) return false
-                        mainViewModel.searchCity(searchQuery)
-                        return true
+        binding.apply {
+            viewPager.apply {
+                adapter = mainPagerAdapter
+                addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+                    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+                    override fun onPageSelected(position: Int) {}
+                    override fun onPageScrollStateChanged(state: Int) { // Fix horizontal scrolling
+                        if (!mainSwipeLayout.isRefreshing) mainSwipeLayout.isEnabled = state == ViewPager.SCROLL_STATE_IDLE
                     }
-                    return false
+                })
+            }
+            mainSwipeLayout.apply {
+                setColorSchemeColors(Color.RED, Color.BLUE)
+                setOnRefreshListener { handleLocationServiceResult() } // Prompt for location update if it is first run
+            }
+            itemSearchCityConstraintLayout?.let {
+                it.searchResultRecyclerView.apply {
+                    adapter = searchCityRecyclerAdapter
+                    setHasFixedSize(true)
                 }
-            })
-            val searchViewCloseButton: View? = it.citySearchView.findViewById(androidx.appcompat.R.id.search_close_btn)
-            searchViewCloseButton?.setOnClickListener { hideSearchView() }
+                it.citySearchView.setOnQueryTextListener(object : OnQueryTextListener {
+                    override fun onQueryTextSubmit(query: String?): Boolean {
+                        return false
+                    }
+
+                    override fun onQueryTextChange(newText: String?): Boolean {
+                        newText?.let { searchQuery ->
+                            if (searchQuery == "" || searchQuery.length < 3) return false
+                            mainViewModel.searchCity(searchQuery)
+                            return true
+                        }
+                        return false
+                    }
+                })
+                val searchViewCloseButton: View? = it.citySearchView.findViewById(androidx.appcompat.R.id.search_close_btn)
+                searchViewCloseButton?.setOnClickListener { hideSearchView() }
+            }
         }
     }
 
@@ -157,10 +158,10 @@ internal class MainActivity : BaseLocationActivity() {
     }
 
     /** Hide searchView and clear query */
-    private fun hideSearchView() = binding.itemSearchCityConstraintLayout.let {
-        it?.root?.visibility = View.GONE
-        it?.citySearchView?.clearFocus()
-        it?.citySearchView?.setQuery("", false)
+    private fun hideSearchView() = binding.itemSearchCityConstraintLayout?.let {
+        it.root.visibility = View.GONE
+        it.citySearchView.clearFocus()
+        it.citySearchView.setQuery("", false)
         searchCityRecyclerAdapter.update(listOf()) // Remove previous list
     }
 
