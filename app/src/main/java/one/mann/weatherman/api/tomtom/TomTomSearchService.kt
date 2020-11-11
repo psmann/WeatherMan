@@ -14,7 +14,6 @@ internal interface TomTomSearchService {
             @Path("query") citySearchQuery: String,
             @Query("typeahead") typeahead: Boolean = true,
             @Query("limit") limit: Int = 5,
-            @Query("idxSet") idxSet: String = "Geo",
-            @Query("timeZone") timeZone: String = "iana"
+            @Query("idxSet") idxSet: String = "Geo"
     ): FuzzySearch
 }

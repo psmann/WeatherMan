@@ -7,7 +7,8 @@ import javax.inject.Inject
 
 /* Created by Psmann. */
 
-internal class TomTomSearchDataSource @Inject constructor(private val tomTomSearchService: TomTomSearchService) : CitySearchDataSource {
+internal class TomTomSearchDataSource @Inject constructor(private val tomTomSearchService: TomTomSearchService)
+    : CitySearchDataSource {
 
     override suspend fun getCitySearch(cityNameQuery: String): List<CitySearchResult> {
         return tomTomSearchService.getSearch(cityNameQuery).mapToDomain()

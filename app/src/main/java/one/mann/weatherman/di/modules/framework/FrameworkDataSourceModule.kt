@@ -15,11 +15,11 @@ import one.mann.weatherman.framework.data.preferences.SettingsPreferencesDataSou
 internal abstract class FrameworkDataSourceModule {
 
     @Binds
-    abstract fun bindDbDataSource(weatherDbDataSource: WeatherDbDataSource): DatabaseDataSource
+    abstract fun bindDatabaseDataSource(weatherDbDataSource: WeatherDbDataSource): DatabaseDataSource
 
     @Binds
-    abstract fun bindLocationDataSource(fusedLocationDataSource: FusedLocationDataSource): DeviceLocationSource
+    abstract fun bindDeviceLocationDataSource(fusedLocationDataSource: FusedLocationDataSource): DeviceLocationSource
 
     @Binds
-    abstract fun bindSettingsDataSource(settingsPreferencesDataSource: SettingsPreferencesDataSource): PreferencesDataSource
+    abstract fun bindPreferencesDataSource(settingsPreferencesDataSource: SettingsPreferencesDataSource): PreferencesDataSource
 }

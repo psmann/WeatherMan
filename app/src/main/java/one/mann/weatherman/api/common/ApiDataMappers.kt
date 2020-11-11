@@ -1,5 +1,6 @@
 package one.mann.weatherman.api.common
 
+import one.mann.domain.logic.countryCodeToEmoji
 import one.mann.domain.model.CitySearchResult
 import one.mann.weatherman.api.teleport.dto.Timezone
 import one.mann.weatherman.api.tomtom.dto.FuzzySearch
@@ -54,10 +55,21 @@ internal fun Timezone?.mapToString(): String {
 /** Map API TomTom Search to Domain, all parameters are nullable and are given default values */
 internal fun FuzzySearch.mapToDomain(): List<CitySearchResult> {
     val citySearchResultList = mutableListOf<CitySearchResult>()
-    result?.forEach {
-        val splitName: List<String>? = it.address?.freeformAddress?.split(",") // Split string in two parts
-        citySearchResultList.add(CitySearchResult(splitName?.get(0) ?: "", splitName?.get(1) ?: "", it.position?.lat
-                ?: 0f, it.position?.lon ?: 0f))
+    results?.forEach { result ->
+        result.position?.let { pos ->
+            // Only add address if it has valid lat and lon parameters
+            if (pos.lat != null && pos.lon != null) {
+                val countryEmoji: String = result.address?.countryCode?.let { countryCodeToEmoji(it) } ?: ""
+                val splitName: List<String>? = result.address?.freeformAddress?.split(",") // Split string at ','
+                splitName?.let { name ->
+                    // Added an If condition since some names do not contain a ','
+                    citySearchResultList.add(
+                            if (name.size > 1) CitySearchResult(name[0], name[1], pos.lat, pos.lon, countryEmoji)
+                            else CitySearchResult(name[0], "", pos.lat, pos.lon, countryEmoji)
+                    )
+                }
+            }
+        }
     }
     return citySearchResultList
 }

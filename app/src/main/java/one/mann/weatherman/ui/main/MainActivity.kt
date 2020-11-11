@@ -8,14 +8,17 @@ import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.snackbar.Snackbar
+import one.mann.domain.logic.truncate
 import one.mann.domain.model.CitySearchResult
 import one.mann.domain.model.Errors.*
+import one.mann.domain.model.location.Location
 import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.databinding.ActivityMainBinding
@@ -30,9 +33,6 @@ import javax.inject.Inject
 
 internal class MainActivity : BaseLocationActivity() {
 
-    // import kotlinx.coroutines.CoroutineExceptionHandler -> CoroutineExceptionHandler // handle exceptions?
-    // mainViewModel.addCity(Location(listOf(placeLoc!!.latitude.toFloat(), placeLoc.longitude.toFloat())).truncate()) // Adds new city
-
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
@@ -41,8 +41,9 @@ internal class MainActivity : BaseLocationActivity() {
     private val inputMethodManager by lazy { getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
     private var countObserved = false // Stop multiple location alerts on first run
     private var isFirstRun = true // Check if this is the first time app is running
-
-    private val searchCityRecyclerAdapter = SearchCityRecyclerAdapter {}
+    private val searchCityRecyclerAdapter by lazy {
+        SearchCityRecyclerAdapter { mainViewModel.addCity(Location(listOf(it.latitude, it.longitude)).truncate()) } // Add new city
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,6 +80,28 @@ internal class MainActivity : BaseLocationActivity() {
             setOnRefreshListener { handleLocationServiceResult() } // Prompt for location update if it is first run
         }
         mainViewModel.uiState.observe(::getLifecycle, ::observeUiState)
+        binding.itemSearchCityConstraintLayout?.let {
+            it.searchResultRecyclerView.apply {
+                adapter = searchCityRecyclerAdapter
+                setHasFixedSize(true)
+            }
+            it.citySearchView.setOnQueryTextListener(object : OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    newText?.let { searchQuery ->
+                        if (searchQuery == "" || searchQuery.length < 3) return false
+                        mainViewModel.searchCity(searchQuery)
+                        return true
+                    }
+                    return false
+                }
+            })
+            val searchViewCloseButton: View? = it.citySearchView.findViewById(androidx.appcompat.R.id.search_close_btn)
+            searchViewCloseButton?.setOnClickListener { hideSearchView() }
+        }
     }
 
     private fun handleLocationServiceResult() = handleLocationPermission { permissionGranted ->
@@ -87,6 +110,8 @@ internal class MainActivity : BaseLocationActivity() {
 
     private fun observeUiState(state: MainViewState) {
         binding.mainSwipeLayout.isRefreshing = state.isRefreshing
+        if (state.citySearchResult == listOf<CitySearchResult>()) hideSearchView()
+        else searchCityRecyclerAdapter.update(state.citySearchResult)
         when (state.error) {
             NO_INTERNET -> toast(R.string.no_internet_connection)
             NO_GPS -> toast(R.string.gps_needed_for_location)
@@ -115,20 +140,7 @@ internal class MainActivity : BaseLocationActivity() {
             when (menuItem!!.itemId) {
                 R.id.menu_add_city -> // Limit cities to 10
                     if (binding.viewPager.adapter!!.count < 10) {
-
                         binding.itemSearchCityConstraintLayout?.let {
-                            // Mock Recycler View data
-                            it.searchResultRecyclerView.apply {
-                                adapter = searchCityRecyclerAdapter
-                                setHasFixedSize(true)
-                            }
-                            searchCityRecyclerAdapter.update(listOf(
-                                    CitySearchResult("Toronto", "ON"),
-                                    CitySearchResult("Buffalo", "NY"),
-                                    CitySearchResult("London", "England"),
-                                    CitySearchResult("Vancouver", "BC"),
-                                    CitySearchResult("Sydney", "NSW")))
-
                             if (it.root.visibility == View.GONE) {
                                 it.root.visibility = View.VISIBLE
                                 it.citySearchView.requestFocus()
@@ -149,6 +161,7 @@ internal class MainActivity : BaseLocationActivity() {
         it?.root?.visibility = View.GONE
         it?.citySearchView?.clearFocus()
         it?.citySearchView?.setQuery("", false)
+        searchCityRecyclerAdapter.update(listOf()) // Remove previous list
     }
 
     private fun removeCityAlert() = AlertDialog.Builder(this, R.style.AlertDialogTheme)

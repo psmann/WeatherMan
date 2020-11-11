@@ -5,13 +5,12 @@
     android:layout_height="wrap_content"
     android:background="@android:color/white">
 
-    <ImageView
-        android:id="@+id/location_pin_image_view"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
+    <TextView
+        android:id="@+id/country_flag_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:contentDescription="@string/location_pin"
-        android:src="@drawable/location_pin"
+        android:textSize="21sp"
         app:layout_constraintBottom_toBottomOf="@+id/city_result_1_text_view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/city_result_1_text_view" />
@@ -22,23 +21,28 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:textAlignment="textStart"
         android:textColor="@android:color/black"
-        android:textSize="23sp"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/location_pin_image_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/country_flag_text_view"
         app:layout_constraintTop_toBottomOf="@+id/horizontal_line_view" />
 
     <TextView
         android:id="@+id/city_result_2_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
+        android:layout_marginEnd="8dp"
         android:textAlignment="textStart"
-        android:textSize="21sp"
+        android:textSize="19sp"
         app:layout_constraintBottom_toBottomOf="@+id/city_result_1_text_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/city_result_1_text_view"
         app:layout_constraintTop_toTopOf="@+id/city_result_1_text_view"
         app:layout_constraintVertical_bias="1.0" />

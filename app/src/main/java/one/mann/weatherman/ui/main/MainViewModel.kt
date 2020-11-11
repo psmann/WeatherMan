@@ -7,6 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.work.*
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import one.mann.domain.model.Errors.*
@@ -33,12 +35,14 @@ internal class MainViewModel @Inject constructor(
         private val removeCity: RemoveCity,
         private val updateWeather: UpdateWeather,
         private val getCityCount: GetCityCount,
+        private val getCitySearch: GetCitySearch,
         private val changeUnits: ChangeUnits,
         private val settingsPrefs: SharedPreferences,
         private val workManager: WorkManager
 ) : BaseViewModel(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val _uiState = MutableLiveData<MainViewState>()
+    private var searchJob: Job? = null
     val uiState: LiveData<MainViewState>
         get() = _uiState
 
@@ -60,10 +64,24 @@ internal class MainViewModel @Inject constructor(
         _uiState.value = _uiState.value?.copy(error = NO_ERROR) // Change error state back
     }
 
+    fun searchCity(query: String) {
+        searchJob?.cancel() // Cancel previous job if any
+        searchJob = launch {
+            try {
+                delay(750) // Debounce
+                val citySearch = withContext(IO) { getCitySearch.invoke(query) }
+                _uiState.value = _uiState.value?.copy(citySearchResult = citySearch)
+            } catch (e: IOException) { // Stop refreshing, show error and change the state back
+                _uiState.value = _uiState.value?.copy(isRefreshing = false, error = NO_RESPONSE)
+                _uiState.value = _uiState.value?.copy(error = NO_ERROR)
+            }
+        }
+    }
+
     fun addCity(apiLocation: Location? = null) {
         launch {
             try {
-                _uiState.value = _uiState.value?.copy(isRefreshing = true) // Start refreshing
+                _uiState.value = _uiState.value?.copy(isRefreshing = true, citySearchResult = listOf()) // Start refreshing
                 withContext(IO) { addCity.invoke(apiLocation) }
                 updateUI()
             } catch (e: IOException) { // Stop refreshing, show error and change the state back
