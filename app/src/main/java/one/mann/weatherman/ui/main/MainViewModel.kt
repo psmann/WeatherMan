@@ -11,6 +11,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import one.mann.domain.model.CitySearchResult
 import one.mann.domain.model.Errors.*
 import one.mann.domain.model.location.Location
 import one.mann.domain.model.location.LocationResponse
@@ -69,8 +70,8 @@ internal class MainViewModel @Inject constructor(
         searchJob = launch {
             try {
                 delay(750) // Debounce
-                val citySearch = withContext(IO) { getCitySearch.invoke(query) }
-                _uiState.value = _uiState.value?.copy(citySearchResult = citySearch)
+                val search = withContext(IO) { getCitySearch.invoke(query) }
+                if (search != listOf<CitySearchResult>()) _uiState.value = _uiState.value?.copy(citySearchResult = search)
             } catch (e: IOException) { // Stop refreshing, show error and change the state back
                 _uiState.value = _uiState.value?.copy(isRefreshing = false, error = NO_RESPONSE)
                 _uiState.value = _uiState.value?.copy(error = NO_ERROR)

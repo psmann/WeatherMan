@@ -30,7 +30,7 @@ internal class SearchCityRecyclerAdapter(val onClick: (searchResult: CitySearchR
 
     override fun getItemCount(): Int = citySearchList.size
 
-    fun update(searchList: List<CitySearchResult>) {
+    fun update(searchList: List<CitySearchResult> = listOf()) {
         citySearchList = searchList
         notifyDataSetChanged()
     }

@@ -35,12 +35,12 @@ internal class MainActivity : BaseLocationActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+    private var countObserved = false // Stop multiple location alerts on first run
+    private var isFirstRun = true // Check if this is the first time app is running
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val mainViewModel: MainViewModel by lazy { getViewModel(viewModelFactory) }
     private val mainPagerAdapter by lazy { MainPagerAdapter(supportFragmentManager) }
     private val inputMethodManager by lazy { getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
-    private var countObserved = false // Stop multiple location alerts on first run
-    private var isFirstRun = true // Check if this is the first time app is running
     private val searchCityRecyclerAdapter by lazy {
         SearchCityRecyclerAdapter { mainViewModel.addCity(Location(listOf(it.latitude, it.longitude)).truncate()) } // Add new city
     }
@@ -59,7 +59,7 @@ internal class MainActivity : BaseLocationActivity() {
     }
 
     private fun initActivity(permissionGranted: Boolean) {
-        if (!permissionGranted) { // If permission denied then exit
+        if (!permissionGranted) { // If permission is denied then exit
             toast(R.string.permission_required)
             finish()
             return
@@ -86,13 +86,13 @@ internal class MainActivity : BaseLocationActivity() {
                     setHasFixedSize(true)
                 }
                 it.citySearchView.setOnQueryTextListener(object : OnQueryTextListener {
-                    override fun onQueryTextSubmit(query: String?): Boolean {
-                        return false
-                    }
-
+                    override fun onQueryTextSubmit(query: String?): Boolean = false
                     override fun onQueryTextChange(newText: String?): Boolean {
                         newText?.let { searchQuery ->
-                            if (searchQuery == "" || searchQuery.length < 3) return false
+                            if (searchQuery == "" || searchQuery.length < 3) {
+                                searchCityRecyclerAdapter.update()
+                                return false
+                            }
                             mainViewModel.searchCity(searchQuery)
                             return true
                         }
@@ -162,7 +162,7 @@ internal class MainActivity : BaseLocationActivity() {
         it.root.visibility = View.GONE
         it.citySearchView.clearFocus()
         it.citySearchView.setQuery("", false)
-        searchCityRecyclerAdapter.update(listOf()) // Remove previous list
+        searchCityRecyclerAdapter.update() // Remove previous list
     }
 
     private fun removeCityAlert() = AlertDialog.Builder(this, R.style.AlertDialogTheme)
