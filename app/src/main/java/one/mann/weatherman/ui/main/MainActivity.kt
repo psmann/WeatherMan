@@ -16,7 +16,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.snackbar.Snackbar
 import one.mann.domain.logic.truncate
-import one.mann.domain.model.CitySearchResult
 import one.mann.domain.model.Errors.*
 import one.mann.domain.model.location.Location
 import one.mann.weatherman.R
@@ -55,7 +54,7 @@ internal class MainActivity : BaseLocationActivity() {
 
     /** Hide the searchView if it is visible instead of exiting activity */
     override fun onBackPressed() {
-        if (binding.itemSearchCityConstraintLayout?.root?.visibility == View.VISIBLE) hideSearchView() else super.onBackPressed()
+        if (binding.itemSearchCityConstraintLayout.root.visibility == View.VISIBLE) hideSearchView() else super.onBackPressed()
     }
 
     private fun initActivity(permissionGranted: Boolean) {
@@ -80,7 +79,8 @@ internal class MainActivity : BaseLocationActivity() {
                 setColorSchemeColors(Color.RED, Color.BLUE)
                 setOnRefreshListener { handleLocationServiceResult() } // Prompt for location update if it is first run
             }
-            itemSearchCityConstraintLayout?.let {
+            itemSearchCityConstraintLayout.let {
+                it.root.setOnClickListener { hideSearchView() } // Hide searchView when clicked anywhere outside it
                 it.searchResultRecyclerView.apply {
                     adapter = searchCityRecyclerAdapter
                     setHasFixedSize(true)
@@ -89,14 +89,10 @@ internal class MainActivity : BaseLocationActivity() {
                     override fun onQueryTextSubmit(query: String?): Boolean = false
                     override fun onQueryTextChange(newText: String?): Boolean {
                         newText?.let { searchQuery ->
-                            if (searchQuery == "" || searchQuery.length < 3) {
-                                searchCityRecyclerAdapter.update()
-                                return false
-                            }
-                            mainViewModel.searchCity(searchQuery)
-                            return true
+                            if (searchQuery == "" || searchQuery.length < 3) searchCityRecyclerAdapter.update()
+                            else mainViewModel.searchCity(searchQuery)
                         }
-                        return false
+                        return true
                     }
                 })
                 val searchViewCloseButton: View? = it.citySearchView.findViewById(androidx.appcompat.R.id.search_close_btn)
@@ -111,8 +107,7 @@ internal class MainActivity : BaseLocationActivity() {
 
     private fun observeUiState(state: MainViewState) {
         binding.mainSwipeLayout.isRefreshing = state.isRefreshing
-        if (state.citySearchResult == listOf<CitySearchResult>()) hideSearchView()
-        else searchCityRecyclerAdapter.update(state.citySearchResult)
+        if (state.citySearchResult.isEmpty()) hideSearchView() else searchCityRecyclerAdapter.update(state.citySearchResult)
         when (state.error) {
             NO_INTERNET -> toast(R.string.no_internet_connection)
             NO_GPS -> toast(R.string.gps_needed_for_location)
@@ -139,17 +134,13 @@ internal class MainActivity : BaseLocationActivity() {
         if (!menu.hasVisibleItems()) inflateMenu(R.menu.menu_main) // Inflate menu directly into toolbar
         setOnMenuItemClickListener { menuItem ->
             when (menuItem!!.itemId) {
-                R.id.menu_add_city -> // Limit cities to 10
-                    if (binding.viewPager.adapter!!.count < 10) {
-                        binding.itemSearchCityConstraintLayout?.let {
-                            if (it.root.visibility == View.GONE) {
-                                it.root.visibility = View.VISIBLE
-                                it.citySearchView.requestFocus()
-                                inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0) // Force show keyboard
-                                it.root.setOnClickListener { hideSearchView() } // Hide searchView when clicked outside
-                            }
-                        }
-                    } else toast(R.string.remove_a_city_before_adding)
+                R.id.menu_add_city -> if (binding.viewPager.adapter?.count!! < 10) { // Limit cities to 10
+                    binding.itemSearchCityConstraintLayout.let {
+                        it.root.visibility = View.VISIBLE
+                        it.citySearchView.requestFocus()
+                        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0) // Force show keyboard
+                    }
+                } else toast(R.string.remove_a_city_before_adding)
                 R.id.menu_remove_city -> removeCityAlert().show()
                 R.id.menu_settings -> startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
             }
@@ -158,7 +149,7 @@ internal class MainActivity : BaseLocationActivity() {
     }
 
     /** Hide searchView and clear query */
-    private fun hideSearchView() = binding.itemSearchCityConstraintLayout?.let {
+    private fun hideSearchView() = binding.itemSearchCityConstraintLayout.let {
         it.root.visibility = View.GONE
         it.citySearchView.clearFocus()
         it.citySearchView.setQuery("", false)
