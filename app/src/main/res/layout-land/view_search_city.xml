@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="48dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="64dp"
         android:background="@android:color/white"
         android:elevation="3dp"
         app:iconifiedByDefault="false"
