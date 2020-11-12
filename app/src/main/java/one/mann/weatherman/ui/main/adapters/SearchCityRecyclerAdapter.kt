@@ -3,7 +3,7 @@ package one.mann.weatherman.ui.main.adapters
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import one.mann.domain.model.CitySearchResult
+import one.mann.domain.models.CitySearchResult
 import one.mann.weatherman.R
 import one.mann.weatherman.databinding.ItemCitySearchBinding
 import one.mann.weatherman.ui.common.util.inflateView

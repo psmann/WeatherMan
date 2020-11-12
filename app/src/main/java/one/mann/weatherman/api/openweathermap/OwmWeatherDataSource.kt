@@ -1,9 +1,9 @@
 package one.mann.weatherman.api.openweathermap
 
-import one.mann.domain.model.weather.CurrentWeather
-import one.mann.domain.model.weather.DailyForecast
-import one.mann.domain.model.weather.HourlyForecast
-import one.mann.domain.model.location.Location
+import one.mann.domain.models.weather.CurrentWeather
+import one.mann.domain.models.weather.DailyForecast
+import one.mann.domain.models.weather.HourlyForecast
+import one.mann.domain.models.location.Location
 import one.mann.interactors.data.sources.api.WeatherDataSource
 import one.mann.weatherman.api.common.mapToDomain
 import javax.inject.Inject

@@ -16,8 +16,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.snackbar.Snackbar
 import one.mann.domain.logic.truncate
-import one.mann.domain.model.Errors.*
-import one.mann.domain.model.location.Location
+import one.mann.domain.models.Errors.*
+import one.mann.domain.models.location.Location
 import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.databinding.ActivityMainBinding

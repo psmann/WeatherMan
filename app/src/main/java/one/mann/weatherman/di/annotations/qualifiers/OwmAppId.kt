@@ -1,4 +1,4 @@
-package one.mann.weatherman.di.annotations.qualifier
+package one.mann.weatherman.di.annotations.qualifiers
 
 import javax.inject.Qualifier
 

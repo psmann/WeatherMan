@@ -1,4 +1,4 @@
-package one.mann.domain.model.weather
+package one.mann.domain.models.weather
 
 /* Created by Psmann. */
 

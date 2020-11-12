@@ -1,6 +1,6 @@
 package one.mann.interactors.data.sources.api
 
-import one.mann.domain.model.CitySearchResult
+import one.mann.domain.models.CitySearchResult
 
 /* Created by Psmann. */
 

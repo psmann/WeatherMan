@@ -1,4 +1,4 @@
-package one.mann.weatherman.di.annotations.key
+package one.mann.weatherman.di.annotations.keys
 
 import androidx.work.ListenableWorker
 import dagger.MapKey

@@ -1,8 +1,8 @@
 package one.mann.weatherman.ui.detail
 
-import one.mann.domain.model.Errors
-import one.mann.domain.model.Errors.NO_ERROR
-import one.mann.domain.model.weather.Weather
+import one.mann.domain.models.Errors
+import one.mann.domain.models.Errors.NO_ERROR
+import one.mann.domain.models.weather.Weather
 
 /* Created by Psmann. */
 

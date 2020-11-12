@@ -1,6 +1,6 @@
 package one.mann.interactors.usecases
 
-import one.mann.domain.model.NotificationData
+import one.mann.domain.models.NotificationData
 import one.mann.interactors.data.repositories.WeatherRepository
 import javax.inject.Inject
 

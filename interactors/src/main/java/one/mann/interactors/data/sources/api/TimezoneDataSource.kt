@@ -1,6 +1,6 @@
 package one.mann.interactors.data.sources.api
 
-import one.mann.domain.model.location.Location
+import one.mann.domain.models.location.Location
 
 /* Created by Psmann. */
 

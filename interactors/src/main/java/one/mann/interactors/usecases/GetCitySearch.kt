@@ -1,6 +1,6 @@
 package one.mann.interactors.usecases
 
-import one.mann.domain.model.CitySearchResult
+import one.mann.domain.models.CitySearchResult
 import one.mann.interactors.data.repositories.CitySearchRepository
 import javax.inject.Inject
 

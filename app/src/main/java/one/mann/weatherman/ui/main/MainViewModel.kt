@@ -11,14 +11,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import one.mann.domain.model.CitySearchResult
-import one.mann.domain.model.Errors.*
-import one.mann.domain.model.location.Location
-import one.mann.domain.model.location.LocationResponse
-import one.mann.domain.model.location.LocationResponse.*
-import one.mann.domain.model.location.LocationType
-import one.mann.domain.model.location.LocationType.DB
-import one.mann.domain.model.location.LocationType.DEVICE
+import one.mann.domain.models.Errors.*
+import one.mann.domain.models.location.Location
+import one.mann.domain.models.location.LocationResponse
+import one.mann.domain.models.location.LocationResponse.*
+import one.mann.domain.models.location.LocationType
+import one.mann.domain.models.location.LocationType.DB
+import one.mann.domain.models.location.LocationType.DEVICE
 import one.mann.interactors.usecases.*
 import one.mann.weatherman.framework.service.workers.NotificationWorker
 import one.mann.weatherman.ui.common.base.BaseViewModel
@@ -70,8 +69,8 @@ internal class MainViewModel @Inject constructor(
         searchJob = launch {
             try {
                 delay(750) // Debounce
-                val search = withContext(IO) { getCitySearch.invoke(query) }
-                if (search != listOf<CitySearchResult>()) _uiState.value = _uiState.value?.copy(citySearchResult = search)
+                val citySearch = withContext(IO) { getCitySearch.invoke(query) }
+                if (citySearch.isEmpty()) _uiState.value = _uiState.value?.copy(citySearchResult = citySearch)
             } catch (e: IOException) { // Stop refreshing, show error and change the state back
                 _uiState.value = _uiState.value?.copy(isRefreshing = false, error = NO_RESPONSE)
                 _uiState.value = _uiState.value?.copy(error = NO_ERROR)

@@ -1,6 +1,6 @@
 package one.mann.weatherman.api.tomtom
 
-import one.mann.domain.model.CitySearchResult
+import one.mann.domain.models.CitySearchResult
 import one.mann.interactors.data.sources.api.CitySearchDataSource
 import one.mann.weatherman.api.common.mapToDomain
 import javax.inject.Inject

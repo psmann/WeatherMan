@@ -1,12 +1,12 @@
 package one.mann.weatherman.api.common
 
 import one.mann.domain.logic.countryCodeToEmoji
-import one.mann.domain.model.CitySearchResult
+import one.mann.domain.models.CitySearchResult
 import one.mann.weatherman.api.teleport.dto.Timezone
 import one.mann.weatherman.api.tomtom.dto.FuzzySearch
-import one.mann.domain.model.weather.CurrentWeather as DomainCurrentWeather
-import one.mann.domain.model.weather.DailyForecast as DomainDailyForecast
-import one.mann.domain.model.weather.HourlyForecast as DomainHourlyForecast
+import one.mann.domain.models.weather.CurrentWeather as DomainCurrentWeather
+import one.mann.domain.models.weather.DailyForecast as DomainDailyForecast
+import one.mann.domain.models.weather.HourlyForecast as DomainHourlyForecast
 import one.mann.weatherman.api.openweathermap.dto.CurrentWeather as ApiCurrentWeather
 import one.mann.weatherman.api.openweathermap.dto.DailyForecast as ApiDailyForecast
 import one.mann.weatherman.api.openweathermap.dto.HourlyForecast as ApiHourlyForecast

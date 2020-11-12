@@ -4,7 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import one.mann.domain.model.Errors
+import one.mann.domain.models.Errors
 import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.api.openweathermap.isOvercast

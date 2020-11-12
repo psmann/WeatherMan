@@ -1,4 +1,4 @@
-package one.mann.weatherman.di.annotations.key
+package one.mann.weatherman.di.annotations.keys
 
 import androidx.lifecycle.ViewModel
 import dagger.MapKey

@@ -7,7 +7,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import kotlinx.coroutines.suspendCancellableCoroutine
 import one.mann.domain.logic.truncate
-import one.mann.domain.model.location.Location
+import one.mann.domain.models.location.Location
 import one.mann.interactors.data.sources.framework.DeviceLocationSource
 import javax.inject.Inject
 import kotlin.coroutines.resume

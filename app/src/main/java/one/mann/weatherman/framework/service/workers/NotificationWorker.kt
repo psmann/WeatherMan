@@ -3,7 +3,7 @@ package one.mann.weatherman.framework.service.workers
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import one.mann.domain.model.location.LocationType
+import one.mann.domain.models.location.LocationType
 import one.mann.interactors.usecases.UpdateWeather
 import one.mann.weatherman.framework.service.workers.factory.ChildWorkerFactory
 import one.mann.weatherman.ui.notification.WeatherNotification

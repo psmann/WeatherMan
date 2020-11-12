@@ -1,4 +1,4 @@
-package one.mann.domain.model.location
+package one.mann.domain.models.location
 
 /* Created by Psmann. */
 

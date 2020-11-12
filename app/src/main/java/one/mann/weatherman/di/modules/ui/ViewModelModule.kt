@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
-import one.mann.weatherman.di.annotations.key.ViewModelKey
+import one.mann.weatherman.di.annotations.keys.ViewModelKey
 import one.mann.weatherman.ui.common.base.ViewModelFactory
 import one.mann.weatherman.ui.detail.DetailViewModel
 import one.mann.weatherman.ui.main.MainViewModel

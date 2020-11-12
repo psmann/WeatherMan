@@ -1,8 +1,8 @@
 package one.mann.domain.logic
 
-import one.mann.domain.model.UnitsType
-import one.mann.domain.model.UnitsType.*
-import one.mann.domain.model.location.Location
+import one.mann.domain.models.UnitsType
+import one.mann.domain.models.UnitsType.*
+import one.mann.domain.models.location.Location
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.exp

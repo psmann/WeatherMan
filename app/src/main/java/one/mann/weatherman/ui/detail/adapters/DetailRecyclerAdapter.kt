@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import one.mann.domain.logic.DEGREES
 import one.mann.domain.logic.removeUnits
-import one.mann.domain.model.weather.Weather
+import one.mann.domain.models.weather.Weather
 import one.mann.weatherman.R
 import one.mann.weatherman.ui.common.util.inflateView
 import one.mann.weatherman.ui.common.util.loadIcon

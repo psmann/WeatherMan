@@ -1,9 +1,9 @@
 package one.mann.weatherman.ui.main
 
-import one.mann.domain.model.CitySearchResult
-import one.mann.domain.model.Errors
-import one.mann.domain.model.Errors.NO_ERROR
-import one.mann.domain.model.weather.Weather
+import one.mann.domain.models.CitySearchResult
+import one.mann.domain.models.Errors
+import one.mann.domain.models.Errors.NO_ERROR
+import one.mann.domain.models.weather.Weather
 
 /* Created by Psmann. */
 

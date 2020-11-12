@@ -1,8 +1,8 @@
 package one.mann.interactors.data.sources.framework
 
-import one.mann.domain.model.location.Location
-import one.mann.domain.model.NotificationData
-import one.mann.domain.model.weather.Weather
+import one.mann.domain.models.location.Location
+import one.mann.domain.models.NotificationData
+import one.mann.domain.models.weather.Weather
 
 /* Created by Psmann. */
 

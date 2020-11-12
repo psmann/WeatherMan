@@ -8,7 +8,7 @@ import one.mann.weatherman.api.common.QueryInterceptor
 import one.mann.weatherman.api.openweathermap.OwmWeatherService
 import one.mann.weatherman.api.teleport.TeleportTimezoneService
 import one.mann.weatherman.api.tomtom.TomTomSearchService
-import one.mann.weatherman.di.annotations.qualifier.*
+import one.mann.weatherman.di.annotations.qualifiers.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -72,7 +72,10 @@ internal class ApiServiceModule {
     @Provides
     @Singleton
     @OpenWeatherMapApi
-    fun provideOwmRestAdapter(@OpenWeatherMapApi client: OkHttpClient, gsonConverterFactory: GsonConverterFactory): Retrofit {
+    fun provideOwmRestAdapter(
+            @OpenWeatherMapApi client: OkHttpClient,
+            gsonConverterFactory: GsonConverterFactory
+    ): Retrofit {
         return Retrofit.Builder()
                 .baseUrl(OWM_BASE_URL)
                 .addConverterFactory(gsonConverterFactory)
@@ -83,7 +86,10 @@ internal class ApiServiceModule {
     @Provides
     @Singleton
     @TomTomApi
-    fun provideTomTomRestAdapter(@TomTomApi client: OkHttpClient, gsonConverterFactory: GsonConverterFactory): Retrofit {
+    fun provideTomTomRestAdapter(
+            @TomTomApi client: OkHttpClient,
+            gsonConverterFactory: GsonConverterFactory
+    ): Retrofit {
         return Retrofit.Builder()
                 .baseUrl(TOMTOM_BASE_URL)
                 .addConverterFactory(gsonConverterFactory)

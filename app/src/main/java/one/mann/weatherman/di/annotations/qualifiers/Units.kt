@@ -1,4 +1,4 @@
-package one.mann.weatherman.di.annotations.qualifier
+package one.mann.weatherman.di.annotations.qualifiers
 
 import javax.inject.Qualifier
 
@@ -6,4 +6,4 @@ import javax.inject.Qualifier
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-internal annotation class TeleportApi
+internal annotation class Units
