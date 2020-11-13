@@ -28,7 +28,7 @@
     <string name="location_settings_not_available">Location settings are not available on this device</string>
     <string name="add_city">Add City</string>
     <string name="remove_city">Remove City</string>
-    <string name="error_has_occurred_try_again">An error has occurred.\nPlease try again later</string>
+    <string name="network_error">Network Error:\n</string>
     <string name="remove_a_city_before_adding">Only 10 cities can be added!\nRemove one before adding another</string>
     <string name="title_activity_settings">Settings</string>
     <string name="settings">Settings</string>

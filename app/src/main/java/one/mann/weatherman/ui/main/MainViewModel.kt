@@ -5,12 +5,9 @@ import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.work.*
+import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import one.mann.domain.models.Errors.*
 import one.mann.domain.models.location.Location
 import one.mann.domain.models.location.LocationResponse
@@ -22,7 +19,6 @@ import one.mann.interactors.usecases.*
 import one.mann.weatherman.framework.service.workers.NotificationWorker
 import one.mann.weatherman.ui.common.base.BaseViewModel
 import one.mann.weatherman.ui.common.util.*
-import java.io.IOException
 import java.util.concurrent.TimeUnit.HOURS
 import java.util.concurrent.TimeUnit.MINUTES
 import javax.inject.Inject
@@ -42,6 +38,10 @@ internal class MainViewModel @Inject constructor(
 ) : BaseViewModel(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val _uiState = MutableLiveData<MainViewState>()
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, e -> // Show error and change the state back
+        _uiState.value = _uiState.value?.copy(isRefreshing = false, errorType = NO_RESPONSE, errorMessage = e.message.toString())
+        _uiState.value = _uiState.value?.copy(errorType = NO_ERROR)
+    }
     private var searchJob: Job? = null
     val uiState: LiveData<MainViewState>
         get() = _uiState
@@ -56,38 +56,28 @@ internal class MainViewModel @Inject constructor(
 
     fun handleRefreshing(response: LocationResponse, firstRun: Boolean) {
         when (response) {
-            NO_NETWORK -> _uiState.value = _uiState.value?.copy(error = NO_INTERNET)
+            NO_NETWORK -> _uiState.value = _uiState.value?.copy(errorType = NO_INTERNET)
             ENABLED -> if (firstRun) addCity() else updateWeather(DEVICE)
-            DISABLED -> if (firstRun) _uiState.value = _uiState.value?.copy(error = NO_GPS) else updateWeather(DB)
-            UNAVAILABLE -> _uiState.value = _uiState.value?.copy(error = NO_LOCATION)
+            DISABLED -> if (firstRun) _uiState.value = _uiState.value?.copy(errorType = NO_GPS) else updateWeather(DB)
+            UNAVAILABLE -> _uiState.value = _uiState.value?.copy(errorType = NO_LOCATION)
         }
-        _uiState.value = _uiState.value?.copy(error = NO_ERROR) // Change error state back
+        _uiState.value = _uiState.value?.copy(errorType = NO_ERROR) // Change error state back
     }
 
     fun searchCity(query: String) {
         searchJob?.cancel() // Cancel previous job if any
-        searchJob = launch {
-            try {
-                delay(750) // Debounce
-                val citySearch = withContext(IO) { getCitySearch.invoke(query) }
-                if (citySearch.isEmpty()) _uiState.value = _uiState.value?.copy(citySearchResult = citySearch)
-            } catch (e: IOException) { // Stop refreshing, show error and change the state back
-                _uiState.value = _uiState.value?.copy(isRefreshing = false, error = NO_RESPONSE)
-                _uiState.value = _uiState.value?.copy(error = NO_ERROR)
-            }
+        searchJob = launch(coroutineExceptionHandler) {
+            delay(750) // Debounce
+            val citySearch = withContext(IO) { getCitySearch.invoke(query) }
+            if (citySearch.isEmpty()) _uiState.value = _uiState.value?.copy(citySearchResult = citySearch)
         }
     }
 
     fun addCity(apiLocation: Location? = null) {
-        launch {
-            try {
-                _uiState.value = _uiState.value?.copy(isRefreshing = true, citySearchResult = listOf()) // Start refreshing
-                withContext(IO) { addCity.invoke(apiLocation) }
-                updateUI()
-            } catch (e: IOException) { // Stop refreshing, show error and change the state back
-                _uiState.value = _uiState.value?.copy(isRefreshing = false, error = NO_RESPONSE)
-                _uiState.value = _uiState.value?.copy(error = NO_ERROR)
-            }
+        launch(coroutineExceptionHandler) {
+            _uiState.value = _uiState.value?.copy(isRefreshing = true, citySearchResult = listOf())
+            withContext(IO) { addCity.invoke(apiLocation) }
+            updateUI()
         }
     }
 
@@ -98,17 +88,12 @@ internal class MainViewModel @Inject constructor(
      * If it returns false (i.e. not updated from API) then LAST_CHECKED_KEY is changed and updateUI() is called in listener.
      */
     private fun updateWeather(locationType: LocationType) {
-        launch {
-            try {
-                _uiState.value = _uiState.value?.copy(isRefreshing = true) // Start refreshing
-                withContext(IO) {
-                    val weatherUpdated = updateWeather.invoke(locationType)
-                    if (weatherUpdated) settingsPrefs.edit { putLong(LAST_UPDATED_KEY, System.currentTimeMillis()) }
-                    else settingsPrefs.edit { putLong(LAST_CHECKED_KEY, System.currentTimeMillis()) }
-                }
-            } catch (e: IOException) { // Stop refreshing, show error and change the state back
-                _uiState.value = _uiState.value?.copy(isRefreshing = false, error = NO_RESPONSE)
-                _uiState.value = _uiState.value?.copy(error = NO_ERROR)
+        launch(coroutineExceptionHandler) {
+            _uiState.value = _uiState.value?.copy(isRefreshing = true)
+            withContext(IO) {
+                val weatherUpdated = updateWeather.invoke(locationType)
+                if (weatherUpdated) settingsPrefs.edit { putLong(LAST_UPDATED_KEY, System.currentTimeMillis()) }
+                else settingsPrefs.edit { putLong(LAST_CHECKED_KEY, System.currentTimeMillis()) }
             }
         }
     }

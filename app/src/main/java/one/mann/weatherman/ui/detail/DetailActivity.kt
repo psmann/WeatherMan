@@ -65,7 +65,7 @@ internal class DetailActivity : BaseLocationActivity() {
         binding.detailSwipeLayout.isRefreshing = state.isRefreshing
         when (state.error) {
             Errors.NO_INTERNET -> toast(R.string.no_internet_connection)
-            Errors.NO_RESPONSE -> toast(R.string.error_has_occurred_try_again)
+            Errors.NO_RESPONSE -> toast(R.string.network_error)
             else -> run { return@run } // Workaround for lack of break support inside when statements
         }
         if (weather.size >= position + 1) {

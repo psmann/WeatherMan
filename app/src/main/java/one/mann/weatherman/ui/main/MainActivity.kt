@@ -108,11 +108,11 @@ internal class MainActivity : BaseLocationActivity() {
     private fun observeUiState(state: MainViewState) {
         binding.mainSwipeLayout.isRefreshing = state.isRefreshing
         if (state.citySearchResult.isEmpty()) hideSearchView() else searchCityRecyclerAdapter.update(state.citySearchResult)
-        when (state.error) {
+        when (state.errorType) {
             NO_INTERNET -> toast(R.string.no_internet_connection)
             NO_GPS -> toast(R.string.gps_needed_for_location)
             NO_LOCATION -> toast(R.string.location_settings_not_available)
-            NO_RESPONSE -> toast(R.string.error_has_occurred_try_again)
+            NO_RESPONSE -> toast(R.string.network_error, state.errorMessage)
             NO_ERROR -> run { return@run } // A workaround for no break support inside when statements
         }
         when (val count = state.cityCount) {

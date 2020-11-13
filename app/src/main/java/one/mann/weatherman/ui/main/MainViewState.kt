@@ -10,7 +10,8 @@ import one.mann.domain.models.weather.Weather
 internal data class MainViewState(
         val isRefreshing: Boolean = false,
         val isLoading: Boolean = true,
-        val error: Errors = NO_ERROR,
+        val errorType: Errors = NO_ERROR,
+        val errorMessage: String = "Error: ",
         val cityCount: Int = -1,
         val weatherData: List<Weather> = listOf(),
         val citySearchResult: List<CitySearchResult> = listOf()
