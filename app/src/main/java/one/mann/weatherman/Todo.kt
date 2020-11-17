@@ -15,6 +15,7 @@ TODO:
  Handle navBar hidden usecase (screen layouts should resize accordingly to fill the empty space)
  Implement CI/CD (Jenkins or CircleCI)
  Implement Crashlytics (Firebase)
+ Add comments to domain model classes
 */
 
 /*

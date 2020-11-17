@@ -9,6 +9,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import one.mann.domain.models.Errors.*
+import one.mann.domain.models.ViewPagerUpdateType
 import one.mann.domain.models.location.Location
 import one.mann.domain.models.location.LocationResponse
 import one.mann.domain.models.location.LocationResponse.*
@@ -38,7 +39,7 @@ internal class MainViewModel @Inject constructor(
 ) : BaseViewModel(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val _uiState = MutableLiveData<MainViewState>()
-    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, e -> // Show error and change the state back
+    private val exceptionHandler = CoroutineExceptionHandler { _, e -> // Show error and change the state back
         _uiState.value = _uiState.value?.copy(isRefreshing = false, errorType = NO_RESPONSE, errorMessage = e.message.toString())
         _uiState.value = _uiState.value?.copy(errorType = NO_ERROR)
     }
@@ -51,7 +52,7 @@ internal class MainViewModel @Inject constructor(
         settingsPrefs.registerOnSharedPreferenceChangeListener(this)
         workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG).observeForever { updateUI() } // Update on change
         enqueueNotificationWork()
-        updateUI()
+        updateUI(ViewPagerUpdateType.SET_SIZE)
     }
 
     fun handleRefreshing(response: LocationResponse, firstRun: Boolean) {
@@ -66,18 +67,18 @@ internal class MainViewModel @Inject constructor(
 
     fun searchCity(query: String) {
         searchJob?.cancel() // Cancel previous job if any
-        searchJob = launch(coroutineExceptionHandler) {
+        searchJob = launch(exceptionHandler) {
             delay(750) // Debounce
             val citySearch = withContext(IO) { getCitySearch.invoke(query) }
-            if (citySearch.isEmpty()) _uiState.value = _uiState.value?.copy(citySearchResult = citySearch)
+            if (citySearch.isNotEmpty()) _uiState.value = _uiState.value?.copy(citySearchResult = citySearch)
         }
     }
 
     fun addCity(apiLocation: Location? = null) {
-        launch(coroutineExceptionHandler) {
+        launch(exceptionHandler) {
             _uiState.value = _uiState.value?.copy(isRefreshing = true, citySearchResult = listOf())
             withContext(IO) { addCity.invoke(apiLocation) }
-            updateUI()
+            updateUI(ViewPagerUpdateType.ADD_ITEM)
         }
     }
 
@@ -88,7 +89,7 @@ internal class MainViewModel @Inject constructor(
      * If it returns false (i.e. not updated from API) then LAST_CHECKED_KEY is changed and updateUI() is called in listener.
      */
     private fun updateWeather(locationType: LocationType) {
-        launch(coroutineExceptionHandler) {
+        launch(exceptionHandler) {
             _uiState.value = _uiState.value?.copy(isRefreshing = true)
             withContext(IO) {
                 val weatherUpdated = updateWeather.invoke(locationType)
@@ -100,26 +101,33 @@ internal class MainViewModel @Inject constructor(
 
     fun removeCity(position: Int) {
         val cityName = _uiState.value?.weatherData?.get(position)?.cityName ?: return // Return if null
-        launch(IO) {
-            removeCity.invoke(cityName)
-            updateUI()
+        launch(exceptionHandler) {
+            withContext(IO) { removeCity.invoke(cityName) }
+            updateUI(ViewPagerUpdateType.REMOVE_ITEM)
         }
     }
 
-    private fun updateUI() {
-        launch {
+    private fun updateUI(updateViewPager: ViewPagerUpdateType = ViewPagerUpdateType.NO_CHANGE) {
+        launch(exceptionHandler) {
             val data = withContext(IO) { getAllWeather.invoke() }
             val count = withContext(IO) { getCityCount.invoke() }
-            _uiState.value = if (data.isEmpty()) _uiState.value?.copy(isRefreshing = false, cityCount = count)
-            else _uiState.value?.copy(weatherData = data, isLoading = false, isRefreshing = false, cityCount = count)
+            _uiState.value = _uiState.value?.copy(
+                    weatherData = if (data.isEmpty()) listOf() else data,
+                    isLoading = data.isEmpty(),
+                    isRefreshing = false,
+                    cityCount = count,
+                    updateViewPager = updateViewPager
+            )
+            _uiState.value = _uiState.value?.copy(updateViewPager = ViewPagerUpdateType.NO_CHANGE) // Change state back
         }
     }
 
     /** Start worker if notifications are turned on by the user, does nothing if worker is already running */
     private fun enqueueNotificationWork() {
         launch(IO) {
-            if (settingsPrefs.getBoolean(SETTINGS_NOTIFICATIONS_KEY, true)) startNotificationWork(
-                    settingsPrefs.getString(SETTINGS_FREQUENCY_KEY, "1")!!.toLong())
+            if (settingsPrefs.getBoolean(SETTINGS_NOTIFICATIONS_KEY, true)) {
+                startNotificationWork(settingsPrefs.getString(SETTINGS_FREQUENCY_KEY, "1")!!.toLong())
+            }
         }
     }
 
@@ -162,10 +170,9 @@ internal class MainViewModel @Inject constructor(
                     changeUnits.invoke()
                     updateUI()
                 }
-                SETTINGS_NOTIFICATIONS_KEY -> // Start-Stop notifications
-                    if (sharedPreferences!!.getBoolean(key, true)) startNotificationWork(
-                            sharedPreferences.getString(SETTINGS_FREQUENCY_KEY, "1")!!.toLong())
-                    else stopNotificationWork()
+                SETTINGS_NOTIFICATIONS_KEY -> if (sharedPreferences!!.getBoolean(key, true)) { // Start-Stop notifications
+                    startNotificationWork(sharedPreferences.getString(SETTINGS_FREQUENCY_KEY, "1")!!.toLong())
+                } else stopNotificationWork()
                 SETTINGS_FREQUENCY_KEY -> { // Change notification frequency
                     stopNotificationWork() // Cancel old work
                     startNotificationWork(sharedPreferences!!.getString(key, "1")!!.toLong()) // Start new work

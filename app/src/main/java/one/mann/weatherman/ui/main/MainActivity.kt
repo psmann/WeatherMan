@@ -13,17 +13,19 @@ import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.snackbar.Snackbar
 import one.mann.domain.logic.truncate
 import one.mann.domain.models.Errors.*
+import one.mann.domain.models.ViewPagerUpdateType
+import one.mann.domain.models.ViewPagerUpdateType.*
 import one.mann.domain.models.location.Location
 import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.databinding.ActivityMainBinding
 import one.mann.weatherman.ui.common.base.BaseLocationActivity
 import one.mann.weatherman.ui.common.util.getViewModel
-import one.mann.weatherman.ui.main.adapters.MainPagerAdapter
+import one.mann.weatherman.ui.main.adapters.MainViewPagerAdapter
 import one.mann.weatherman.ui.main.adapters.SearchCityRecyclerAdapter
 import one.mann.weatherman.ui.settings.SettingsActivity
 import javax.inject.Inject
@@ -36,9 +38,10 @@ internal class MainActivity : BaseLocationActivity() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private var countObserved = false // Stop multiple location alerts on first run
     private var isFirstRun = true // Check if this is the first time app is running
+    private var removeViewPagerItem = false // check if viewPager item is being removed
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val mainViewModel: MainViewModel by lazy { getViewModel(viewModelFactory) }
-    private val mainPagerAdapter by lazy { MainPagerAdapter(supportFragmentManager) }
+    private val mainViewPagerAdapter by lazy { MainViewPagerAdapter(supportFragmentManager, lifecycle) }
     private val inputMethodManager by lazy { getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
     private val searchCityRecyclerAdapter by lazy {
         SearchCityRecyclerAdapter { mainViewModel.addCity(Location(listOf(it.latitude, it.longitude)).truncate()) } // Add new city
@@ -66,12 +69,20 @@ internal class MainActivity : BaseLocationActivity() {
         mainViewModel.uiState.observe(::getLifecycle, ::observeUiState)
         binding.apply {
             viewPager.apply {
-                adapter = mainPagerAdapter
-                addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-                    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
-                    override fun onPageSelected(position: Int) {}
-                    override fun onPageScrollStateChanged(state: Int) { // Fix horizontal scrolling
-                        if (!mainSwipeLayout.isRefreshing) mainSwipeLayout.isEnabled = state == ViewPager.SCROLL_STATE_IDLE
+                adapter = mainViewPagerAdapter
+                registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                        super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+                        // Complete scrolling to previous item before updating ViewPager data set
+                        if (removeViewPagerItem && positionOffset == 0f) {
+                            mainViewPagerAdapter.updatePages(binding.viewPager.adapter?.itemCount!! - 1)
+                            removeViewPagerItem = false
+                        }
+                    }
+
+                    override fun onPageScrollStateChanged(state: Int) {
+                        super.onPageScrollStateChanged(state)
+                        if (!mainSwipeLayout.isRefreshing) mainSwipeLayout.isEnabled = state == ViewPager2.SCROLL_STATE_IDLE
                     }
                 })
             }
@@ -124,17 +135,33 @@ internal class MainActivity : BaseLocationActivity() {
             else -> { // Show Snackbar when user adds a city for the first time
                 if (count == 2 && !mainViewModel.navigationGuideShown()) appNavigationGuideSnack().show()
                 if (isFirstRun) binding.toolbar.init() // Ensures this function is only called once
-                mainPagerAdapter.updatePages(count)
+                updateViewPager(count, state.updateViewPager)
                 isFirstRun = false
             }
         }
+    }
+
+    /** Handle ViewPager update scenarios */
+    private fun updateViewPager(pageCount: Int, updateType: ViewPagerUpdateType) = when (updateType) {
+        SET_SIZE -> mainViewPagerAdapter.updatePages(pageCount)
+        ADD_ITEM -> {
+            mainViewPagerAdapter.updatePages(pageCount)
+            binding.viewPager.setCurrentItem(pageCount - 1, true)
+            toast(R.string.location_added)
+        }
+        REMOVE_ITEM -> {
+            binding.viewPager.setCurrentItem(binding.viewPager.currentItem - 1, true)
+            removeViewPagerItem = true
+            toast(R.string.location_removed)
+        }
+        NO_CHANGE -> run { return@run }
     }
 
     private fun Toolbar.init() = apply {
         if (!menu.hasVisibleItems()) inflateMenu(R.menu.menu_main) // Inflate menu directly into toolbar
         setOnMenuItemClickListener { menuItem ->
             when (menuItem!!.itemId) {
-                R.id.menu_add_city -> if (binding.viewPager.adapter?.count!! < 10) { // Limit cities to 10
+                R.id.menu_add_city -> if (binding.viewPager.adapter?.itemCount!! < 10) { // Limit cities to 10
                     binding.itemSearchCityConstraintLayout.let {
                         it.root.visibility = View.VISIBLE
                         it.citySearchView.requestFocus()
@@ -162,10 +189,7 @@ internal class MainActivity : BaseLocationActivity() {
             .setPositiveButton(getString(R.string.yes)) { _, _ ->
                 val position = binding.viewPager.currentItem
                 if (position == 0) toast(R.string.cant_remove_first_location)
-                else {
-                    mainViewModel.removeCity(position)
-                    toast(R.string.location_removed)
-                }
+                else mainViewModel.removeCity(position)
             }
             .setNegativeButton(getString(R.string.no)) { _, _ -> }
             .create()
