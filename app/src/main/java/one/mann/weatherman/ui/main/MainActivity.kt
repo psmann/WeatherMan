@@ -38,7 +38,7 @@ internal class MainActivity : BaseLocationActivity() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private var countObserved = false // Stop multiple location alerts on first run
     private var isFirstRun = true // Check if this is the first time app is running
-    private var removeViewPagerItem = false // check if viewPager item is being removed
+    private var removeViewPagerItem = false // Check if viewPager item is being removed
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val mainViewModel: MainViewModel by lazy { getViewModel(viewModelFactory) }
     private val mainViewPagerAdapter by lazy { MainViewPagerAdapter(supportFragmentManager, lifecycle) }
@@ -73,7 +73,7 @@ internal class MainActivity : BaseLocationActivity() {
                 registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                         super.onPageScrolled(position, positionOffset, positionOffsetPixels)
-                        // Complete scrolling to previous item before updating ViewPager data set
+                        // Complete scrolling to previous item before removing item
                         if (removeViewPagerItem && positionOffset == 0f) {
                             mainViewPagerAdapter.updatePages(binding.viewPager.adapter?.itemCount!! - 1)
                             removeViewPagerItem = false
@@ -143,18 +143,18 @@ internal class MainActivity : BaseLocationActivity() {
 
     /** Handle ViewPager update scenarios */
     private fun updateViewPager(pageCount: Int, updateType: ViewPagerUpdateType) = when (updateType) {
-        SET_SIZE -> mainViewPagerAdapter.updatePages(pageCount)
+        SET_SIZE -> mainViewPagerAdapter.updatePages(pageCount) // Just update pager data set
         ADD_ITEM -> {
-            mainViewPagerAdapter.updatePages(pageCount)
-            binding.viewPager.setCurrentItem(pageCount - 1, true)
+            mainViewPagerAdapter.updatePages(pageCount) // Update pager data set
+            binding.viewPager.setCurrentItem(pageCount - 1, true) // Move to the new item that was added
             toast(R.string.location_added)
         }
         REMOVE_ITEM -> {
-            binding.viewPager.setCurrentItem(binding.viewPager.currentItem - 1, true)
-            removeViewPagerItem = true
+            binding.viewPager.setCurrentItem(binding.viewPager.currentItem - 1, true) // Move to previous item
+            removeViewPagerItem = true // Setting this to true updates the viewPager inside onPageScrolled() callback
             toast(R.string.location_removed)
         }
-        NO_CHANGE -> run { return@run }
+        NO_CHANGE -> run { return@run } // Do nothing
     }
 
     private fun Toolbar.init() = apply {
