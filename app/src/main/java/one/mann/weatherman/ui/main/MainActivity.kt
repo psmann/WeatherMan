@@ -66,7 +66,7 @@ internal class MainActivity : BaseLocationActivity() {
             finish()
             return
         }
-        mainViewModel.uiModel.observe(::getLifecycle, ::observeUiState)
+        mainViewModel.uiModel.observe(::getLifecycle, ::observeUiModel)
         binding.apply {
             // Set up the ViewPager
             viewPager.apply {
@@ -119,7 +119,7 @@ internal class MainActivity : BaseLocationActivity() {
         if (permissionGranted) checkLocationService(isFirstRun) { mainViewModel.handleRefreshing(it, isFirstRun) }
     }
 
-    private fun observeUiState(model: MainUiModel) {
+    private fun observeUiModel(model: MainUiModel) {
         binding.mainSwipeLayout.isRefreshing = model.viewState is MainUiModel.State.Refreshing
         if (model.citySearchResult.isEmpty()) hideSearchView() else searchCityRecyclerAdapter.update(model.citySearchResult)
         when (val state = model.viewState) {
