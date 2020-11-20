@@ -39,7 +39,7 @@ internal class MainViewModel @Inject constructor(
 ) : BaseViewModel(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val _uiModel = MutableLiveData<MainUiModel>()
-    private val exceptionHandler = CoroutineExceptionHandler { _, e -> // Show error and change the state back
+    private val exceptionHandler = CoroutineExceptionHandler { _, e -> // Show error and change the state back to idle
         _uiModel.value = _uiModel.value?.copy(viewState = Error(NoResponse(e.message.toString())))
         _uiModel.value = _uiModel.value?.copy(viewState = Idle)
     }
@@ -62,7 +62,7 @@ internal class MainViewModel @Inject constructor(
             DISABLED -> if (firstRun) _uiModel.value = _uiModel.value?.copy(viewState = Error(NoGps)) else updateWeather(DB)
             UNAVAILABLE -> _uiModel.value = _uiModel.value?.copy(viewState = Error(NoLocation))
         }
-        _uiModel.value = _uiModel.value?.copy(viewState = Error(NoError)) // Change error state back
+        _uiModel.value = _uiModel.value?.copy(viewState = Idle) // Change state back to idle
     }
 
     fun searchCity(query: String) {
@@ -86,7 +86,7 @@ internal class MainViewModel @Inject constructor(
      * Invoke updateWeather usecase, if it returns true then data has been updated from the API.
      * LAST_UPDATED_KEY is given currentTimeMillis() and updateUI() is called from onSharedPreferenceChanged().
      * This is done because weather can be updated from both MainActivity and DetailActivity.
-     * If it returns false (i.e. not updated from API) then LAST_CHECKED_KEY is changed and updateUI() is called in listener.
+     * If it returns false then LAST_CHECKED_KEY is changed and updateUI() is called from onSharedPreferenceChanged().
      */
     private fun updateWeather(locationType: LocationType) {
         launch(exceptionHandler) {
@@ -112,9 +112,10 @@ internal class MainViewModel @Inject constructor(
             val data = withContext(IO) { getAllWeather.invoke() }
             _uiModel.value = _uiModel.value?.copy(
                     weatherData = if (data.isEmpty()) listOf() else data,
+                    cityCount = data.size,
                     viewState = UpdateViewPager(updateViewPager)
             )
-            _uiModel.value = _uiModel.value?.copy(viewState = Idle) // Change state back
+            _uiModel.value = _uiModel.value?.copy(viewState = Idle) // Change state back to idle
         }
     }
 

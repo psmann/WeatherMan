@@ -133,13 +133,14 @@ internal class MainActivity : BaseLocationActivity() {
             is MainUiModel.State.UpdateViewPager -> updateViewPager(model.weatherData.size, state.updateType)
             else -> run { return@run }
         }
-        when (val count = model.weatherData.size) {
+        when (val cities = model.cityCount) {
+            -1 -> run { return@run } // Before data has been initialised
             0 -> if (!countObserved) { // If cityCount is 0 then this is the app's first run
                 handleLocationServiceResult() // Add current user location, prompt for location update
                 countObserved = true // This ensures that handleLocationServiceResult() is only called once here
             }
             else -> { // Show Snackbar when user adds a city for the first time
-                if (count == 2 && !mainViewModel.navigationGuideShown()) appNavigationGuideSnack().show()
+                if (cities == 2 && !mainViewModel.navigationGuideShown()) appNavigationGuideSnack().show()
                 if (isFirstRun) binding.toolbar.init() // Ensures this function is only called once
                 isFirstRun = false
             }
