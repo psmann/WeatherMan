@@ -32,7 +32,7 @@ internal class DetailViewModel @Inject constructor(
     private val _uiState = MutableLiveData<DetailViewState>()
     val uiState: LiveData<DetailViewState>
         get() = _uiState
-
+// TODO: Add exception handler
     init {
         _uiState.value = DetailViewState()
         updateUI()
@@ -41,8 +41,8 @@ internal class DetailViewModel @Inject constructor(
 
     fun handleRefreshing(response: LocationResponse) = when (response) {
         NO_NETWORK -> {
-            _uiState.value = _uiState.value?.copy(isRefreshing = false, error = NO_INTERNET)
-            _uiState.value = _uiState.value?.copy(error = NO_ERROR) // Change error state back
+            _uiState.value = _uiState.value?.copy(isRefreshing = false, errorType = NoInternet)
+            _uiState.value = _uiState.value?.copy(errorType = NoError) // Change error state back
         }
         ENABLED -> updateWeather(DEVICE)
         DISABLED -> updateWeather(DB)
@@ -65,8 +65,8 @@ internal class DetailViewModel @Inject constructor(
                     else settingsPrefs.edit { putLong(LAST_CHECKED_KEY, System.currentTimeMillis()) }
                 }
             } catch (e: IOException) { // Stop refreshing, show error and change the state back
-                _uiState.value = _uiState.value?.copy(isRefreshing = false, error = NO_RESPONSE)
-                _uiState.value = _uiState.value?.copy(error = NO_ERROR)
+                _uiState.value = _uiState.value?.copy(isRefreshing = false, errorType = NoResponse(e.message.toString()))
+                _uiState.value = _uiState.value?.copy(errorType = NoError)
             }
         }
     }

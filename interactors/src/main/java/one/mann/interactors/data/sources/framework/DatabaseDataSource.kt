@@ -1,7 +1,7 @@
 package one.mann.interactors.data.sources.framework
 
-import one.mann.domain.models.location.Location
 import one.mann.domain.models.NotificationData
+import one.mann.domain.models.location.Location
 import one.mann.domain.models.weather.Weather
 
 /* Created by Psmann. */
@@ -9,8 +9,6 @@ import one.mann.domain.models.weather.Weather
 interface DatabaseDataSource {
 
     suspend fun insertWeather(weather: Weather)
-
-    suspend fun getDbSize(): Int
 
     suspend fun getNotificationData(): NotificationData
 

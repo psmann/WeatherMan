@@ -14,6 +14,7 @@ import one.mann.weatherman.api.openweathermap.isOvercast
 import one.mann.weatherman.databinding.FragmentCityBinding
 import one.mann.weatherman.ui.common.util.*
 import one.mann.weatherman.ui.detail.DetailActivity
+import one.mann.weatherman.ui.main.MainUiModel.State.Loading
 import javax.inject.Inject
 
 /* Created by Psmann. */
@@ -49,14 +50,14 @@ internal class CityFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         injectDependencies()
         binding.cityDetailButton.setOnClickListener { startActivity(detailIntent) }
-        mainViewModel.uiState.observe(viewLifecycleOwner, ::observeUiState)
+        mainViewModel.uiModel.observe(viewLifecycleOwner, ::observeUiState)
     }
 
     private fun injectDependencies() = WeatherManApp.appComponent.getSubComponent().injectMainFragment(this)
 
-    private fun observeUiState(state: MainViewState) {
-        val weatherData = state.weatherData
-        binding.root.visibility = if (state.isLoading) View.GONE else View.VISIBLE // Layout is hidden until data is loaded
+    private fun observeUiState(model: MainUiModel) {
+        val weatherData = model.weatherData
+        binding.root.visibility = if (model.viewState is Loading) View.GONE else View.VISIBLE // Layout is hidden until data is loaded
         if (weatherData.size >= position + 1) setupViews(weatherData[position])
     }
 

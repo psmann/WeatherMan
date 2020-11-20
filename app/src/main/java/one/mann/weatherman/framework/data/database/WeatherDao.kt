@@ -10,9 +10,6 @@ import one.mann.weatherman.framework.data.database.model.Weather
 @Dao
 internal interface WeatherDao {
 
-    @Query("SELECT COUNT(id) FROM Weather")
-    suspend fun tableSize(): Int
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(weather: Weather)
 

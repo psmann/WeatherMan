@@ -2,6 +2,10 @@ package one.mann.domain.models
 
 /* Created by Psmann. */
 
-enum class Errors {
-    NO_INTERNET, NO_GPS, NO_LOCATION, NO_RESPONSE, NO_ERROR
+sealed class Errors {
+    object NoError : Errors()
+    object NoInternet : Errors()
+    object NoGps : Errors()
+    object NoLocation : Errors()
+    data class NoResponse(val message: String = "") : Errors()
 }

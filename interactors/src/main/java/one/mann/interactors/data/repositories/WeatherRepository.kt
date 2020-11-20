@@ -27,10 +27,7 @@ class WeatherRepository @Inject constructor(
         private const val TIME_OUT = 1000000 // ~ 16.6 minutes (= 16.667 * 60 * 1000)
     }
 
-    /** Returns number of rows in Db (i.e. number of cities) */
-    suspend fun dbSize(): Int = dbData.getDbSize()
-
-    /** Insert new city in Db */
+    /** Insert new city in the database */
     suspend fun create(apiLocation: Location? = null) {
         val location = apiLocation ?: deviceLocation.getLocation() // Use device GPS location if null
         dbData.insertWeather(
@@ -45,13 +42,13 @@ class WeatherRepository @Inject constructor(
         )
     }
 
-    /** Returns a list of all Weather data in Db */
+    /** Returns a list of all Weather data from the database */
     suspend fun read(): List<Weather> = dbData.getAllWeather()
 
-    /** Update all rows in Db with new data */
+    /** Update all rows in the database with new data */
     suspend fun update(weatherData: List<Weather>) = dbData.updateAllWeather(weatherData)
 
-    /** Remove a row from Db */
+    /** Remove a row from the database */
     suspend fun delete(name: String) = dbData.deleteWeather(name)
 
     /** Returns notification data */
@@ -80,7 +77,7 @@ class WeatherRepository @Inject constructor(
             )
             update(weathers)
             true
-        } else { // This still uses the Teleport API for getting timezones sadly
+        } else { // This still uses the Teleport API for getting timezones
             update(read().mapIndexed { i, it -> it.updateLastChecked(timezones[i]) })
             false
         }

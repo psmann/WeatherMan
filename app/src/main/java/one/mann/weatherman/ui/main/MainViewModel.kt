@@ -20,6 +20,7 @@ import one.mann.interactors.usecases.*
 import one.mann.weatherman.framework.service.workers.NotificationWorker
 import one.mann.weatherman.ui.common.base.BaseViewModel
 import one.mann.weatherman.ui.common.util.*
+import one.mann.weatherman.ui.main.MainUiModel.State.*
 import java.util.concurrent.TimeUnit.HOURS
 import java.util.concurrent.TimeUnit.MINUTES
 import javax.inject.Inject
@@ -31,24 +32,23 @@ internal class MainViewModel @Inject constructor(
         private val getAllWeather: GetAllWeather,
         private val removeCity: RemoveCity,
         private val updateWeather: UpdateWeather,
-        private val getCityCount: GetCityCount,
         private val getCitySearch: GetCitySearch,
         private val changeUnits: ChangeUnits,
         private val settingsPrefs: SharedPreferences,
         private val workManager: WorkManager
 ) : BaseViewModel(), SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private val _uiState = MutableLiveData<MainViewState>()
+    private val _uiModel = MutableLiveData<MainUiModel>()
     private val exceptionHandler = CoroutineExceptionHandler { _, e -> // Show error and change the state back
-        _uiState.value = _uiState.value?.copy(isRefreshing = false, errorType = NO_RESPONSE, errorMessage = e.message.toString())
-        _uiState.value = _uiState.value?.copy(errorType = NO_ERROR)
+        _uiModel.value = _uiModel.value?.copy(viewState = Error(NoResponse(e.message.toString())))
+        _uiModel.value = _uiModel.value?.copy(viewState = Idle)
     }
     private var searchJob: Job? = null
-    val uiState: LiveData<MainViewState>
-        get() = _uiState
+    val uiModel: LiveData<MainUiModel>
+        get() = _uiModel
 
     init {
-        _uiState.value = MainViewState()
+        _uiModel.value = MainUiModel(viewState = Loading)
         settingsPrefs.registerOnSharedPreferenceChangeListener(this)
         workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG).observeForever { updateUI() } // Update on change
         enqueueNotificationWork()
@@ -57,12 +57,12 @@ internal class MainViewModel @Inject constructor(
 
     fun handleRefreshing(response: LocationResponse, firstRun: Boolean) {
         when (response) {
-            NO_NETWORK -> _uiState.value = _uiState.value?.copy(errorType = NO_INTERNET)
+            NO_NETWORK -> _uiModel.value = _uiModel.value?.copy(viewState = Error(NoInternet))
             ENABLED -> if (firstRun) addCity() else updateWeather(DEVICE)
-            DISABLED -> if (firstRun) _uiState.value = _uiState.value?.copy(errorType = NO_GPS) else updateWeather(DB)
-            UNAVAILABLE -> _uiState.value = _uiState.value?.copy(errorType = NO_LOCATION)
+            DISABLED -> if (firstRun) _uiModel.value = _uiModel.value?.copy(viewState = Error(NoGps)) else updateWeather(DB)
+            UNAVAILABLE -> _uiModel.value = _uiModel.value?.copy(viewState = Error(NoLocation))
         }
-        _uiState.value = _uiState.value?.copy(errorType = NO_ERROR) // Change error state back
+        _uiModel.value = _uiModel.value?.copy(viewState = Error(NoError)) // Change error state back
     }
 
     fun searchCity(query: String) {
@@ -70,13 +70,13 @@ internal class MainViewModel @Inject constructor(
         searchJob = launch(exceptionHandler) {
             delay(750) // Debounce
             val citySearch = withContext(IO) { getCitySearch.invoke(query) }
-            if (citySearch.isNotEmpty()) _uiState.value = _uiState.value?.copy(citySearchResult = citySearch)
+            if (citySearch.isNotEmpty()) _uiModel.value = uiModel.value?.copy(citySearchResult = citySearch)
         }
     }
 
     fun addCity(apiLocation: Location? = null) {
         launch(exceptionHandler) {
-            _uiState.value = _uiState.value?.copy(isRefreshing = true, citySearchResult = listOf())
+            _uiModel.value = _uiModel.value?.copy(citySearchResult = listOf(), viewState = Refreshing)
             withContext(IO) { addCity.invoke(apiLocation) }
             updateUI(ViewPagerUpdateType.ADD_ITEM)
         }
@@ -90,7 +90,7 @@ internal class MainViewModel @Inject constructor(
      */
     private fun updateWeather(locationType: LocationType) {
         launch(exceptionHandler) {
-            _uiState.value = _uiState.value?.copy(isRefreshing = true)
+            _uiModel.value = _uiModel.value?.copy(viewState = Refreshing)
             withContext(IO) {
                 val weatherUpdated = updateWeather.invoke(locationType)
                 if (weatherUpdated) settingsPrefs.edit { putLong(LAST_UPDATED_KEY, System.currentTimeMillis()) }
@@ -100,7 +100,7 @@ internal class MainViewModel @Inject constructor(
     }
 
     fun removeCity(position: Int) {
-        val cityName = _uiState.value?.weatherData?.get(position)?.cityName ?: return // Return if null
+        val cityName = _uiModel.value?.weatherData?.get(position)?.cityName ?: return // Return if null
         launch(exceptionHandler) {
             withContext(IO) { removeCity.invoke(cityName) }
             updateUI(ViewPagerUpdateType.REMOVE_ITEM)
@@ -110,15 +110,11 @@ internal class MainViewModel @Inject constructor(
     private fun updateUI(updateViewPager: ViewPagerUpdateType = ViewPagerUpdateType.NO_CHANGE) {
         launch(exceptionHandler) {
             val data = withContext(IO) { getAllWeather.invoke() }
-            val count = withContext(IO) { getCityCount.invoke() }
-            _uiState.value = _uiState.value?.copy(
+            _uiModel.value = _uiModel.value?.copy(
                     weatherData = if (data.isEmpty()) listOf() else data,
-                    isLoading = data.isEmpty(),
-                    isRefreshing = false,
-                    cityCount = count,
-                    updateViewPager = updateViewPager
+                    viewState = UpdateViewPager(updateViewPager)
             )
-            _uiState.value = _uiState.value?.copy(updateViewPager = ViewPagerUpdateType.NO_CHANGE) // Change state back
+            _uiModel.value = _uiModel.value?.copy(viewState = Idle) // Change state back
         }
     }
 

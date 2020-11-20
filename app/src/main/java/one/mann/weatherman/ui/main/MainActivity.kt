@@ -66,8 +66,9 @@ internal class MainActivity : BaseLocationActivity() {
             finish()
             return
         }
-        mainViewModel.uiState.observe(::getLifecycle, ::observeUiState)
+        mainViewModel.uiModel.observe(::getLifecycle, ::observeUiState)
         binding.apply {
+            // Set up the ViewPager
             viewPager.apply {
                 adapter = mainViewPagerAdapter
                 registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
@@ -86,10 +87,12 @@ internal class MainActivity : BaseLocationActivity() {
                     }
                 })
             }
+            // Set up the Swipe Refresh Layout
             mainSwipeLayout.apply {
                 setColorSchemeColors(Color.RED, Color.BLUE)
                 setOnRefreshListener { handleLocationServiceResult() } // Prompt for location update if it is first run
             }
+            // Set up the City Search Layout
             itemSearchCityConstraintLayout.let {
                 it.root.setOnClickListener { hideSearchView() } // Hide searchView when clicked anywhere outside it
                 it.searchResultRecyclerView.apply {
@@ -116,18 +119,21 @@ internal class MainActivity : BaseLocationActivity() {
         if (permissionGranted) checkLocationService(isFirstRun) { mainViewModel.handleRefreshing(it, isFirstRun) }
     }
 
-    private fun observeUiState(state: MainViewState) {
-        binding.mainSwipeLayout.isRefreshing = state.isRefreshing
-        if (state.citySearchResult.isEmpty()) hideSearchView() else searchCityRecyclerAdapter.update(state.citySearchResult)
-        when (state.errorType) {
-            NO_INTERNET -> toast(R.string.no_internet_connection)
-            NO_GPS -> toast(R.string.gps_needed_for_location)
-            NO_LOCATION -> toast(R.string.location_settings_not_available)
-            NO_RESPONSE -> toast(R.string.network_error, state.errorMessage)
-            NO_ERROR -> run { return@run } // A workaround for no break support inside when statements
+    private fun observeUiState(model: MainUiModel) {
+        binding.mainSwipeLayout.isRefreshing = model.viewState is MainUiModel.State.Refreshing
+        if (model.citySearchResult.isEmpty()) hideSearchView() else searchCityRecyclerAdapter.update(model.citySearchResult)
+        when (val state = model.viewState) {
+            is MainUiModel.State.Error -> when (state.errorType) {
+                NoError -> run { return@run }
+                NoInternet -> toast(R.string.no_internet_connection)
+                NoGps -> toast(R.string.gps_needed_for_location)
+                NoLocation -> toast(R.string.location_settings_not_available)
+                is NoResponse -> toast(R.string.network_error, NoResponse().message)
+            }
+            is MainUiModel.State.UpdateViewPager -> updateViewPager(model.weatherData.size, state.updateType)
+            else -> run { return@run }
         }
-        when (val count = state.cityCount) {
-            -1 -> run { return@run }
+        when (val count = model.weatherData.size) {
             0 -> if (!countObserved) { // If cityCount is 0 then this is the app's first run
                 handleLocationServiceResult() // Add current user location, prompt for location update
                 countObserved = true // This ensures that handleLocationServiceResult() is only called once here
@@ -135,7 +141,6 @@ internal class MainActivity : BaseLocationActivity() {
             else -> { // Show Snackbar when user adds a city for the first time
                 if (count == 2 && !mainViewModel.navigationGuideShown()) appNavigationGuideSnack().show()
                 if (isFirstRun) binding.toolbar.init() // Ensures this function is only called once
-                updateViewPager(count, state.updateViewPager)
                 isFirstRun = false
             }
         }

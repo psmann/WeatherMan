@@ -4,7 +4,8 @@ import android.graphics.Color
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import one.mann.domain.models.Errors
+import one.mann.domain.models.Errors.NoInternet
+import one.mann.domain.models.Errors.NoResponse
 import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.api.openweathermap.isOvercast
@@ -63,9 +64,9 @@ internal class DetailActivity : BaseLocationActivity() {
     private fun observeUiState(state: DetailViewState) {
         val weather = state.weatherData
         binding.detailSwipeLayout.isRefreshing = state.isRefreshing
-        when (state.error) {
-            Errors.NO_INTERNET -> toast(R.string.no_internet_connection)
-            Errors.NO_RESPONSE -> toast(R.string.network_error)
+        when (state.errorType) {
+            NoInternet -> toast(R.string.no_internet_connection)
+            is NoResponse -> toast(R.string.network_error, NoResponse().message)
             else -> run { return@run } // Workaround for lack of break support inside when statements
         }
         if (weather.size >= position + 1) {

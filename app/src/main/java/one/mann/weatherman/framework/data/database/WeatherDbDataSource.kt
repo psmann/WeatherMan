@@ -1,7 +1,7 @@
 package one.mann.weatherman.framework.data.database
 
-import one.mann.domain.models.location.Location
 import one.mann.domain.models.NotificationData
+import one.mann.domain.models.location.Location
 import one.mann.domain.models.weather.Weather
 import one.mann.interactors.data.sources.framework.DatabaseDataSource
 import javax.inject.Inject
@@ -13,8 +13,6 @@ internal class WeatherDbDataSource @Inject constructor(db: WeatherDb) : Database
     private val dao = db.weatherDao()
 
     override suspend fun insertWeather(weather: Weather) = dao.insert(weather.mapToDb())
-
-    override suspend fun getDbSize(): Int = dao.tableSize()
 
     override suspend fun getNotificationData(): NotificationData = dao.fetchNotificationData().mapToDomain()
 
