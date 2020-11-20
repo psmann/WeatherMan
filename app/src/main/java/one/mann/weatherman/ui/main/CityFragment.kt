@@ -50,12 +50,12 @@ internal class CityFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         injectDependencies()
         binding.cityDetailButton.setOnClickListener { startActivity(detailIntent) }
-        mainViewModel.uiModel.observe(viewLifecycleOwner, ::observeUiState)
+        mainViewModel.uiModel.observe(viewLifecycleOwner, ::observeUiModel)
     }
 
     private fun injectDependencies() = WeatherManApp.appComponent.getSubComponent().injectMainFragment(this)
 
-    private fun observeUiState(model: MainUiModel) {
+    private fun observeUiModel(model: MainUiModel) {
         val weatherData = model.weatherData
         binding.root.visibility = if (model.viewState is Loading) View.GONE else View.VISIBLE // Layout is hidden until data is loaded
         if (weatherData.size >= position + 1) setupViews(weatherData[position])
