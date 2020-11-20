@@ -39,10 +39,6 @@ internal class MainViewModel @Inject constructor(
 ) : BaseViewModel(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val _uiModel = MutableLiveData<MainUiModel>()
-    private val exceptionHandler = CoroutineExceptionHandler { _, e -> // Show error and change the state back to idle
-        _uiModel.value = _uiModel.value?.copy(viewState = Error(NoResponse(e.message.toString())))
-        _uiModel.value = _uiModel.value?.copy(viewState = Idle)
-    }
     private var searchJob: Job? = null
     val uiModel: LiveData<MainUiModel>
         get() = _uiModel
@@ -53,6 +49,10 @@ internal class MainViewModel @Inject constructor(
         workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG).observeForever { updateUI() } // Update on change
         enqueueNotificationWork()
         updateUI(ViewPagerUpdateType.SET_SIZE)
+        errorMessage = { error -> // Show error and change the state back to idle
+            _uiModel.value = _uiModel.value?.copy(viewState = Error(NoResponse(error)))
+            _uiModel.value = _uiModel.value?.copy(viewState = Idle)
+        }
     }
 
     fun handleRefreshing(response: LocationResponse, firstRun: Boolean) {
@@ -67,7 +67,7 @@ internal class MainViewModel @Inject constructor(
 
     fun searchCity(query: String) {
         searchJob?.cancel() // Cancel previous job if any
-        searchJob = launch(exceptionHandler) {
+        searchJob = launch {
             delay(750) // Debounce
             val citySearch = withContext(IO) { getCitySearch.invoke(query) }
             if (citySearch.isNotEmpty()) _uiModel.value = uiModel.value?.copy(citySearchResult = citySearch)
@@ -75,7 +75,7 @@ internal class MainViewModel @Inject constructor(
     }
 
     fun addCity(apiLocation: Location? = null) {
-        launch(exceptionHandler) {
+        launch {
             _uiModel.value = _uiModel.value?.copy(citySearchResult = listOf(), viewState = Refreshing)
             withContext(IO) { addCity.invoke(apiLocation) }
             updateUI(ViewPagerUpdateType.ADD_ITEM)
@@ -89,7 +89,7 @@ internal class MainViewModel @Inject constructor(
      * If it returns false then LAST_CHECKED_KEY is changed and updateUI() is called from onSharedPreferenceChanged().
      */
     private fun updateWeather(locationType: LocationType) {
-        launch(exceptionHandler) {
+        launch {
             _uiModel.value = _uiModel.value?.copy(viewState = Refreshing)
             withContext(IO) {
                 val weatherUpdated = updateWeather.invoke(locationType)
@@ -101,14 +101,14 @@ internal class MainViewModel @Inject constructor(
 
     fun removeCity(position: Int) {
         val cityName = _uiModel.value?.weatherData?.get(position)?.cityName ?: return // Return if null
-        launch(exceptionHandler) {
+        launch {
             withContext(IO) { removeCity.invoke(cityName) }
             updateUI(ViewPagerUpdateType.REMOVE_ITEM)
         }
     }
 
     private fun updateUI(updateViewPager: ViewPagerUpdateType = ViewPagerUpdateType.NO_CHANGE) {
-        launch(exceptionHandler) {
+        launch {
             val data = withContext(IO) { getAllWeather.invoke() }
             _uiModel.value = _uiModel.value?.copy(
                     weatherData = if (data.isEmpty()) listOf() else data,
