@@ -10,7 +10,7 @@ import one.mann.domain.models.weather.Weather
 internal data class MainUiModel(
         val weatherData: List<Weather> = listOf(),
         val citySearchResult: List<CitySearchResult> = listOf(),
-        val viewState: State
+        val viewState: State = State.Loading
 ) {
     sealed class State {
         object Idle : State() // No change

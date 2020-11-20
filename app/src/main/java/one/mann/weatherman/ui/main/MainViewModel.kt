@@ -48,7 +48,7 @@ internal class MainViewModel @Inject constructor(
         get() = _uiModel
 
     init {
-        _uiModel.value = MainUiModel(viewState = Loading)
+        _uiModel.value = MainUiModel()
         settingsPrefs.registerOnSharedPreferenceChangeListener(this)
         workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG).observeForever { updateUI() } // Update on change
         enqueueNotificationWork()
