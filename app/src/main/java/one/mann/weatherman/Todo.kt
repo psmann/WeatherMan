@@ -10,7 +10,6 @@ TODO:
  Implement Coroutine Flow for LiveData
  Add tests for all modules
  Write and test Proguard rules - WIP
- Migrate ViewPager to ViewPager2
  Add more weather data parameters (detailed forecasts, maps, UV index, etc)
  Handle navBar hidden usecase (screen layouts should resize accordingly to fill the empty space)
  Implement CI/CD (Jenkins or CircleCI)
@@ -25,4 +24,5 @@ DONE:
  Center ForecastGraphView lines (by increasing lengths by the amount they are being clipped at intersections)
  Replace Google Places API with TomTom Search API
  Handle all network responses from API calls explicitly
+ Migrate ViewPager to ViewPager2
 */

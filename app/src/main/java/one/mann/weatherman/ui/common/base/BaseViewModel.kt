@@ -10,8 +10,8 @@ import kotlin.coroutines.CoroutineContext
 internal abstract class BaseViewModel : ViewModel(), CoroutineScope {
 
     private val job: Job = SupervisorJob() // Doesn't get cancelled when a child coroutine crashes
-    var errorMessage: (String) -> Unit = {} // Pass error message to coroutine by implementing this function
-    private val exceptionHandler = CoroutineExceptionHandler { _, e -> errorMessage(e.message.toString()) }
+    var coroutineErrorResponse: (String) -> Unit = {} // Handle response to a coroutine exception by implementing this
+    private val exceptionHandler = CoroutineExceptionHandler { _, e -> coroutineErrorResponse(e.message.toString()) }
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job + exceptionHandler
 

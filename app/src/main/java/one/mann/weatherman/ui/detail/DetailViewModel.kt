@@ -7,7 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import one.mann.domain.models.Errors.*
+import one.mann.domain.models.Errors.NoInternet
+import one.mann.domain.models.Errors.NoResponse
 import one.mann.domain.models.location.LocationResponse
 import one.mann.domain.models.location.LocationResponse.*
 import one.mann.domain.models.location.LocationType
@@ -18,7 +19,7 @@ import one.mann.interactors.usecases.UpdateWeather
 import one.mann.weatherman.ui.common.base.BaseViewModel
 import one.mann.weatherman.ui.common.util.LAST_CHECKED_KEY
 import one.mann.weatherman.ui.common.util.LAST_UPDATED_KEY
-import java.io.IOException
+import one.mann.weatherman.ui.detail.DetailUiModel.State.*
 import javax.inject.Inject
 
 /* Created by Psmann. */
@@ -29,44 +30,43 @@ internal class DetailViewModel @Inject constructor(
         private val settingsPrefs: SharedPreferences
 ) : BaseViewModel(), SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private val _uiState = MutableLiveData<DetailViewState>()
-    val uiState: LiveData<DetailViewState>
-        get() = _uiState
-// TODO: Add exception handler
+    private val _uiModel = MutableLiveData<DetailUiModel>()
+    val uiModel: LiveData<DetailUiModel>
+        get() = _uiModel
+
     init {
-        _uiState.value = DetailViewState()
+        _uiModel.value = DetailUiModel()
         updateUI()
         settingsPrefs.registerOnSharedPreferenceChangeListener(this)
+        coroutineErrorResponse = { error ->  // Show error and change the state back to idle
+            _uiModel.value = _uiModel.value?.copy(viewState = Error(NoResponse(error)))
+            _uiModel.value = _uiModel.value?.copy(viewState = Idle)
+        }
     }
 
     fun handleRefreshing(response: LocationResponse) = when (response) {
         NO_NETWORK -> {
-            _uiState.value = _uiState.value?.copy(isRefreshing = false, errorType = NoInternet)
-            _uiState.value = _uiState.value?.copy(errorType = NoError) // Change error state back
+            _uiModel.value = _uiModel.value?.copy(viewState = Error(NoInternet))
+            _uiModel.value = _uiModel.value?.copy(viewState = Idle) // Change state back to idle
         }
         ENABLED -> updateWeather(DEVICE)
         DISABLED -> updateWeather(DB)
-        else -> run { return@run } // Workaround for lack of break support inside when statements
+        else -> run { return@run }
     }
 
     /**
      * Invoke updateWeather usecase, if it returns true then data has been updated from the API.
      * LAST_UPDATED_KEY is given currentTimeMillis() and updateUI() is called from onSharedPreferenceChanged().
      * This is done because weather can be updated from both MainActivity and DetailActivity.
-     * If it returns false (i.e. not updated from API) then LAST_CHECKED_KEY is changed and updateUI() is called in listener.
+     * If it returns false then LAST_CHECKED_KEY is changed and updateUI() is called from onSharedPreferenceChanged().
      */
     private fun updateWeather(locationType: LocationType) {
         launch {
-            try {
-                _uiState.value = _uiState.value?.copy(isRefreshing = true) // Start refreshing
-                withContext(IO) {
-                    val weatherUpdated = updateWeather.invoke(locationType)
-                    if (weatherUpdated) settingsPrefs.edit { putLong(LAST_UPDATED_KEY, System.currentTimeMillis()) }
-                    else settingsPrefs.edit { putLong(LAST_CHECKED_KEY, System.currentTimeMillis()) }
-                }
-            } catch (e: IOException) { // Stop refreshing, show error and change the state back
-                _uiState.value = _uiState.value?.copy(isRefreshing = false, errorType = NoResponse(e.message.toString()))
-                _uiState.value = _uiState.value?.copy(errorType = NoError)
+            _uiModel.value = _uiModel.value?.copy(viewState = Refreshing)
+            withContext(IO) {
+                val weatherUpdated = updateWeather.invoke(locationType)
+                if (weatherUpdated) settingsPrefs.edit { putLong(LAST_UPDATED_KEY, System.currentTimeMillis()) }
+                else settingsPrefs.edit { putLong(LAST_CHECKED_KEY, System.currentTimeMillis()) }
             }
         }
     }
@@ -74,8 +74,10 @@ internal class DetailViewModel @Inject constructor(
     private fun updateUI() {
         launch {
             val data = withContext(IO) { getAllWeather.invoke() }
-            _uiState.value = if (data.isEmpty()) _uiState.value?.copy(isRefreshing = false)
-            else _uiState.value?.copy(isRefreshing = false, weatherData = data)
+            _uiModel.value = _uiModel.value?.copy(
+                    weatherData = if (data.isEmpty()) listOf() else data,
+                    viewState = Idle
+            )
         }
     }
 

@@ -11,10 +11,7 @@ import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.api.openweathermap.isOvercast
 import one.mann.weatherman.databinding.ActivityDetailBinding
 import one.mann.weatherman.ui.common.base.BaseLocationActivity
-import one.mann.weatherman.ui.common.util.ACTIVITY_BACKGROUND
-import one.mann.weatherman.ui.common.util.PAGER_POSITION
-import one.mann.weatherman.ui.common.util.getGradient
-import one.mann.weatherman.ui.common.util.getViewModel
+import one.mann.weatherman.ui.common.util.*
 import one.mann.weatherman.ui.detail.adapters.DetailRecyclerAdapter
 import javax.inject.Inject
 
@@ -54,25 +51,25 @@ internal class DetailActivity : BaseLocationActivity() {
             setColorSchemeColors(Color.RED, Color.BLUE)
             setOnRefreshListener { handleLocationServiceResult() }
         }
-        detailViewModel.uiState.observe(::getLifecycle, ::observeUiState)
+        detailViewModel.uiModel.observe(::getLifecycle, ::observeUiModel)
     }
 
     private fun handleLocationServiceResult() = handleLocationPermission { permissionGranted ->
         if (permissionGranted) checkLocationService { detailViewModel.handleRefreshing(it) }
     }
 
-    private fun observeUiState(state: DetailViewState) {
-        val weather = state.weatherData
-        binding.detailSwipeLayout.isRefreshing = state.isRefreshing
-        when (state.errorType) {
+    private fun observeUiModel(model: DetailUiModel) {
+        val weatherData = model.weatherData
+        binding.detailSwipeLayout.isRefreshing = model.viewState is DetailUiModel.State.Refreshing
+        if (model.viewState is DetailUiModel.State.Error) when (model.viewState.errorType) {
             NoInternet -> toast(R.string.no_internet_connection)
             is NoResponse -> toast(R.string.network_error, NoResponse().message)
-            else -> run { return@run } // Workaround for lack of break support inside when statements
+            else -> run { return@run }
         }
-        if (weather.size >= position + 1) {
-            detailRecyclerAdapter.update(weather[position])
+        if (weatherData.size >= position + 1) {
+            detailRecyclerAdapter.update(weatherData[position])
             // Update activity background only if it changes after a data refresh
-            val newBackground = getGradient(weather[position].sunPosition, isOvercast(weather[position].iconId))
+            val newBackground = getGradient(weatherData[position].sunPosition, isOvercast(weatherData[position].iconId))
             if (newBackground != backgroundResource) binding.root.setBackgroundResource(newBackground)
         }
     }

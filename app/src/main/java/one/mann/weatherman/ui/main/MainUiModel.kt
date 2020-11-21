@@ -8,16 +8,16 @@ import one.mann.domain.models.weather.Weather
 /* Created by Psmann. */
 
 internal data class MainUiModel(
-        val weatherData: List<Weather> = listOf(),
-        val cityCount: Int = -1,
-        val citySearchResult: List<CitySearchResult> = listOf(),
-        val viewState: State = State.Loading
+        val weatherData: List<Weather> = listOf(), // Weather data
+        val cityCount: Int = -1, // Number of cities
+        val citySearchResult: List<CitySearchResult> = listOf(), // City search data
+        val viewState: State = State.Loading // Current state of the view
 ) {
     sealed class State {
-        object Idle : State() // No change
-        object Loading : State() // Whether view is visible or not
-        object Refreshing : State() // Whether data is being refreshed or not
-        data class Error(val errorType: Errors) : State()
-        data class UpdateViewPager(val updateType: ViewPagerUpdateType) : State()
+        object Idle : State() // Idle state, no change
+        object Loading : State() // Set whether view is visible or not
+        object Refreshing : State() // Set whether data is being refreshed or not
+        data class Error(val errorType: Errors) : State() // Pass error type to a Toast
+        data class UpdateViewPager(val updateType: ViewPagerUpdateType) : State() // Update ViewPager with animation
     }
 }

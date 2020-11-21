@@ -49,7 +49,7 @@ internal class MainViewModel @Inject constructor(
         workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG).observeForever { updateUI() } // Update on change
         enqueueNotificationWork()
         updateUI(ViewPagerUpdateType.SET_SIZE)
-        errorMessage = { error -> // Show error and change the state back to idle
+        coroutineErrorResponse = { error -> // Show error and change the state back to idle
             _uiModel.value = _uiModel.value?.copy(viewState = Error(NoResponse(error)))
             _uiModel.value = _uiModel.value?.copy(viewState = Idle)
         }
