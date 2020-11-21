@@ -3,7 +3,6 @@ package one.mann.weatherman.ui.detail
 import android.graphics.Color
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import one.mann.domain.models.Errors.NoInternet
 import one.mann.domain.models.Errors.NoResponse
 import one.mann.weatherman.R
@@ -42,16 +41,19 @@ internal class DetailActivity : BaseLocationActivity() {
             finish()
             return
         }
-        binding.detailRecyclerView.apply {
-            setHasFixedSize(true)
-            layoutManager = LinearLayoutManager(this@DetailActivity)
-            adapter = detailRecyclerAdapter
-        }
-        binding.detailSwipeLayout.apply {
-            setColorSchemeColors(Color.RED, Color.BLUE)
-            setOnRefreshListener { handleLocationServiceResult() }
-        }
         detailViewModel.uiModel.observe(::getLifecycle, ::observeUiModel)
+        binding.apply {
+            // Set up RecyclerView
+            detailRecyclerView.apply {
+                setHasFixedSize(true)
+                adapter = detailRecyclerAdapter
+            }
+            // Set up the Swipe Refresh Layout
+            detailSwipeLayout.apply {
+                setColorSchemeColors(Color.RED, Color.BLUE)
+                setOnRefreshListener { handleLocationServiceResult() }
+            }
+        }
     }
 
     private fun handleLocationServiceResult() = handleLocationPermission { permissionGranted ->
