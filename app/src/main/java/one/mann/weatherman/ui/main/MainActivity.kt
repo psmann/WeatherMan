@@ -25,6 +25,7 @@ import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.databinding.ActivityMainBinding
 import one.mann.weatherman.ui.common.base.BaseLocationActivity
 import one.mann.weatherman.ui.common.util.getViewModel
+import one.mann.weatherman.ui.main.MainUiModel.State.*
 import one.mann.weatherman.ui.main.adapters.MainViewPagerAdapter
 import one.mann.weatherman.ui.main.adapters.SearchCityRecyclerAdapter
 import one.mann.weatherman.ui.settings.SettingsActivity
@@ -120,16 +121,16 @@ internal class MainActivity : BaseLocationActivity() {
     }
 
     private fun observeUiModel(model: MainUiModel) {
-        binding.mainSwipeLayout.isRefreshing = model.viewState is MainUiModel.State.Refreshing
+        binding.mainSwipeLayout.isRefreshing = model.viewState is Refreshing
         if (model.citySearchResult.isEmpty()) hideSearchView() else searchCityRecyclerAdapter.update(model.citySearchResult)
         when (val state = model.viewState) {
-            is MainUiModel.State.Error -> when (state.errorType) {
+            is Error -> when (state.errorType) {
                 NoInternet -> toast(R.string.no_internet_connection)
                 NoGps -> toast(R.string.gps_needed_for_location)
                 NoLocation -> toast(R.string.location_settings_not_available)
                 is NoResponse -> toast(R.string.network_error, NoResponse().message)
             }
-            is MainUiModel.State.UpdateViewPager -> updateViewPager(model.weatherData.size, state.updateType)
+            is UpdateViewPager -> updateViewPager(model.weatherData.size, state.updateType)
             else -> run { return@run }
         }
         when (val cities = model.cityCount) {
