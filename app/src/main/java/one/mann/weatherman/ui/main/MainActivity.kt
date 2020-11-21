@@ -124,7 +124,6 @@ internal class MainActivity : BaseLocationActivity() {
         if (model.citySearchResult.isEmpty()) hideSearchView() else searchCityRecyclerAdapter.update(model.citySearchResult)
         when (val state = model.viewState) {
             is MainUiModel.State.Error -> when (state.errorType) {
-                NoError -> run { return@run }
                 NoInternet -> toast(R.string.no_internet_connection)
                 NoGps -> toast(R.string.gps_needed_for_location)
                 NoLocation -> toast(R.string.location_settings_not_available)
