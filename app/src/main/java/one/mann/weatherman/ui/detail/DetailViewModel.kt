@@ -38,15 +38,15 @@ internal class DetailViewModel @Inject constructor(
         _uiModel.value = DetailUiModel()
         updateUI()
         settingsPrefs.registerOnSharedPreferenceChangeListener(this)
-        coroutineErrorResponse = { error ->  // Show error and change the state back to idle
-            _uiModel.value = _uiModel.value?.copy(viewState = Error(NoResponse(error)))
+        exceptionResponse = { error ->  // Show error and change the state back to idle
+            _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoResponse(error)))
             _uiModel.value = _uiModel.value?.copy(viewState = Idle)
         }
     }
 
     fun handleRefreshing(response: LocationResponse) = when (response) {
         NO_NETWORK -> {
-            _uiModel.value = _uiModel.value?.copy(viewState = Error(NoInternet))
+            _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoInternet))
             _uiModel.value = _uiModel.value?.copy(viewState = Idle) // Change state back to idle
         }
         ENABLED -> updateWeather(DEVICE)

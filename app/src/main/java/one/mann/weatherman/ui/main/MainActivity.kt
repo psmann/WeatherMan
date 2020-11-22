@@ -124,7 +124,7 @@ internal class MainActivity : BaseLocationActivity() {
         binding.mainSwipeLayout.isRefreshing = model.viewState is Refreshing
         if (model.citySearchResult.isEmpty()) hideSearchView() else searchCityRecyclerAdapter.update(model.citySearchResult)
         when (val state = model.viewState) {
-            is Error -> when (state.errorType) {
+            is ShowError -> when (state.errorType) {
                 NoInternet -> toast(R.string.no_internet_connection)
                 NoGps -> toast(R.string.gps_needed_for_location)
                 NoLocation -> toast(R.string.location_settings_not_available)

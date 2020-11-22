@@ -49,18 +49,18 @@ internal class MainViewModel @Inject constructor(
         workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG).observeForever { updateUI() } // Update on change
         enqueueNotificationWork()
         updateUI(ViewPagerUpdateType.SET_SIZE)
-        coroutineErrorResponse = { error -> // Show error and change the state back to idle
-            _uiModel.value = _uiModel.value?.copy(viewState = Error(NoResponse(error)))
+        exceptionResponse = { error -> // Show error and change the state back to idle
+            _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoResponse(error)))
             _uiModel.value = _uiModel.value?.copy(viewState = Idle)
         }
     }
 
     fun handleRefreshing(response: LocationResponse, firstRun: Boolean) {
         when (response) {
-            NO_NETWORK -> _uiModel.value = _uiModel.value?.copy(viewState = Error(NoInternet))
+            NO_NETWORK -> _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoInternet))
             ENABLED -> if (firstRun) addCity() else updateWeather(DEVICE)
-            DISABLED -> if (firstRun) _uiModel.value = _uiModel.value?.copy(viewState = Error(NoGps)) else updateWeather(DB)
-            UNAVAILABLE -> _uiModel.value = _uiModel.value?.copy(viewState = Error(NoLocation))
+            DISABLED -> if (firstRun) _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoGps)) else updateWeather(DB)
+            UNAVAILABLE -> _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoLocation))
         }
         _uiModel.value = _uiModel.value?.copy(viewState = Idle) // Change state back to idle
     }

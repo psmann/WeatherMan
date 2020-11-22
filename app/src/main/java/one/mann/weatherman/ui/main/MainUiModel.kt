@@ -17,7 +17,7 @@ internal data class MainUiModel(
         object Idle : State() // Idle state, no change
         object Loading : State() // Set whether view is visible or not
         object Refreshing : State() // Set whether data is being refreshed or not
-        data class Error(val errorType: Errors) : State() // Pass error type to a Toast
+        data class ShowError(val errorType: Errors) : State() // Pass error type to a Toast
         data class UpdateViewPager(val updateType: ViewPagerUpdateType) : State() // Update ViewPager with animation
     }
 }
