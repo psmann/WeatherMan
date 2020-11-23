@@ -156,6 +156,7 @@ internal class MainViewModel @Inject constructor(
     /** Remove listeners and observers at destruction */
     override fun onCleared() {
         super.onCleared()
+        searchJob?.cancel()
         settingsPrefs.unregisterOnSharedPreferenceChangeListener(this)
         workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG).removeObserver { }
     }
