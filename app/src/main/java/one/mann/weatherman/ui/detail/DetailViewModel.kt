@@ -7,8 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import one.mann.domain.models.Errors.NoInternet
-import one.mann.domain.models.Errors.NoResponse
+import one.mann.domain.models.ErrorType.NoInternet
+import one.mann.domain.models.ErrorType.NoResponse
 import one.mann.domain.models.location.LocationResponse
 import one.mann.domain.models.location.LocationResponse.*
 import one.mann.domain.models.location.LocationType

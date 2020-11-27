@@ -1,7 +1,7 @@
 package one.mann.weatherman.framework.data.database
 
-import one.mann.domain.models.location.Location
 import one.mann.domain.models.NotificationData
+import one.mann.domain.models.location.Location
 import one.mann.weatherman.framework.data.database.model.LocationTuple
 import one.mann.weatherman.framework.data.database.model.NotificationTuple
 import one.mann.domain.models.weather.Weather as DomainWeather

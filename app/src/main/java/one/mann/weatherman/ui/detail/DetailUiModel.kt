@@ -1,6 +1,6 @@
 package one.mann.weatherman.ui.detail
 
-import one.mann.domain.models.Errors
+import one.mann.domain.models.ErrorType
 import one.mann.domain.models.weather.Weather
 
 /* Created by Psmann. */
@@ -12,6 +12,6 @@ internal data class DetailUiModel(
     sealed class State {
         object Idle : State() // Idle state, no change
         object Refreshing : State()// Set whether data is being refreshed or not
-        data class ShowError(val errorType: Errors) : State() // Pass error type to a Toast
+        data class ShowError(val errorType: ErrorType) : State() // Pass error type to a Toast
     }
 }

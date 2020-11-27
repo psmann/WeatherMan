@@ -3,8 +3,8 @@ package one.mann.weatherman.ui.detail
 import android.graphics.Color
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import one.mann.domain.models.Errors.NoInternet
-import one.mann.domain.models.Errors.NoResponse
+import one.mann.domain.models.ErrorType.NoInternet
+import one.mann.domain.models.ErrorType.NoResponse
 import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.api.openweathermap.isOvercast

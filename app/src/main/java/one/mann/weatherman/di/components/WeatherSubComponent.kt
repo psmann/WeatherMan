@@ -3,8 +3,8 @@ package one.mann.weatherman.di.components
 import dagger.Subcomponent
 import one.mann.weatherman.di.annotations.scope.ActivityScope
 import one.mann.weatherman.ui.detail.DetailActivity
-import one.mann.weatherman.ui.main.MainActivity
 import one.mann.weatherman.ui.main.CityFragment
+import one.mann.weatherman.ui.main.MainActivity
 
 /* Created by Psmann. */
 

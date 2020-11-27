@@ -1,36 +1,35 @@
-<androidx.preference.PreferenceScreen
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!--Added to give padding-->
-    <PreferenceCategory/>
+    <PreferenceCategory />
 
     <PreferenceCategory app:title="@string/units_header">
 
         <ListPreference
-                app:defaultValue="metric"
-                app:entries="@array/units_entries"
-                app:entryValues="@array/units_values"
-                app:key="units"
-                app:title="@string/weather_units"
-                app:useSimpleSummaryProvider="true"/>
+            app:defaultValue="metric"
+            app:entries="@array/units_entries"
+            app:entryValues="@array/units_values"
+            app:key="units"
+            app:title="@string/weather_units"
+            app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/notification_header">
 
         <SwitchPreferenceCompat
-                app:defaultValue="true"
-                app:key="notification"
-                app:title="@string/display_notification"/>
+            app:defaultValue="true"
+            app:key="notification"
+            app:title="@string/display_notification" />
 
         <ListPreference
-                app:defaultValue="1"
-                app:key="notification_frequency"
-                app:entries="@array/frequency_entries"
-                app:entryValues="@array/frequency_values"
-                app:dependency="notification"
-                app:title="@string/notification_frequency"
-                app:useSimpleSummaryProvider="true"/>
+            app:defaultValue="1"
+            app:key="notification_frequency"
+            app:entries="@array/frequency_entries"
+            app:entryValues="@array/frequency_values"
+            app:dependency="notification"
+            app:title="@string/notification_frequency"
+            app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 

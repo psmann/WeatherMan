@@ -1,10 +1,7 @@
 package one.mann.weatherman.ui.detail.views
 
 import android.content.Context
-import android.graphics.BitmapFactory
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Path
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import one.mann.weatherman.R

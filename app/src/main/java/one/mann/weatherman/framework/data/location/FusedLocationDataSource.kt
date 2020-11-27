@@ -1,10 +1,7 @@
 package one.mann.weatherman.framework.data.location
 
 import android.annotation.SuppressLint
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.*
 import kotlinx.coroutines.suspendCancellableCoroutine
 import one.mann.domain.logic.truncate
 import one.mann.domain.models.location.Location

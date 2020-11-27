@@ -8,7 +8,7 @@ import androidx.work.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
-import one.mann.domain.models.Errors.*
+import one.mann.domain.models.ErrorType.*
 import one.mann.domain.models.ViewPagerUpdateType
 import one.mann.domain.models.location.Location
 import one.mann.domain.models.location.LocationResponse

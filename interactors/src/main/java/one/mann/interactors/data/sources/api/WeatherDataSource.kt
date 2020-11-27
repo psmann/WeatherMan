@@ -1,9 +1,9 @@
 package one.mann.interactors.data.sources.api
 
+import one.mann.domain.models.location.Location
 import one.mann.domain.models.weather.CurrentWeather
 import one.mann.domain.models.weather.DailyForecast
 import one.mann.domain.models.weather.HourlyForecast
-import one.mann.domain.models.location.Location
 
 /* Created by Psmann. */
 

@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.snackbar.Snackbar
 import one.mann.domain.logic.truncate
-import one.mann.domain.models.Errors.*
+import one.mann.domain.models.ErrorType.*
 import one.mann.domain.models.ViewPagerUpdateType
 import one.mann.domain.models.ViewPagerUpdateType.*
 import one.mann.domain.models.location.Location
@@ -194,8 +194,7 @@ internal class MainActivity : BaseLocationActivity() {
             .setMessage(getString(R.string.do_you_want_to_remove_location))
             .setPositiveButton(getString(R.string.yes)) { _, _ ->
                 val position = binding.viewPager.currentItem
-                if (position == 0) toast(R.string.cant_remove_first_location)
-                else mainViewModel.removeCity(position)
+                if (position == 0) toast(R.string.cant_remove_first_location) else mainViewModel.removeCity(position)
             }
             .setNegativeButton(getString(R.string.no)) { _, _ -> }
             .create()

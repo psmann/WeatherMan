@@ -3,10 +3,7 @@ package one.mann.interactors.data
 import one.mann.domain.logic.*
 import one.mann.domain.models.UnitsType.*
 import one.mann.domain.models.location.Location
-import one.mann.domain.models.weather.CurrentWeather
-import one.mann.domain.models.weather.DailyForecast
-import one.mann.domain.models.weather.HourlyForecast
-import one.mann.domain.models.weather.Weather
+import one.mann.domain.models.weather.*
 
 /* Created by Psmann. */
 

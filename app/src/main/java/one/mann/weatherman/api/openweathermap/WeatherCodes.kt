@@ -41,7 +41,7 @@ internal fun nightIcons(code: Int): String = when (code) {
 }
 
 /** Check if current weather is overcast */
-internal fun isOvercast(code: Int): Boolean = when(code) {
+internal fun isOvercast(code: Int): Boolean = when (code) {
     in 200..232, in 500..510, in 512..531, 511, in 602..619, 622, in 700..781, 804 -> true
     else -> false
 }
