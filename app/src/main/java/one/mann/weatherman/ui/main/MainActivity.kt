@@ -189,27 +189,30 @@ internal class MainActivity : BaseLocationActivity() {
         searchCityRecyclerAdapter.update() // Remove previous list
     }
 
-    private fun removeCityAlert() = AlertDialog.Builder(this, R.style.AlertDialogTheme)
-            .setTitle(getString(R.string.remove_city_location))
-            .setMessage(getString(R.string.do_you_want_to_remove_location))
-            .setPositiveButton(getString(R.string.yes)) { _, _ ->
-                val position = binding.viewPager.currentItem
-                if (position == 0) toast(R.string.cant_remove_first_location) else mainViewModel.removeCity(position)
-            }
-            .setNegativeButton(getString(R.string.no)) { _, _ -> }
-            .create()
+    private fun removeCityAlert(): AlertDialog {
+        return AlertDialog.Builder(this, R.style.AlertDialogTheme)
+                .setTitle(getString(R.string.remove_city_location))
+                .setMessage(getString(R.string.do_you_want_to_remove_location))
+                .setPositiveButton(getString(R.string.yes)) { _, _ ->
+                    val position = binding.viewPager.currentItem
+                    if (position == 0) toast(R.string.cant_remove_first_location) else mainViewModel.removeCity(position)
+                }
+                .setNegativeButton(getString(R.string.no)) { _, _ -> }
+                .create()
+    }
 
-    private fun appNavigationGuideSnack() = Snackbar
-            .make(binding.root, getString(R.string.swipe_left_or_right), Snackbar.LENGTH_INDEFINITE)
-            .setAction(getString(R.string.got_it)) { mainViewModel.setNavigationGuideShown() }
-            .setBackgroundTint(ContextCompat.getColor(this, R.color.dayClearStart))
-            .setActionTextColor(ContextCompat.getColor(this, R.color.sunriseClearCenter))
-            .apply {
-                val params = view.layoutParams as CoordinatorLayout.LayoutParams
-                params.anchorId = R.id.snackbar_anchor // Add bottom padding for navigation bar
-                params.anchorGravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
-                params.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
-                view.elevation = 0f // Remove shadow
-                view.layoutParams = params
-            }
+    private fun appNavigationGuideSnack(): Snackbar {
+        return Snackbar.make(binding.root, getString(R.string.swipe_left_or_right), Snackbar.LENGTH_INDEFINITE)
+                .setAction(getString(R.string.got_it)) { mainViewModel.setNavigationGuideShown() }
+                .setBackgroundTint(ContextCompat.getColor(this, R.color.dayClearStart))
+                .setActionTextColor(ContextCompat.getColor(this, R.color.sunriseClearCenter))
+                .apply {
+                    val params = view.layoutParams as CoordinatorLayout.LayoutParams
+                    params.anchorId = R.id.snackbar_anchor // Add bottom padding for navigation bar
+                    params.anchorGravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
+                    params.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
+                    view.elevation = 0f // Remove shadow
+                    view.layoutParams = params
+                }
+    }
 }
