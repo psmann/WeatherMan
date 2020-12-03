@@ -41,7 +41,7 @@ internal class CityFragment : Fragment() {
         arguments?.getInt(PAGER_POSITION)?.let { position = it }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentCityBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
