@@ -47,6 +47,7 @@ internal class DetailActivity : BaseLocationActivity() {
             detailRecyclerView.apply {
                 setHasFixedSize(true)
                 adapter = detailRecyclerAdapter
+                animateSlideUp()
             }
             // Set up the Swipe Refresh Layout
             detailSwipeLayout.apply {
