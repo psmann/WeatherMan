@@ -24,6 +24,8 @@ import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.databinding.ActivityMainBinding
 import one.mann.weatherman.ui.common.base.BaseLocationActivity
+import one.mann.weatherman.ui.common.util.PAGER_COUNT
+import one.mann.weatherman.ui.common.util.PAGER_POSITION
 import one.mann.weatherman.ui.common.util.getViewModel
 import one.mann.weatherman.ui.main.MainUiModel.State.*
 import one.mann.weatherman.ui.main.adapters.MainViewPagerAdapter
@@ -54,12 +56,26 @@ internal class MainActivity : BaseLocationActivity() {
         handleLocationPermission { initActivity(it) }
     }
 
-    override fun injectDependencies() = WeatherManApp.appComponent.getSubComponent().injectMainActivity(this)
-
-    /** Hide the searchView if it is visible instead of exiting activity */
-    override fun onBackPressed() {
-        if (binding.itemSearchCityConstraintLayout.root.visibility == View.VISIBLE) hideSearchView() else super.onBackPressed()
+    /** Save ViewPager position and page count on configuration change */
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(PAGER_POSITION, binding.viewPager.currentItem)
+        outState.putInt(PAGER_COUNT, binding.viewPager.adapter?.itemCount!!)
     }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        mainViewPagerAdapter.updatePages(savedInstanceState.getInt(PAGER_COUNT))
+        binding.viewPager.currentItem = savedInstanceState.getInt(PAGER_POSITION)
+    }
+
+    override fun onBackPressed() = when {
+        binding.itemSearchCityConstraintLayout.root.visibility == View.VISIBLE -> hideSearchView()
+        binding.viewPager.currentItem != 0 -> binding.viewPager.currentItem = 0
+        else -> super.onBackPressed()
+    }
+
+    override fun injectDependencies() = WeatherManApp.appComponent.getSubComponent().injectMainActivity(this)
 
     private fun initActivity(permissionGranted: Boolean) {
         if (!permissionGranted) { // If permission is denied then exit
