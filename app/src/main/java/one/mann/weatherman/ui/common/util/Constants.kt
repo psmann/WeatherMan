@@ -23,3 +23,4 @@ internal const val NOTIFICATION_ID = 1
 internal const val PAGER_POSITION = "pager_position"
 internal const val PAGER_COUNT = "pager_count"
 internal const val ACTIVITY_BACKGROUND = "activity_background"
+internal const val DETAIL_BUTTON_CLICKED = "detail_button_clicked"

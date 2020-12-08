@@ -23,7 +23,7 @@ internal class DetailActivity : BaseLocationActivity() {
     private val binding by lazy { ActivityDetailBinding.inflate(layoutInflater) }
     private val detailViewModel: DetailViewModel by lazy { getViewModel(viewModelFactory) }
     private val detailRecyclerAdapter by lazy { DetailRecyclerAdapter() }
-    private val position: Int by lazy { intent.getIntExtra(PAGER_POSITION, 1) }
+    private val position: Int by lazy { intent.getIntExtra(PAGER_POSITION, 0) }
     private val backgroundResource: Int by lazy { intent.getIntExtra(ACTIVITY_BACKGROUND, getGradient()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {

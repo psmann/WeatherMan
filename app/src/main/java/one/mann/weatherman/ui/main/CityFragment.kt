@@ -25,6 +25,7 @@ internal class CityFragment : Fragment() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private var position = 0
     private var backgroundResources = 0
+    private var detailButtonClicked = false
     private lateinit var binding: FragmentCityBinding
     private val detailIntent: Intent by lazy { Intent(context, DetailActivity::class.java) }
     private val mainViewModel: MainViewModel by lazy { requireActivity().getViewModel(viewModelFactory) }
@@ -36,9 +37,27 @@ internal class CityFragment : Fragment() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        savedInstanceState?.let {
+            detailButtonClicked = it.getBoolean(DETAIL_BUTTON_CLICKED)
+            if (detailButtonClicked) {
+                position = it.getInt(PAGER_POSITION)
+                setupIntent(it.getInt(ACTIVITY_BACKGROUND))
+                startActivity(detailIntent)
+            }
+        }
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         arguments?.getInt(PAGER_POSITION)?.let { position = it }
+    }
+
+    /** Reset detailButtonClicked when fragment is started */
+    override fun onStart() {
+        super.onStart()
+        detailButtonClicked = false
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -49,8 +68,18 @@ internal class CityFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         injectDependencies()
-        binding.cityDetailButton.setOnClickListener { startActivity(detailIntent) }
+        binding.cityDetailButton.setOnClickListener {
+            detailButtonClicked = true
+            startActivity(detailIntent)
+        }
         mainViewModel.uiModel.observe(viewLifecycleOwner, ::observeUiModel)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(DETAIL_BUTTON_CLICKED, detailButtonClicked)
+        outState.putInt(PAGER_POSITION, position)
+        outState.putInt(ACTIVITY_BACKGROUND, detailIntent.getIntExtra(ACTIVITY_BACKGROUND, getGradient()))
     }
 
     private fun injectDependencies() = WeatherManApp.appComponent.getSubComponent().injectMainFragment(this)
