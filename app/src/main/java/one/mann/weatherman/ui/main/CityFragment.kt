@@ -1,5 +1,6 @@
 package one.mann.weatherman.ui.main
 
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -44,7 +45,7 @@ internal class CityFragment : Fragment() {
             if (detailButtonClicked) {
                 position = it.getInt(PAGER_POSITION)
                 setupIntent(it.getInt(ACTIVITY_BACKGROUND))
-                startActivity(detailIntent)
+                startActivityForResult(detailIntent, ACTIVITY_BACK_REQUEST_CODE)
             }
         }
     }
@@ -52,12 +53,6 @@ internal class CityFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         arguments?.getInt(PAGER_POSITION)?.let { position = it }
-    }
-
-    /** Reset detailButtonClicked when fragment is started */
-    override fun onStart() {
-        super.onStart()
-        detailButtonClicked = false
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -70,11 +65,18 @@ internal class CityFragment : Fragment() {
         injectDependencies()
         binding.cityDetailButton.setOnClickListener {
             detailButtonClicked = true
-            startActivity(detailIntent)
+            startActivityForResult(detailIntent, ACTIVITY_BACK_REQUEST_CODE)
         }
         mainViewModel.uiModel.observe(viewLifecycleOwner, ::observeUiModel)
     }
 
+    /** Reset detailButtonClicked after returning back to fragment */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == ACTIVITY_BACK_REQUEST_CODE && resultCode == RESULT_OK) detailButtonClicked = false
+    }
+
+    /** Save ViewPager position and button click event state */
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(DETAIL_BUTTON_CLICKED, detailButtonClicked)

@@ -24,3 +24,4 @@ internal const val PAGER_POSITION = "pager_position"
 internal const val PAGER_COUNT = "pager_count"
 internal const val ACTIVITY_BACKGROUND = "activity_background"
 internal const val DETAIL_BUTTON_CLICKED = "detail_button_clicked"
+internal const val ACTIVITY_BACK_REQUEST_CODE = 1

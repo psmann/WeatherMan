@@ -1,7 +1,6 @@
 package one.mann.weatherman.ui.common.base
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
@@ -54,8 +53,8 @@ internal abstract class BaseLocationActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == LOCATION_REQUEST_CODE) when (resultCode) {
-            Activity.RESULT_OK -> networkAndLocationListener(ENABLED)
-            Activity.RESULT_CANCELED -> networkAndLocationListener(DISABLED)
+            RESULT_OK -> networkAndLocationListener(ENABLED)
+            RESULT_CANCELED -> networkAndLocationListener(DISABLED)
         }
     }
 
@@ -97,7 +96,7 @@ internal abstract class BaseLocationActivity : AppCompatActivity() {
                 }
     }
 
-    /** Toast extension function to be used only in activity scope with String Resources and an optional error message */
+    /** Toast extension function to be used only in activity scope with String Resources and an optional string */
     protected fun Context.toast(@StringRes msg: Int, errorMessage: String = "") {
         Toast.makeText(this, "${this.resources.getText(msg)}$errorMessage", Toast.LENGTH_SHORT).show()
     }
