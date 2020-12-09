@@ -4,7 +4,9 @@
     package="one.mann.weatherman">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-feature android:name="android.hardware.location.gps" />
@@ -18,23 +20,34 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".ui.detail.DetailActivity" />
+
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:launchMode="singleTask">
+
+            <intent-filter>
+
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+
+            </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name=".ui.detail.DetailActivity"
+            android:parentActivityName=".ui.main.MainActivity" />
+
         <activity
             android:name=".ui.settings.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".ui.main.MainActivity">
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="one.mann.weatherman.ui.main.MainActivity" />
-        </activity>
-        <activity
-            android:name=".ui.main.MainActivity"
-            android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <provider

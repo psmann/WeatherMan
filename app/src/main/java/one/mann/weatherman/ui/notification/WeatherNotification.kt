@@ -1,19 +1,21 @@
 package one.mann.weatherman.ui.notification
 
 import android.app.*
+import android.app.NotificationManager.IMPORTANCE_DEFAULT
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.app.TaskStackBuilder
 import one.mann.domain.logic.DEGREES
 import one.mann.domain.logic.removeUnits
 import one.mann.domain.logic.roundOff
 import one.mann.interactors.usecases.GetNotificationData
 import one.mann.weatherman.R
 import one.mann.weatherman.ui.common.util.*
-import one.mann.weatherman.ui.main.MainActivity
+import one.mann.weatherman.ui.detail.DetailActivity
 import javax.inject.Inject
 
 /* Created by Psmann. */
@@ -22,6 +24,12 @@ internal class WeatherNotification @Inject constructor(
         private val context: Context,
         private val getNotificationData: GetNotificationData
 ) {
+    // Pending Intent to open Detail Activity for current location from the notification
+    private val detailActivityPendingIntent: PendingIntent? = TaskStackBuilder.create(context).run {
+        addNextIntentWithParentStack(Intent(context, DetailActivity::class.java))
+        getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+    }
+
     /** Get weather data, set up custom layouts, create channel, build notification and display */
     suspend fun show() {
         val data = getNotificationData.invoke()
@@ -70,7 +78,7 @@ internal class WeatherNotification @Inject constructor(
                 .setCustomContentView(notificationCollapsed)
                 .setCustomBigContentView(notificationExpanded)
                 .setStyle(NotificationCompat.DecoratedCustomViewStyle())
-                .setContentIntent(PendingIntent.getActivity(context, 0, Intent(context, MainActivity::class.java), 0))
+                .setContentIntent(detailActivityPendingIntent)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setVibrate(LongArray(0))
                 .setAutoCancel(true)
@@ -80,15 +88,15 @@ internal class WeatherNotification @Inject constructor(
 
     /** Create notification channel, re-creating an existing channel performs no operation */
     private fun makeNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?).run {
-                val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME,
-                        NotificationManager.IMPORTANCE_DEFAULT)
+                val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, IMPORTANCE_DEFAULT)
                         .apply {
                             this.description = context.getString(R.string.notification_channel_description)
                             this.lockscreenVisibility = Notification.VISIBILITY_SECRET
                         }
                 this?.createNotificationChannel(channel)
             }
+        }
     }
 }
