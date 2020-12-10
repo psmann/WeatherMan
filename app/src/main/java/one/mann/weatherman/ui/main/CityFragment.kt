@@ -27,7 +27,8 @@ internal class CityFragment : Fragment() {
     private var position = 0
     private var backgroundResources = 0
     private var detailButtonClicked = false
-    private lateinit var binding: FragmentCityBinding
+    private var _binding: FragmentCityBinding? = null
+    private val binding: FragmentCityBinding get() = _binding!!
     private val detailIntent: Intent by lazy { Intent(context, DetailActivity::class.java) }
     private val mainViewModel: MainViewModel by lazy { requireActivity().getViewModel(viewModelFactory) }
 
@@ -56,7 +57,7 @@ internal class CityFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = FragmentCityBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentCityBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -82,6 +83,11 @@ internal class CityFragment : Fragment() {
         outState.putBoolean(DETAIL_BUTTON_CLICKED, detailButtonClicked)
         outState.putInt(PAGER_POSITION, position)
         outState.putInt(ACTIVITY_BACKGROUND, detailIntent.getIntExtra(ACTIVITY_BACKGROUND, getGradient()))
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun injectDependencies() = WeatherManApp.appComponent.getSubComponent().injectMainFragment(this)
