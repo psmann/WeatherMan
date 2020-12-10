@@ -17,6 +17,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.snackbar.Snackbar
 import one.mann.domain.logic.truncate
 import one.mann.domain.models.ErrorType.*
+import one.mann.domain.models.SlideType
 import one.mann.domain.models.ViewPagerUpdateType
 import one.mann.domain.models.ViewPagerUpdateType.*
 import one.mann.domain.models.location.Location
@@ -24,9 +25,7 @@ import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.databinding.ActivityMainBinding
 import one.mann.weatherman.ui.common.base.BaseLocationActivity
-import one.mann.weatherman.ui.common.util.PAGER_COUNT
-import one.mann.weatherman.ui.common.util.PAGER_POSITION
-import one.mann.weatherman.ui.common.util.getViewModel
+import one.mann.weatherman.ui.common.util.*
 import one.mann.weatherman.ui.main.MainUiModel.State.*
 import one.mann.weatherman.ui.main.adapters.MainViewPagerAdapter
 import one.mann.weatherman.ui.main.adapters.SearchCityRecyclerAdapter
@@ -134,12 +133,10 @@ internal class MainActivity : BaseLocationActivity() {
     }
 
     private fun observeUiModel(model: MainUiModel) {
-        if (model.viewState is Refreshing) {
-            hideSearchView()
-            binding.mainSwipeLayout.isRefreshing = true
-        } else binding.mainSwipeLayout.isRefreshing = false
+        binding.mainSwipeLayout.isRefreshing = model.viewState is Refreshing
         searchCityRecyclerAdapter.update(model.citySearchResult)
         when (val state = model.viewState) {
+            is Refreshing -> hideSearchView()
             is ShowError -> when (state.errorType) {
                 NoInternet -> toast(R.string.no_internet_connection)
                 NoGps -> toast(R.string.gps_needed_for_location)
@@ -186,6 +183,7 @@ internal class MainActivity : BaseLocationActivity() {
                 R.id.menu_add_city -> if (binding.viewPager.adapter?.itemCount!! < 10) { // Limit cities to 10
                     binding.itemSearchCityConstraintLayout.let {
                         it.root.visibility = View.VISIBLE
+                        it.root.setSlideAnimation(SlideType.LEFT)
                         it.citySearchView.requestFocus()
                         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0) // Force show keyboard
                     }

@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import one.mann.domain.models.ErrorType.NoInternet
 import one.mann.domain.models.ErrorType.NoResponse
+import one.mann.domain.models.SlideType
 import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.api.openweathermap.isOvercast
@@ -53,7 +54,7 @@ internal class DetailActivity : BaseLocationActivity() {
             detailRecyclerView.apply {
                 setHasFixedSize(true)
                 adapter = detailRecyclerAdapter
-                animateSlideUp()
+                setSlideAnimation(SlideType.UP)
             }
             // Set up the Swipe Refresh Layout
             detailSwipeLayout.apply {
