@@ -17,7 +17,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.snackbar.Snackbar
 import one.mann.domain.logic.truncate
 import one.mann.domain.models.ErrorType.*
-import one.mann.domain.models.SlideType
+import one.mann.domain.models.Direction
 import one.mann.domain.models.ViewPagerUpdateType
 import one.mann.domain.models.ViewPagerUpdateType.*
 import one.mann.domain.models.location.Location
@@ -183,7 +183,7 @@ internal class MainActivity : BaseLocationActivity() {
                 R.id.menu_add_city -> if (binding.viewPager.adapter?.itemCount!! < 10) { // Limit cities to 10
                     binding.itemSearchCityConstraintLayout.let {
                         it.root.visibility = View.VISIBLE
-                        it.root.setSlideAnimation(SlideType.LEFT)
+                        it.root.setSlideAnimation(Direction.LEFT)
                         it.citySearchView.requestFocus()
                         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0) // Force show keyboard
                     }

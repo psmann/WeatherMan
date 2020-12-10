@@ -2,6 +2,6 @@ package one.mann.domain.models
 
 /* Created by Psmann. */
 
-enum class SlideType {
+enum class Direction {
     UP, LEFT
 }

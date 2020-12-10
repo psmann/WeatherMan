@@ -20,9 +20,9 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import kotlinx.coroutines.suspendCancellableCoroutine
-import one.mann.domain.models.SlideType
-import one.mann.domain.models.SlideType.LEFT
-import one.mann.domain.models.SlideType.UP
+import one.mann.domain.models.Direction
+import one.mann.domain.models.Direction.LEFT
+import one.mann.domain.models.Direction.UP
 import one.mann.weatherman.R
 import one.mann.weatherman.api.openweathermap.dayIcons
 import one.mann.weatherman.api.openweathermap.nightIcons
@@ -62,11 +62,11 @@ internal inline fun <reified VM : ViewModel> FragmentActivity.getViewModel(facto
 }
 
 /** Set sliding animation on a view */
-internal fun View.setSlideAnimation(slideType: SlideType, animationDuration: Long = 750L) {
+internal fun View.setSlideAnimation(direction: Direction, animationDuration: Long = 750L) {
     startAnimation(
             AnimationUtils.loadAnimation(
                     context,
-                    when (slideType) {
+                    when (direction) {
                         UP -> R.anim.anim_slide_up
                         LEFT -> R.anim.anim_slide_left
                     }
