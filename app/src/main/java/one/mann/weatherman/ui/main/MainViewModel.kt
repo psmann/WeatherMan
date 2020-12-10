@@ -40,8 +40,7 @@ internal class MainViewModel @Inject constructor(
 
     private val _uiModel = MutableLiveData<MainUiModel>()
     private var searchJob: Job? = null
-    val uiModel: LiveData<MainUiModel>
-        get() = _uiModel
+    val uiModel: LiveData<MainUiModel> get() = _uiModel
 
     init {
         _uiModel.value = MainUiModel()
