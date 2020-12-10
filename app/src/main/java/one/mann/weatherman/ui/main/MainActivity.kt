@@ -134,7 +134,10 @@ internal class MainActivity : BaseLocationActivity() {
     }
 
     private fun observeUiModel(model: MainUiModel) {
-        binding.mainSwipeLayout.isRefreshing = model.viewState is Refreshing
+        if (model.viewState is Refreshing) {
+            hideSearchView()
+            binding.mainSwipeLayout.isRefreshing = true
+        } else binding.mainSwipeLayout.isRefreshing = false
         searchCityRecyclerAdapter.update(model.citySearchResult)
         when (val state = model.viewState) {
             is ShowError -> when (state.errorType) {
