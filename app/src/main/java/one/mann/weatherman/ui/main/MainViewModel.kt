@@ -66,6 +66,8 @@ internal class MainViewModel @Inject constructor(
 
     fun searchCity(query: String) {
         searchJob?.cancel() // Cancel previous job if any
+        _uiModel.value = uiModel.value?.copy(citySearchResult = listOf()) // Reset list after every user input
+        if (query == "" || query.length < 3) return // Return if query is less than 3 characters long
         searchJob = launch {
             delay(750) // Debounce
             val citySearch = withContext(IO) { getCitySearch.invoke(query) }

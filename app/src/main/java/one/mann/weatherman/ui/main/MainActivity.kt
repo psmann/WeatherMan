@@ -119,10 +119,7 @@ internal class MainActivity : BaseLocationActivity() {
                 it.citySearchView.setOnQueryTextListener(object : OnQueryTextListener {
                     override fun onQueryTextSubmit(query: String?): Boolean = false
                     override fun onQueryTextChange(newText: String?): Boolean {
-                        newText?.let { searchQuery ->
-                            if (searchQuery == "" || searchQuery.length < 3) searchCityRecyclerAdapter.update()
-                            else mainViewModel.searchCity(searchQuery)
-                        }
+                        newText?.let { searchQuery -> mainViewModel.searchCity(searchQuery) }
                         return true
                     }
                 })
@@ -138,7 +135,7 @@ internal class MainActivity : BaseLocationActivity() {
 
     private fun observeUiModel(model: MainUiModel) {
         binding.mainSwipeLayout.isRefreshing = model.viewState is Refreshing
-        if (model.citySearchResult.isEmpty()) hideSearchView() else searchCityRecyclerAdapter.update(model.citySearchResult)
+        searchCityRecyclerAdapter.update(model.citySearchResult)
         when (val state = model.viewState) {
             is ShowError -> when (state.errorType) {
                 NoInternet -> toast(R.string.no_internet_connection)
