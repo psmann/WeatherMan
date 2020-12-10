@@ -15,9 +15,15 @@ import androidx.fragment.app.FragmentActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import kotlinx.coroutines.suspendCancellableCoroutine
 import one.mann.weatherman.R
 import one.mann.weatherman.api.openweathermap.dayIcons
 import one.mann.weatherman.api.openweathermap.nightIcons
+import kotlin.coroutines.resume
 
 /* Created by Psmann. */
 
@@ -60,4 +66,21 @@ internal fun View.animateSlideUp(animationDuration: Long = 750L) {
                 duration = animationDuration
             }
     )
+}
+
+/** Check if location services are enabled or not */
+internal suspend fun Context.isLocationEnabled(): Boolean = suspendCancellableCoroutine { continuation ->
+    val locationRequestBuilder = LocationSettingsRequest.Builder()
+            .addLocationRequest(LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY))
+
+    LocationServices.getSettingsClient(this)
+            .checkLocationSettings(locationRequestBuilder.build())
+            .addOnCompleteListener {
+                try { // Location settings are On
+                    it.getResult(ApiException::class.java)
+                    continuation.resume(true)
+                } catch (exception: ApiException) { // Location settings are Off
+                    continuation.resume(false)
+                }
+            }
 }

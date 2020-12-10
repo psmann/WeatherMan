@@ -6,7 +6,6 @@ TODO:
  Make Weather data model less repetitive by getting rid of redundant operations (replace with arrays/lists)
  Use relevant data types in Weather model and database instead of using strings everywhere
  Bug: 1) The same city can be added multiple times 2) Deleting one city also removes any other city having the same name
- Get weather for current location (instead of previous saved location) in notifications if GPS is enabled on device
  Implement Coroutine Flow for LiveData
  Add tests for all modules
  Write and test Proguard rules - WIP
@@ -25,4 +24,5 @@ DONE:
  Replace Google Places API with TomTom Search API
  Handle all network responses from API calls explicitly
  Migrate ViewPager to ViewPager2
+ Get weather for current location (instead of previous saved location) in notifications if GPS is enabled on device
 */
