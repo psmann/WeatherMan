@@ -1,9 +1,9 @@
 package one.mann.weatherman.framework.data.database
 
 import androidx.room.*
-import one.mann.weatherman.framework.data.database.model.LocationTuple
-import one.mann.weatherman.framework.data.database.model.NotificationTuple
-import one.mann.weatherman.framework.data.database.model.Weather
+import one.mann.weatherman.framework.data.database.entities.LocationTuple
+import one.mann.weatherman.framework.data.database.entities.NotificationTuple
+import one.mann.weatherman.framework.data.database.entities.Weather
 
 /* Created by Psmann. */
 

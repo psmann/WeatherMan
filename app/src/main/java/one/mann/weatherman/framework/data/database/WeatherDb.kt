@@ -2,7 +2,7 @@ package one.mann.weatherman.framework.data.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import one.mann.weatherman.framework.data.database.model.Weather
+import one.mann.weatherman.framework.data.database.entities.Weather
 
 /* Created by Psmann. */
 

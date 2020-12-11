@@ -2,10 +2,10 @@ package one.mann.weatherman.framework.data.database
 
 import one.mann.domain.models.NotificationData
 import one.mann.domain.models.location.Location
-import one.mann.weatherman.framework.data.database.model.LocationTuple
-import one.mann.weatherman.framework.data.database.model.NotificationTuple
+import one.mann.weatherman.framework.data.database.entities.LocationTuple
+import one.mann.weatherman.framework.data.database.entities.NotificationTuple
 import one.mann.domain.models.weather.Weather as DomainWeather
-import one.mann.weatherman.framework.data.database.model.Weather as DbWeather
+import one.mann.weatherman.framework.data.database.entities.Weather as DbWeather
 
 /* Created by Psmann. */
 

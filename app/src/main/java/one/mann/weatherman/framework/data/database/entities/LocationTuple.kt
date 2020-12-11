@@ -1,4 +1,4 @@
-package one.mann.weatherman.framework.data.database.model
+package one.mann.weatherman.framework.data.database.entities
 
 /* Created by Psmann. */
 
