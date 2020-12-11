@@ -22,5 +22,5 @@ internal class WeatherDbDataSource @Inject constructor(db: WeatherDb) : Database
 
     override suspend fun updateAllWeather(weathers: List<Weather>) = dao.updateAll(weathers.map { it.mapToDb() })
 
-    override suspend fun deleteWeather(name: String) = dao.delete(name)
+    override suspend fun deleteWeather(cityId: String) = dao.delete(cityId)
 }

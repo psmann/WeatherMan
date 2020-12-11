@@ -18,5 +18,5 @@ interface DatabaseDataSource {
 
     suspend fun updateAllWeather(weathers: List<Weather>)
 
-    suspend fun deleteWeather(name: String)
+    suspend fun deleteWeather(cityId: String)
 }

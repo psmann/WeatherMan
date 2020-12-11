@@ -4,5 +4,5 @@ package one.mann.domain.models.location
 
 data class Location(
         val coordinates: List<Float>,
-        val id: Int? = null
+        val id: Int
 )

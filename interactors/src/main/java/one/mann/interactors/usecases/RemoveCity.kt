@@ -7,5 +7,5 @@ import javax.inject.Inject
 
 class RemoveCity @Inject constructor(private val weatherRepository: WeatherRepository) {
 
-    suspend fun invoke(name: String) = weatherRepository.delete(name)
+    suspend fun invoke(cityId: String) = weatherRepository.delete(cityId)
 }

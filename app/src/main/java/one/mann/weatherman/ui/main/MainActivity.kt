@@ -16,8 +16,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.snackbar.Snackbar
 import one.mann.domain.logic.truncate
-import one.mann.domain.models.ErrorType.*
 import one.mann.domain.models.Direction
+import one.mann.domain.models.ErrorType.*
 import one.mann.domain.models.ViewPagerUpdateType
 import one.mann.domain.models.ViewPagerUpdateType.*
 import one.mann.domain.models.location.Location
@@ -46,7 +46,10 @@ internal class MainActivity : BaseLocationActivity() {
     private val mainViewPagerAdapter by lazy { MainViewPagerAdapter(supportFragmentManager, lifecycle) }
     private val inputMethodManager by lazy { getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
     private val searchCityRecyclerAdapter by lazy {
-        SearchCityRecyclerAdapter { mainViewModel.addCity(Location(listOf(it.latitude, it.longitude)).truncate()) } // Add new city
+        SearchCityRecyclerAdapter {
+            mainViewModel.addCity(Location(listOf(it.latitude, it.longitude), binding.viewPager.adapter?.itemCount!! + 1)
+                    .truncate()) // Add new city
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

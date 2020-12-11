@@ -101,9 +101,9 @@ internal class MainViewModel @Inject constructor(
     }
 
     fun removeCity(position: Int) {
-        val cityName = _uiModel.value?.weatherData?.get(position)?.cityName ?: return // Return if null
+        val cityId = _uiModel.value?.weatherData?.get(position)?.uuid ?: return // Return if null
         launch {
-            withContext(IO) { removeCity.invoke(cityName) }
+            withContext(IO) { removeCity.invoke(cityId) }
             updateUI(ViewPagerUpdateType.REMOVE_ITEM)
         }
     }

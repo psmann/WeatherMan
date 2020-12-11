@@ -5,11 +5,11 @@ import one.mann.domain.models.location.Location
 import one.mann.weatherman.framework.data.database.entities.LocationTuple
 import one.mann.weatherman.framework.data.database.entities.NotificationTuple
 import one.mann.domain.models.weather.Weather as DomainWeather
-import one.mann.weatherman.framework.data.database.entities.Weather as DbWeather
+import one.mann.weatherman.framework.data.database.entities.CurrentWeather as DbWeather
 
 /* Created by Psmann. */
 
-internal fun LocationTuple.mapToDomain(): Location = Location(listOf(coordinatesLat, coordinatesLong), id)
+internal fun LocationTuple.mapToDomain(): Location = Location(listOf(coordinatesLat, coordinatesLong), position)
 
 internal fun NotificationTuple.mapToDomain(): NotificationData = NotificationData(
         cityName,
@@ -38,7 +38,8 @@ internal fun NotificationTuple.mapToDomain(): NotificationData = NotificationDat
 )
 
 internal fun DomainWeather.mapToDb(): DbWeather = DbWeather(
-        id, // id = null to use SQLite's default increment system
+        uuid,
+        order,
         cityName,
         currentTemp,
         feelsLike,
@@ -119,7 +120,8 @@ internal fun DomainWeather.mapToDb(): DbWeather = DbWeather(
 )
 
 internal fun DbWeather.mapToDomain(): DomainWeather = DomainWeather(
-        id,
+        uuid,
+        position,
         cityName,
         currentTemp,
         feelsLike,

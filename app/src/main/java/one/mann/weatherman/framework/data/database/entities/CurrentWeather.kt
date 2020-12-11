@@ -5,9 +5,16 @@ import androidx.room.PrimaryKey
 
 /* Created by Psmann. */
 
+// TODO:
+//  1. Rename 'id' to 'order'
+//  2. Use 'uuid' as the Primary Key
+//  3. Disable @PrimaryKey auto-generation
+//  4. Create
+
 @Entity
-internal data class Weather(
-        @PrimaryKey val id: Int?, // when null SQLite's default ROWID increment system is used
+internal data class CurrentWeather(
+        @PrimaryKey(autoGenerate = false) val uuid: String,
+        val position: Int,
         // Current Weather
         val cityName: String,
         val currentTemp: String,

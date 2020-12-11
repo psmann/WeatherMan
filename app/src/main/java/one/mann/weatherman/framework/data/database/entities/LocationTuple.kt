@@ -5,5 +5,5 @@ package one.mann.weatherman.framework.data.database.entities
 internal data class LocationTuple(
         val coordinatesLat: Float,
         val coordinatesLong: Float,
-        val id: Int
+        val position: Int
 )

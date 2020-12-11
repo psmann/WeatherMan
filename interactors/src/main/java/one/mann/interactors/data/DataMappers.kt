@@ -4,6 +4,7 @@ import one.mann.domain.logic.*
 import one.mann.domain.models.UnitsType.*
 import one.mann.domain.models.location.Location
 import one.mann.domain.models.weather.*
+import java.util.*
 
 /* Created by Psmann. */
 
@@ -23,7 +24,9 @@ internal fun mapToWeather(
 ): Weather {
     val sunriseTime = epochToMinutes(currentWeather.sunrise, timezone)
     val sunsetTime = epochToMinutes(currentWeather.sunset, timezone)
+    val uuid = UUID.randomUUID().toString()
     return Weather(
+            uuid,
             location.id,
             currentWeather.cityName,
             currentWeather.currentTemperature.setUnits(units, TEMPERATURE).addSuffix(DEGREES),

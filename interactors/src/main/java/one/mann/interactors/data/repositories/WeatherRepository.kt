@@ -49,7 +49,7 @@ class WeatherRepository @Inject constructor(
     suspend fun update(weatherData: List<Weather>) = dbData.updateAllWeather(weatherData)
 
     /** Remove a row from the database */
-    suspend fun delete(name: String) = dbData.deleteWeather(name)
+    suspend fun delete(cityId: String) = dbData.deleteWeather(cityId)
 
     /** Returns notification data */
     suspend fun readNotificationData(): NotificationData = dbData.getNotificationData()

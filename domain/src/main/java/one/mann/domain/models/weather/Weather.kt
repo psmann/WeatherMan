@@ -4,7 +4,8 @@ package one.mann.domain.models.weather
 
 data class Weather(
         // Current Weather
-        val id: Int? = null,
+        val uuid: String = "",
+        val order: Int = 1,
         val cityName: String = "",
         val currentTemp: String = "",
         val feelsLike: String = "",
