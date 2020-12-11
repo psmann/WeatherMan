@@ -1,6 +1,8 @@
 package one.mann.weatherman.ui.common.util
 
+import android.Manifest.permission
 import android.content.Context
+import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities.*
 import android.os.Build.VERSION
@@ -11,6 +13,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import androidx.annotation.LayoutRes
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.ViewModel
@@ -77,19 +80,21 @@ internal fun View.setSlideAnimation(direction: Direction, animationDuration: Lon
     )
 }
 
-/** Check if location services are enabled or not */
+/** Check if location permission has been granted and location services are enabled or not */
 internal suspend fun Context.isLocationEnabled(): Boolean = suspendCancellableCoroutine { continuation ->
     val locationRequestBuilder = LocationSettingsRequest.Builder()
             .addLocationRequest(LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY))
-
-    LocationServices.getSettingsClient(this)
-            .checkLocationSettings(locationRequestBuilder.build())
-            .addOnCompleteListener {
-                try { // Location settings are On
-                    it.getResult(ApiException::class.java)
-                    continuation.resume(true)
-                } catch (exception: ApiException) { // Location settings are Off
-                    continuation.resume(false)
+    if (ContextCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        LocationServices.getSettingsClient(this)
+                .checkLocationSettings(locationRequestBuilder.build())
+                .addOnCompleteListener {
+                    try { // Location settings are On
+                        it.getResult(ApiException::class.java)
+                        continuation.resume(true) // Return True
+                    } catch (exception: ApiException) { // Location settings are Off
+                        continuation.resume(false) // Return False
+                    }
                 }
-            }
+
+    } else continuation.resume(false) // Location Permission not granted, return False
 }
