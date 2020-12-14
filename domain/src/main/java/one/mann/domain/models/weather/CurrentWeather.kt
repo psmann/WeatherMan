@@ -3,18 +3,18 @@ package one.mann.domain.models.weather
 /* Created by Psmann. */
 
 data class CurrentWeather(
-        val cityName: String,
-        val currentTemperature: Float,
-        val pressure: Int,
-        val humidity: Int,
-        val description: String,
-        val iconId: Int,
-        var sunrise: Long,
-        var sunset: Long,
-        val countryFlag: String,
-        val clouds: Int,
-        val windSpeed: Float,
-        val windDirection: Int,
-        var lastUpdated: Long,
-        val visibility: Float
+        val cityName: String = "",
+        val currentTemperature: Float = 0f,
+        val pressure: Int = 0,
+        val humidity: Int = 0,
+        val description: String = "",
+        val iconId: Int = 0,
+        var sunrise: Long = 0,
+        var sunset: Long = 0,
+        val countryFlag: String = "",
+        val clouds: Int = 0,
+        val windSpeed: Float = 0f,
+        val windDirection: Int = 0,
+        var lastUpdated: Long = 0,
+        val visibility: Float = 0f
 )
