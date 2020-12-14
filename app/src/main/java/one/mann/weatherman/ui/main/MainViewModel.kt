@@ -33,7 +33,6 @@ internal class MainViewModel @Inject constructor(
         private val removeCity: RemoveCity,
         private val updateWeather: UpdateWeather,
         private val getCitySearch: GetCitySearch,
-        private val changeUnits: ChangeUnits,
         private val settingsPrefs: SharedPreferences,
         private val workManager: WorkManager
 ) : BaseViewModel(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -166,7 +165,7 @@ internal class MainViewModel @Inject constructor(
         launch(IO) {
             when (key) { // All Settings are handled here, ideally this should be done in SettingsActivity
                 SETTINGS_UNITS_KEY -> { // Change units and update UI
-                    changeUnits.invoke()
+//                    changeUnits.invoke() // TODO: Re-implement
                     updateUI()
                 }
                 SETTINGS_NOTIFICATIONS_KEY -> if (sharedPreferences!!.getBoolean(key, true)) { // Start-Stop notifications

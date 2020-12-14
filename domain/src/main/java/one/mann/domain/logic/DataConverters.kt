@@ -40,7 +40,7 @@ fun Float.roundOff(): String = this.roundToInt().toString()
 
 /** Truncate location coordinates to 4 decimal places */
 fun Location.truncate(): Location {
-    return Location(listOf(String.format("%.4f", coordinates[0]).toFloat(), String.format("%.4f", coordinates[1]).toFloat()), id)
+    return Location(listOf(String.format("%.4f", coordinates[0]).toFloat(), String.format("%.4f", coordinates[1]).toFloat()))
 }
 
 /** Convert location coordinates into a truncated comma separated string */
