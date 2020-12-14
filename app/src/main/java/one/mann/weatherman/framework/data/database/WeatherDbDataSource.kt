@@ -54,7 +54,7 @@ internal class WeatherDbDataSource @Inject constructor(db: WeatherDb) : Database
         dao.updateCities(weathers.map { it.mapToDbCity() })
         dao.updateCurrentWeathers(weathers.map { it.mapToDbCurrentWeather() })
         dao.updateDailyForecasts(dailyForecastsDb)
-        dao.insertHourlyForecasts(hourlyForecastsDb)
+        dao.updateHourlyForecasts(hourlyForecastsDb)
     }
 
     override suspend fun deleteWeather(cityId: String) {

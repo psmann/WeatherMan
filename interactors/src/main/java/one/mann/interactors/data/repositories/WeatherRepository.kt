@@ -61,7 +61,7 @@ class WeatherRepository @Inject constructor(
     /** Returns notification data */
     suspend fun readNotificationData(): NotificationData = dbData.getNotificationData()
 
-    /** Update weather from server if syncFromServer() is true, else only update lastChecked value */
+    /** Update weather from server if syncFromServer() is true, otherwise only update lastChecked value */
     suspend fun updateAll(locationType: LocationType): Boolean {
         val citiesForUpdate = mutableListOf<City>()
         val citiesFromDb = dbData.getAllCities()
