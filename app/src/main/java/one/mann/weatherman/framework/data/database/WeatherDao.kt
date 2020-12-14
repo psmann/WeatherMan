@@ -1,37 +1,92 @@
 package one.mann.weatherman.framework.data.database
 
 import androidx.room.*
-import one.mann.weatherman.framework.data.database.entities.LocationTuple
-import one.mann.weatherman.framework.data.database.entities.NotificationTuple
-import one.mann.weatherman.framework.data.database.entities.CurrentWeather
+import one.mann.weatherman.framework.data.database.entities.*
+import one.mann.weatherman.framework.data.database.entities.relations.*
 
 /* Created by Psmann. */
-
-// TODO:
-//  1. Replace 'cityName' with 'uuid' in delete()
-//  2. Replace LocationTuple with LocationCoordinates
 
 @Dao
 internal interface WeatherDao {
 
+    /** Inserts a new City */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(currentWeather: CurrentWeather)
+    suspend fun insertCity(city: City)
 
-    @Query("SELECT * FROM CurrentWeather ORDER BY position ASC")
-    suspend fun fetchAll(): List<CurrentWeather>
+    /** Inserts a new CurrentWeather */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCurrentWeather(currentWeather: CurrentWeather)
 
-    @Query("SELECT cityName, description, currentTemp, day1MinTemp, day1MaxTemp, iconId, sunPosition, humidity, " +
-            "hour03Time, hour03IconId, hour03SunPosition, hour06Time, hour06IconId, hour06SunPosition, " +
-            "hour09Time, hour09IconId, hour09SunPosition, hour12Time, hour12IconId, hour12SunPosition, " +
-            "hour15Time, hour15IconId, hour15SunPosition FROM CurrentWeather WHERE position = 1")
-    suspend fun fetchNotificationData(): NotificationTuple
+    /** Inserts a new list of HourlyForecast */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertHourlyForecasts(hourlyForecasts: List<HourlyForecast>)
 
-    @Query("SELECT coordinatesLat, coordinatesLong, position FROM CurrentWeather ORDER BY position ASC")
-    suspend fun fetchLocations(): List<LocationTuple>
+    /** Inserts a new list of DailyForecast */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertDailyForecasts(dailyForecasts: List<DailyForecast>)
 
+    /** Gets all cities */
+    @Query("SELECT * FROM City ORDER BY timeAdded ASC")
+    suspend fun getAllCities(): List<City>
+
+    /** Gets CurrentWeather for a City */
+    @Transaction
+    @Query("SELECT * FROM City WHERE cityId = :cityId")
+    suspend fun getCurrentWeather(cityId: String): CityWithCurrentWeather
+
+    /** Gets HourlyForecasts for a City */
+    @Transaction
+    @Query("SELECT * FROM City WHERE cityId = :cityId")
+    suspend fun getHourlyForecasts(cityId: String): CityWithHourlyForecasts
+
+    /** Gets DailyForecasts for a City */
+    @Transaction
+    @Query("SELECT * FROM City WHERE cityId = :cityId")
+    suspend fun getCDailyForecasts(cityId: String): CityWithDailyForecasts
+
+    /** Returns the cityName for user location */
+    @Query("SELECT cityName FROM City WHERE MIN(timeAdded)")
+    suspend fun getCityNameForUserLocation(): String
+
+    /** Gets today's forecast for user location */
+    @Transaction
+    @Query("SELECT * FROM DailyForecast WHERE cityId IN (SELECT cityId FROM City WHERE MIN(timeAdded)) AND MIN(date)")
+    suspend fun getTodayForecastForUserLocation(): DailyForecast
+
+    /** Gets CurrentWeather and HourlyForecast for user location */
+    @Transaction
+    @Query("SELECT * FROM CurrentWeather WHERE cityId IN (SELECT cityId FROM City WHERE MIN(timeAdded))")
+    suspend fun getHourlyForecastsForUserLocation(): CurrentWeatherWithHourlyForecasts
+
+    /** Updates City entity */
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateAll(currentWeathers: List<CurrentWeather>)
+    suspend fun updateCities(cities: List<City>)
 
-    @Query("DELETE FROM CurrentWeather WHERE uuid = :cityId")
-    suspend fun delete(cityId: String)
+    /** Updates CurrentWeather entity */
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateCurrentWeathers(currentWeathers: List<CurrentWeather>)
+
+    /** Updates HourlyForecast entity */
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateHourlyForecasts(hourlyForecasts: List<HourlyForecast>)
+
+    /** Updates DailyForecast entity */
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateDailyForecasts(dailyForecasts: List<DailyForecast>)
+
+    /** Deletes City with the passed cityId */
+    @Query("DELETE FROM City WHERE cityId = :cityId")
+    suspend fun deleteCity(cityId: String)
+
+    /** Deletes CurrentWeather with the passed cityId */
+    @Query("DELETE FROM CurrentWeather WHERE cityId = :cityId")
+    suspend fun deleteCurrentWeather(cityId: String)
+
+    /** Deletes HourlyForecasts with the passed cityId */
+    @Query("DELETE FROM HourlyForecast WHERE cityId = :cityId")
+    suspend fun deleteHourlyForecasts(cityId: String)
+
+    /** Deletes DailyForecasts with the passed cityId */
+    @Query("DELETE FROM DailyForecast WHERE cityId = :cityId")
+    suspend fun deleteDailyForecasts(cityId: String)
 }
