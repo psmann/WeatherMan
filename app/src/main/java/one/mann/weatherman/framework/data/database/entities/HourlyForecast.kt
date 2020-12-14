@@ -6,11 +6,11 @@ import androidx.room.PrimaryKey
 /* Created by Psmann. */
 
 @Entity
-data class HourlyForecast(
-        @PrimaryKey(autoGenerate = true) val id: Int,
-        val weatherId: String,
-        val time: String,
-        val temperature: String,
+internal data class HourlyForecast(
+        @PrimaryKey(autoGenerate = true) val hourlyId: Int = 0,
+        val time: Long,
+        val temperature: Float,
         val iconId: Int,
-        val sunPosition: Float
+        val sunPosition: Float,
+        val cityId: String
 )
