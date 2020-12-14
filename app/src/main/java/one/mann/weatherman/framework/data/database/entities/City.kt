@@ -12,5 +12,5 @@ internal data class City(
         val coordinatesLat: Float,
         val coordinatesLong: Float,
         val timezone: String,
-        val timeAdded: Long // Used to order the list
+        val timeCreated: Long // Used to order the list
 )

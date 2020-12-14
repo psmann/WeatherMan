@@ -26,7 +26,7 @@ internal interface WeatherDao {
     suspend fun insertDailyForecasts(dailyForecasts: List<DailyForecast>)
 
     /** Gets all cities */
-    @Query("SELECT * FROM City ORDER BY timeAdded ASC")
+    @Query("SELECT * FROM City ORDER BY timeCreated ASC")
     suspend fun getAllCities(): List<City>
 
     /** Gets CurrentWeather for a City */
@@ -45,17 +45,17 @@ internal interface WeatherDao {
     suspend fun getCDailyForecasts(cityId: String): CityWithDailyForecasts
 
     /** Returns the cityName for user location */
-    @Query("SELECT cityName FROM City WHERE MIN(timeAdded)")
+    @Query("SELECT cityName FROM City WHERE MIN(timeCreated)")
     suspend fun getCityNameForUserLocation(): String
 
     /** Gets today's forecast for user location */
     @Transaction
-    @Query("SELECT * FROM DailyForecast WHERE cityId IN (SELECT cityId FROM City WHERE MIN(timeAdded)) AND MIN(date)")
+    @Query("SELECT * FROM DailyForecast WHERE cityId IN (SELECT cityId FROM City WHERE MIN(timeCreated)) AND MIN(date)")
     suspend fun getTodayForecastForUserLocation(): DailyForecast
 
     /** Gets CurrentWeather and HourlyForecast for user location */
     @Transaction
-    @Query("SELECT * FROM CurrentWeather WHERE cityId IN (SELECT cityId FROM City WHERE MIN(timeAdded))")
+    @Query("SELECT * FROM CurrentWeather WHERE cityId IN (SELECT cityId FROM City WHERE MIN(timeCreated))")
     suspend fun getHourlyForecastsForUserLocation(): CurrentWeatherWithHourlyForecasts
 
     /** Updates City entity */

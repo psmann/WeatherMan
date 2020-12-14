@@ -17,7 +17,7 @@ internal fun DomainWeather.mapToDbCity(): City = City(
         city.coordinatesLat,
         city.coordinatesLong,
         city.timezone,
-        city.timeAdded
+        city.timeCreated
 )
 
 internal fun DomainWeather.mapToDbCurrentWeather(): CurrentWeather = CurrentWeather(
@@ -81,7 +81,7 @@ internal fun City.mapToDomainCity(): DomainCity = DomainCity(
         coordinatesLat,
         coordinatesLong,
         timezone,
-        timeAdded
+        timeCreated
 )
 
 internal fun City.mapToDomainWeather(
@@ -119,7 +119,7 @@ internal fun City.mapToDomainWeather(
                     coordinatesLat,
                     coordinatesLong,
                     timezone,
-                    timeAdded
+                    timeCreated
             ),
             DomainCurrentWeather(
                     cityName,

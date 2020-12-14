@@ -7,5 +7,5 @@ data class City(
         val coordinatesLat: Float = 0f,
         val coordinatesLong: Float = 0f,
         val timezone: String = "",
-        val timeAdded: Long = 0
+        val timeCreated: Long = 0
 )

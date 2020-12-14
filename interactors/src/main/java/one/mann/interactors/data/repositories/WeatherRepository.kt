@@ -32,7 +32,7 @@ class WeatherRepository @Inject constructor(
     /** Insert new city in the database */
     suspend fun create(apiLocation: Location? = null) {
         val location = apiLocation ?: deviceLocation.getLocation() // Use device GPS location if null
-        val timeAdded = System.currentTimeMillis()
+        val timeCreated = System.currentTimeMillis()
         dbData.insertWeather(
                 mapToDomainWeather(
                         City(
@@ -40,7 +40,7 @@ class WeatherRepository @Inject constructor(
                                 location.coordinates[0],
                                 location.coordinates[1],
                                 timezoneData.getTimezone(location),
-                                timeAdded
+                                timeCreated
                         ),
                         weatherData.getCurrentWeather(location),
                         weatherData.getDailyForecast(location),
@@ -77,7 +77,7 @@ class WeatherRepository @Inject constructor(
                                     coordinatesLat = gpsLocation.coordinates[0],
                                     coordinatesLong = gpsLocation.coordinates[1],
                                     timezone = dbCity.timezone,
-                                    timeAdded = dbCity.timeAdded
+                                    timeCreated = dbCity.timeCreated
                             )
                     )
                 } else citiesForUpdate.add(dbCity)
@@ -105,7 +105,7 @@ class WeatherRepository @Inject constructor(
         }
     }
 
-    /** Create a new unique code for cityId */
+    /** Creates a new unique code for cityId */
     private fun generateCityId(): String = UUID.randomUUID().toString()
 
     /** Returns true if it has been longer than time-out period since last update */
