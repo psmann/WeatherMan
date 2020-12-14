@@ -1,202 +1,177 @@
 package one.mann.weatherman.framework.data.database
 
 import one.mann.domain.models.NotificationData
-import one.mann.domain.models.location.Location
-import one.mann.weatherman.framework.data.database.entities.LocationTuple
-import one.mann.weatherman.framework.data.database.entities.NotificationTuple
+import one.mann.weatherman.framework.data.database.entities.*
+import one.mann.weatherman.framework.data.database.entities.relations.CurrentWeatherWithHourlyForecasts
+import one.mann.domain.models.weather.City as DomainCity
+import one.mann.domain.models.weather.CurrentWeather as DomainCurrentWeather
+import one.mann.domain.models.weather.DailyForecast as DailyForecastDommain
+import one.mann.domain.models.weather.HourlyForecast as HourlyForecastDomain
 import one.mann.domain.models.weather.Weather as DomainWeather
-import one.mann.weatherman.framework.data.database.entities.CurrentWeather as DbWeather
 
 /* Created by Psmann. */
 
-internal fun LocationTuple.mapToDomain(): Location = Location(listOf(coordinatesLat, coordinatesLong), position)
-
-internal fun NotificationTuple.mapToDomain(): NotificationData = NotificationData(
-        cityName,
-        description,
-        currentTemp,
-        day1MinTemp,
-        day1MaxTemp,
-        iconId,
-        sunPosition,
-        humidity,
-        hour03Time,
-        hour03IconId,
-        hour03SunPosition,
-        hour06Time,
-        hour06IconId,
-        hour06SunPosition,
-        hour09Time,
-        hour09IconId,
-        hour09SunPosition,
-        hour12Time,
-        hour12IconId,
-        hour12SunPosition,
-        hour15Time,
-        hour15IconId,
-        hour15SunPosition
+internal fun DomainWeather.mapToDbCity(): City = City(
+        city.cityId,
+        currentWeather.cityName,
+        city.coordinatesLat,
+        city.coordinatesLong,
+        city.timezone,
+        city.timeAdded
 )
 
-internal fun DomainWeather.mapToDb(): DbWeather = DbWeather(
-        uuid,
-        order,
-        cityName,
-        currentTemp,
+internal fun DomainWeather.mapToDbCurrentWeather(): CurrentWeather = CurrentWeather(
+        0,
+        currentWeather.currentTemperature,
         feelsLike,
-        pressure,
-        humidity,
-        description,
-        iconId,
-        sunrise,
-        sunset,
-        countryFlag,
-        clouds,
-        windSpeed,
-        windDirection,
-        lastUpdated,
-        visibility,
+        currentWeather.pressure,
+        currentWeather.humidity,
+        currentWeather.description,
+        currentWeather.iconId,
+        currentWeather.sunrise,
+        currentWeather.sunset,
+        currentWeather.countryFlag,
+        currentWeather.clouds,
+        currentWeather.windSpeed,
+        currentWeather.windDirection,
+        currentWeather.lastUpdated,
+        currentWeather.visibility,
         dayLength,
         lastChecked,
         sunPosition,
-        day1Date,
-        day1MinTemp,
-        day1MaxTemp,
-        day1IconId,
-        day2Date,
-        day2MinTemp,
-        day2MaxTemp,
-        day2IconId,
-        day3Date,
-        day3MinTemp,
-        day3MaxTemp,
-        day3IconId,
-        day4Date,
-        day4MinTemp,
-        day4MaxTemp,
-        day4IconId,
-        day5Date,
-        day5MinTemp,
-        day5MaxTemp,
-        day5IconId,
-        day6Date,
-        day6MinTemp,
-        day6MaxTemp,
-        day6IconId,
-        day7Date,
-        day7MinTemp,
-        day7MaxTemp,
-        day7IconId,
-        hour03Time,
-        hour03Temp,
-        hour03IconId,
-        hour03SunPosition,
-        hour06Time,
-        hour06Temp,
-        hour06IconId,
-        hour06SunPosition,
-        hour09Time,
-        hour09Temp,
-        hour09IconId,
-        hour09SunPosition,
-        hour12Time,
-        hour12Temp,
-        hour12IconId,
-        hour12SunPosition,
-        hour15Time,
-        hour15Temp,
-        hour15IconId,
-        hour15SunPosition,
-        hour18Time,
-        hour18Temp,
-        hour18IconId,
-        hour18SunPosition,
-        hour21Time,
-        hour21Temp,
-        hour21IconId,
-        hour21SunPosition,
-        coordinatesLat,
-        coordinatesLong,
-        locationString
+        city.cityId
 )
 
-internal fun DbWeather.mapToDomain(): DomainWeather = DomainWeather(
-        uuid,
-        position,
-        cityName,
-        currentTemp,
-        feelsLike,
-        pressure,
-        humidity,
-        description,
-        iconId,
-        sunrise,
-        sunset,
-        countryFlag,
-        clouds,
-        windSpeed,
-        windDirection,
-        lastUpdated,
-        visibility,
-        dayLength,
-        lastChecked,
-        sunPosition,
-        day1Date,
-        day1MinTemp,
-        day1MaxTemp,
-        day1IconId,
-        day2Date,
-        day2MinTemp,
-        day2MaxTemp,
-        day2IconId,
-        day3Date,
-        day3MinTemp,
-        day3MaxTemp,
-        day3IconId,
-        day4Date,
-        day4MinTemp,
-        day4MaxTemp,
-        day4IconId,
-        day5Date,
-        day5MinTemp,
-        day5MaxTemp,
-        day5IconId,
-        day6Date,
-        day6MinTemp,
-        day6MaxTemp,
-        day6IconId,
-        day7Date,
-        day7MinTemp,
-        day7MaxTemp,
-        day7IconId,
-        hour03Time,
-        hour03Temp,
-        hour03IconId,
-        hour03SunPosition,
-        hour06Time,
-        hour06Temp,
-        hour06IconId,
-        hour06SunPosition,
-        hour09Time,
-        hour09Temp,
-        hour09IconId,
-        hour09SunPosition,
-        hour12Time,
-        hour12Temp,
-        hour12IconId,
-        hour12SunPosition,
-        hour15Time,
-        hour15Temp,
-        hour15IconId,
-        hour15SunPosition,
-        hour18Time,
-        hour18Temp,
-        hour18IconId,
-        hour18SunPosition,
-        hour21Time,
-        hour21Temp,
-        hour21IconId,
-        hour21SunPosition,
+internal fun DomainWeather.mapToDbDailyForecasts(): List<DailyForecast> {
+    val dailyForecastsForDb = mutableListOf<DailyForecast>()
+    dailyForecasts.map {
+        dailyForecastsForDb.add(
+                DailyForecast(
+                        0,
+                        it.forecastDate,
+                        it.minTemp,
+                        it.maxTemp,
+                        it.forecastIconId,
+                        city.cityId
+                )
+        )
+    }
+    return dailyForecastsForDb
+}
+
+internal fun DomainWeather.mapToDbHourlyForecasts(): List<HourlyForecast> {
+    val hourlyForecastsForDb = mutableListOf<HourlyForecast>()
+    hourlyForecasts.map {
+        hourlyForecastsForDb.add(
+                HourlyForecast(
+                        0,
+                        it.forecastTime,
+                        it.temperature,
+                        it.forecastIconId,
+                        it.sunPosition,
+                        city.cityId
+                )
+        )
+    }
+    return hourlyForecastsForDb
+}
+
+internal fun City.mapToDomainCity(): DomainCity = DomainCity(
+        cityId,
         coordinatesLat,
         coordinatesLong,
-        locationString
+        timezone,
+        timeAdded
 )
+
+internal fun City.mapToDomainWeather(
+        currentWeather: CurrentWeather,
+        dailyForecasts: List<DailyForecast>,
+        hourlyForecasts: List<HourlyForecast>
+): DomainWeather {
+    val dailyForecastsDomain = mutableListOf<DailyForecastDommain>()
+    val hourlyForecastsDomain = mutableListOf<HourlyForecastDomain>()
+
+    dailyForecasts.map {
+        dailyForecastsDomain.add(
+                DailyForecastDommain(
+                        it.date,
+                        it.minTemp,
+                        it.maxTemp,
+                        it.iconId
+                )
+        )
+    }
+    hourlyForecasts.map {
+        hourlyForecastsDomain.add(
+                HourlyForecastDomain(
+                        it.time,
+                        it.temperature,
+                        it.iconId,
+                        it.sunPosition
+                )
+        )
+    }
+
+    return DomainWeather(
+            DomainCity(
+                    cityId,
+                    coordinatesLat,
+                    coordinatesLong,
+                    timezone,
+                    timeAdded
+            ),
+            DomainCurrentWeather(
+                    cityName,
+                    currentWeather.currentTemperature,
+                    currentWeather.pressure,
+                    currentWeather.humidity,
+                    currentWeather.description,
+                    currentWeather.iconId,
+                    currentWeather.sunrise,
+                    currentWeather.sunset,
+                    currentWeather.countryFlag,
+                    currentWeather.clouds,
+                    currentWeather.windSpeed,
+                    currentWeather.windDirection,
+                    currentWeather.lastUpdated,
+                    currentWeather.visibility
+            ),
+            dailyForecastsDomain,
+            hourlyForecastsDomain,
+            currentWeather.feelsLike,
+            currentWeather.dayLength,
+            currentWeather.lastChecked,
+            currentWeather.sunPosition
+    )
+}
+
+internal fun CurrentWeatherWithHourlyForecasts.mapToDomain(cityName: String, todayForecast: DailyForecast): NotificationData {
+    val forecasts = getSortedForecast()
+
+    return NotificationData(
+            cityName,
+            currentWeather.description,
+            currentWeather.currentTemperature,
+            todayForecast.minTemp,
+            todayForecast.maxTemp,
+            currentWeather.iconId,
+            currentWeather.sunPosition,
+            currentWeather.humidity,
+            forecasts[0].time,
+            forecasts[0].iconId,
+            forecasts[0].sunPosition,
+            forecasts[1].time,
+            forecasts[1].iconId,
+            forecasts[1].sunPosition,
+            forecasts[2].time,
+            forecasts[2].iconId,
+            forecasts[2].sunPosition,
+            forecasts[3].time,
+            forecasts[3].iconId,
+            forecasts[3].sunPosition,
+            forecasts[4].time,
+            forecasts[4].iconId,
+            forecasts[4].sunPosition,
+    )
+}
