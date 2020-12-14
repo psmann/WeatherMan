@@ -48,8 +48,7 @@ internal fun ApiDailyForecast.ListObject?.mapToDomain(): DomainDailyForecast = D
 
 /** Map API Teleport Timezone to String to be used in Domain logic, parameter is nullable and is given a default value */
 internal fun Timezone?.mapToString(): String {
-    return this?.embedded1?.locationNearestCities?.get(0)?.embedded2?.locationNearestCity?.embedded3?.cityTimezone
-            ?.ianaName ?: ""
+    return this?.embedded1?.locationNearestCities?.get(0)?.embedded2?.locationNearestCity?.embedded3?.cityTimezone?.ianaName ?: ""
 }
 
 /** Map API TomTom Search to Domain, all parameters are nullable and are given default values */

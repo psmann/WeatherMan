@@ -46,10 +46,7 @@ internal class MainActivity : BaseLocationActivity() {
     private val mainViewPagerAdapter by lazy { MainViewPagerAdapter(supportFragmentManager, lifecycle) }
     private val inputMethodManager by lazy { getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
     private val searchCityRecyclerAdapter by lazy {
-        SearchCityRecyclerAdapter {
-            mainViewModel.addCity(Location(listOf(it.latitude, it.longitude), binding.viewPager.adapter?.itemCount!! + 1)
-                    .truncate()) // Add new city
-        }
+        SearchCityRecyclerAdapter { mainViewModel.addCity(Location(listOf(it.latitude, it.longitude)).truncate()) }// Add new city
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

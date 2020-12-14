@@ -2,10 +2,13 @@ package one.mann.weatherman
 
 /*
 TODO:
+ Fix Indents (should be 4 everywhere?) for the project. Check with IDE defaults
  Update Database model: Atomise and make it adhere to single responsibility principle (split-up into multiple tables)
  Make Weather data model less repetitive by getting rid of redundant operations (replace with arrays/lists)
  Use relevant data types in Weather model and database instead of using strings everywhere
- Bug: 1) The same city can be added multiple times 2) Deleting one city also removes any other city having the same name
+ Bugs:
+  1) The same city can be added multiple times
+  2) Deleting one city also removes any other city having the same name
  Implement Coroutine Flow for LiveData
  Add tests for all modules
  Write and test Proguard rules - WIP
