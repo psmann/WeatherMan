@@ -3,14 +3,16 @@ package one.mann.interactors.data.repositories
 import one.mann.domain.models.NotificationData
 import one.mann.domain.models.location.Location
 import one.mann.domain.models.location.LocationType
+import one.mann.domain.models.weather.City
 import one.mann.domain.models.weather.Weather
-import one.mann.interactors.data.mapToWeather
+import one.mann.interactors.data.mapToDomainWeather
 import one.mann.interactors.data.sources.api.TimezoneDataSource
 import one.mann.interactors.data.sources.api.WeatherDataSource
 import one.mann.interactors.data.sources.framework.DatabaseDataSource
 import one.mann.interactors.data.sources.framework.DeviceLocationSource
 import one.mann.interactors.data.sources.framework.PreferencesDataSource
 import one.mann.interactors.data.updateLastChecked
+import java.util.*
 import javax.inject.Inject
 
 /* Created by Psmann. */
@@ -30,14 +32,19 @@ class WeatherRepository @Inject constructor(
     /** Insert new city in the database */
     suspend fun create(apiLocation: Location? = null) {
         val location = apiLocation ?: deviceLocation.getLocation() // Use device GPS location if null
+        val timeAdded = System.currentTimeMillis()
         dbData.insertWeather(
-                mapToWeather(
+                mapToDomainWeather(
+                        City(
+                                generateCityId(),
+                                location.coordinates[0],
+                                location.coordinates[1],
+                                timezoneData.getTimezone(location),
+                                timeAdded
+                        ),
                         weatherData.getCurrentWeather(location),
                         weatherData.getDailyForecast(location),
                         weatherData.getHourlyForecast(location),
-                        timezoneData.getTimezone(location),
-                        location,
-                        prefsData.getUnits()
                 )
         )
     }
@@ -56,32 +63,50 @@ class WeatherRepository @Inject constructor(
 
     /** Update weather from server if syncFromServer() is true, else only update lastChecked value */
     suspend fun updateAll(locationType: LocationType): Boolean {
-        val locations = dbData.getAllLocations().toMutableList()
-        val timezones = timezoneData.getAllTimezone(locations)
-        return if (syncFromServer()) {
-            if (locationType == LocationType.DEVICE) locations[0] = deviceLocation.getLocation()
-            val currentWeathers = weatherData.getAllCurrentWeather(locations)
-            val dailyForecasts = weatherData.getAllDailyForecast(locations)
-            val hourlyForecasts = weatherData.getAllHourlyForecast(locations)
-            val weathers: MutableList<Weather> = mutableListOf()
-            val units = prefsData.getUnits()
-            for (i in 0 until locations.size) weathers.add(
-                    mapToWeather(
-                            currentWeathers[i],
-                            dailyForecasts[i],
-                            hourlyForecasts[i],
-                            timezones[i],
-                            locations[i],
-                            units
+        val citiesForUpdate = mutableListOf<City>()
+        val citiesFromDb = dbData.getAllCities()
+
+        if (locationType == LocationType.DEVICE) {
+            val gpsLocation = deviceLocation.getLocation()
+            citiesFromDb.mapIndexed { i, dbCity ->
+                // Update coordinates for user location
+                if (i == 0) {
+                    citiesForUpdate.add(
+                            City(
+                                    cityId = dbCity.cityId,
+                                    coordinatesLat = gpsLocation.coordinates[0],
+                                    coordinatesLong = gpsLocation.coordinates[1],
+                                    timezone = dbCity.timezone,
+                                    timeAdded = dbCity.timeAdded
+                            )
                     )
-            )
+                } else citiesForUpdate.add(dbCity)
+            }
+        } else citiesFromDb.map { citiesForUpdate.add(it) }
+
+        return if (syncFromServer()) {
+            val weathers = mutableListOf<Weather>()
+            citiesForUpdate.forEach {
+                val location = Location(listOf(it.coordinatesLat, it.coordinatesLong))
+                weathers.add(
+                        mapToDomainWeather(
+                                it,
+                                weatherData.getCurrentWeather(location),
+                                weatherData.getDailyForecast(location),
+                                weatherData.getHourlyForecast(location)
+                        )
+                )
+            }
             update(weathers)
             true
-        } else { // This still uses the Teleport API for getting timezones
-            update(read().mapIndexed { i, it -> it.updateLastChecked(timezones[i]) })
+        } else {
+            update(read().map { it.updateLastChecked() })
             false
         }
     }
+
+    /** Create a new unique code for cityId */
+    private fun generateCityId(): String = UUID.randomUUID().toString()
 
     /** Returns true if it has been longer than time-out period since last update */
     private suspend fun syncFromServer(): Boolean = System.currentTimeMillis() - prefsData.getLastChecked() > TIME_OUT
