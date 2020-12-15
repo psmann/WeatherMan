@@ -2,7 +2,7 @@ package one.mann.weatherman
 
 /*
 TODO:
- Fix Indents (should be 4 everywhere?) for the project. Check with IDE defaults
+ Fix navBar and statusBar heights
  Update Database model: Atomise and make it adhere to single responsibility principle (split-up into multiple tables)
  Make Weather data model less repetitive by getting rid of redundant operations (replace with arrays/lists)
  Use relevant data types in Weather model and database instead of using strings everywhere
