@@ -110,7 +110,7 @@ internal class MainViewModel @Inject constructor(
 
     private fun updateUI(updateViewPager: ViewPagerUpdateType = ViewPagerUpdateType.NO_CHANGE) {
         launch {
-            val data = withContext(IO) { getAllWeather.invoke() }
+            val data = withContext(IO) { getAllWeather.invoke().map { it.mapToUiWeather() } }
             _uiModel.value = _uiModel.value?.copy(
                     weatherData = if (data.isEmpty()) listOf() else data,
                     cityCount = data.size,

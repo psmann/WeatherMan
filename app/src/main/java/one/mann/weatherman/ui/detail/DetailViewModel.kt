@@ -9,8 +9,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import one.mann.domain.models.ErrorType.NoInternet
 import one.mann.domain.models.ErrorType.NoResponse
-import one.mann.domain.models.location.LocationResponse
-import one.mann.domain.models.location.LocationResponse.*
+import one.mann.domain.models.location.LocationServicesResponse
+import one.mann.domain.models.location.LocationServicesResponse.*
 import one.mann.domain.models.location.LocationType
 import one.mann.domain.models.location.LocationType.DB
 import one.mann.domain.models.location.LocationType.DEVICE
@@ -19,6 +19,7 @@ import one.mann.interactors.usecases.UpdateWeather
 import one.mann.weatherman.ui.common.base.BaseViewModel
 import one.mann.weatherman.ui.common.util.LAST_CHECKED_KEY
 import one.mann.weatherman.ui.common.util.LAST_UPDATED_KEY
+import one.mann.weatherman.ui.common.util.mapToUiWeather
 import one.mann.weatherman.ui.detail.DetailUiModel.State.*
 import javax.inject.Inject
 
@@ -44,7 +45,7 @@ internal class DetailViewModel @Inject constructor(
         }
     }
 
-    fun handleRefreshing(response: LocationResponse) = when (response) {
+    fun handleRefreshing(response: LocationServicesResponse) = when (response) {
         NO_NETWORK -> {
             _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoInternet))
             _uiModel.value = _uiModel.value?.copy(viewState = Idle) // Change state back to idle
@@ -73,7 +74,7 @@ internal class DetailViewModel @Inject constructor(
 
     private fun updateUI() {
         launch {
-            val data = withContext(IO) { getAllWeather.invoke() }
+            val data = withContext(IO) { getAllWeather.invoke().map { it.mapToUiWeather() } }
             _uiModel.value = _uiModel.value?.copy(
                     weatherData = if (data.isEmpty()) listOf() else data,
                     viewState = Idle

@@ -3,7 +3,7 @@ package one.mann.weatherman.ui.main
 import one.mann.domain.models.CitySearchResult
 import one.mann.domain.models.ErrorType
 import one.mann.domain.models.ViewPagerUpdateType
-import one.mann.domain.models.weather.Weather
+import one.mann.weatherman.ui.common.models.Weather
 
 /* Created by Psmann. */
 

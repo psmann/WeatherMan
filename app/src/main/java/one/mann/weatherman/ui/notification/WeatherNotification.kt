@@ -32,7 +32,7 @@ internal class WeatherNotification @Inject constructor(
 
     /** Get weather data, set up custom layouts, create channel, build notification and display */
     suspend fun show() {
-        val data = getNotificationData.invoke()
+        val data = getNotificationData.invoke().mapToUiNotificationData()
         val currentTemp = data.currentTemp.removeUnits(DEGREES).toFloat().roundOff() + DEGREES
         // Notification layouts
         val notificationCollapsed = RemoteViews(context.packageName, R.layout.notification_collapsed).apply {

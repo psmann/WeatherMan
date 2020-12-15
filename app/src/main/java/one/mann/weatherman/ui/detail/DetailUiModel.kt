@@ -1,7 +1,7 @@
 package one.mann.weatherman.ui.detail
 
 import one.mann.domain.models.ErrorType
-import one.mann.domain.models.weather.Weather
+import one.mann.weatherman.ui.common.models.Weather
 
 /* Created by Psmann. */
 

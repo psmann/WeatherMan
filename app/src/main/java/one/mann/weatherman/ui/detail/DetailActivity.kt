@@ -3,9 +3,9 @@ package one.mann.weatherman.ui.detail
 import android.graphics.Color
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
+import one.mann.domain.models.Direction
 import one.mann.domain.models.ErrorType.NoInternet
 import one.mann.domain.models.ErrorType.NoResponse
-import one.mann.domain.models.Direction
 import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.api.openweathermap.isOvercast
@@ -51,11 +51,7 @@ internal class DetailActivity : BaseLocationActivity() {
         detailViewModel.uiModel.observe(::getLifecycle, ::observeUiModel)
         binding.apply {
             // Set up RecyclerView
-            detailRecyclerView.apply {
-                setHasFixedSize(true)
-                adapter = detailRecyclerAdapter
-                setSlideAnimation(Direction.UP)
-            }
+            detailRecyclerView.setHasFixedSize(true)
             // Set up the Swipe Refresh Layout
             detailSwipeLayout.apply {
                 setColorSchemeColors(Color.RED, Color.BLUE)
@@ -78,8 +74,15 @@ internal class DetailActivity : BaseLocationActivity() {
         }
         if (weatherData.size >= position + 1) {
             detailRecyclerAdapter.update(weatherData[position])
+            if (binding.detailRecyclerView.adapter != detailRecyclerAdapter) binding.detailRecyclerView.apply {
+                adapter = detailRecyclerAdapter
+                setSlideAnimation(Direction.UP)
+            }
             // Update activity background only if it changes after a data refresh
-            val newBackground = getGradient(weatherData[position].sunPosition, isOvercast(weatherData[position].iconId))
+            val newBackground = getGradient(
+                    weatherData[position].currentWeather.sunPosition,
+                    isOvercast(weatherData[position].currentWeather.iconId)
+            )
             if (newBackground != backgroundResource) binding.root.setBackgroundResource(newBackground)
         }
     }

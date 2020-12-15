@@ -9,10 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import one.mann.domain.models.weather.Weather
 import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.api.openweathermap.isOvercast
 import one.mann.weatherman.databinding.FragmentCityBinding
+import one.mann.weatherman.ui.common.models.Weather
 import one.mann.weatherman.ui.common.util.*
 import one.mann.weatherman.ui.detail.DetailActivity
 import one.mann.weatherman.ui.main.MainUiModel.State.Loading
@@ -99,11 +99,11 @@ internal class CityFragment : Fragment() {
     }
 
     private fun setupViews(weather: Weather) {
-        val newBackground = getGradient(weather.sunPosition, isOvercast(weather.iconId))
-        binding.cityWeatherIconImageView.loadIcon(weather.iconId, weather.sunPosition)
-        binding.cityCurrentTempTextView.text = weather.currentTemp
-        binding.cityTimeUpdatedTextView.text = weather.lastChecked
-        binding.cityNameTextView.text = weather.cityName
+        val newBackground = getGradient(weather.currentWeather.sunPosition, isOvercast(weather.currentWeather.iconId))
+        binding.cityWeatherIconImageView.loadIcon(weather.currentWeather.iconId, weather.currentWeather.sunPosition)
+        binding.cityCurrentTempTextView.text = weather.currentWeather.currentTemperature
+        binding.cityTimeUpdatedTextView.text = weather.currentWeather.lastChecked
+        binding.cityNameTextView.text = weather.city.cityName
         if (backgroundResources != newBackground) { // Update layout background only if it changes after a data refresh
             binding.root.setBackgroundResource(newBackground)
             backgroundResources = newBackground
