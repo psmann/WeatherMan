@@ -73,12 +73,9 @@ class WeatherRepository @Inject constructor(
                 // Update coordinates for user location
                 if (i == 0) {
                     citiesForUpdate.add(
-                            City(
-                                    cityId = dbCity.cityId,
+                            dbCity.copy(
                                     coordinatesLat = gpsLocation.coordinates[0],
                                     coordinatesLong = gpsLocation.coordinates[1],
-                                    timezone = dbCity.timezone,
-                                    timeCreated = dbCity.timeCreated
                             )
                     )
                 } else citiesForUpdate.add(dbCity)

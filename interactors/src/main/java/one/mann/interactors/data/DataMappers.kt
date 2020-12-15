@@ -24,12 +24,7 @@ internal fun mapToDomainWeather(
 
     hourlyForecasts.map {
         hourlyForecastsWithSunPosition.add(
-                HourlyForecast(
-                        it.forecastTime,
-                        it.temperature,
-                        it.forecastIconId,
-                        sunPositionBias(sunriseTime, sunsetTime, epochToMinutes(it.forecastTime, city.timezone))
-                )
+                it.copy(sunPosition = sunPositionBias(sunriseTime, sunsetTime, epochToMinutes(it.forecastTime, city.timezone)))
         )
     }
 
