@@ -9,14 +9,9 @@ TODO:
  Bugs:
   1) The same city can be added multiple times
   2) Deleting one city also removes any other city having the same name
- Implement Coroutine Flow for LiveData
- Add tests for all modules
- Write and test Proguard rules - WIP
- Add more weather data parameters (detailed forecasts, maps, UV index, etc)
  Handle navBar hidden usecase (screen layouts should resize accordingly to fill the empty space)
+ Add tests for all modules
  Implement CI/CD (Jenkins or CircleCI)
- Implement Crashlytics (Firebase)
- Add comments to domain model classes
 */
 
 /*
@@ -28,4 +23,5 @@ DONE:
  Handle all network responses from API calls explicitly
  Migrate ViewPager to ViewPager2
  Get weather for current location (instead of previous saved location) in notifications if GPS is enabled on device
+ Write and test Proguard rules
 */
