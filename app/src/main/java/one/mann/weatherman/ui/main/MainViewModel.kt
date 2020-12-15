@@ -11,8 +11,8 @@ import kotlinx.coroutines.Dispatchers.IO
 import one.mann.domain.models.ErrorType.*
 import one.mann.domain.models.ViewPagerUpdateType
 import one.mann.domain.models.location.Location
-import one.mann.domain.models.location.LocationResponse
-import one.mann.domain.models.location.LocationResponse.*
+import one.mann.domain.models.location.LocationServicesResponse
+import one.mann.domain.models.location.LocationServicesResponse.*
 import one.mann.domain.models.location.LocationType
 import one.mann.domain.models.location.LocationType.DB
 import one.mann.domain.models.location.LocationType.DEVICE
@@ -33,6 +33,7 @@ internal class MainViewModel @Inject constructor(
         private val removeCity: RemoveCity,
         private val updateWeather: UpdateWeather,
         private val getCitySearch: GetCitySearch,
+        private val changeUnits: ChangeUnits,
         private val settingsPrefs: SharedPreferences,
         private val workManager: WorkManager
 ) : BaseViewModel(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -53,7 +54,7 @@ internal class MainViewModel @Inject constructor(
         }
     }
 
-    fun handleRefreshing(response: LocationResponse, firstRun: Boolean) {
+    fun handleRefreshing(response: LocationServicesResponse, firstRun: Boolean) {
         when (response) {
             NO_NETWORK -> _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoInternet))
             ENABLED -> if (firstRun) addCity() else updateWeather(DEVICE)
@@ -165,7 +166,7 @@ internal class MainViewModel @Inject constructor(
         launch(IO) {
             when (key) { // All Settings are handled here, ideally this should be done in SettingsActivity
                 SETTINGS_UNITS_KEY -> { // Change units and update UI
-//                    changeUnits.invoke() // TODO: Re-implement
+                    changeUnits.invoke()
                     updateUI()
                 }
                 SETTINGS_NOTIFICATIONS_KEY -> if (sharedPreferences!!.getBoolean(key, true)) { // Start-Stop notifications

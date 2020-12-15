@@ -19,8 +19,8 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes.RESOLUTION_REQUIRED
 import com.google.android.gms.location.LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE
-import one.mann.domain.models.location.LocationResponse
-import one.mann.domain.models.location.LocationResponse.*
+import one.mann.domain.models.location.LocationServicesResponse
+import one.mann.domain.models.location.LocationServicesResponse.*
 import one.mann.weatherman.ui.common.util.isConnected
 
 /* Created by Psmann. */
@@ -31,7 +31,7 @@ internal abstract class BaseLocationActivity : AppCompatActivity() {
     companion object {
         private const val LOCATION_REQUEST_CODE = 1011
         private var locationPermissionListener: (Boolean) -> Unit = {} // Delegate function object to activity callback
-        private var networkAndLocationListener: (LocationResponse) -> Unit = {} // Delegate function object to activity callback
+        private var networkAndLocationListener: (LocationServicesResponse) -> Unit = {} // Delegate function object to activity callback
         private val locationRequestBuilder = LocationSettingsRequest.Builder()
                 .addLocationRequest(LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY))
     }
@@ -70,7 +70,7 @@ internal abstract class BaseLocationActivity : AppCompatActivity() {
     }
 
     /** Check status of location services and handle in lambda */
-    protected fun checkLocationService(prompt: Boolean = false, result: (LocationResponse) -> Unit) {
+    protected fun checkLocationService(prompt: Boolean = false, result: (LocationServicesResponse) -> Unit) {
         if (!isConnected()) {
             result(NO_NETWORK)
             return

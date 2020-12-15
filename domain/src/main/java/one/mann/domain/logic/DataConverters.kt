@@ -22,14 +22,14 @@ fun String.removeUnits(vararg units: String): String {
 }
 
 /** Set units to Imperial or Metric when data is fetched from API */
-fun Float.setUnits(units: String, type: UnitsType) = when (type) {
+fun Float.setUnits(units: String, type: UnitsType): Float = when (type) {
     TEMPERATURE -> String.format("%.1f", if (units == IMPERIAL) ((this * 1.8) + 32) else this).toFloat()
     WIND -> String.format("%.1f", if (units == IMPERIAL) (this * 2.237) else (this * 3.6)).toFloat()
     VISIBILITY -> String.format("%.1f", if (units == IMPERIAL) (this / 1609.344) else (this / 1000)).toFloat()
 }
 
 /** Change units to Imperial or Metric when changed from Settings */
-fun Float.changeUnits(units: String, type: UnitsType) = when (type) {
+fun Float.changeUnits(units: String, type: UnitsType): Float = when (type) {
     TEMPERATURE -> String.format("%.1f", if (units == IMPERIAL) ((this * 1.8) + 32) else (this - 32) * 0.556).toFloat()
     WIND -> String.format("%.1f", if (units == IMPERIAL) (this / 1.609) else (this * 1.609)).toFloat()
     VISIBILITY -> String.format("%.1f", if (units == IMPERIAL) (this / 1.609) else (this * 1.609)).toFloat()

@@ -5,6 +5,7 @@ import one.mann.domain.models.location.Location
 import one.mann.domain.models.location.LocationType
 import one.mann.domain.models.weather.City
 import one.mann.domain.models.weather.Weather
+import one.mann.interactors.data.applyUnits
 import one.mann.interactors.data.mapToDomainWeather
 import one.mann.interactors.data.sources.api.TimezoneDataSource
 import one.mann.interactors.data.sources.api.WeatherDataSource
@@ -45,7 +46,7 @@ class WeatherRepository @Inject constructor(
                         weatherData.getCurrentWeather(location),
                         weatherData.getDailyForecast(location),
                         weatherData.getHourlyForecast(location),
-                )
+                ).applyUnits(prefsData.getUnits(), true)
         )
     }
 
@@ -94,7 +95,7 @@ class WeatherRepository @Inject constructor(
                                 weatherData.getCurrentWeather(location),
                                 weatherData.getDailyForecast(location),
                                 weatherData.getHourlyForecast(location)
-                        )
+                        ).applyUnits(prefsData.getUnits(), true)
                 )
             }
             update(weathers)
