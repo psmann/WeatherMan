@@ -35,14 +35,14 @@ internal fun mapToDomainWeather(
 
     return Weather(
             city,
-            currentWeather,
+            currentWeather.copy(countryFlag = countryCodeToEmoji(currentWeather.countryFlag)),
             dailyForecasts,
             hourlyForecastsWithSunPosition,
             feelsLike(currentWeather.currentTemperature, currentWeather.humidity, currentWeather.windSpeed),
             lengthOfDay(currentWeather.sunrise, currentWeather.sunset),
             System.currentTimeMillis(),
             sunPositionBias(sunriseTime, sunsetTime, epochToMinutes(System.currentTimeMillis(), city.timezone)),
-    )
+    ).applyUnits(currentWeather.units, true)
 }
 
 /** Apply units (Imperial or Metric) to weather parameters */
@@ -50,14 +50,23 @@ internal fun Weather.applyUnits(units: String, isDataFromApi: Boolean): Weather 
     // Use setUnits() if data is retrieved from the API, otherwise use changeUnits()
     fun Float.set(units: String, type: UnitsType): Float = if (isDataFromApi) setUnits(units, type) else changeUnits(units, type)
 
-    currentWeather.currentTemperature.set(units, TEMPERATURE)
-    currentWeather.windSpeed.set(units, WIND)
-    currentWeather.visibility.set(units, VISIBILITY)
-    dailyForecasts.map {
-        it.maxTemp.set(units, TEMPERATURE)
-        it.minTemp.set(units, TEMPERATURE)
+    val currentWeatherWithUnits = currentWeather.copy(
+            currentTemperature = currentWeather.currentTemperature.set(units, TEMPERATURE),
+            windSpeed = currentWeather.windSpeed.set(units, WIND),
+            visibility = currentWeather.visibility.set(units, VISIBILITY)
+    )
+    val dailyForecastsWithUnits = dailyForecasts.map {
+        it.copy(
+                minTemp = it.minTemp.set(units, TEMPERATURE),
+                maxTemp = it.maxTemp.set(units, TEMPERATURE)
+        )
     }
-    hourlyForecasts.map { it.temperature.set(units, TEMPERATURE) }
-    feelsLike.set(units, TEMPERATURE)
-    return this
+    val hourlyForecastsWithUnits = hourlyForecasts.map { it.copy(temperature = it.temperature.set(units, TEMPERATURE)) }
+
+    return copy(
+            currentWeather = currentWeatherWithUnits,
+            dailyForecasts = dailyForecastsWithUnits,
+            hourlyForecasts = hourlyForecastsWithUnits,
+            feelsLike = feelsLike.set(units, TEMPERATURE)
+    )
 }
