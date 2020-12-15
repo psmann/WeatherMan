@@ -5,7 +5,6 @@ import one.mann.domain.models.location.Location
 import one.mann.domain.models.location.LocationType
 import one.mann.domain.models.weather.City
 import one.mann.domain.models.weather.Weather
-import one.mann.interactors.data.applyUnits
 import one.mann.interactors.data.mapToDomainWeather
 import one.mann.interactors.data.sources.api.TimezoneDataSource
 import one.mann.interactors.data.sources.api.WeatherDataSource
@@ -34,6 +33,7 @@ class WeatherRepository @Inject constructor(
     suspend fun create(apiLocation: Location? = null) {
         val location = apiLocation ?: deviceLocation.getLocation() // Use device GPS location if null
         val timeCreated = System.currentTimeMillis()
+        val currentWeather = weatherData.getCurrentWeather(location).copy(units = prefsData.getUnits())
         dbData.insertWeather(
                 mapToDomainWeather(
                         City(
@@ -43,10 +43,10 @@ class WeatherRepository @Inject constructor(
                                 timezoneData.getTimezone(location),
                                 timeCreated
                         ),
-                        weatherData.getCurrentWeather(location),
+                        currentWeather,
                         weatherData.getDailyForecast(location),
-                        weatherData.getHourlyForecast(location),
-                ).applyUnits(prefsData.getUnits(), true)
+                        weatherData.getHourlyForecast(location)
+                )
         )
     }
 
@@ -89,13 +89,14 @@ class WeatherRepository @Inject constructor(
             val weathers = mutableListOf<Weather>()
             citiesForUpdate.forEach {
                 val location = Location(listOf(it.coordinatesLat, it.coordinatesLong))
+                val currentWeather = weatherData.getCurrentWeather(location).copy(units = prefsData.getUnits())
                 weathers.add(
                         mapToDomainWeather(
                                 it,
-                                weatherData.getCurrentWeather(location),
+                                currentWeather,
                                 weatherData.getDailyForecast(location),
                                 weatherData.getHourlyForecast(location)
-                        ).applyUnits(prefsData.getUnits(), true)
+                        )
                 )
             }
             update(weathers)
