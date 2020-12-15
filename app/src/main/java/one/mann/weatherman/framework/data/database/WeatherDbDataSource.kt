@@ -24,11 +24,11 @@ internal class WeatherDbDataSource @Inject constructor(db: WeatherDb) : Database
     override suspend fun getAllCities(): List<City> = dao.getAllCities().map { it.mapToDomainCity() }
 
     override suspend fun getNotificationData(): NotificationData {
-        val cityName = dao.getCityNameForUserLocation()
-        val todayForecast = dao.getTodayForecastForUserLocation()
-        val currentWeatherWithHourlyForecasts = dao.getHourlyForecastsForUserLocation()
+        val userCity = dao.getCityNameForUserLocation()
+        val todayForecast = dao.getTodayForecastForUserLocation(userCity.cityId)
+        val currentWeatherWithHourlyForecasts = dao.getHourlyForecastsForUserLocation(userCity.cityId)
 
-        return currentWeatherWithHourlyForecasts.mapToDomain(cityName, todayForecast)
+        return currentWeatherWithHourlyForecasts.mapToDomain(userCity.cityName, todayForecast)
     }
 
     override suspend fun getAllWeather(): List<Weather> {

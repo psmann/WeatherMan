@@ -44,19 +44,19 @@ internal interface WeatherDao {
     @Query("SELECT * FROM City WHERE cityId = :cityId")
     suspend fun getCDailyForecasts(cityId: String): CityWithDailyForecasts
 
-    /** Returns the cityName for user location */
-    @Query("SELECT cityName FROM City WHERE MIN(timeCreated)")
-    suspend fun getCityNameForUserLocation(): String
+    /** Returns the City for user location */
+    @Query("SELECT * FROM City WHERE timeCreated = (SELECT MIN(timeCreated) FROM City)")
+    suspend fun getCityNameForUserLocation(): City
 
     /** Gets today's forecast for user location */
     @Transaction
-    @Query("SELECT * FROM DailyForecast WHERE cityId IN (SELECT cityId FROM City WHERE MIN(timeCreated)) AND MIN(date)")
-    suspend fun getTodayForecastForUserLocation(): DailyForecast
+    @Query("SELECT * FROM DailyForecast WHERE cityId = :cityId")
+    suspend fun getTodayForecastForUserLocation(cityId: String): DailyForecast
 
     /** Gets CurrentWeather and HourlyForecast for user location */
     @Transaction
-    @Query("SELECT * FROM CurrentWeather WHERE cityId IN (SELECT cityId FROM City WHERE MIN(timeCreated))")
-    suspend fun getHourlyForecastsForUserLocation(): CurrentWeatherWithHourlyForecasts
+    @Query("SELECT * FROM CurrentWeather WHERE cityId = :cityId")
+    suspend fun getHourlyForecastsForUserLocation(cityId: String): CurrentWeatherWithHourlyForecasts
 
     /** Updates City entity */
     @Update(onConflict = OnConflictStrategy.REPLACE)
