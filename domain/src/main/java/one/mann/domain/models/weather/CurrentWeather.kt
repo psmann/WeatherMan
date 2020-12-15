@@ -16,5 +16,6 @@ data class CurrentWeather(
         val windSpeed: Float = 0f,
         val windDirection: Int = 0,
         var lastUpdated: Long = 0,
-        val visibility: Float = 0f
+        val visibility: Float = 0f,
+        val units: String = ""
 )
