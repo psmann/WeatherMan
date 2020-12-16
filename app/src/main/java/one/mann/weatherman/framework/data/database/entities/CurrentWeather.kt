@@ -1,11 +1,12 @@
 package one.mann.weatherman.framework.data.database.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 /* Created by Psmann. */
 
-@Entity
+@Entity()
 internal data class CurrentWeather(
         @PrimaryKey(autoGenerate = true) val weatherId: Int = 0,
         val currentTemperature: Float,

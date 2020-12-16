@@ -15,6 +15,7 @@ import one.mann.weatherman.api.openweathermap.dto.HourlyForecast as ApiHourlyFor
 
 /** Map API OWM CurrentWeather to Domain, all parameters are nullable and are given default values */
 internal fun ApiCurrentWeather.mapToDomain(): DomainCurrentWeather = DomainCurrentWeather(
+        0,
         name ?: "Earth",
         main?.temp ?: 0f,
         main?.pressure?.toInt() ?: 0,
@@ -33,6 +34,7 @@ internal fun ApiCurrentWeather.mapToDomain(): DomainCurrentWeather = DomainCurre
 
 /** Map API OWM HourlyForecast to Domain, all parameters are nullable and are given default values */
 internal fun ApiHourlyForecast.ListObject?.mapToDomain(): DomainHourlyForecast = DomainHourlyForecast(
+        0,
         this?.dt?.times(1000) ?: 1000000000000,
         this?.main?.temp ?: 0f,
         this?.weather?.get(0)?.id ?: 0
@@ -40,6 +42,7 @@ internal fun ApiHourlyForecast.ListObject?.mapToDomain(): DomainHourlyForecast =
 
 /** Map API OWM DailyForecast to Domain, all parameters are nullable and are given default values */
 internal fun ApiDailyForecast.ListObject?.mapToDomain(): DomainDailyForecast = DomainDailyForecast(
+        0,
         this?.dt?.times(1000) ?: 1000000000000,
         this?.temp?.min ?: 0f,
         this?.temp?.max ?: 0f,

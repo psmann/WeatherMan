@@ -7,9 +7,6 @@ import one.mann.domain.models.weather.*
 
 /* Created by Psmann. */
 
-/** Update lastChecked for the Weather model */
-internal fun Weather.updateLastChecked(): Weather = copy(lastChecked = System.currentTimeMillis())
-
 /** Transform API data and map to domain Weather model */
 internal fun mapToDomainWeather(
         city: City,

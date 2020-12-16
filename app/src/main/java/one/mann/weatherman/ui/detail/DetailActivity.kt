@@ -2,6 +2,7 @@ package one.mann.weatherman.ui.detail
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import one.mann.domain.models.Direction
 import one.mann.domain.models.ErrorType.NoInternet
@@ -50,8 +51,6 @@ internal class DetailActivity : BaseLocationActivity() {
         }
         detailViewModel.uiModel.observe(::getLifecycle, ::observeUiModel)
         binding.apply {
-            // Set up RecyclerView
-            detailRecyclerView.setHasFixedSize(true)
             // Set up the Swipe Refresh Layout
             detailSwipeLayout.apply {
                 setColorSchemeColors(Color.RED, Color.BLUE)
@@ -75,7 +74,9 @@ internal class DetailActivity : BaseLocationActivity() {
         if (weatherData.size >= position + 1) {
             detailRecyclerAdapter.update(weatherData[position])
             if (binding.detailRecyclerView.adapter != detailRecyclerAdapter) binding.detailRecyclerView.apply {
+                setHasFixedSize(true)
                 adapter = detailRecyclerAdapter
+                visibility = View.VISIBLE
                 setSlideAnimation(Direction.UP)
             }
             // Update activity background only if it changes after a data refresh

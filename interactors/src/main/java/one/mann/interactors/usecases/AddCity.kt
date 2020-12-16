@@ -8,5 +8,5 @@ import javax.inject.Inject
 
 class AddCity @Inject constructor(private val weatherRepository: WeatherRepository) {
 
-    suspend fun invoke(apiLocation: Location? = null) = weatherRepository.create(apiLocation)
+    suspend fun invoke(apiLocation: Location? = null) = weatherRepository.createCity(apiLocation)
 }

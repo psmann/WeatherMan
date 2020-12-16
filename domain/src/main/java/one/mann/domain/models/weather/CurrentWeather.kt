@@ -3,6 +3,7 @@ package one.mann.domain.models.weather
 /* Created by Psmann. */
 
 data class CurrentWeather(
+        val weatherId: Int = 0,
         val cityName: String = "",
         val currentTemperature: Float = 0f,
         val pressure: Int = 0,

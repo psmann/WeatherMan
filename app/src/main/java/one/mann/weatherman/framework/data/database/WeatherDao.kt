@@ -9,21 +9,29 @@ import one.mann.weatherman.framework.data.database.entities.relations.*
 @Dao
 internal interface WeatherDao {
 
-    /** Inserts a new City */
+    /** Inserts a City */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCity(city: City)
 
-    /** Inserts a new CurrentWeather */
+    /** Inserts a CurrentWeather */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCurrentWeather(currentWeather: CurrentWeather)
 
-    /** Inserts a new list of HourlyForecast */
+    /** Inserts a list of CurrentWeathers */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllCurrentWeathers(currentWeathers: List<CurrentWeather>)
+
+    /** Inserts a list of HourlyForecast */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertHourlyForecasts(hourlyForecasts: List<HourlyForecast>)
 
-    /** Inserts a new list of DailyForecast */
+    /** Inserts a list of DailyForecast */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertDailyForecasts(dailyForecasts: List<DailyForecast>)
+
+    /** Gets user city */
+    @Query("SELECT * FROM City ORDER BY timeCreated ASC LIMIT 1")
+    suspend fun getUserCity(): City
 
     /** Gets all cities */
     @Query("SELECT * FROM City ORDER BY timeCreated ASC")
@@ -33,6 +41,10 @@ internal interface WeatherDao {
     @Transaction
     @Query("SELECT * FROM City WHERE cityId = :cityId")
     suspend fun getCurrentWeather(cityId: String): CityWithCurrentWeather
+
+    /** Gets all CurrentWeathers */
+    @Query("SELECT * FROM CurrentWeather")
+    suspend fun getAllCurrentWeather(): List<CurrentWeather>
 
     /** Gets HourlyForecasts for a City */
     @Transaction
@@ -59,6 +71,10 @@ internal interface WeatherDao {
     suspend fun getHourlyForecastsForUserLocation(cityId: String): CurrentWeatherWithHourlyForecasts
 
     /** Updates City entity */
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateCity(city: City)
+
+    /** Updates City entities */
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateCities(cities: List<City>)
 

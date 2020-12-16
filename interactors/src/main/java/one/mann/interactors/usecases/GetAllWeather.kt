@@ -8,5 +8,5 @@ import javax.inject.Inject
 
 class GetAllWeather @Inject constructor(private val weatherRepository: WeatherRepository) {
 
-    suspend fun invoke(): List<Weather> = weatherRepository.read()
+    suspend fun invoke(): List<Weather> = weatherRepository.readAllWeather()
 }

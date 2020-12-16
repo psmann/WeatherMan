@@ -11,7 +11,6 @@ import one.mann.interactors.data.sources.api.WeatherDataSource
 import one.mann.interactors.data.sources.framework.DatabaseDataSource
 import one.mann.interactors.data.sources.framework.DeviceLocationSource
 import one.mann.interactors.data.sources.framework.PreferencesDataSource
-import one.mann.interactors.data.updateLastChecked
 import java.util.*
 import javax.inject.Inject
 
@@ -30,7 +29,7 @@ class WeatherRepository @Inject constructor(
     }
 
     /** Insert new city in the database */
-    suspend fun create(apiLocation: Location? = null) {
+    suspend fun createCity(apiLocation: Location? = null) {
         val location = apiLocation ?: deviceLocation.getLocation() // Use device GPS location if null
         val timeCreated = System.currentTimeMillis()
         val currentWeather = weatherData.getCurrentWeather(location).copy(units = prefsData.getUnits())
@@ -51,55 +50,60 @@ class WeatherRepository @Inject constructor(
     }
 
     /** Returns a list of all Weather data from the database */
-    suspend fun read(): List<Weather> = dbData.getAllWeather()
+    suspend fun readAllWeather(): List<Weather> = dbData.getAllWeather()
 
     /** Update all rows in the database with new data */
-    suspend fun update(weatherData: List<Weather>) = dbData.updateAllWeather(weatherData)
+    suspend fun updateAllWeather(weatherData: List<Weather>) = dbData.updateAllWeather(weatherData)
 
     /** Remove a row from the database */
-    suspend fun delete(cityId: String) = dbData.deleteWeather(cityId)
+    suspend fun deleteCity(cityId: String) = dbData.deleteCity(cityId)
 
     /** Returns notification data */
     suspend fun readNotificationData(): NotificationData = dbData.getNotificationData()
 
     /** Update weather from server if syncFromServer() is true, otherwise only update lastChecked value */
-    suspend fun updateAll(locationType: LocationType): Boolean {
-        val citiesForUpdate = mutableListOf<City>()
-        val citiesFromDb = dbData.getAllCities()
+    suspend fun updateAllData(locationType: LocationType): Boolean {
+        val gpsLocation = if (locationType == LocationType.DEVICE) deviceLocation.getLocation() else null
 
-        if (locationType == LocationType.DEVICE) {
-            val gpsLocation = deviceLocation.getLocation()
-            citiesFromDb.mapIndexed { i, dbCity ->
-                // Update coordinates for user location
-                if (i == 0) {
-                    citiesForUpdate.add(
-                            dbCity.copy(
-                                    coordinatesLat = gpsLocation.coordinates[0],
-                                    coordinatesLong = gpsLocation.coordinates[1],
-                            )
-                    )
-                } else citiesForUpdate.add(dbCity)
-            }
-        } else citiesFromDb.map { citiesForUpdate.add(it) }
+        gpsLocation?.let { dbData.updateUserCity(it) }
 
         return if (syncFromServer()) {
-            val weathers = mutableListOf<Weather>()
-            citiesForUpdate.forEach {
-                val location = Location(listOf(it.coordinatesLat, it.coordinatesLong))
-                val currentWeather = weatherData.getCurrentWeather(location).copy(units = prefsData.getUnits())
-                weathers.add(
+            val weathersFromDb = readAllWeather()
+            val weathersForUpdate = mutableListOf<Weather>()
+            weathersFromDb.forEachIndexed { i, dbWeather ->
+                val cityForUpdate = if (i == 0 && gpsLocation != null) {
+                    dbWeather.city.copy(
+                            coordinatesLat = gpsLocation.coordinates[0],
+                            coordinatesLong = gpsLocation.coordinates[1]
+                    )
+                } else dbWeather.city
+                val location = Location(coordinates = listOf(cityForUpdate.coordinatesLat, cityForUpdate.coordinatesLong))
+                val currentWeatherForUpdate = weatherData.getCurrentWeather(location).copy(
+                        weatherId = dbWeather.currentWeather.weatherId,
+                        units = prefsData.getUnits()
+                )
+                val dailyForecastsForUpdate = weatherData.getDailyForecast(location).toMutableList()
+                val hourlyForecastsForUpdate = weatherData.getHourlyForecast(location).toMutableList()
+
+                dbWeather.dailyForecasts.mapIndexed { index, dbDailyForecast ->
+                    dailyForecastsForUpdate[index].copy(dailyId = dbDailyForecast.dailyId)
+                }
+                dbWeather.hourlyForecasts.mapIndexed { index, dbHourlyForecast ->
+                    hourlyForecastsForUpdate[index].copy(hourlyId = dbHourlyForecast.hourlyId)
+                }
+                weathersForUpdate.add(
                         mapToDomainWeather(
-                                it,
-                                currentWeather,
-                                weatherData.getDailyForecast(location),
-                                weatherData.getHourlyForecast(location)
+                                cityForUpdate,
+                                currentWeatherForUpdate,
+                                dailyForecastsForUpdate,
+                                hourlyForecastsForUpdate
                         )
                 )
             }
-            update(weathers)
+            updateAllWeather(weathersForUpdate)
             true
         } else {
-            update(read().map { it.updateLastChecked() })
+            dbData.updateLastChecked(System.currentTimeMillis())
             false
         }
     }
