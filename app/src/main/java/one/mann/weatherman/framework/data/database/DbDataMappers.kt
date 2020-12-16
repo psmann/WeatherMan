@@ -11,16 +11,14 @@ import one.mann.domain.models.weather.Weather as DomainWeather
 
 /* Created by Psmann. */
 
-internal fun DomainWeather.mapToDbCity(): City {
-    return City(
-            city.cityId,
-            currentWeather.cityName,
-            city.coordinatesLat,
-            city.coordinatesLong,
-            city.timezone,
-            city.timeCreated
-    )
-}
+internal fun DomainWeather.mapToDbCity(): City = City(
+        city.cityId,
+        currentWeather.cityName,
+        city.coordinatesLat,
+        city.coordinatesLong,
+        city.timezone,
+        city.timeCreated
+)
 
 internal fun DomainWeather.mapToDbCurrentWeather(): CurrentWeather = CurrentWeather(
         currentWeather.weatherId,
@@ -116,7 +114,6 @@ internal fun City.mapToDomainWeather(
                 )
         )
     }
-
     return DomainWeather(
             DomainCity(
                     cityId,
