@@ -72,14 +72,8 @@ class WeatherRepository @Inject constructor(
         return if (syncFromServer()) {
             val weathersFromDb = readAllWeather()
             val weathersForUpdate = mutableListOf<Weather>()
-            weathersFromDb.forEachIndexed { i, dbWeather ->
-                val cityForUpdate = if (i == 0 && gpsLocation != null) {
-                    dbWeather.city.copy(
-                            coordinatesLat = gpsLocation.coordinates[0],
-                            coordinatesLong = gpsLocation.coordinates[1]
-                    )
-                } else dbWeather.city
-                val location = Location(coordinates = listOf(cityForUpdate.coordinatesLat, cityForUpdate.coordinatesLong))
+            weathersFromDb.forEach { dbWeather ->
+                val location = Location(coordinates = listOf(dbWeather.city.coordinatesLat, dbWeather.city.coordinatesLong))
                 val currentWeatherForUpdate = weatherData.getCurrentWeather(location).copy(
                         weatherId = dbWeather.currentWeather.weatherId,
                         units = prefsData.getUnits()
@@ -87,15 +81,15 @@ class WeatherRepository @Inject constructor(
                 val dailyForecastsForUpdate = weatherData.getDailyForecast(location).toMutableList()
                 val hourlyForecastsForUpdate = weatherData.getHourlyForecast(location).toMutableList()
 
-                dbWeather.dailyForecasts.mapIndexed { index, dbDailyForecast ->
-                    dailyForecastsForUpdate[index].copy(dailyId = dbDailyForecast.dailyId)
+                dbWeather.dailyForecasts.mapIndexed { i, dbDailyForecast ->
+                    dailyForecastsForUpdate[i].copy(dailyId = dbDailyForecast.dailyId)
                 }
-                dbWeather.hourlyForecasts.mapIndexed { index, dbHourlyForecast ->
-                    hourlyForecastsForUpdate[index].copy(hourlyId = dbHourlyForecast.hourlyId)
+                dbWeather.hourlyForecasts.mapIndexed { i, dbHourlyForecast ->
+                    hourlyForecastsForUpdate[i].copy(hourlyId = dbHourlyForecast.hourlyId)
                 }
                 weathersForUpdate.add(
                         mapToDomainWeather(
-                                cityForUpdate,
+                                dbWeather.city,
                                 currentWeatherForUpdate,
                                 dailyForecastsForUpdate,
                                 hourlyForecastsForUpdate
