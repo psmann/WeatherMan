@@ -40,7 +40,6 @@ internal class WeatherDbDataSource @Inject constructor(db: WeatherDb) : Database
             val hourlyForecasts = dao.getHourlyForecasts(it.cityId).getSortedForecast()
             weathers.add(it.mapToDomainWeather(currentWeather, dailyForecasts, hourlyForecasts))
         }
-
         return weathers
     }
 
@@ -62,7 +61,6 @@ internal class WeatherDbDataSource @Inject constructor(db: WeatherDb) : Database
         val currentWeathersDb = mutableListOf<CurrentWeather>()
         val dailyForecastsDb = mutableListOf<DailyForecast>()
         val hourlyForecastsDb = mutableListOf<HourlyForecast>()
-
         weathers.forEach {
             citiesDb.add(it.mapToDbCity())
             currentWeathersDb.add(it.mapToDbCurrentWeather())
