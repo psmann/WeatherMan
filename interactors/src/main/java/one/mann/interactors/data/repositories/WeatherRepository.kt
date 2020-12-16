@@ -50,7 +50,9 @@ class WeatherRepository @Inject constructor(
     }
 
     /** Returns a list of all Weather data from the database */
-    suspend fun readAllWeather(): List<Weather> = dbData.getAllWeather()
+    suspend fun readAllWeather(): List<Weather> {
+        return dbData.getAllWeather().map { it.copy(currentWeather = it.currentWeather.copy(units = prefsData.getUnits())) }
+    }
 
     /** Update all rows in the database with new data */
     suspend fun updateAllWeather(weatherData: List<Weather>) = dbData.updateAllWeather(weatherData)
