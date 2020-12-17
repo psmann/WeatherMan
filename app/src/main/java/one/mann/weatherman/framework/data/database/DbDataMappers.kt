@@ -47,7 +47,7 @@ internal fun DomainWeather.mapToDbDailyForecasts(): List<DailyForecast> {
     dailyForecasts.map {
         dailyForecastsForDb.add(
                 DailyForecast(
-                        0,
+                        it.dailyId,
                         it.forecastDate,
                         it.minTemp,
                         it.maxTemp,
@@ -64,7 +64,7 @@ internal fun DomainWeather.mapToDbHourlyForecasts(): List<HourlyForecast> {
     hourlyForecasts.map {
         hourlyForecastsForDb.add(
                 HourlyForecast(
-                        0,
+                        it.hourlyId,
                         it.forecastTime,
                         it.temperature,
                         it.forecastIconId,

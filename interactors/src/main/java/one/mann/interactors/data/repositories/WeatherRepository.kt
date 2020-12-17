@@ -72,20 +72,20 @@ class WeatherRepository @Inject constructor(
         return if (syncFromServer()) {
             val weathersFromDb = readAllWeather()
             val weathersForUpdate = mutableListOf<Weather>()
+
             weathersFromDb.forEach { dbWeather ->
                 val location = Location(coordinates = listOf(dbWeather.city.coordinatesLat, dbWeather.city.coordinatesLong))
                 val currentWeatherForUpdate = weatherData.getCurrentWeather(location).copy(
                         weatherId = dbWeather.currentWeather.weatherId,
                         units = prefsData.getUnits()
                 )
-                val dailyForecastsForUpdate = weatherData.getDailyForecast(location).toMutableList()
-                val hourlyForecastsForUpdate = weatherData.getHourlyForecast(location).toMutableList()
-
-                dbWeather.dailyForecasts.mapIndexed { i, dbDailyForecast ->
-                    dailyForecastsForUpdate[i].copy(dailyId = dbDailyForecast.dailyId)
+                val dailyForecastsFromApi = weatherData.getDailyForecast(location)
+                val hourlyForecastsFromApi = weatherData.getHourlyForecast(location)
+                val dailyForecastsForUpdate = dbWeather.dailyForecasts.mapIndexed { i, dbDailyForecast ->
+                    dailyForecastsFromApi[i].copy(dailyId = dbDailyForecast.dailyId)
                 }
-                dbWeather.hourlyForecasts.mapIndexed { i, dbHourlyForecast ->
-                    hourlyForecastsForUpdate[i].copy(hourlyId = dbHourlyForecast.hourlyId)
+                val hourlyForecastsForUpdate = dbWeather.hourlyForecasts.mapIndexed { i, dbHourlyForecast ->
+                    hourlyForecastsFromApi[i].copy(hourlyId = dbHourlyForecast.hourlyId)
                 }
                 weathersForUpdate.add(
                         mapToDomainWeather(
