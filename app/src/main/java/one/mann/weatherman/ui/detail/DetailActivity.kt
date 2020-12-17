@@ -1,8 +1,10 @@
 package one.mann.weatherman.ui.detail
 
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.ViewModelProvider
 import one.mann.domain.models.Direction
 import one.mann.domain.models.ErrorType.NoInternet
@@ -15,6 +17,7 @@ import one.mann.weatherman.ui.common.base.BaseLocationActivity
 import one.mann.weatherman.ui.common.util.*
 import one.mann.weatherman.ui.detail.adapters.DetailRecyclerAdapter
 import javax.inject.Inject
+
 
 /* Created by Psmann. */
 
@@ -53,6 +56,7 @@ internal class DetailActivity : BaseLocationActivity() {
         binding.apply {
             // Set up the Swipe Refresh Layout
             detailSwipeLayout.apply {
+                adjustLayoutHeight()
                 setColorSchemeColors(Color.RED, Color.BLUE)
                 setOnRefreshListener { handleLocationServiceResult() }
             }
@@ -85,6 +89,23 @@ internal class DetailActivity : BaseLocationActivity() {
                     isOvercast(weatherData[position].currentWeather.iconId)
             )
             if (newBackground != backgroundResource) binding.root.setBackgroundResource(newBackground)
+        }
+    }
+
+    /** Set correct StatusBar and NavigationBar heights */
+    private fun View.adjustLayoutHeight() {
+        val density = resources.displayMetrics.density.toInt()
+        val statusBarId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+        val navBarId = resources.getIdentifier("status_bar_height", "dimen", "android")
+
+        this.apply {
+            val params = layoutParams as CoordinatorLayout.LayoutParams
+            params.topMargin = if (statusBarId > 0) resources.getDimensionPixelSize(statusBarId) else 48 * density
+            params.bottomMargin = when (resources.configuration.orientation) {
+                Configuration.ORIENTATION_PORTRAIT -> if (navBarId > 0) resources.getDimensionPixelSize(navBarId) else 0
+                else -> 0
+            }
+            layoutParams = params
         }
     }
 }

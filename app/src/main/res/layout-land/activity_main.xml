@@ -37,7 +37,9 @@
     <View
         android:id="@+id/snackbar_anchor"
         android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_gravity="bottom" />
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
