@@ -97,7 +97,7 @@ internal abstract class BaseLocationActivity : AppCompatActivity() {
     }
 
     /** Toast extension function to be used only in activity scope with String Resources and an optional string */
-    protected fun Context.toast(@StringRes msg: Int, errorMessage: String = "") {
-        Toast.makeText(this, "${this.resources.getText(msg)}$errorMessage", Toast.LENGTH_SHORT).show()
+    protected fun Context.toast(@StringRes msg: Int, length: Int = Toast.LENGTH_SHORT, errorMessage: String = "") {
+        Toast.makeText(this, "${this.resources.getText(msg)}$errorMessage", length).show()
     }
 }

@@ -8,6 +8,7 @@ import androidx.work.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
+import one.mann.domain.logic.coordinatesInString
 import one.mann.domain.models.ErrorType.*
 import one.mann.domain.models.ViewPagerUpdateType
 import one.mann.domain.models.location.Location
@@ -77,6 +78,18 @@ internal class MainViewModel @Inject constructor(
 
     fun addCity(apiLocation: Location? = null) {
         launch {
+            apiLocation?.let {
+                val coordinatesInString = listOf(it.coordinates[0], it.coordinates[1]).coordinatesInString()
+                val weatherData = _uiModel.value?.weatherData
+                // Check if the city already exists in the list
+                weatherData?.forEach { weather ->
+                    if (weather.city.coordinates == coordinatesInString) {
+                        _uiModel.value = _uiModel.value?.copy(viewState = ShowError(CityAlreadyExists))
+                        _uiModel.value = _uiModel.value?.copy(viewState = Idle)
+                        return@launch
+                    }
+                }
+            }
             _uiModel.value = _uiModel.value?.copy(citySearchResult = listOf(), viewState = Refreshing)
             withContext(IO) { addCity.invoke(apiLocation) }
             updateUI(ViewPagerUpdateType.ADD_ITEM)

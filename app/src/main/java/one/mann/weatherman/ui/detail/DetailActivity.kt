@@ -69,7 +69,7 @@ internal class DetailActivity : BaseLocationActivity() {
         binding.detailSwipeLayout.isRefreshing = model.viewState is DetailUiModel.State.Refreshing
         if (model.viewState is DetailUiModel.State.ShowError) when (model.viewState.errorType) {
             NoInternet -> toast(R.string.no_internet_connection)
-            is NoResponse -> toast(R.string.network_error, NoResponse().message)
+            is NoResponse -> toast(R.string.network_error, errorMessage = NoResponse().message)
             else -> run { return@run }
         }
         if (weatherData.size >= position + 1) {

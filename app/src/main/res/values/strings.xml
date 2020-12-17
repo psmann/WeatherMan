@@ -26,6 +26,7 @@
     <string name="no_gps_updating_previous_location">Weather updated for previous location</string>
     <string name="weather_icon">Weather Icon</string>
     <string name="location_settings_not_available">Location settings are not available on this device</string>
+    <string name="city_already_exists">This city has already been added. Please choose a different city.</string>
     <string name="add_city">Add City</string>
     <string name="remove_city">Remove City</string>
     <string name="network_error">Network Error:\n</string>

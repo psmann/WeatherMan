@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.appcompat.widget.Toolbar
@@ -141,7 +142,8 @@ internal class MainActivity : BaseLocationActivity() {
                 NoInternet -> toast(R.string.no_internet_connection)
                 NoGps -> toast(R.string.gps_needed_for_location)
                 NoLocation -> toast(R.string.location_settings_not_available)
-                is NoResponse -> toast(R.string.network_error, NoResponse().message)
+                CityAlreadyExists -> toast(R.string.city_already_exists, Toast.LENGTH_LONG)
+                is NoResponse -> toast(R.string.network_error, errorMessage = NoResponse().message)
             }
             is UpdateViewPager -> updateViewPager(model.weatherData.size, state.updateType)
             else -> run { return@run }
