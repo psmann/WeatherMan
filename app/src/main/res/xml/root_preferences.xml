@@ -23,7 +23,7 @@
             app:title="@string/display_notification" />
 
         <ListPreference
-            app:defaultValue="1"
+            app:defaultValue="24"
             app:key="notification_frequency"
             app:entries="@array/frequency_entries"
             app:entryValues="@array/frequency_values"

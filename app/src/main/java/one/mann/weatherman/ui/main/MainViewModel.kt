@@ -170,11 +170,11 @@ internal class MainViewModel @Inject constructor(
                     updateUI()
                 }
                 SETTINGS_NOTIFICATIONS_KEY -> if (sharedPreferences!!.getBoolean(key, true)) { // Start-Stop notifications
-                    startNotificationWork(sharedPreferences.getString(SETTINGS_FREQUENCY_KEY, "1")!!.toLong())
+                    startNotificationWork(sharedPreferences.getString(SETTINGS_FREQUENCY_KEY, "24")!!.toLong())
                 } else stopNotificationWork()
                 SETTINGS_FREQUENCY_KEY -> { // Change notification frequency
                     stopNotificationWork() // Cancel old work
-                    startNotificationWork(sharedPreferences!!.getString(key, "1")!!.toLong()) // Start new work
+                    startNotificationWork(sharedPreferences!!.getString(key, "24")!!.toLong()) // Start new work
                 }
                 LAST_UPDATED_KEY, LAST_CHECKED_KEY -> updateUI() // Update UI when weather is updated from Main or Detail
             }
