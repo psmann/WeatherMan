@@ -3,6 +3,7 @@ package one.mann.weatherman.ui.common.util
 import android.Manifest.permission
 import android.content.Context
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities.*
 import android.os.Build.VERSION
@@ -13,6 +14,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import androidx.annotation.LayoutRes
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
@@ -98,3 +100,20 @@ internal suspend fun Context.isLocationEnabled(): Boolean = suspendCancellableCo
 
     } else continuation.resume(false) // Location Permission not granted, return False
 }
+
+///** Set correct StatusBar and NavigationBar heights */
+//internal fun View.adjustLayoutHeight() {
+//    val density = resources.displayMetrics.density.toInt()
+//    val statusBarId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+//    val navBarId = resources.getIdentifier("status_bar_height", "dimen", "android")
+//
+//    this.apply {
+//        val params = layoutParams as CoordinatorLayout.LayoutParams
+//        params.topMargin = if (statusBarId > 0) resources.getDimensionPixelSize(statusBarId) else 48 * density
+//        params.bottomMargin = when (resources.configuration.orientation) {
+//            Configuration.ORIENTATION_PORTRAIT -> if (navBarId > 0) resources.getDimensionPixelSize(navBarId) else 0
+//            else -> 0
+//        }
+//        layoutParams = params
+//    }
+//}
