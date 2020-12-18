@@ -41,4 +41,4 @@ Code is written in Kotlin and uses coroutines to handle all asynchronous work.
 
 1) Clone the project repository
 2) Generate keys for OpenWeatherMap API and TomTom Search API
-3) Add your keys to ../api/common/Keys.kt located inside the app module and rebuild project
+3) Add your keys to [../api/common/Keys.kt](Keys.kt) located inside the app module and rebuild project
