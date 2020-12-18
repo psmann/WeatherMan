@@ -1,7 +1,7 @@
 # WeatherMan
 
 An Android weather app that shows current and forecast weather for user location and other cities.
-Uses OpenWeatherMap API for weather data and TomTom Search API to get cities.
+Uses OpenWeatherMap API for weather information and TomTom Search API to get cities.
 
 ## Screenshots
 
@@ -27,15 +27,15 @@ Code is written in Kotlin and uses coroutines to handle all asynchronous work.
 ### Dependencies
 
   * [Dagger 2](https://dagger.dev/) - Dependency Injection
-  * <a href="https://square.github.io/retrofit/">Retrofit 2</a> - Network calls
-  * <a href="https://square.github.io/okhttp/">OkHttp 3</a> - Network calls
-  * <a href="https://developer.android.com/topic/libraries/architecture/room">Room Persistence Library</a> - SQLite Database
-  * <a href="https://kotlinlang.org/docs/reference/coroutines-overview.html">Kotlin Coroutines</a> - Asynchronous tasks
-  * <a href="https://developer.android.com/topic/libraries/architecture/workmanager">WorkManager</a> - Background tasks (data sync, notifications)
-  * <a href="https://developers.google.com/android/reference/com/google/android/gms/location/package-summary">Google Play Services</a> - Device GPS location
-  * <a href="https://developer.tomtom.com/search-api">TomTom Search API</a> - City names and locations
-  * <a href="https://openweathermap.org/api">OpenWeatherMap API</a> - Weather data
-  * <a href="https://developers.teleport.org/api/resources/Timezone/">Teleport Timezone API</a> - Time zones
+  * [Retrofit 2](https://square.github.io/retrofit/) - Network calls
+  * [OkHttp 3](https://square.github.io/okhttp/) - Network calls
+  * [Room Persistence Library](https://developer.android.com/topic/libraries/architecture/room) - SQLite Database
+  * [Kotlin Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html) - Asynchronous programming
+  * [Work Manager](https://developer.android.com/topic/libraries/architecture/workmanager) - Background tasks (data sync, notifications)
+  * [Google Play Services](https://developers.google.com/android/reference/com/google/android/gms/location/package-summary) - Device GPS location
+  * [TomTom Search API](https://developer.tomtom.com/search-api) - City names and locations
+  * [OpenWeatherMap API](https://openweathermap.org/api) - Weather information
+  * [Teleport Timezone API](https://developers.teleport.org/api/resources/Timezone/) - Time zones
 
 ## Getting Started
 
