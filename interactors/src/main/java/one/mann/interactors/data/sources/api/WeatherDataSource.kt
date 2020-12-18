@@ -11,13 +11,7 @@ interface WeatherDataSource {
 
     suspend fun getCurrentWeather(location: Location): CurrentWeather
 
-    suspend fun getDailyForecast(location: Location): List<DailyForecast>
+    suspend fun getDailyForecasts(location: Location): List<DailyForecast>
 
-    suspend fun getHourlyForecast(location: Location): List<HourlyForecast>
-
-    suspend fun getAllCurrentWeather(locations: List<Location>): List<CurrentWeather>
-
-    suspend fun getAllDailyForecast(locations: List<Location>): List<List<DailyForecast>>
-
-    suspend fun getAllHourlyForecast(locations: List<Location>): List<List<HourlyForecast>>
+    suspend fun getHourlyForecasts(location: Location): List<HourlyForecast>
 }

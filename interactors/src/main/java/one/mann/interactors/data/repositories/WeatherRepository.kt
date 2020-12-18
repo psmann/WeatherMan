@@ -43,8 +43,8 @@ class WeatherRepository @Inject constructor(
                                 timeCreated
                         ),
                         currentWeather,
-                        weatherData.getDailyForecast(location),
-                        weatherData.getHourlyForecast(location)
+                        weatherData.getDailyForecasts(location),
+                        weatherData.getHourlyForecasts(location)
                 )
         )
     }
@@ -79,8 +79,8 @@ class WeatherRepository @Inject constructor(
                         weatherId = dbWeather.currentWeather.weatherId,
                         units = prefsData.getUnits()
                 )
-                val dailyForecastsFromApi = weatherData.getDailyForecast(location)
-                val hourlyForecastsFromApi = weatherData.getHourlyForecast(location)
+                val dailyForecastsFromApi = weatherData.getDailyForecasts(location)
+                val hourlyForecastsFromApi = weatherData.getHourlyForecasts(location)
                 val dailyForecastsForUpdate = dbWeather.dailyForecasts.mapIndexed { i, dbDailyForecast ->
                     dailyForecastsFromApi[i].copy(dailyId = dbDailyForecast.dailyId)
                 }
