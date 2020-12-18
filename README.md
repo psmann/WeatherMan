@@ -21,12 +21,12 @@ Code is written in Kotlin and uses coroutines to handle all asynchronous work.
 ### Modules
 
   1) domain (Kotlin): Contains all the domain level business logic such as data entities and algorithms.
-  2) interactors (Kotlin): Contains usecases and repository patterns
+  2) interactors (Kotlin): Contains usecases and repository patterns.
   3) app (Android): This is the presentation module. Contains all UI and framework code (including API services).
 
 ### Dependencies
 
-  * <a href="https://dagger.dev/">Dagger 2</a> - Dependency Injection
+  * [Dagger 2](https://dagger.dev/) - Dependency Injection
   * <a href="https://square.github.io/retrofit/">Retrofit 2</a> - Network calls
   * <a href="https://square.github.io/okhttp/">OkHttp 3</a> - Network calls
   * <a href="https://developer.android.com/topic/libraries/architecture/room">Room Persistence Library</a> - SQLite Database
@@ -39,6 +39,6 @@ Code is written in Kotlin and uses coroutines to handle all asynchronous work.
 
 ## Getting Started
 
-1) Clone the project repository
-2) Generate keys for OpenWeatherMap API and TomTom Search API
-3) Add your keys to [app/../api/common/Keys.kt](app/src/main/java/one/mann/weatherman/api/common/Keys.kt) and rebuild project
+1) Clone the project repository.
+2) Generate keys for OpenWeatherMap API and TomTom Search API.
+3) Add your keys to [app/../api/common/Keys.kt](app/src/main/java/one/mann/weatherman/api/common/Keys.kt) and rebuild project.
