@@ -70,13 +70,9 @@ internal interface WeatherDao {
     @Query("SELECT * FROM CurrentWeather WHERE cityId = :cityId")
     suspend fun getHourlyForecastsForUserLocation(cityId: String): CurrentWeatherWithHourlyForecasts
 
-    /** Updates City entity */
+    /** Updates City entity (returns 1 if successful) */
     @Update(onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateCity(city: City)
-
-    /** Updates City entities */
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun updateCities(cities: List<City>)
 
     /** Updates CurrentWeather entity */
     @Update(onConflict = OnConflictStrategy.REPLACE)
