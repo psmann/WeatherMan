@@ -33,6 +33,7 @@ class WeatherRepository @Inject constructor(
         val location = apiLocation ?: deviceLocation.getLocation() // Use device GPS location if null
         val timeCreated = System.currentTimeMillis()
         val currentWeather = weatherData.getCurrentWeather(location).copy(units = prefsData.getUnits())
+
         dbData.insertCityAndWeather(
                 mapToDomainWeather(
                         City(
@@ -50,8 +51,8 @@ class WeatherRepository @Inject constructor(
     }
 
     /** Returns a list of all Weather data from the database */
-    suspend fun readAllWeather(): List<Weather> {
-        return dbData.getAllCitiesAndWeathers().map { it.copy(currentWeather = it.currentWeather.copy(units = prefsData.getUnits())) }
+    suspend fun readAllWeather(): List<Weather> = dbData.getAllCitiesAndWeathers().map {
+        it.copy(currentWeather = it.currentWeather.copy(units = prefsData.getUnits()))
     }
 
     /** Update all rows in the database with new data */
