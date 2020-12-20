@@ -6,5 +6,5 @@ interface PreferencesDataSource {
 
     suspend fun getUnits(): String
 
-    suspend fun getLastChecked(): Long
+    suspend fun getLastUpdated(): Long
 }

@@ -20,5 +20,5 @@ internal class SettingsPreferencesDataSource @Inject constructor(private val pre
         return preferences.getString(SETTINGS_UNITS_KEY, UNITS)!!
     }
 
-    override suspend fun getLastChecked(): Long = preferences.getLong(LAST_UPDATED_KEY, 0L)
+    override suspend fun getLastUpdated(): Long = preferences.getLong(LAST_UPDATED_KEY, 0L)
 }
