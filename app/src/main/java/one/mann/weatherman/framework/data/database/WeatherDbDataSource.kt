@@ -56,13 +56,14 @@ internal class WeatherDbDataSource @Inject constructor(db: WeatherDb) : Database
         val currentWeathersDb = mutableListOf<CurrentWeather>()
         val dailyForecastsDb = mutableListOf<DailyForecast>()
         val hourlyForecastsDb = mutableListOf<HourlyForecast>()
-        weathers.forEach {
-            currentWeathersDb.add(it.mapToDbCurrentWeather())
-            dailyForecastsDb.addAll(it.mapToDbDailyForecasts())
-            hourlyForecastsDb.addAll(it.mapToDbHourlyForecasts())
+
+        weathers.forEachIndexed { i, weather ->
+            // Only update user city in the database as only it can change (i.e. if user location changes)
+            if (i == 0) dao.updateCity(weather.mapToDbCity())
+            currentWeathersDb.add(weather.mapToDbCurrentWeather())
+            dailyForecastsDb.addAll(weather.mapToDbDailyForecasts())
+            hourlyForecastsDb.addAll(weather.mapToDbHourlyForecasts())
         }
-        // Only update user city in the database as only it can change (i.e. if user location changes)
-        dao.updateCity(weathers[0].mapToDbCity())
         dao.updateCurrentWeathers(currentWeathersDb)
         dao.updateDailyForecasts(dailyForecastsDb)
         dao.updateHourlyForecasts(hourlyForecastsDb)
