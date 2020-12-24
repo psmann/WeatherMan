@@ -33,7 +33,7 @@ android {
 
 dependencies {
     def lifecycle_version = '2.2.0'
-    def room_version = '2.2.5'
+    def room_version = '2.2.6'
 
     // Modules
     implementation project(":domain")
@@ -56,8 +56,8 @@ dependencies {
     kapt "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
     // Room Persistence Library (JetPack)
     implementation "androidx.room:room-runtime:$room_version"
-    kapt 'androidx.room:room-compiler:2.2.5'
-    implementation 'androidx.room:room-ktx:2.2.5' // Kotlin extensions and Coroutines support
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.room:room-ktx:$room_version" // Kotlin extensions and Coroutines support
     // WorkManager (JetPack)
     implementation 'androidx.work:work-runtime-ktx:2.4.0'
     // Google Play Services - Location
