@@ -11,7 +11,7 @@ internal data class DetailUiModel(
 ) {
     sealed class State {
         object Idle : State() // Idle state, no change
-        object Refreshing : State()// Set whether data is being refreshed or not
+        object Refreshing : State() // Set whether data is being refreshed or not
         data class ShowError(val errorType: ErrorType) : State() // Pass error type to a Toast
     }
 }
