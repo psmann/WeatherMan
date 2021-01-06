@@ -67,9 +67,9 @@ internal class DetailActivity : BaseLocationActivity() {
     private fun observeUiModel(model: DetailUiModel) {
         val weatherData = model.weatherData
         binding.detailSwipeLayout.isRefreshing = model.viewState is DetailUiModel.State.Refreshing
-        if (model.viewState is DetailUiModel.State.ShowError) when (model.viewState.errorType) {
+        if (model.viewState is DetailUiModel.State.ShowError) when (val errorType = model.viewState.errorType) {
             NoInternet -> toast(R.string.no_internet_connection)
-            is NoResponse -> toast(R.string.network_error, errorMessage = NoResponse().message)
+            is NoResponse -> toast(R.string.network_error, errorMessage = errorType.message)
             else -> run { return@run }
         }
         if (weatherData.size >= position + 1) {

@@ -138,12 +138,12 @@ internal class MainActivity : BaseLocationActivity() {
         searchCityRecyclerAdapter.update(model.citySearchResult)
         when (val state = model.viewState) {
             is Refreshing -> hideSearchView()
-            is ShowError -> when (state.errorType) {
+            is ShowError -> when (val errorType = state.errorType) {
                 NoInternet -> toast(R.string.no_internet_connection)
                 NoGps -> toast(R.string.gps_needed_for_location)
                 NoLocation -> toast(R.string.location_settings_not_available)
                 CityAlreadyExists -> toast(R.string.city_already_exists, Toast.LENGTH_LONG)
-                is NoResponse -> toast(R.string.network_error, errorMessage = NoResponse().message)
+                is NoResponse -> toast(R.string.network_error, errorMessage = errorType.message)
             }
             is UpdateViewPager -> updateViewPager(model.weatherData.size, state.updateType)
             else -> run { return@run }
