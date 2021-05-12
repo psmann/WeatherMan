@@ -1,11 +1,12 @@
-apply plugin: 'java'
 apply plugin: 'kotlin'
 
 dependencies {
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    // Testing APIs
-    testImplementation 'junit:junit:4.13.1' // JUnit
-    testImplementation 'com.google.truth:truth:1.1' // Truth
+    /** Testing APIs */
+    // JUnit
+    testImplementation 'junit:junit:4.13.2'
+    // Truth
+    testImplementation 'com.google.truth:truth:1.1.2'
 }

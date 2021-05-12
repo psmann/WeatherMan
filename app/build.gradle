@@ -25,56 +25,75 @@ android {
         }
     }
 
-    compileOptions { // Java 8 required for WorkManager
+    compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
 dependencies {
-    def lifecycle_version = '2.2.0'
-    def room_version = '2.2.6'
+    def lifecycle_version = '2.3.1'
+    def room_version = '2.3.0'
 
     // Modules
     implementation project(":domain")
     implementation project(":interactors")
 
-    // Android Framework
-    implementation 'androidx.appcompat:appcompat:1.2.0' // AppCompat
-    implementation 'com.google.android.material:material:1.2.1' // Material design
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0' // SwipeRefresh Layout
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4' // Constraint Layout
-    implementation 'androidx.preference:preference-ktx:1.1.1' // Shared Preferences
-    implementation 'androidx.core:core-ktx:1.3.2' // Kotlin framework extensions
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     // Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.0'
-    // ViewModel, LiveData and Lifecycle (JetPack)
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
-    kapt "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
-    // Room Persistence Library (JetPack)
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1'
+
+    /** Android Framework */
+    // AppCompat
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    // Material design
+    implementation 'com.google.android.material:material:1.3.0'
+    // Constraint Layout
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    // SwipeRefresh Layout
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    // Shared Preferences
+    implementation 'androidx.preference:preference-ktx:1.1.1'
+    // Kotlin framework extensions
+    implementation 'androidx.core:core-ktx:1.3.2'
+
+    /** Jetpack */
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    // Lifecycle
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
+    // Room Persistence Library
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
-    implementation "androidx.room:room-ktx:$room_version" // Kotlin extensions and Coroutines support
-    // WorkManager (JetPack)
-    implementation 'androidx.work:work-runtime-ktx:2.4.0'
+    implementation "androidx.room:room-ktx:$room_version"
+    // WorkManager
+    implementation 'androidx.work:work-runtime-ktx:2.5.0'
+
     // Google Play Services - Location
-    implementation 'com.google.android.gms:play-services-location:17.1.0'
+    implementation 'com.google.android.gms:play-services-location:18.0.0'
+
     // Dagger 2
-    implementation 'com.google.dagger:dagger:2.31'
-    kapt 'com.google.dagger:dagger-compiler:2.31'
+    implementation 'com.google.dagger:dagger:2.33'
+    kapt 'com.google.dagger:dagger-compiler:2.33'
+
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     // OkHttp
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
 
-    // Testing APIs
-    testImplementation 'junit:junit:4.13.1' // JUnit
-    androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.9' // Coroutine tests
-    androidTestImplementation 'androidx.test:runner:1.3.0' // Runner
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0' // Espresso
-    androidTestImplementation 'com.google.truth:truth:1.1' // Truth
+    /** Testing APIs */
+    // JUnit
+    testImplementation 'junit:junit:4.13.2'
+    // Runner
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    // Espresso
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    // Truth
+    androidTestImplementation 'com.google.truth:truth:1.1.2'
+    // Coroutine Test
+    androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.9'
 }

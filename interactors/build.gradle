@@ -1,17 +1,20 @@
-apply plugin: 'java'
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-kapt'
 
 dependencies {
+    // Modules
     implementation project(":domain")
 
     // Kotlin
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    // Dagger 2
-    implementation 'com.google.dagger:dagger:2.31'
-    kapt 'com.google.dagger:dagger-compiler:2.31'
 
-    // Testing APIs
-    testImplementation 'junit:junit:4.13.1' // JUnit
-    testImplementation 'com.google.truth:truth:1.1' // Truth
+    // Dagger 2
+    implementation 'com.google.dagger:dagger:2.33'
+    kapt 'com.google.dagger:dagger-compiler:2.33'
+
+    /** Testing APIs */
+    // JUnit
+    testImplementation 'junit:junit:4.13.2'
+    // Truth
+    testImplementation 'com.google.truth:truth:1.1.2'
 }
