@@ -33,12 +33,13 @@ internal abstract class BaseLocationActivity : AppCompatActivity() {
         private var locationPermissionListener: (Boolean) -> Unit = {} // Delegate function object to activity callback
         private var networkAndLocationListener: (LocationServicesResponse) -> Unit = {} // Delegate function object to activity callback
         private val locationRequestBuilder = LocationSettingsRequest.Builder()
-                .addLocationRequest(LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY))
+            .addLocationRequest(LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.setFlags(FLAG_LAYOUT_NO_LIMITS, FLAG_LAYOUT_NO_LIMITS) // Make navigation bar and status bar transparent
+        // Make navigation bar and status bar transparent
+        window.setFlags(FLAG_LAYOUT_NO_LIMITS, FLAG_LAYOUT_NO_LIMITS)
         injectDependencies()
     }
 
@@ -77,23 +78,26 @@ internal abstract class BaseLocationActivity : AppCompatActivity() {
         }
         networkAndLocationListener = result
         LocationServices.getSettingsClient(this)
-                .checkLocationSettings(locationRequestBuilder.build())
-                .addOnCompleteListener {
-                    try { // Location settings are On
-                        it.getResult(ApiException::class.java)
-                        networkAndLocationListener(ENABLED)
-                    } catch (exception: ApiException) { // Location settings are Off
-                        if (prompt) when (exception.statusCode) {
-                            RESOLUTION_REQUIRED -> try { // Check result in onActivityResult
-                                val resolvable = exception as ResolvableApiException
-                                resolvable.startResolutionForResult(this, LOCATION_REQUEST_CODE)
-                            } catch (ignored: IntentSender.SendIntentException) {
-                            } catch (ignored: ClassCastException) {
-                            } // Location settings are not available on device
-                            SETTINGS_CHANGE_UNAVAILABLE -> networkAndLocationListener(UNAVAILABLE)
-                        } else networkAndLocationListener(DISABLED)
-                    }
+            .checkLocationSettings(locationRequestBuilder.build())
+            .addOnCompleteListener {
+                // If location settings are On
+                try {
+                    it.getResult(ApiException::class.java)
+                    networkAndLocationListener(ENABLED)
+                } catch (exception: ApiException) {
+                    // If location settings are Off
+                    if (prompt) when (exception.statusCode) {
+                        // Check result in onActivityResult
+                        RESOLUTION_REQUIRED -> try {
+                            val resolvable = exception as ResolvableApiException
+                            resolvable.startResolutionForResult(this, LOCATION_REQUEST_CODE)
+                        } catch (ignored: IntentSender.SendIntentException) {
+                        } catch (ignored: ClassCastException) {
+                        } // Location settings are not available on device
+                        SETTINGS_CHANGE_UNAVAILABLE -> networkAndLocationListener(UNAVAILABLE)
+                    } else networkAndLocationListener(DISABLED)
                 }
+            }
     }
 
     /** Toast extension function to be used only in activity scope with String Resources and an optional string */

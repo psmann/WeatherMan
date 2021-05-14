@@ -3,7 +3,6 @@ package one.mann.weatherman.ui.common.util
 import android.Manifest.permission
 import android.content.Context
 import android.content.pm.PackageManager
-import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities.*
 import android.os.Build.VERSION
@@ -14,7 +13,6 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import androidx.annotation.LayoutRes
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
@@ -69,34 +67,34 @@ internal inline fun <reified VM : ViewModel> FragmentActivity.getViewModel(facto
 /** Set sliding animation on a view */
 internal fun View.setSlideAnimation(direction: Direction, animationDuration: Long = 750L) {
     startAnimation(
-            AnimationUtils.loadAnimation(
-                    context,
-                    when (direction) {
-                        UP -> R.anim.anim_slide_up
-                        LEFT -> R.anim.anim_slide_left
-                    }
-            ).apply {
-                interpolator = FastOutSlowInInterpolator()
-                duration = animationDuration
+        AnimationUtils.loadAnimation(
+            context,
+            when (direction) {
+                UP -> R.anim.anim_slide_up
+                LEFT -> R.anim.anim_slide_left
             }
+        ).apply {
+            interpolator = FastOutSlowInInterpolator()
+            duration = animationDuration
+        }
     )
 }
 
 /** Check if location permission has been granted and location services are enabled or not */
 internal suspend fun Context.isLocationEnabled(): Boolean = suspendCancellableCoroutine { continuation ->
     val locationRequestBuilder = LocationSettingsRequest.Builder()
-            .addLocationRequest(LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY))
+        .addLocationRequest(LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY))
     if (ContextCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
         LocationServices.getSettingsClient(this)
-                .checkLocationSettings(locationRequestBuilder.build())
-                .addOnCompleteListener {
-                    try { // Location settings are On
-                        it.getResult(ApiException::class.java)
-                        continuation.resume(true) // Return True
-                    } catch (exception: ApiException) { // Location settings are Off
-                        continuation.resume(false) // Return False
-                    }
+            .checkLocationSettings(locationRequestBuilder.build())
+            .addOnCompleteListener {
+                try { // Location settings are On
+                    it.getResult(ApiException::class.java)
+                    continuation.resume(true) // Return True
+                } catch (exception: ApiException) { // Location settings are Off
+                    continuation.resume(false) // Return False
                 }
+            }
 
     } else continuation.resume(false) // Location Permission not granted, return False
 }
