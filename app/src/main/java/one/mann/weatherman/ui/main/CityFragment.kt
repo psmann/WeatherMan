@@ -94,7 +94,8 @@ internal class CityFragment : Fragment() {
 
     private fun observeUiModel(model: MainUiModel) {
         val weatherData = model.weatherData
-        binding.root.visibility = if (model.viewState is Loading) View.GONE else View.VISIBLE // Layout is hidden until data is loaded
+        // Hide layout until data is loaded
+        binding.root.visibility = if (model.viewState is Loading) View.GONE else View.VISIBLE
         if (weatherData.size >= position + 1) setupViews(weatherData[position])
     }
 
@@ -104,7 +105,8 @@ internal class CityFragment : Fragment() {
         binding.cityCurrentTempTextView.text = weather.currentWeather.currentTemperature
         binding.cityTimeUpdatedTextView.text = weather.currentWeather.lastChecked
         binding.cityNameTextView.text = weather.city.cityName
-        if (backgroundResources != newBackground) { // Update layout background only if it changes after a data refresh
+        // Update layout background only if it changes after a data refresh
+        if (backgroundResources != newBackground) {
             binding.root.setBackgroundResource(newBackground)
             backgroundResources = newBackground
         }

@@ -8,10 +8,10 @@ import one.mann.weatherman.ui.common.models.Weather
 /* Created by Psmann. */
 
 internal data class MainUiModel(
-        val weatherData: List<Weather> = listOf(), // Weather data
-        val cityCount: Int = -1, // Number of cities
-        val citySearchResult: List<CitySearchResult> = listOf(), // City search data
-        val viewState: State = State.Loading // Current state of the view
+    val weatherData: List<Weather> = listOf(), // Weather data
+    val cityCount: Int = -1, // Number of cities
+    val citySearchResult: List<CitySearchResult> = listOf(), // City search data
+    val viewState: State = State.Loading // Current state of the view
 ) {
     sealed class State {
         object Idle : State() // Idle state, no change

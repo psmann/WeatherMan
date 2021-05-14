@@ -14,7 +14,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager2.widget.ViewPager2
+import androidx.viewpager2.widget.ViewPager2.*
 import com.google.android.material.snackbar.Snackbar
 import one.mann.domain.logic.truncate
 import one.mann.domain.models.Direction
@@ -39,15 +39,15 @@ internal class MainActivity : BaseLocationActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
-    private var countObserved = false // Stop multiple location alerts on first run
-    private var isFirstRun = true // Check if this is the first time app is running
-    private var removeViewPagerItem = false // Check if viewPager item is being removed
+    private var countObserved = false // To stop multiple location alerts on first run
+    private var isFirstRun = true // To check if this is the first time app is running
+    private var removeViewPagerItem = false // To check if viewPager item is being removed
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val mainViewModel: MainViewModel by lazy { getViewModel(viewModelFactory) }
     private val mainViewPagerAdapter by lazy { MainViewPagerAdapter(supportFragmentManager, lifecycle) }
     private val inputMethodManager by lazy { getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
     private val searchCityRecyclerAdapter by lazy {
-        SearchCityRecyclerAdapter { mainViewModel.addCity(Location(listOf(it.latitude, it.longitude)).truncate()) }// Add new city
+        SearchCityRecyclerAdapter { mainViewModel.addCity(Location(listOf(it.latitude, it.longitude)).truncate()) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,7 +78,8 @@ internal class MainActivity : BaseLocationActivity() {
     override fun injectDependencies() = WeatherManApp.appComponent.getSubComponent().injectMainActivity(this)
 
     private fun initActivity(permissionGranted: Boolean) {
-        if (!permissionGranted) { // If permission is denied then exit
+        // If permission is denied then exit
+        if (!permissionGranted) {
             toast(R.string.permission_required)
             finish()
             return
@@ -88,7 +89,7 @@ internal class MainActivity : BaseLocationActivity() {
             // Set up the ViewPager
             viewPager.apply {
                 adapter = mainViewPagerAdapter
-                registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                registerOnPageChangeCallback(object : OnPageChangeCallback() {
                     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                         super.onPageScrolled(position, positionOffset, positionOffsetPixels)
                         // Complete scrolling to previous item before removing item
@@ -100,18 +101,20 @@ internal class MainActivity : BaseLocationActivity() {
 
                     override fun onPageScrollStateChanged(state: Int) {
                         super.onPageScrollStateChanged(state)
-                        if (!mainSwipeLayout.isRefreshing) mainSwipeLayout.isEnabled = state == ViewPager2.SCROLL_STATE_IDLE
+                        if (!mainSwipeLayout.isRefreshing) mainSwipeLayout.isEnabled = state == SCROLL_STATE_IDLE
                     }
                 })
             }
             // Set up the Swipe Refresh Layout
             mainSwipeLayout.apply {
                 setColorSchemeColors(Color.RED, Color.BLUE)
-                setOnRefreshListener { handleLocationServiceResult() } // Prompt for location update if it is first run
+                // Prompt for location update if it is first run
+                setOnRefreshListener { handleLocationServiceResult() }
             }
             // Set up the City Search Layout
             itemSearchCityConstraintLayout.let {
-                it.root.setOnClickListener { hideSearchView() } // Hide searchView when clicked anywhere outside it
+                // Hide searchView when clicked anywhere outside it
+                it.root.setOnClickListener { hideSearchView() }
                 it.searchResultRecyclerView.apply {
                     adapter = searchCityRecyclerAdapter
                     setHasFixedSize(true)
@@ -123,8 +126,8 @@ internal class MainActivity : BaseLocationActivity() {
                         return true
                     }
                 })
-                val searchViewCloseButton: View? = it.citySearchView.findViewById(androidx.appcompat.R.id.search_close_btn)
-                searchViewCloseButton?.setOnClickListener { hideSearchView() }
+                val searchCloseButton: View? = it.citySearchView.findViewById(androidx.appcompat.R.id.search_close_btn)
+                searchCloseButton?.setOnClickListener { hideSearchView() }
             }
         }
     }
@@ -149,14 +152,20 @@ internal class MainActivity : BaseLocationActivity() {
             else -> run { return@run }
         }
         when (val cities = model.cityCount) {
-            -1 -> run { return@run } // Before data has been initialised
-            0 -> if (!countObserved) { // If cityCount is 0 then this is the app's first run
-                handleLocationServiceResult() // Add current user location, prompt for location update
-                countObserved = true // This ensures that handleLocationServiceResult() is only called once here
+            // cityCount is -1 before data has been initialised, in which case do nothing
+            -1 -> run { return@run }
+            // If cityCount is 0 then this is the app's first run
+            0 -> if (!countObserved) {
+                // Add current user location, prompt for location update
+                handleLocationServiceResult()
+                // Ensures handleLocationServiceResult() is only called once here
+                countObserved = true
             }
-            else -> { // Show Snackbar when user adds a city for the first time
+            // Show Snackbar when user adds a city for the first time
+            else -> {
                 if (cities == 2 && !mainViewModel.navigationGuideShown()) appNavigationGuideSnack().show()
-                if (isFirstRun) binding.toolbar.init() // Ensures this function is only called once
+                if (isFirstRun) binding.toolbar.init()
+                // Ensures this function is only called once
                 isFirstRun = false
             }
         }
@@ -164,30 +173,37 @@ internal class MainActivity : BaseLocationActivity() {
 
     /** Handle ViewPager update scenarios */
     private fun updateViewPager(pageCount: Int, updateType: ViewPagerUpdateType) = when (updateType) {
-        SET_SIZE -> mainViewPagerAdapter.updatePages(pageCount) // Just update pager data set
+        // Just update pager data set
+        SET_SIZE -> mainViewPagerAdapter.updatePages(pageCount)
+        // Update pager data set and move to the new item that was added
         ADD_ITEM -> {
-            mainViewPagerAdapter.updatePages(pageCount) // Update pager data set
-            binding.viewPager.setCurrentItem(pageCount - 1, true) // Move to the new item that was added
+            mainViewPagerAdapter.updatePages(pageCount)
+            binding.viewPager.setCurrentItem(pageCount - 1, true)
             toast(R.string.location_added)
         }
+        // Move to previous item and update the viewPager inside onPageScrolled() callback
         REMOVE_ITEM -> {
-            binding.viewPager.setCurrentItem(binding.viewPager.currentItem - 1, true) // Move to previous item
-            removeViewPagerItem = true // Setting this to true updates the viewPager inside onPageScrolled() callback
+            binding.viewPager.setCurrentItem(binding.viewPager.currentItem - 1, true)
+            removeViewPagerItem = true
             toast(R.string.location_removed)
         }
-        NO_CHANGE -> run { return@run } // Do nothing
+        // Do nothing
+        NO_CHANGE -> run { return@run }
     }
 
     private fun Toolbar.init() = apply {
-        if (!menu.hasVisibleItems()) inflateMenu(R.menu.menu_main) // Inflate menu directly into toolbar
+        // Inflate menu directly into toolbar
+        if (!menu.hasVisibleItems()) inflateMenu(R.menu.menu_main)
         setOnMenuItemClickListener { menuItem ->
             when (menuItem!!.itemId) {
-                R.id.menu_add_city -> if (binding.viewPager.adapter?.itemCount!! < 10) { // Limit cities to 10
+                // Add new city, limit is set to 10
+                R.id.menu_add_city -> if (binding.viewPager.adapter?.itemCount!! < 10) {
                     binding.itemSearchCityConstraintLayout.let {
                         it.root.visibility = View.VISIBLE
                         it.root.setSlideAnimation(Direction.LEFT)
                         it.citySearchView.requestFocus()
-                        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0) // Force show keyboard
+                        // Force show keyboard
+                        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
                     }
                 } else toast(R.string.remove_a_city_before_adding)
                 R.id.menu_remove_city -> removeCityAlert().show()
@@ -202,33 +218,34 @@ internal class MainActivity : BaseLocationActivity() {
         it.root.visibility = View.GONE
         it.citySearchView.clearFocus()
         it.citySearchView.setQuery("", false)
-        searchCityRecyclerAdapter.update() // Remove previous list
+        // Remove previous list
+        searchCityRecyclerAdapter.update()
     }
 
     private fun removeCityAlert(): AlertDialog {
         return AlertDialog.Builder(this, R.style.AlertDialogTheme)
-                .setTitle(getString(R.string.remove_city_location))
-                .setMessage(getString(R.string.do_you_want_to_remove_location))
-                .setPositiveButton(getString(R.string.yes)) { _, _ ->
-                    val position = binding.viewPager.currentItem
-                    if (position == 0) toast(R.string.cant_remove_first_location) else mainViewModel.removeCity(position)
-                }
-                .setNegativeButton(getString(R.string.no)) { _, _ -> }
-                .create()
+            .setTitle(getString(R.string.remove_city_location))
+            .setMessage(getString(R.string.do_you_want_to_remove_location))
+            .setPositiveButton(getString(R.string.yes)) { _, _ ->
+                val position = binding.viewPager.currentItem
+                if (position == 0) toast(R.string.cant_remove_first_location) else mainViewModel.removeCity(position)
+            }
+            .setNegativeButton(getString(R.string.no)) { _, _ -> }
+            .create()
     }
 
     private fun appNavigationGuideSnack(): Snackbar {
         return Snackbar.make(binding.root, getString(R.string.swipe_left_or_right), Snackbar.LENGTH_INDEFINITE)
-                .setAction(getString(R.string.got_it)) { mainViewModel.setNavigationGuideShown() }
-                .setBackgroundTint(ContextCompat.getColor(this, R.color.dayClearStart))
-                .setActionTextColor(ContextCompat.getColor(this, R.color.sunriseClearCenter))
-                .apply {
-                    val params = view.layoutParams as CoordinatorLayout.LayoutParams
-                    params.anchorId = R.id.snackbar_anchor // Add bottom padding for navigation bar
-                    params.anchorGravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
-                    params.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
-                    view.elevation = 0f // Remove shadow
-                    view.layoutParams = params
-                }
+            .setAction(getString(R.string.got_it)) { mainViewModel.setNavigationGuideShown() }
+            .setBackgroundTint(ContextCompat.getColor(this, R.color.dayClearStart))
+            .setActionTextColor(ContextCompat.getColor(this, R.color.sunriseClearCenter))
+            .apply {
+                val params = view.layoutParams as CoordinatorLayout.LayoutParams
+                params.anchorId = R.id.snackbar_anchor // Add bottom padding for navigation bar
+                params.anchorGravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
+                params.gravity = Gravity.TOP or Gravity.CENTER_HORIZONTAL
+                view.elevation = 0f // Remove shadow
+                view.layoutParams = params
+            }
     }
 }

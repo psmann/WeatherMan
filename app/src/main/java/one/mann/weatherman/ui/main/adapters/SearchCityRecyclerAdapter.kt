@@ -10,8 +10,8 @@ import one.mann.weatherman.ui.common.util.inflateView
 
 /* Created by Psmann. */
 
-internal class SearchCityRecyclerAdapter(val onClick: (searchResult: CitySearchResult) -> Unit)
-    : RecyclerView.Adapter<SearchCityRecyclerAdapter.CitySearchViewHolder>() {
+internal class SearchCityRecyclerAdapter(val onClick: (searchResult: CitySearchResult) -> Unit) :
+    RecyclerView.Adapter<SearchCityRecyclerAdapter.CitySearchViewHolder>() {
 
     private var citySearchList = listOf<CitySearchResult>()
 
@@ -36,7 +36,7 @@ internal class SearchCityRecyclerAdapter(val onClick: (searchResult: CitySearchR
     }
 
     class CitySearchViewHolder(
-            itemView: View,
-            val binding: ItemCitySearchBinding = ItemCitySearchBinding.bind(itemView)
+        itemView: View,
+        val binding: ItemCitySearchBinding = ItemCitySearchBinding.bind(itemView)
     ) : RecyclerView.ViewHolder(itemView)
 }
