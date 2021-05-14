@@ -36,7 +36,6 @@ dependencies {
     def room_version = '2.3.0'
 
     // Modules
-    implementation project(":domain")
     implementation project(":interactors")
 
     // Kotlin
