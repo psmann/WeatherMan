@@ -10,11 +10,14 @@ import javax.inject.Provider
 /* Created by Psmann. */
 
 internal class ParentWorkerFactory @Inject constructor(
-        private val workerFactory: Map<Class<out ListenableWorker>, @JvmSuppressWildcards Provider<ChildWorkerFactory>>
+    private val workerFactory: Map<Class<out ListenableWorker>, @JvmSuppressWildcards Provider<ChildWorkerFactory>>
 ) : WorkerFactory() {
 
-    override fun createWorker(appContext: Context, workerClassName: String, workerParameters: WorkerParameters): ListenableWorker? {
-
+    override fun createWorker(
+        appContext: Context,
+        workerClassName: String,
+        workerParameters: WorkerParameters
+    ): ListenableWorker? {
         val factoryEntry = workerFactory.entries.find { Class.forName(workerClassName).isAssignableFrom(it.key) }
 
         // Use custom factory if available else use default implementation

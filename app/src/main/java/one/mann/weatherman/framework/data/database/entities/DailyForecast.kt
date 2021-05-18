@@ -7,10 +7,10 @@ import androidx.room.PrimaryKey
 
 @Entity
 internal data class DailyForecast(
-        @PrimaryKey(autoGenerate = true) val dailyId: Int = 0,
-        val date: Long,
-        val minTemp: Float,
-        val maxTemp: Float,
-        val iconId: Int,
-        val cityId: String
+    @PrimaryKey(autoGenerate = true) val dailyId: Int = 0,
+    val date: Long,
+    val minTemp: Float,
+    val maxTemp: Float,
+    val iconId: Int,
+    val cityId: String
 )

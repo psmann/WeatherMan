@@ -8,8 +8,8 @@ import javax.inject.Inject
 /* Created by Psmann. */
 
 class ChangeUnits @Inject constructor(
-        private val weatherRepository: WeatherRepository,
-        private val prefsData: PreferencesDataSource
+    private val weatherRepository: WeatherRepository,
+    private val prefsData: PreferencesDataSource
 ) {
 
     suspend fun invoke() {

@@ -45,7 +45,7 @@ internal class DetailActivity : BaseLocationActivity() {
     override fun injectDependencies() = WeatherManApp.appComponent.getSubComponent().injectDetailActivity(this)
 
     private fun initActivity(permissionGranted: Boolean) {
-        if (!permissionGranted) { // If permission denied then exit
+        if (!permissionGranted) {
             toast(R.string.permission_required)
             finish()
             return
@@ -82,8 +82,8 @@ internal class DetailActivity : BaseLocationActivity() {
             }
             // Update activity background only if it changes after a data refresh
             val newBackground = getGradient(
-                    weatherData[position].currentWeather.sunPosition,
-                    isOvercast(weatherData[position].currentWeather.iconId)
+                weatherData[position].currentWeather.sunPosition,
+                isOvercast(weatherData[position].currentWeather.iconId)
             )
             if (newBackground != backgroundResource) binding.root.setBackgroundResource(newBackground)
         }

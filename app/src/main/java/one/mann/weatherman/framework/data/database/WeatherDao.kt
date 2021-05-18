@@ -1,8 +1,14 @@
 package one.mann.weatherman.framework.data.database
 
 import androidx.room.*
-import one.mann.weatherman.framework.data.database.entities.*
-import one.mann.weatherman.framework.data.database.entities.relations.*
+import one.mann.weatherman.framework.data.database.entities.City
+import one.mann.weatherman.framework.data.database.entities.CurrentWeather
+import one.mann.weatherman.framework.data.database.entities.DailyForecast
+import one.mann.weatherman.framework.data.database.entities.HourlyForecast
+import one.mann.weatherman.framework.data.database.entities.relations.CityWithCurrentWeather
+import one.mann.weatherman.framework.data.database.entities.relations.CityWithDailyForecasts
+import one.mann.weatherman.framework.data.database.entities.relations.CityWithHourlyForecasts
+import one.mann.weatherman.framework.data.database.entities.relations.CurrentWeatherWithHourlyForecasts
 
 /* Created by Psmann. */
 

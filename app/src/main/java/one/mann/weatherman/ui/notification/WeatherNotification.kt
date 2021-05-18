@@ -1,7 +1,10 @@
 package one.mann.weatherman.ui.notification
 
-import android.app.*
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_DEFAULT
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -21,8 +24,8 @@ import javax.inject.Inject
 /* Created by Psmann. */
 
 internal class WeatherNotification @Inject constructor(
-        private val context: Context,
-        private val getNotificationData: GetNotificationData
+    private val context: Context,
+    private val getNotificationData: GetNotificationData
 ) {
     // Pending Intent to open Detail Activity for current location from the notification
     private val detailActivityPendingIntent: PendingIntent? = TaskStackBuilder.create(context).run {
@@ -42,8 +45,11 @@ internal class WeatherNotification @Inject constructor(
             setTextViewText(R.id.notification_city_name_text_view, data.cityName)
             setTextViewText(R.id.notification_description_text_view, data.description)
             setTextViewText(R.id.notification_humidity_text_view, data.humidity)
-            setImageViewResource(R.id.notification_icon_image_view, context.resources.getIdentifier(
-                    getUri(data.iconId, data.sunPosition), "drawable", context.packageName))
+            setImageViewResource(
+                R.id.notification_icon_image_view, context.resources.getIdentifier(
+                    getUri(data.iconId, data.sunPosition), "drawable", context.packageName
+                )
+            )
         }
         val notificationExpanded = RemoteViews(context.packageName, R.layout.notification_expanded).apply {
             setTextViewText(R.id.notification_current_temp_text_view, currentTemp)
@@ -52,38 +58,56 @@ internal class WeatherNotification @Inject constructor(
             setTextViewText(R.id.notification_city_name_text_view, data.cityName)
             setTextViewText(R.id.notification_description_text_view, data.description)
             setTextViewText(R.id.notification_humidity_text_view, data.humidity)
-            setImageViewResource(R.id.notification_icon_image_view, context.resources.getIdentifier(
-                    getUri(data.iconId, data.sunPosition), "drawable", context.packageName))
+            setImageViewResource(
+                R.id.notification_icon_image_view, context.resources.getIdentifier(
+                    getUri(data.iconId, data.sunPosition), "drawable", context.packageName
+                )
+            )
             setTextViewText(R.id.notification_temp_forecast1_text_view, data.hour03Time)
             setTextViewText(R.id.notification_temp_forecast2_text_view, data.hour06Time)
             setTextViewText(R.id.notification_temp_forecast3_text_view, data.hour09Time)
             setTextViewText(R.id.notification_temp_forecast4_text_view, data.hour12Time)
             setTextViewText(R.id.notification_temp_forecast5_text_view, data.hour15Time)
-            setImageViewResource(R.id.notification_icon_forecast1_image_view, context.resources.getIdentifier(
-                    getUri(data.hour03IconId, data.hour03SunPosition), "drawable", context.packageName))
-            setImageViewResource(R.id.notification_icon_forecast2_image_view, context.resources.getIdentifier(
-                    getUri(data.hour06IconId, data.hour06SunPosition), "drawable", context.packageName))
-            setImageViewResource(R.id.notification_icon_forecast3_image_view, context.resources.getIdentifier(
-                    getUri(data.hour09IconId, data.hour09SunPosition), "drawable", context.packageName))
-            setImageViewResource(R.id.notification_icon_forecast4_image_view, context.resources.getIdentifier(
-                    getUri(data.hour12IconId, data.hour12SunPosition), "drawable", context.packageName))
-            setImageViewResource(R.id.notification_icon_forecast5_image_view, context.resources.getIdentifier(
-                    getUri(data.hour15IconId, data.hour15SunPosition), "drawable", context.packageName))
+            setImageViewResource(
+                R.id.notification_icon_forecast1_image_view, context.resources.getIdentifier(
+                    getUri(data.hour03IconId, data.hour03SunPosition), "drawable", context.packageName
+                )
+            )
+            setImageViewResource(
+                R.id.notification_icon_forecast2_image_view, context.resources.getIdentifier(
+                    getUri(data.hour06IconId, data.hour06SunPosition), "drawable", context.packageName
+                )
+            )
+            setImageViewResource(
+                R.id.notification_icon_forecast3_image_view, context.resources.getIdentifier(
+                    getUri(data.hour09IconId, data.hour09SunPosition), "drawable", context.packageName
+                )
+            )
+            setImageViewResource(
+                R.id.notification_icon_forecast4_image_view, context.resources.getIdentifier(
+                    getUri(data.hour12IconId, data.hour12SunPosition), "drawable", context.packageName
+                )
+            )
+            setImageViewResource(
+                R.id.notification_icon_forecast5_image_view, context.resources.getIdentifier(
+                    getUri(data.hour15IconId, data.hour15SunPosition), "drawable", context.packageName
+                )
+            )
         }
         // Create notification channel if necessary
         makeNotificationChannel()
         // Build notification and show
         NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_notification)
-                .setCustomContentView(notificationCollapsed)
-                .setCustomBigContentView(notificationExpanded)
-                .setStyle(NotificationCompat.DecoratedCustomViewStyle())
-                .setContentIntent(detailActivityPendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_LOW)
-                .setVibrate(LongArray(0))
-                .setAutoCancel(true)
-                .setVisibility(NotificationCompat.VISIBILITY_SECRET)
-                .run { NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, this.build()) }
+            .setSmallIcon(R.drawable.ic_notification)
+            .setCustomContentView(notificationCollapsed)
+            .setCustomBigContentView(notificationExpanded)
+            .setStyle(NotificationCompat.DecoratedCustomViewStyle())
+            .setContentIntent(detailActivityPendingIntent)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setVibrate(LongArray(0))
+            .setAutoCancel(true)
+            .setVisibility(NotificationCompat.VISIBILITY_SECRET)
+            .run { NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, this.build()) }
     }
 
     /** Create notification channel, re-creating an existing channel performs no operation */

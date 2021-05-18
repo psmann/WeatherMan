@@ -8,18 +8,24 @@ import javax.inject.Inject
 /* Created by Psmann. */
 
 internal class TeleportTimezoneDataSource @Inject constructor(
-        private val teleportTimezoneService: TeleportTimezoneService
+    private val teleportTimezoneService: TeleportTimezoneService
 ) : TimezoneDataSource {
 
-    override suspend fun getTimezone(location: Location): String = teleportTimezoneService
-            .getTimezone(location.coordinates[0].toString(), location.coordinates[1].toString())
-            .mapToString()
+    override suspend fun getTimezone(location: Location): String {
+        return teleportTimezoneService.getTimezone(
+            location.coordinates[0].toString(),
+            location.coordinates[1].toString()
+        ).mapToString()
+    }
 
     override suspend fun getAllTimezone(locations: List<Location>): List<String> {
         val timezones: MutableList<String> = mutableListOf()
-        for (location in locations) timezones.add(teleportTimezoneService
+
+        for (location in locations) timezones.add(
+            teleportTimezoneService
                 .getTimezone(location.coordinates[0].toString(), location.coordinates[1].toString())
-                .mapToString())
+                .mapToString()
+        )
         return timezones
     }
 }

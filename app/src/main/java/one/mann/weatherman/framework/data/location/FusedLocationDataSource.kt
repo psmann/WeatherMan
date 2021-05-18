@@ -29,13 +29,25 @@ internal class FusedLocationDataSource @Inject constructor(private val client: F
                 for (location in locationResult.locations) {
                     client.removeLocationUpdates(this)
                     continuation.resume(
-                        Location(listOf(location.latitude.toFloat(), location.longitude.toFloat())).truncate()
+                        Location(
+                            listOf(
+                                location.latitude.toFloat(),
+                                location.longitude.toFloat()
+                            )
+                        ).truncate()
                     )
                 }
             }
         } // Check for last location if available else request for an update (drains battery)
         client.lastLocation.addOnSuccessListener {
-            if (it != null) continuation.resume(Location(listOf(it.latitude.toFloat(), it.longitude.toFloat())).truncate())
+            if (it != null) continuation.resume(
+                Location(
+                    listOf(
+                        it.latitude.toFloat(),
+                        it.longitude.toFloat()
+                    )
+                ).truncate()
+            )
             else client.requestLocationUpdates(locationRequest, locationCallback, null) // Looper parameter can be null
         }
     }

@@ -29,14 +29,14 @@ import javax.inject.Inject
 /* Created by Psmann. */
 
 internal class MainViewModel @Inject constructor(
-        private val addCity: AddCity,
-        private val getAllWeather: GetAllWeather,
-        private val removeCity: RemoveCity,
-        private val updateWeather: UpdateWeather,
-        private val getCitySearch: GetCitySearch,
-        private val changeUnits: ChangeUnits,
-        private val settingsPrefs: SharedPreferences,
-        private val workManager: WorkManager
+    private val addCity: AddCity,
+    private val getAllWeather: GetAllWeather,
+    private val removeCity: RemoveCity,
+    private val updateWeather: UpdateWeather,
+    private val getCitySearch: GetCitySearch,
+    private val changeUnits: ChangeUnits,
+    private val settingsPrefs: SharedPreferences,
+    private val workManager: WorkManager
 ) : BaseViewModel(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val _uiModel = MutableLiveData<MainUiModel>()
@@ -46,10 +46,12 @@ internal class MainViewModel @Inject constructor(
     init {
         _uiModel.value = MainUiModel()
         settingsPrefs.registerOnSharedPreferenceChangeListener(this)
-        workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG).observeForever { updateUI() } // Update on change
+        // Update on change
+        workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG).observeForever { updateUI() }
         enqueueNotificationWork()
         updateUI(ViewPagerUpdateType.SET_SIZE)
-        exceptionResponse = { error -> // Show error and change the state back to idle
+        exceptionResponse = { error ->
+            // Show error and change the state back to idle
             _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoResponse(error)))
             _uiModel.value = _uiModel.value?.copy(viewState = Idle)
         }
@@ -59,16 +61,22 @@ internal class MainViewModel @Inject constructor(
         when (response) {
             NO_NETWORK -> _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoInternet))
             ENABLED -> if (firstRun) addCity() else updateWeather(DEVICE)
-            DISABLED -> if (firstRun) _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoGps)) else updateWeather(DB)
+            DISABLED -> if (firstRun) {
+                _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoGps))
+            } else updateWeather(DB)
             UNAVAILABLE -> _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoLocation))
         }
-        _uiModel.value = _uiModel.value?.copy(viewState = Idle) // Change state back to idle
+        // Change state back to idle
+        _uiModel.value = _uiModel.value?.copy(viewState = Idle)
     }
 
     fun searchCity(query: String) {
-        searchJob?.cancel() // Cancel previous job if any
-        _uiModel.value = uiModel.value?.copy(citySearchResult = listOf()) // Reset list after every user input
-        if (query == "" || query.length < 3) return // Return if query is less than 3 characters long
+        // Cancel previous job if any
+        searchJob?.cancel()
+        // Reset list after every user input
+        _uiModel.value = uiModel.value?.copy(citySearchResult = listOf())
+        // Return if query is less than 3 characters long
+        if (query == "" || query.length < 3) return
         searchJob = launch {
             delay(750) // Debounce
             val citySearch = withContext(IO) { getCitySearch.invoke(query) }
@@ -125,11 +133,12 @@ internal class MainViewModel @Inject constructor(
         launch {
             val data = withContext(IO) { getAllWeather.invoke().map { it.mapToUiWeather() } }
             _uiModel.value = _uiModel.value?.copy(
-                    weatherData = if (data.isEmpty()) listOf() else data,
-                    cityCount = data.size,
-                    viewState = UpdateViewPager(updateViewPager)
+                weatherData = if (data.isEmpty()) listOf() else data,
+                cityCount = data.size,
+                viewState = UpdateViewPager(updateViewPager)
             )
-            _uiModel.value = _uiModel.value?.copy(viewState = Idle) // Change state back to idle
+            // Change state back to idle
+            _uiModel.value = _uiModel.value?.copy(viewState = Idle)
         }
     }
 
@@ -145,14 +154,16 @@ internal class MainViewModel @Inject constructor(
     private fun startNotificationWork(frequency: Long) {
         launch(Default) {
             workManager.enqueueUniquePeriodicWork(
-                    NOTIFICATION_WORKER,
-                    ExistingPeriodicWorkPolicy.KEEP,
-                    PeriodicWorkRequestBuilder<NotificationWorker>(frequency, HOURS, 15, MINUTES)
-                            .addTag(NOTIFICATION_WORKER_TAG)
-                            .setConstraints(Constraints.Builder()
-                                    .setRequiredNetworkType(NetworkType.CONNECTED)
-                                    .build())
+                NOTIFICATION_WORKER,
+                ExistingPeriodicWorkPolicy.KEEP,
+                PeriodicWorkRequestBuilder<NotificationWorker>(frequency, HOURS, 15, MINUTES)
+                    .addTag(NOTIFICATION_WORKER_TAG)
+                    .setConstraints(
+                        Constraints.Builder()
+                            .setRequiredNetworkType(NetworkType.CONNECTED)
                             .build()
+                    )
+                    .build()
             )
         }
     }
@@ -177,19 +188,25 @@ internal class MainViewModel @Inject constructor(
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         launch(IO) {
-            when (key) { // All Settings are handled here, ideally this should be done in SettingsActivity
-                SETTINGS_UNITS_KEY -> { // Change units and update UI
+            when (key) {
+                // Change units and update UI
+                SETTINGS_UNITS_KEY -> {
                     changeUnits.invoke()
                     updateUI()
                 }
-                SETTINGS_NOTIFICATIONS_KEY -> if (sharedPreferences!!.getBoolean(key, true)) { // Start-Stop notifications
+                // Start-Stop notifications
+                SETTINGS_NOTIFICATIONS_KEY -> if (sharedPreferences!!.getBoolean(key, true)) {
                     startNotificationWork(sharedPreferences.getString(SETTINGS_FREQUENCY_KEY, "24")!!.toLong())
                 } else stopNotificationWork()
-                SETTINGS_FREQUENCY_KEY -> { // Change notification frequency
-                    stopNotificationWork() // Cancel old work
-                    startNotificationWork(sharedPreferences!!.getString(key, "24")!!.toLong()) // Start new work
+                // Change notification frequency
+                SETTINGS_FREQUENCY_KEY -> {
+                    // Cancel old work
+                    stopNotificationWork()
+                    // Start new work
+                    startNotificationWork(sharedPreferences!!.getString(key, "24")!!.toLong())
                 }
-                LAST_UPDATED_KEY, LAST_CHECKED_KEY -> updateUI() // Update UI when weather is updated from Main or Detail
+                // Update UI when weather is updated from Main or Detail
+                LAST_UPDATED_KEY, LAST_CHECKED_KEY -> updateUI()
             }
         }
     }

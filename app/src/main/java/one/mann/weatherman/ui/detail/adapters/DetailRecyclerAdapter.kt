@@ -46,7 +46,8 @@ internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>()
                 conditionsCloudsResultTextView.text = weather.currentWeather.clouds
                 conditionsWindSpeedResultTextView.text = weather.currentWeather.windSpeed
                 conditionsWindDirectionResultTextView.text = weather.currentWeather.windDirection
-                conditionsWindDirIconImageView.rotation = weather.currentWeather.windDirection.removeUnits(DEGREES).toFloat() // Rotate icon
+                conditionsWindDirIconImageView.rotation = weather.currentWeather.windDirection.removeUnits(DEGREES)
+                    .toFloat() // Rotate icon
                 conditionsLocationResultTextView.text = weather.city.coordinates
                 conditionsCountryFlagTextView.text = weather.currentWeather.countryFlag
                 conditionsLastUpdatedResultTextView.text = weather.currentWeather.lastUpdated
@@ -61,13 +62,13 @@ internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>()
             }
             is HourlyForecast -> holder.binding.apply {
                 val forecastList = listOf(
-                        weather.hourlyForecasts[0].temperature.removeUnits(DEGREES).toFloat(),
-                        weather.hourlyForecasts[1].temperature.removeUnits(DEGREES).toFloat(),
-                        weather.hourlyForecasts[2].temperature.removeUnits(DEGREES).toFloat(),
-                        weather.hourlyForecasts[3].temperature.removeUnits(DEGREES).toFloat(),
-                        weather.hourlyForecasts[4].temperature.removeUnits(DEGREES).toFloat(),
-                        weather.hourlyForecasts[5].temperature.removeUnits(DEGREES).toFloat(),
-                        weather.hourlyForecasts[6].temperature.removeUnits(DEGREES).toFloat()
+                    weather.hourlyForecasts[0].temperature.removeUnits(DEGREES).toFloat(),
+                    weather.hourlyForecasts[1].temperature.removeUnits(DEGREES).toFloat(),
+                    weather.hourlyForecasts[2].temperature.removeUnits(DEGREES).toFloat(),
+                    weather.hourlyForecasts[3].temperature.removeUnits(DEGREES).toFloat(),
+                    weather.hourlyForecasts[4].temperature.removeUnits(DEGREES).toFloat(),
+                    weather.hourlyForecasts[5].temperature.removeUnits(DEGREES).toFloat(),
+                    weather.hourlyForecasts[6].temperature.removeUnits(DEGREES).toFloat()
                 )
                 holder.setIsRecyclable(false) // This force reloads ForecastView to fix view not updating issue
                 forecastHourly1TimeTextView.text = weather.hourlyForecasts[0].forecastTime
@@ -84,13 +85,34 @@ internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>()
                 forecastHourly6TempTextView.text = weather.hourlyForecasts[5].temperature
                 forecastHourly7TimeTextView.text = weather.hourlyForecasts[6].forecastTime
                 forecastHourly7TempTextView.text = weather.hourlyForecasts[6].temperature
-                forecastHourly1IconImageView.loadIcon(weather.hourlyForecasts[0].forecastIconId, weather.hourlyForecasts[0].sunPosition)
-                forecastHourly2IconImageView.loadIcon(weather.hourlyForecasts[1].forecastIconId, weather.hourlyForecasts[1].sunPosition)
-                forecastHourly3IconImageView.loadIcon(weather.hourlyForecasts[2].forecastIconId, weather.hourlyForecasts[2].sunPosition)
-                forecastHourly4IconImageView.loadIcon(weather.hourlyForecasts[3].forecastIconId, weather.hourlyForecasts[3].sunPosition)
-                forecastHourly5IconImageView.loadIcon(weather.hourlyForecasts[4].forecastIconId, weather.hourlyForecasts[4].sunPosition)
-                forecastHourly6IconImageView.loadIcon(weather.hourlyForecasts[5].forecastIconId, weather.hourlyForecasts[5].sunPosition)
-                forecastHourly7IconImageView.loadIcon(weather.hourlyForecasts[6].forecastIconId, weather.hourlyForecasts[6].sunPosition)
+                forecastHourly1IconImageView.loadIcon(
+                    weather.hourlyForecasts[0].forecastIconId,
+                    weather.hourlyForecasts[0].sunPosition
+                )
+                forecastHourly2IconImageView.loadIcon(
+                    weather.hourlyForecasts[1].forecastIconId,
+                    weather.hourlyForecasts[1].sunPosition
+                )
+                forecastHourly3IconImageView.loadIcon(
+                    weather.hourlyForecasts[2].forecastIconId,
+                    weather.hourlyForecasts[2].sunPosition
+                )
+                forecastHourly4IconImageView.loadIcon(
+                    weather.hourlyForecasts[3].forecastIconId,
+                    weather.hourlyForecasts[3].sunPosition
+                )
+                forecastHourly5IconImageView.loadIcon(
+                    weather.hourlyForecasts[4].forecastIconId,
+                    weather.hourlyForecasts[4].sunPosition
+                )
+                forecastHourly6IconImageView.loadIcon(
+                    weather.hourlyForecasts[5].forecastIconId,
+                    weather.hourlyForecasts[5].sunPosition
+                )
+                forecastHourly7IconImageView.loadIcon(
+                    weather.hourlyForecasts[6].forecastIconId,
+                    weather.hourlyForecasts[6].sunPosition
+                )
                 forecastHourlyForecastGraphView.setPoints(forecastList) // Set points for forecast graph
             }
             is DailyForecast -> holder.binding.apply {

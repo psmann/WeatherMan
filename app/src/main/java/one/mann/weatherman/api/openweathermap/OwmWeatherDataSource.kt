@@ -10,20 +10,21 @@ import javax.inject.Inject
 
 /* Created by Psmann. */
 
-internal class OwmWeatherDataSource @Inject constructor(private val owmWeatherService: OwmWeatherService) : WeatherDataSource {
+internal class OwmWeatherDataSource @Inject constructor(private val owmWeatherService: OwmWeatherService) :
+    WeatherDataSource {
 
     override suspend fun getCurrentWeather(location: Location): CurrentWeather {
         return owmWeatherService.getCurrentWeather(location.coordinates[0], location.coordinates[1])
-                .mapToDomain()
+            .mapToDomain()
     }
 
     override suspend fun getDailyForecasts(location: Location): List<DailyForecast> {
         return owmWeatherService.getDailyForecast(location.coordinates[0], location.coordinates[1]).list
-                ?.map { it.mapToDomain() }!!
+            ?.map { it.mapToDomain() }!!
     }
 
     override suspend fun getHourlyForecasts(location: Location): List<HourlyForecast> {
         return owmWeatherService.getHourlyForecast(location.coordinates[0], location.coordinates[1]).list
-                ?.map { it.mapToDomain() }!!
+            ?.map { it.mapToDomain() }!!
     }
 }

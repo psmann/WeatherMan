@@ -16,9 +16,9 @@ internal class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.settings_frame_layout, SettingsFragment())
-                .commit()
+            .beginTransaction()
+            .replace(R.id.settings_frame_layout, SettingsFragment())
+            .commit()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 

@@ -31,7 +31,7 @@ internal abstract class BaseLocationActivity : AppCompatActivity() {
     companion object {
         private const val LOCATION_REQUEST_CODE = 1011
         private var locationPermissionListener: (Boolean) -> Unit = {} // Delegate function object to activity callback
-        private var networkAndLocationListener: (LocationServicesResponse) -> Unit = {} // Delegate function object to activity callback
+        private var networkAndLocationListener: (LocationServicesResponse) -> Unit = {}
         private val locationRequestBuilder = LocationSettingsRequest.Builder()
             .addLocationRequest(LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY))
     }

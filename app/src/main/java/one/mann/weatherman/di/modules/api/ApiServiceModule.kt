@@ -51,13 +51,13 @@ internal class ApiServiceModule {
     @Singleton
     @OpenWeatherMapApi
     fun provideOwmOkHttpClient(
-            @OwmAppId appIdQueryInterceptor: QueryInterceptor,
-            @Units unitsQueryInterceptor: QueryInterceptor
+        @OwmAppId appIdQueryInterceptor: QueryInterceptor,
+        @Units unitsQueryInterceptor: QueryInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
-                .addInterceptor(appIdQueryInterceptor)
-                .addInterceptor(unitsQueryInterceptor)
-                .build()
+            .addInterceptor(appIdQueryInterceptor)
+            .addInterceptor(unitsQueryInterceptor)
+            .build()
     }
 
     @Provides
@@ -65,36 +65,36 @@ internal class ApiServiceModule {
     @TomTomApi
     fun provideTomTomOkHttpClient(@TomTomKey keyQueryInterceptor: QueryInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
-                .addInterceptor(keyQueryInterceptor)
-                .build()
+            .addInterceptor(keyQueryInterceptor)
+            .build()
     }
 
     @Provides
     @Singleton
     @OpenWeatherMapApi
     fun provideOwmRestAdapter(
-            @OpenWeatherMapApi client: OkHttpClient,
-            gsonConverterFactory: GsonConverterFactory
+        @OpenWeatherMapApi client: OkHttpClient,
+        gsonConverterFactory: GsonConverterFactory
     ): Retrofit {
         return Retrofit.Builder()
-                .baseUrl(OWM_BASE_URL)
-                .addConverterFactory(gsonConverterFactory)
-                .client(client)
-                .build()
+            .baseUrl(OWM_BASE_URL)
+            .addConverterFactory(gsonConverterFactory)
+            .client(client)
+            .build()
     }
 
     @Provides
     @Singleton
     @TomTomApi
     fun provideTomTomRestAdapter(
-            @TomTomApi client: OkHttpClient,
-            gsonConverterFactory: GsonConverterFactory
+        @TomTomApi client: OkHttpClient,
+        gsonConverterFactory: GsonConverterFactory
     ): Retrofit {
         return Retrofit.Builder()
-                .baseUrl(TOMTOM_BASE_URL)
-                .addConverterFactory(gsonConverterFactory)
-                .client(client)
-                .build()
+            .baseUrl(TOMTOM_BASE_URL)
+            .addConverterFactory(gsonConverterFactory)
+            .client(client)
+            .build()
     }
 
     @Provides
@@ -102,20 +102,26 @@ internal class ApiServiceModule {
     @TeleportApi
     fun provideTeleportRestAdapter(gsonConverterFactory: GsonConverterFactory): Retrofit {
         return Retrofit.Builder()
-                .baseUrl(TELEPORT_BASE_URL)
-                .addConverterFactory(gsonConverterFactory)
-                .build()
+            .baseUrl(TELEPORT_BASE_URL)
+            .addConverterFactory(gsonConverterFactory)
+            .build()
     }
 
     @Provides
     @Singleton
-    fun provideOwmService(@OpenWeatherMapApi retrofit: Retrofit): OwmWeatherService = retrofit.create(OwmWeatherService::class.java)
+    fun provideOwmService(@OpenWeatherMapApi retrofit: Retrofit): OwmWeatherService {
+        return retrofit.create(OwmWeatherService::class.java)
+    }
 
     @Provides
     @Singleton
-    fun provideTomTomService(@TomTomApi retrofit: Retrofit): TomTomSearchService = retrofit.create(TomTomSearchService::class.java)
+    fun provideTomTomService(@TomTomApi retrofit: Retrofit): TomTomSearchService {
+        return retrofit.create(TomTomSearchService::class.java)
+    }
 
     @Provides
     @Singleton
-    fun provideTeleportService(@TeleportApi retrofit: Retrofit): TeleportTimezoneService = retrofit.create(TeleportTimezoneService::class.java)
+    fun provideTeleportService(@TeleportApi retrofit: Retrofit): TeleportTimezoneService {
+        return retrofit.create(TeleportTimezoneService::class.java)
+    }
 }

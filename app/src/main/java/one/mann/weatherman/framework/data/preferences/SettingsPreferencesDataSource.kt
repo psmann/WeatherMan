@@ -9,14 +9,20 @@ import javax.inject.Inject
 
 /* Created by Psmann. */
 
-internal class SettingsPreferencesDataSource @Inject constructor(private val preferences: SharedPreferences) : PreferencesDataSource {
+internal class SettingsPreferencesDataSource @Inject constructor(private val preferences: SharedPreferences) :
+    PreferencesDataSource {
 
     companion object {
         private const val UNITS = "metric"
     }
 
     override suspend fun getUnits(): String {
-        if (preferences.getString(SETTINGS_UNITS_KEY, "")!! == "") preferences.edit { putString(SETTINGS_UNITS_KEY, UNITS) }
+        if (preferences.getString(SETTINGS_UNITS_KEY, "")!! == "") preferences.edit {
+            putString(
+                SETTINGS_UNITS_KEY,
+                UNITS
+            )
+        }
         return preferences.getString(SETTINGS_UNITS_KEY, UNITS)!!
     }
 

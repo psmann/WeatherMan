@@ -10,7 +10,7 @@ internal interface TeleportTimezoneService {
 
     @GET("{lat},{long}/?embed=location:nearest-cities/location:nearest-city/city:timezone")
     suspend fun getTimezone(
-            @Path("lat") latitude: String,
-            @Path("long") longitude: String
+        @Path("lat") latitude: String,
+        @Path("long") longitude: String
     ): Timezone?
 }

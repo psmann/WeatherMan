@@ -17,7 +17,9 @@ fun Any.addSuffix(units: String): String = this.toString() + units
 /** Remove units from data */
 fun String.removeUnits(vararg units: String): String {
     var result = this
+
     units.forEach { result = result.replace(it, "") }
+
     return result
 }
 
@@ -39,9 +41,12 @@ fun Float.changeUnits(units: String, type: UnitsType): Float = when (type) {
 fun Float.roundOff(): String = this.roundToInt().toString()
 
 /** Truncate location coordinates to 4 decimal places */
-fun Location.truncate(): Location {
-    return Location(listOf(String.format("%.4f", coordinates[0]).toFloat(), String.format("%.4f", coordinates[1]).toFloat()))
-}
+fun Location.truncate(): Location = Location(
+    listOf(
+        String.format("%.4f", coordinates[0]).toFloat(),
+        String.format("%.4f", coordinates[1]).toFloat()
+    )
+)
 
 /** Convert location coordinates into a truncated comma separated string */
 fun List<Float>.coordinatesInString(): String = String.format("%.4f", this[0]) + ", " + String.format("%.4f", this[1])
@@ -50,20 +55,25 @@ fun List<Float>.coordinatesInString(): String = String.format("%.4f", this[0]) +
 fun countryCodeToEmoji(code: String): String {
     val firstChar = Character.codePointAt(code, 0) - ASCII_OFFSET + FLAG_OFFSET
     val secondChar = Character.codePointAt(code, 1) - ASCII_OFFSET + FLAG_OFFSET
+
     return String(Character.toChars(firstChar)) + String(Character.toChars(secondChar))
 }
 
 /** Base function to convert Unix epoch time into regular time formats */
 private fun epochToFormat(time: Long, timezone: String, pattern: String): String {
     val format = SimpleDateFormat(pattern, Locale.getDefault())
+
     format.timeZone = if (timezone == "") TimeZone.getDefault() else TimeZone.getTimeZone(timezone)
+
     return format.format(Date(time)).toString()
 }
 
 /** Calculate the length of day using sunrise and sunset */
 fun lengthOfDay(sunrise: Long, sunset: Long): String {
     val hoursFormat = SimpleDateFormat(DURATION_PATTERN, Locale.getDefault())
-    hoursFormat.timeZone = TimeZone.getTimeZone("UTC") // Remove time offset
+    // Remove time offset
+    hoursFormat.timeZone = TimeZone.getTimeZone("UTC")
+
     return hoursFormat.format(Date(sunset - sunrise)).toString()
 }
 
@@ -71,8 +81,10 @@ fun lengthOfDay(sunrise: Long, sunset: Long): String {
 fun epochToMinutes(time: Long, timezone: String): Float {
     val hourFormat = SimpleDateFormat("H", Locale.getDefault())
     val minuteFormat = SimpleDateFormat("m", Locale.getDefault())
+
     hourFormat.timeZone = if (timezone == "") TimeZone.getDefault() else TimeZone.getTimeZone(timezone)
     minuteFormat.timeZone = if (timezone == "") TimeZone.getDefault() else TimeZone.getTimeZone(timezone)
+
     return (hourFormat.format(Date(time)).toFloat() * 60) + minuteFormat.format(Date(time)).toFloat()
 }
 
@@ -94,13 +106,18 @@ fun sunPositionBias(sunrise: Float, sunset: Float, time: Float): Float = (time -
 /** Calculate FeelsLike temperature using https://blog.metservice.com/FeelsLikeTemp for reference */
 fun feelsLike(temperature: Float, humidity: Int, wind: Float): Float {
     var feelsLike: Double
-    if (temperature < 14) { // = Wind Chill calculated using JAG/TI formula
+
+    if (temperature < 14) {
+        // Wind Chill calculated using JAG/TI formula
         val k = (wind.toDouble() * 3.6).pow(0.16) // Wind speed converted to km/h and raised to the power
         feelsLike = 13.12 + (0.6215 * temperature) - (11.35 * k) + (0.396 * temperature * k)
-        if (temperature > 10) feelsLike = temperature - (((temperature - feelsLike) * (14 - temperature)) / 4) // = Roll-over
-    } else { // = Heat Index or Apparent Temperature calculated using the Steadman formula
+        // Roll-over
+        if (temperature > 10) feelsLike = temperature - (((temperature - feelsLike) * (14 - temperature)) / 4)
+    } else {
+        // Heat Index or Apparent Temperature calculated using the Steadman formula
         val e = humidity / 100 * 6.105 * exp(17.27 * temperature / (237.7 + temperature)) // Pressure
         feelsLike = temperature + (0.33 * e) - (0.7 * wind) - 4
     }
-    return String.format("%.1f", feelsLike).toFloat() // Set precision to match current temp
+    // Set precision to match current temperature and return
+    return String.format("%.1f", feelsLike).toFloat()
 }

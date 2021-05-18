@@ -20,4 +20,6 @@ internal fun getGradient(sunPosition: Float = 0.1f, isOvercast: Boolean = false)
 }
 
 /** Get file name for vector resource */
-internal fun getUri(code: Int, sunPosition: Float): String = if (sunPosition in 0.0..1.0) dayIcons(code) else nightIcons(code)
+internal fun getUri(code: Int, sunPosition: Float): String {
+    return if (sunPosition in 0.0..1.0) dayIcons(code) else nightIcons(code)
+}

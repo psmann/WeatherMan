@@ -26,9 +26,9 @@ import javax.inject.Inject
 /* Created by Psmann. */
 
 internal class DetailViewModel @Inject constructor(
-        private val getAllWeather: GetAllWeather,
-        private val updateWeather: UpdateWeather,
-        private val settingsPrefs: SharedPreferences
+    private val getAllWeather: GetAllWeather,
+    private val updateWeather: UpdateWeather,
+    private val settingsPrefs: SharedPreferences
 ) : BaseViewModel(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     private val _uiModel = MutableLiveData<DetailUiModel>()
@@ -39,7 +39,8 @@ internal class DetailViewModel @Inject constructor(
         _uiModel.value = DetailUiModel()
         updateUI()
         settingsPrefs.registerOnSharedPreferenceChangeListener(this)
-        exceptionResponse = { error ->  // Show error and change the state back to idle
+        exceptionResponse = { error ->
+            // Show error and change the state back to idle
             _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoResponse(error)))
             _uiModel.value = _uiModel.value?.copy(viewState = Idle)
         }
@@ -48,7 +49,8 @@ internal class DetailViewModel @Inject constructor(
     fun handleRefreshing(response: LocationServicesResponse) = when (response) {
         NO_NETWORK -> {
             _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoInternet))
-            _uiModel.value = _uiModel.value?.copy(viewState = Idle) // Change state back to idle
+            // Change state back to idle
+            _uiModel.value = _uiModel.value?.copy(viewState = Idle)
         }
         ENABLED -> updateWeather(DEVICE)
         DISABLED -> updateWeather(DB)
@@ -66,6 +68,7 @@ internal class DetailViewModel @Inject constructor(
             _uiModel.value = _uiModel.value?.copy(viewState = Refreshing)
             withContext(IO) {
                 val weatherUpdated = updateWeather.invoke(locationType)
+
                 if (weatherUpdated) settingsPrefs.edit { putLong(LAST_UPDATED_KEY, System.currentTimeMillis()) }
                 else settingsPrefs.edit { putLong(LAST_CHECKED_KEY, System.currentTimeMillis()) }
             }
@@ -75,9 +78,10 @@ internal class DetailViewModel @Inject constructor(
     private fun updateUI() {
         launch {
             val data = withContext(IO) { getAllWeather.invoke().map { it.mapToUiWeather() } }
+
             _uiModel.value = _uiModel.value?.copy(
-                    weatherData = if (data.isEmpty()) listOf() else data,
-                    viewState = Idle
+                weatherData = if (data.isEmpty()) listOf() else data,
+                viewState = Idle
             )
         }
     }

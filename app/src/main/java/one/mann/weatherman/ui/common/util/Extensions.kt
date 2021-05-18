@@ -84,19 +84,25 @@ internal fun View.setSlideAnimation(direction: Direction, animationDuration: Lon
 internal suspend fun Context.isLocationEnabled(): Boolean = suspendCancellableCoroutine { continuation ->
     val locationRequestBuilder = LocationSettingsRequest.Builder()
         .addLocationRequest(LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY))
+
     if (ContextCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
         LocationServices.getSettingsClient(this)
             .checkLocationSettings(locationRequestBuilder.build())
             .addOnCompleteListener {
-                try { // Location settings are On
+                try {
+                    // Location settings are On, return true
                     it.getResult(ApiException::class.java)
-                    continuation.resume(true) // Return True
-                } catch (exception: ApiException) { // Location settings are Off
-                    continuation.resume(false) // Return False
+                    continuation.resume(true)
+                } catch (exception: ApiException) {
+                    // Location settings are Off, return false
+                    continuation.resume(false)
                 }
             }
 
-    } else continuation.resume(false) // Location Permission not granted, return False
+    } else {
+        // Location Permission not granted, return False
+        continuation.resume(false)
+    }
 }
 
 ///** Set correct StatusBar and NavigationBar heights */

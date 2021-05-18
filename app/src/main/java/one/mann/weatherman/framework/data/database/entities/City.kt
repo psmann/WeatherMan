@@ -7,10 +7,10 @@ import androidx.room.PrimaryKey
 
 @Entity
 internal data class City(
-        @PrimaryKey(autoGenerate = false) val cityId: String,
-        val cityName: String,
-        val coordinatesLat: Float,
-        val coordinatesLong: Float,
-        val timezone: String,
-        val timeCreated: Long // Used to order the list
+    @PrimaryKey(autoGenerate = false) val cityId: String,
+    val cityName: String,
+    val coordinatesLat: Float,
+    val coordinatesLong: Float,
+    val timezone: String,
+    val timeCreated: Long // Used to order the list
 )

@@ -7,10 +7,10 @@ import androidx.room.PrimaryKey
 
 @Entity
 internal data class HourlyForecast(
-        @PrimaryKey(autoGenerate = true) val hourlyId: Int = 0,
-        val time: Long,
-        val temperature: Float,
-        val iconId: Int,
-        val sunPosition: Float,
-        val cityId: String
+    @PrimaryKey(autoGenerate = true) val hourlyId: Int = 0,
+    val time: Long,
+    val temperature: Float,
+    val iconId: Int,
+    val sunPosition: Float,
+    val cityId: String
 )
