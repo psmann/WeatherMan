@@ -17,11 +17,11 @@ import javax.inject.Inject
 /* Created by Psmann. */
 
 class WeatherRepository @Inject constructor(
-        private val weatherData: WeatherDataSource,
-        private val timezoneData: TimezoneDataSource,
-        private val deviceLocation: DeviceLocationSource,
-        private val dbData: DatabaseDataSource,
-        private val prefsData: PreferencesDataSource
+    private val weatherData: WeatherDataSource,
+    private val timezoneData: TimezoneDataSource,
+    private val deviceLocation: DeviceLocationSource,
+    private val dbData: DatabaseDataSource,
+    private val prefsData: PreferencesDataSource
 ) {
 
     companion object {
@@ -35,18 +35,18 @@ class WeatherRepository @Inject constructor(
         val currentWeather = weatherData.getCurrentWeather(location).copy(units = prefsData.getUnits())
 
         dbData.insertCityAndWeather(
-                mapToDomainWeather(
-                        City(
-                                cityId = generateCityId(),
-                                coordinatesLat = location.coordinates[0],
-                                coordinatesLong = location.coordinates[1],
-                                timezone = if (apiLocation != null) timezoneData.getTimezone(location) else "",
-                                timeCreated = timeCreated
-                        ),
-                        currentWeather,
-                        weatherData.getDailyForecasts(location),
-                        weatherData.getHourlyForecasts(location)
-                )
+            mapToDomainWeather(
+                City(
+                    cityId = generateCityId(),
+                    coordinatesLat = location.coordinates[0],
+                    coordinatesLong = location.coordinates[1],
+                    timezone = if (apiLocation != null) timezoneData.getTimezone(location) else "",
+                    timeCreated = timeCreated
+                ),
+                currentWeather,
+                weatherData.getDailyForecasts(location),
+                weatherData.getHourlyForecasts(location)
+            )
         )
     }
 
@@ -73,15 +73,15 @@ class WeatherRepository @Inject constructor(
             val location = if (index == 0 && locationType == LocationType.DEVICE) {
                 deviceLocation.getLocation()
             } else Location(coordinates = listOf(dbWeather.city.coordinatesLat, dbWeather.city.coordinatesLong))
-            val cityForUpdate = if (index == 0) City(
-                    cityId = dbWeather.city.cityId,
-                    coordinatesLat = location.coordinates[0],
-                    coordinatesLong = location.coordinates[1],
-                    timeCreated = dbWeather.city.timeCreated
-            ) else City()
+            val cityForUpdate = City(
+                cityId = dbWeather.city.cityId,
+                coordinatesLat = location.coordinates[0],
+                coordinatesLong = location.coordinates[1],
+                timeCreated = dbWeather.city.timeCreated
+            )
             val currentWeatherForUpdate = weatherData.getCurrentWeather(location).copy(
-                    weatherId = dbWeather.currentWeather.weatherId,
-                    units = prefsData.getUnits()
+                weatherId = dbWeather.currentWeather.weatherId,
+                units = prefsData.getUnits()
             )
             val dailyForecastsFromApi = weatherData.getDailyForecasts(location)
             val hourlyForecastsFromApi = weatherData.getHourlyForecasts(location)
@@ -92,18 +92,19 @@ class WeatherRepository @Inject constructor(
                 hourlyForecastsFromApi[i].copy(hourlyId = dbHourlyForecast.hourlyId)
             }
             weathersForUpdate.add(
-                    mapToDomainWeather(
-                            cityForUpdate,
-                            currentWeatherForUpdate,
-                            dailyForecastsForUpdate,
-                            hourlyForecastsForUpdate
-                    )
+                mapToDomainWeather(
+                    cityForUpdate,
+                    currentWeatherForUpdate,
+                    dailyForecastsForUpdate,
+                    hourlyForecastsForUpdate
+                )
             )
         }
         updateAllWeather(weathersForUpdate)
         true
     } else {
-        dbData.updateLastChecked(System.currentTimeMillis()) // If time out period isn't over then just update lastChecked
+        // If time out period isn't over then just update lastChecked
+        dbData.updateLastChecked(System.currentTimeMillis())
         false
     }
 

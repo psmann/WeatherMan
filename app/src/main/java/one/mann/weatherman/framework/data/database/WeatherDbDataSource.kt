@@ -35,6 +35,7 @@ internal class WeatherDbDataSource @Inject constructor(db: WeatherDb) : Database
     override suspend fun getAllCitiesAndWeathers(): List<DomainWeather> {
         val cities = dao.getAllCities()
         val weathers = mutableListOf<DomainWeather>()
+
         cities.forEach {
             val currentWeather = dao.getCurrentWeather(it.cityId).currentWeather
             val dailyForecasts = dao.getCDailyForecasts(it.cityId).getSortedForecast()
@@ -57,13 +58,13 @@ internal class WeatherDbDataSource @Inject constructor(db: WeatherDb) : Database
         val dailyForecastsDb = mutableListOf<DailyForecast>()
         val hourlyForecastsDb = mutableListOf<HourlyForecast>()
 
-        weathers.forEachIndexed { i, weather ->
-            // Only update user city in the database as only it can change (i.e. if user location changes)
-            if (i == 0) dao.updateCity(weather.mapToDbCity())
-            currentWeathersDb.add(weather.mapToDbCurrentWeather())
-            dailyForecastsDb.addAll(weather.mapToDbDailyForecasts())
-            hourlyForecastsDb.addAll(weather.mapToDbHourlyForecasts())
+        weathers.forEach {
+            currentWeathersDb.add(it.mapToDbCurrentWeather())
+            dailyForecastsDb.addAll(it.mapToDbDailyForecasts())
+            hourlyForecastsDb.addAll(it.mapToDbHourlyForecasts())
         }
+        // Only update user city in the database as only it can change (i.e. if user location changes)
+        dao.updateCity(weathers[0].mapToDbCity())
         dao.updateCurrentWeathers(currentWeathersDb)
         dao.updateDailyForecasts(dailyForecastsDb)
         dao.updateHourlyForecasts(hourlyForecastsDb)
