@@ -79,7 +79,7 @@ internal class MainViewModel @Inject constructor(
         if (query == "" || query.length < 3) return
         searchJob = launch {
             delay(750) // Debounce
-            val citySearch = withContext(IO) { getCitySearch.invoke(query) }
+            val citySearch = getCitySearch.invoke(query)
             if (citySearch.isNotEmpty()) _uiModel.value = uiModel.value?.copy(citySearchResult = citySearch)
         }
     }
@@ -99,7 +99,7 @@ internal class MainViewModel @Inject constructor(
                 }
             }
             _uiModel.value = _uiModel.value?.copy(citySearchResult = listOf(), viewState = Refreshing)
-            withContext(IO) { addCity.invoke(apiLocation) }
+            addCity.invoke(apiLocation)
             updateUI(ViewPagerUpdateType.ADD_ITEM)
         }
     }
@@ -113,8 +113,8 @@ internal class MainViewModel @Inject constructor(
     private fun updateWeather(locationType: LocationType) {
         launch {
             _uiModel.value = _uiModel.value?.copy(viewState = Refreshing)
+            val weatherUpdated = updateWeather.invoke(locationType)
             withContext(IO) {
-                val weatherUpdated = updateWeather.invoke(locationType)
                 if (weatherUpdated) settingsPrefs.edit { putLong(LAST_UPDATED_KEY, System.currentTimeMillis()) }
                 else settingsPrefs.edit { putLong(LAST_CHECKED_KEY, System.currentTimeMillis()) }
             }
@@ -124,7 +124,7 @@ internal class MainViewModel @Inject constructor(
     fun removeCity(position: Int) {
         val cityId = _uiModel.value?.weatherData?.get(position)?.city?.cityId ?: return // Return if null
         launch {
-            withContext(IO) { removeCity.invoke(cityId) }
+            removeCity.invoke(cityId)
             updateUI(ViewPagerUpdateType.REMOVE_ITEM)
         }
     }
@@ -152,20 +152,18 @@ internal class MainViewModel @Inject constructor(
     }
 
     private fun startNotificationWork(frequency: Long) {
-        launch(Default) {
-            workManager.enqueueUniquePeriodicWork(
-                NOTIFICATION_WORKER,
-                ExistingPeriodicWorkPolicy.KEEP,
-                PeriodicWorkRequestBuilder<NotificationWorker>(frequency, HOURS, 15, MINUTES)
-                    .addTag(NOTIFICATION_WORKER_TAG)
-                    .setConstraints(
-                        Constraints.Builder()
-                            .setRequiredNetworkType(NetworkType.CONNECTED)
-                            .build()
-                    )
-                    .build()
-            )
-        }
+        workManager.enqueueUniquePeriodicWork(
+            NOTIFICATION_WORKER,
+            ExistingPeriodicWorkPolicy.KEEP,
+            PeriodicWorkRequestBuilder<NotificationWorker>(frequency, HOURS, 15, MINUTES)
+                .addTag(NOTIFICATION_WORKER_TAG)
+                .setConstraints(
+                    Constraints.Builder()
+                        .setRequiredNetworkType(NetworkType.CONNECTED)
+                        .build()
+                )
+                .build()
+        )
     }
 
     private fun stopNotificationWork() {

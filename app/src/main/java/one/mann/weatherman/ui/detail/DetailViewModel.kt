@@ -66,9 +66,8 @@ internal class DetailViewModel @Inject constructor(
     private fun updateWeather(locationType: LocationType) {
         launch {
             _uiModel.value = _uiModel.value?.copy(viewState = Refreshing)
+            val weatherUpdated = updateWeather.invoke(locationType)
             withContext(IO) {
-                val weatherUpdated = updateWeather.invoke(locationType)
-
                 if (weatherUpdated) settingsPrefs.edit { putLong(LAST_UPDATED_KEY, System.currentTimeMillis()) }
                 else settingsPrefs.edit { putLong(LAST_CHECKED_KEY, System.currentTimeMillis()) }
             }
