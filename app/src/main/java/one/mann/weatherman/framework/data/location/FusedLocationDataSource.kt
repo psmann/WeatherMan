@@ -47,8 +47,8 @@ internal class FusedLocationDataSource @Inject constructor(private val client: F
                         it.longitude.toFloat()
                     )
                 ).truncate()
-            )
-            else client.requestLocationUpdates(locationRequest, locationCallback, null) // Looper parameter can be null
+            ) // Looper parameter can be null
+            else client.requestLocationUpdates(locationRequest, locationCallback, null)
         }
     }
 }
