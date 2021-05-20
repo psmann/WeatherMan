@@ -18,6 +18,7 @@ import one.mann.domain.models.location.LocationType
 import one.mann.domain.models.location.LocationType.DB
 import one.mann.domain.models.location.LocationType.DEVICE
 import one.mann.interactors.usecases.*
+import one.mann.weatherman.common.*
 import one.mann.weatherman.framework.service.workers.NotificationWorker
 import one.mann.weatherman.ui.common.base.BaseViewModel
 import one.mann.weatherman.ui.common.util.*
@@ -145,8 +146,13 @@ internal class MainViewModel @Inject constructor(
     /** Start worker if notifications are turned on by the user, does nothing if worker is already running */
     private fun enqueueNotificationWork() {
         launch(IO) {
-            if (settingsPrefs.getBoolean(SETTINGS_NOTIFICATIONS_KEY, true)) {
-                startNotificationWork(settingsPrefs.getString(SETTINGS_FREQUENCY_KEY, "1")!!.toLong())
+            if (settingsPrefs.getBoolean(SETTINGS_NOTIFICATIONS_KEY, SETTINGS_NOTIFICATIONS_DEFAULT)) {
+                startNotificationWork(
+                    settingsPrefs.getString(
+                        SETTINGS_FREQUENCY_KEY,
+                        SETTINGS_FREQUENCY_DEFAULT
+                    )!!.toLong()
+                )
             }
         }
     }
@@ -170,7 +176,7 @@ internal class MainViewModel @Inject constructor(
         launch(Default) { workManager.cancelUniqueWork(NOTIFICATION_WORKER) }
     }
 
-    fun navigationGuideShown(): Boolean = settingsPrefs.getBoolean(NAVIGATION_GUIDE_KEY, false)
+    fun navigationGuideShown(): Boolean = settingsPrefs.getBoolean(NAVIGATION_GUIDE_KEY, NAVIGATION_GUIDE_DEFAULT)
 
     fun setNavigationGuideShown() {
         launch(IO) { settingsPrefs.edit { putBoolean(NAVIGATION_GUIDE_KEY, true) } }
@@ -193,15 +199,20 @@ internal class MainViewModel @Inject constructor(
                     updateUI()
                 }
                 // Start-Stop notifications
-                SETTINGS_NOTIFICATIONS_KEY -> if (sharedPreferences!!.getBoolean(key, true)) {
-                    startNotificationWork(sharedPreferences.getString(SETTINGS_FREQUENCY_KEY, "24")!!.toLong())
+                SETTINGS_NOTIFICATIONS_KEY -> if (sharedPreferences!!.getBoolean(key, SETTINGS_NOTIFICATIONS_DEFAULT)) {
+                    startNotificationWork(
+                        sharedPreferences.getString(
+                            SETTINGS_FREQUENCY_KEY,
+                            SETTINGS_FREQUENCY_DEFAULT
+                        )!!.toLong()
+                    )
                 } else stopNotificationWork()
                 // Change notification frequency
                 SETTINGS_FREQUENCY_KEY -> {
                     // Cancel old work
                     stopNotificationWork()
                     // Start new work
-                    startNotificationWork(sharedPreferences!!.getString(key, "24")!!.toLong())
+                    startNotificationWork(sharedPreferences!!.getString(key, SETTINGS_FREQUENCY_DEFAULT)!!.toLong())
                 }
                 // Update UI when weather is updated from Main or Detail
                 LAST_UPDATED_KEY, LAST_CHECKED_KEY -> updateUI()

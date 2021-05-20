@@ -17,8 +17,8 @@ import one.mann.domain.models.location.LocationType.DEVICE
 import one.mann.interactors.usecases.GetAllWeather
 import one.mann.interactors.usecases.UpdateWeather
 import one.mann.weatherman.ui.common.base.BaseViewModel
-import one.mann.weatherman.ui.common.util.LAST_CHECKED_KEY
-import one.mann.weatherman.ui.common.util.LAST_UPDATED_KEY
+import one.mann.weatherman.common.LAST_CHECKED_KEY
+import one.mann.weatherman.common.LAST_UPDATED_KEY
 import one.mann.weatherman.ui.common.util.mapToUiWeather
 import one.mann.weatherman.ui.detail.DetailUiModel.State.*
 import javax.inject.Inject

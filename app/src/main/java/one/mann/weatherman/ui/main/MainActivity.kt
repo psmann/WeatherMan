@@ -24,6 +24,8 @@ import one.mann.domain.models.ViewPagerUpdateType.*
 import one.mann.domain.models.location.Location
 import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
+import one.mann.weatherman.common.PAGER_COUNT
+import one.mann.weatherman.common.PAGER_POSITION
 import one.mann.weatherman.databinding.ActivityMainBinding
 import one.mann.weatherman.ui.common.base.BaseLocationActivity
 import one.mann.weatherman.ui.common.util.*

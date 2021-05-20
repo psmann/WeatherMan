@@ -1,13 +1,18 @@
-package one.mann.weatherman.ui.common.util
+package one.mann.weatherman.common
 
 /* Created by Psmann. */
 
 /** Preferences */
 internal const val SETTINGS_UNITS_KEY = "units"
+internal const val SETTINGS_UNITS_DEFAULT = "metric"
 internal const val SETTINGS_NOTIFICATIONS_KEY = "notification"
+internal const val SETTINGS_NOTIFICATIONS_DEFAULT = true
 internal const val SETTINGS_FREQUENCY_KEY = "notification_frequency"
+internal const val SETTINGS_FREQUENCY_DEFAULT = "24"
 internal const val NAVIGATION_GUIDE_KEY = "navigation_guide"
+internal const val NAVIGATION_GUIDE_DEFAULT = false
 internal const val LAST_UPDATED_KEY = "last_updated_time"
+internal const val LAST_UPDATED_DEFAULT = 0L
 internal const val LAST_CHECKED_KEY = "last_checked_time"
 
 /** WorkManager */

@@ -10,6 +10,8 @@ import one.mann.domain.models.ErrorType.NoResponse
 import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.api.openweathermap.isOvercast
+import one.mann.weatherman.common.ACTIVITY_BACKGROUND
+import one.mann.weatherman.common.PAGER_POSITION
 import one.mann.weatherman.databinding.ActivityDetailBinding
 import one.mann.weatherman.ui.common.base.BaseLocationActivity
 import one.mann.weatherman.ui.common.util.*

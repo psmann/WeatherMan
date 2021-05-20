@@ -11,6 +11,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.api.openweathermap.isOvercast
+import one.mann.weatherman.common.ACTIVITY_BACKGROUND
+import one.mann.weatherman.common.ACTIVITY_BACK_REQUEST_CODE
+import one.mann.weatherman.common.DETAIL_BUTTON_CLICKED
+import one.mann.weatherman.common.PAGER_POSITION
 import one.mann.weatherman.databinding.FragmentCityBinding
 import one.mann.weatherman.ui.common.models.Weather
 import one.mann.weatherman.ui.common.util.*

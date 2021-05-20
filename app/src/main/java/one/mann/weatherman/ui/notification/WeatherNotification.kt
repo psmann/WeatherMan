@@ -17,6 +17,9 @@ import one.mann.domain.logic.removeUnits
 import one.mann.domain.logic.roundOff
 import one.mann.interactors.usecases.GetNotificationData
 import one.mann.weatherman.R
+import one.mann.weatherman.common.NOTIFICATION_CHANNEL_ID
+import one.mann.weatherman.common.NOTIFICATION_CHANNEL_NAME
+import one.mann.weatherman.common.NOTIFICATION_ID
 import one.mann.weatherman.ui.common.util.*
 import one.mann.weatherman.ui.detail.DetailActivity
 import javax.inject.Inject
