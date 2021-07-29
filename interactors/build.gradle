@@ -5,18 +5,16 @@ dependencies {
     // Modules
     api project(":domain")
 
-    // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    // Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0'
+    // Kotlin Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1'
 
     // Dagger 2
-    implementation 'com.google.dagger:dagger:2.35.1'
-    kapt 'com.google.dagger:dagger-compiler:2.35.1'
+    implementation 'com.google.dagger:dagger:2.38.1'
+    kapt 'com.google.dagger:dagger-compiler:2.38.1'
 
     /** Testing APIs */
     // JUnit
     testImplementation 'junit:junit:4.13.2'
     // Truth
-    testImplementation 'com.google.truth:truth:1.1.2'
+    testImplementation 'com.google.truth:truth:1.1.3'
 }

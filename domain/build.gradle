@@ -1,12 +1,9 @@
 apply plugin: 'kotlin'
 
 dependencies {
-    // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
     /** Testing APIs */
     // JUnit
     testImplementation 'junit:junit:4.13.2'
     // Truth
-    testImplementation 'com.google.truth:truth:1.1.2'
+    testImplementation 'com.google.truth:truth:1.1.3'
 }
