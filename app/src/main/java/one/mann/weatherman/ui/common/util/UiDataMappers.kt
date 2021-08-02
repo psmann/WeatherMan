@@ -8,27 +8,20 @@ import one.mann.domain.models.weather.Weather as DomainWeather
 /* Created by Psmann. */
 
 internal fun DomainWeather.mapToUiWeather(): Weather {
-    val dailyForecastsUi = mutableListOf<DailyForecast>()
-    val hourlyForecastsUi = mutableListOf<HourlyForecast>()
-
-    dailyForecasts.map {
-        dailyForecastsUi.add(
-            DailyForecast(
-                epochToDay(it.forecastDate, city.timezone),
-                it.minTemp.roundOff().addSuffix(DEGREES),
-                it.maxTemp.roundOff().addSuffix(DEGREES),
-                it.forecastIconId
-            )
+    val dailyForecastsUi = dailyForecasts.map {
+        DailyForecast(
+            epochToDay(it.forecastDate, city.timezone),
+            it.minTemp.roundOff().addSuffix(DEGREES),
+            it.maxTemp.roundOff().addSuffix(DEGREES),
+            it.forecastIconId
         )
     }
-    hourlyForecasts.map {
-        hourlyForecastsUi.add(
-            HourlyForecast(
-                epochToHour(it.forecastTime, city.timezone),
-                it.temperature.roundOff().addSuffix(DEGREES),
-                it.forecastIconId,
-                it.sunPosition
-            )
+    val hourlyForecastsUi = hourlyForecasts.map {
+        HourlyForecast(
+            epochToHour(it.forecastTime, city.timezone),
+            it.temperature.roundOff().addSuffix(DEGREES),
+            it.forecastIconId,
+            it.sunPosition
         )
     }
 
