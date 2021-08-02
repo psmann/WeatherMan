@@ -79,7 +79,7 @@ internal class MainViewModel @Inject constructor(
         // Return if query is less than 3 characters long
         if (query == "" || query.length < 3) return
         searchJob = launch {
-            delay(750) // Debounce
+            delay(625) // Debounce
             val citySearch = getCitySearch.invoke(query)
             if (citySearch.isNotEmpty()) _uiModel.value = uiModel.value?.copy(citySearchResult = citySearch)
         }

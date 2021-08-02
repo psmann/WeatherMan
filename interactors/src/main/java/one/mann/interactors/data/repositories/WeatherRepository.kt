@@ -1,5 +1,7 @@
 package one.mann.interactors.data.repositories
 
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import one.mann.domain.models.NotificationData
 import one.mann.domain.models.location.Location
 import one.mann.domain.models.location.LocationType
@@ -29,10 +31,14 @@ class WeatherRepository @Inject constructor(
     }
 
     /** Insert new city in the database */
-    suspend fun createCity(apiLocation: Location? = null) {
+    suspend fun createCity(apiLocation: Location? = null) = coroutineScope {
         val location = apiLocation ?: deviceLocation.getLocation() // Use device GPS location if null
         val timeCreated = System.currentTimeMillis()
-        val currentWeather = weatherData.getCurrentWeather(location).copy(units = prefsData.getUnits())
+        val units = async { prefsData.getUnits() }
+        val timezone = async { if (apiLocation != null) timezoneData.getTimezone(location) else "" }
+        val currentWeather = async { weatherData.getCurrentWeather(location).copy(units = units.await()) }
+        val dailyForecasts = async { weatherData.getDailyForecasts(location) }
+        val hourlyForecasts = async { weatherData.getHourlyForecasts(location) }
 
         dbData.insertCityAndWeather(
             mapToDomainWeather(
@@ -40,12 +46,12 @@ class WeatherRepository @Inject constructor(
                     cityId = generateCityId(),
                     coordinatesLat = location.coordinates[0],
                     coordinatesLong = location.coordinates[1],
-                    timezone = if (apiLocation != null) timezoneData.getTimezone(location) else "",
+                    timezone = timezone.await(),
                     timeCreated = timeCreated
                 ),
-                currentWeather,
-                weatherData.getDailyForecasts(location),
-                weatherData.getHourlyForecasts(location)
+                currentWeather.await(),
+                dailyForecasts.await(),
+                hourlyForecasts.await()
             )
         )
     }
@@ -65,48 +71,57 @@ class WeatherRepository @Inject constructor(
     suspend fun readNotificationData(): NotificationData = dbData.getNotificationData()
 
     /** Update weather from server if syncFromServer() is true, otherwise only update lastChecked value */
-    suspend fun updateAllData(locationType: LocationType): Boolean = if (syncFromServer()) {
-        val weathersFromDb = readAllWeather()
-        val weathersForUpdate = mutableListOf<Weather>()
+    suspend fun updateAllData(locationType: LocationType): Boolean = coroutineScope {
+        if (syncFromServer()) {
+            val weathersFromDb = readAllWeather()
+            val weathersForUpdate = mutableListOf<Weather>()
+            val units = async { prefsData.getUnits() }
 
-        weathersFromDb.forEachIndexed { index, dbWeather ->
-            val location = if (index == 0 && locationType == LocationType.DEVICE) {
-                deviceLocation.getLocation()
-            } else Location(coordinates = listOf(dbWeather.city.coordinatesLat, dbWeather.city.coordinatesLong))
-            val cityForUpdate = City(
-                cityId = dbWeather.city.cityId,
-                coordinatesLat = location.coordinates[0],
-                coordinatesLong = location.coordinates[1],
-                timeCreated = dbWeather.city.timeCreated,
-                timezone = dbWeather.city.timezone
-            )
-            val currentWeatherForUpdate = weatherData.getCurrentWeather(location).copy(
-                weatherId = dbWeather.currentWeather.weatherId,
-                units = prefsData.getUnits()
-            )
-            val dailyForecastsFromApi = weatherData.getDailyForecasts(location)
-            val hourlyForecastsFromApi = weatherData.getHourlyForecasts(location)
-            val dailyForecastsForUpdate = dbWeather.dailyForecasts.mapIndexed { i, dbDailyForecast ->
-                dailyForecastsFromApi[i].copy(dailyId = dbDailyForecast.dailyId)
-            }
-            val hourlyForecastsForUpdate = dbWeather.hourlyForecasts.mapIndexed { i, dbHourlyForecast ->
-                hourlyForecastsFromApi[i].copy(hourlyId = dbHourlyForecast.hourlyId)
-            }
-            weathersForUpdate.add(
-                mapToDomainWeather(
-                    cityForUpdate,
-                    currentWeatherForUpdate,
-                    dailyForecastsForUpdate,
-                    hourlyForecastsForUpdate
+            weathersFromDb.forEachIndexed { index, dbWeather ->
+                val location = if (index == 0 && locationType == LocationType.DEVICE) {
+                    deviceLocation.getLocation()
+                } else Location(coordinates = listOf(dbWeather.city.coordinatesLat, dbWeather.city.coordinatesLong))
+                val cityForUpdate = City(
+                    cityId = dbWeather.city.cityId,
+                    coordinatesLat = location.coordinates[0],
+                    coordinatesLong = location.coordinates[1],
+                    timezone = dbWeather.city.timezone,
+                    timeCreated = dbWeather.city.timeCreated
                 )
-            )
+                val currentWeatherForUpdate = async {
+                    weatherData.getCurrentWeather(location).copy(
+                        weatherId = dbWeather.currentWeather.weatherId,
+                        units = units.await()
+                    )
+                }
+                val dailyForecastsFromApi = async { weatherData.getDailyForecasts(location) }
+                val hourlyForecastsFromApi = async { weatherData.getHourlyForecasts(location) }
+                val dailyForecastsForUpdate = async {
+                    dbWeather.dailyForecasts.mapIndexed { i, dbDailyForecast ->
+                        dailyForecastsFromApi.await()[i].copy(dailyId = dbDailyForecast.dailyId)
+                    }
+                }
+                val hourlyForecastsForUpdate = async {
+                    dbWeather.hourlyForecasts.mapIndexed { i, dbHourlyForecast ->
+                        hourlyForecastsFromApi.await()[i].copy(hourlyId = dbHourlyForecast.hourlyId)
+                    }
+                }
+                weathersForUpdate.add(
+                    mapToDomainWeather(
+                        cityForUpdate,
+                        currentWeatherForUpdate.await(),
+                        dailyForecastsForUpdate.await(),
+                        hourlyForecastsForUpdate.await()
+                    )
+                )
+            }
+            updateAllWeather(weathersForUpdate)
+            true
+        } else {
+            // If time out period isn't over then just update lastChecked
+            dbData.updateLastChecked(System.currentTimeMillis())
+            false
         }
-        updateAllWeather(weathersForUpdate)
-        true
-    } else {
-        // If time out period isn't over then just update lastChecked
-        dbData.updateLastChecked(System.currentTimeMillis())
-        false
     }
 
     /** Creates a new unique code for cityId */
