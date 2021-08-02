@@ -6,13 +6,14 @@
 
     <TextView
         android:id="@+id/current_city_name_text_view"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="32dp"
         android:elevation="2dp"
         android:fontFamily="sans-serif"
+        android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="@android:color/white"
         android:textSize="31sp"
@@ -26,13 +27,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:textColor="@android:color/white"
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/current_city_name_text_view" />
+        app:layout_constraintTop_toBottomOf="@+id/current_city_name_text_view" />
 
     <TextView
         android:id="@+id/current_current_temp_result_text_view"
@@ -47,7 +48,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/current_weather_icon_image_view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/current_weather_icon_image_view"
-        app:layout_constraintVertical_bias="0.45" />
+        app:layout_constraintVertical_bias="0.37" />
 
     <LinearLayout
         android:id="@+id/current_max_min_linear_layout"
@@ -139,12 +140,11 @@
         android:layout_width="256dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="152dp"
-        android:layout_marginTop="16dp"
         android:adjustViewBounds="true"
         android:contentDescription="@string/weather_icon"
         android:scaleType="fitXY"
         android:src="@drawable/weather_type_cloudy_day_1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/current_city_name_text_view" />
+        app:layout_constraintTop_toBottomOf="@+id/current_city_name_text_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
