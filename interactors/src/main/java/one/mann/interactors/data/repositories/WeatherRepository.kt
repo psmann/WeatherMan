@@ -81,13 +81,15 @@ class WeatherRepository @Inject constructor(
                 val location = if (index == 0 && locationType == LocationType.DEVICE) {
                     deviceLocation.getLocation()
                 } else Location(coordinates = listOf(dbWeather.city.coordinatesLat, dbWeather.city.coordinatesLong))
-                val cityForUpdate = City(
-                    cityId = dbWeather.city.cityId,
-                    coordinatesLat = location.coordinates[0],
-                    coordinatesLong = location.coordinates[1],
-                    timezone = dbWeather.city.timezone,
-                    timeCreated = dbWeather.city.timeCreated
-                )
+                val cityForUpdate = async {
+                    City(
+                        cityId = dbWeather.city.cityId,
+                        coordinatesLat = location.coordinates[0],
+                        coordinatesLong = location.coordinates[1],
+                        timezone = dbWeather.city.timezone,
+                        timeCreated = dbWeather.city.timeCreated
+                    )
+                }
                 val currentWeatherForUpdate = async {
                     weatherData.getCurrentWeather(location).copy(
                         weatherId = dbWeather.currentWeather.weatherId,
@@ -108,7 +110,7 @@ class WeatherRepository @Inject constructor(
                 }
                 weathersForUpdate.add(
                     mapToDomainWeather(
-                        cityForUpdate,
+                        cityForUpdate.await(),
                         currentWeatherForUpdate.await(),
                         dailyForecastsForUpdate.await(),
                         hourlyForecastsForUpdate.await()
