@@ -77,7 +77,8 @@ class WeatherRepository @Inject constructor(
                 cityId = dbWeather.city.cityId,
                 coordinatesLat = location.coordinates[0],
                 coordinatesLong = location.coordinates[1],
-                timeCreated = dbWeather.city.timeCreated
+                timeCreated = dbWeather.city.timeCreated,
+                timezone = dbWeather.city.timezone
             )
             val currentWeatherForUpdate = weatherData.getCurrentWeather(location).copy(
                 weatherId = dbWeather.currentWeather.weatherId,
