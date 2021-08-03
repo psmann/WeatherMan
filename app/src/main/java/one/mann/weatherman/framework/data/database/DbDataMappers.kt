@@ -5,7 +5,7 @@ import one.mann.weatherman.framework.data.database.entities.*
 import one.mann.weatherman.framework.data.database.entities.relations.CurrentWeatherWithHourlyForecasts
 import one.mann.domain.models.weather.City as DomainCity
 import one.mann.domain.models.weather.CurrentWeather as DomainCurrentWeather
-import one.mann.domain.models.weather.DailyForecast as DailyForecastDommain
+import one.mann.domain.models.weather.DailyForecast as DailyForecastDomain
 import one.mann.domain.models.weather.HourlyForecast as HourlyForecastDomain
 import one.mann.domain.models.weather.Weather as DomainWeather
 
@@ -42,38 +42,26 @@ internal fun DomainWeather.mapToDbCurrentWeather(): CurrentWeather = CurrentWeat
     city.cityId
 )
 
-internal fun DomainWeather.mapToDbDailyForecasts(): List<DailyForecast> {
-    val dailyForecastsForDb = mutableListOf<DailyForecast>()
-    dailyForecasts.map {
-        dailyForecastsForDb.add(
-            DailyForecast(
-                it.dailyId,
-                it.forecastDate,
-                it.minTemp,
-                it.maxTemp,
-                it.forecastIconId,
-                city.cityId
-            )
-        )
-    }
-    return dailyForecastsForDb
+internal fun DomainWeather.mapToDbDailyForecasts(): List<DailyForecast> = dailyForecasts.map {
+    DailyForecast(
+        it.dailyId,
+        it.forecastDate,
+        it.minTemp,
+        it.maxTemp,
+        it.forecastIconId,
+        city.cityId
+    )
 }
 
-internal fun DomainWeather.mapToDbHourlyForecasts(): List<HourlyForecast> {
-    val hourlyForecastsForDb = mutableListOf<HourlyForecast>()
-    hourlyForecasts.map {
-        hourlyForecastsForDb.add(
-            HourlyForecast(
-                it.hourlyId,
-                it.forecastTime,
-                it.temperature,
-                it.forecastIconId,
-                it.sunPosition,
-                city.cityId
-            )
-        )
-    }
-    return hourlyForecastsForDb
+internal fun DomainWeather.mapToDbHourlyForecasts(): List<HourlyForecast> = hourlyForecasts.map {
+    HourlyForecast(
+        it.hourlyId,
+        it.forecastTime,
+        it.temperature,
+        it.forecastIconId,
+        it.sunPosition,
+        city.cityId
+    )
 }
 
 internal fun City.mapToDomainCity(): DomainCity = DomainCity(
@@ -89,31 +77,25 @@ internal fun City.mapToDomainWeather(
     dailyForecasts: List<DailyForecast>,
     hourlyForecasts: List<HourlyForecast>
 ): DomainWeather {
-    val dailyForecastsDomain = mutableListOf<DailyForecastDommain>()
-    val hourlyForecastsDomain = mutableListOf<HourlyForecastDomain>()
+    val dailyForecastsDomain = dailyForecasts.map {
+        DailyForecastDomain(
+            it.dailyId,
+            it.date,
+            it.minTemp,
+            it.maxTemp,
+            it.iconId
+        )
+    }
+    val hourlyForecastsDomain = hourlyForecasts.map {
+        HourlyForecastDomain(
+            it.hourlyId,
+            it.time,
+            it.temperature,
+            it.iconId,
+            it.sunPosition
+        )
+    }
 
-    dailyForecasts.map {
-        dailyForecastsDomain.add(
-            DailyForecastDommain(
-                it.dailyId,
-                it.date,
-                it.minTemp,
-                it.maxTemp,
-                it.iconId
-            )
-        )
-    }
-    hourlyForecasts.map {
-        hourlyForecastsDomain.add(
-            HourlyForecastDomain(
-                it.hourlyId,
-                it.time,
-                it.temperature,
-                it.iconId,
-                it.sunPosition
-            )
-        )
-    }
     return DomainWeather(
         DomainCity(
             cityId,
