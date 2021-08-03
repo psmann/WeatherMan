@@ -17,16 +17,12 @@ internal fun mapToDomainWeather(
 
     val sunriseTime = epochToMinutes(currentWeather.sunrise, city.timezone)
     val sunsetTime = epochToMinutes(currentWeather.sunset, city.timezone)
-    val hourlyForecastsWithSunPosition = mutableListOf<HourlyForecast>() // Create HourlyForecast list with sunPosition
-
-    hourlyForecasts.map {
-        hourlyForecastsWithSunPosition.add(
-            it.copy(
-                sunPosition = sunPositionBias(
-                    sunriseTime,
-                    sunsetTime,
-                    epochToMinutes(it.forecastTime, city.timezone)
-                )
+    val hourlyForecastsWithSunPosition = hourlyForecasts.map {
+        it.copy(
+            sunPosition = sunPositionBias(
+                sunriseTime,
+                sunsetTime,
+                epochToMinutes(it.forecastTime, city.timezone)
             )
         )
     }
