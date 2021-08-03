@@ -18,14 +18,10 @@ internal class TeleportTimezoneDataSource @Inject constructor(
         ).mapToString()
     }
 
-    override suspend fun getAllTimezone(locations: List<Location>): List<String> {
-        val timezones: MutableList<String> = mutableListOf()
-
-        for (location in locations) timezones.add(
-            teleportTimezoneService
-                .getTimezone(location.coordinates[0].toString(), location.coordinates[1].toString())
-                .mapToString()
-        )
-        return timezones
+    override suspend fun getAllTimezone(locations: List<Location>): List<String> = locations.map {
+        teleportTimezoneService.getTimezone(
+            it.coordinates[0].toString(),
+            it.coordinates[1].toString()
+        ).mapToString()
     }
 }
