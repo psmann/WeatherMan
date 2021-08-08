@@ -2,16 +2,14 @@ package one.mann.weatherman.ui.common.base
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Context
-import android.content.Intent
 import android.content.IntentSender
-import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
 import android.view.WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
 import android.widget.Toast
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat.requestPermissions
-import androidx.core.content.ContextCompat.checkSelfPermission
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest
@@ -29,11 +27,20 @@ import one.mann.weatherman.ui.common.util.isConnected
 internal abstract class BaseLocationActivity : AppCompatActivity() {
 
     companion object {
-        private const val LOCATION_REQUEST_CODE = 1011
         private var locationPermissionListener: (Boolean) -> Unit = {} // Delegate function object to activity callback
         private var networkAndLocationListener: (LocationServicesResponse) -> Unit = {}
         private val locationRequestBuilder = LocationSettingsRequest.Builder()
             .addLocationRequest(LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY))
+    }
+
+    private val requestPermissionResult = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+        locationPermissionListener(it)
+    }
+    private val resolutionForResult = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
+        when (it.resultCode) {
+            RESULT_OK -> networkAndLocationListener(ENABLED)
+            RESULT_CANCELED -> networkAndLocationListener(DISABLED)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,31 +50,13 @@ internal abstract class BaseLocationActivity : AppCompatActivity() {
         injectDependencies()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == LOCATION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PERMISSION_GRANTED) locationPermissionListener(true)
-            else locationPermissionListener(false)
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == LOCATION_REQUEST_CODE) when (resultCode) {
-            RESULT_OK -> networkAndLocationListener(ENABLED)
-            RESULT_CANCELED -> networkAndLocationListener(DISABLED)
-        }
-    }
-
     /** Field injection for Dagger components*/
     protected abstract fun injectDependencies()
 
     /** Give permissions for NETWORK_PROVIDER (COARSE_LOCATION) and GPS_PROVIDER (FINE_LOCATION) */
     protected fun handleLocationPermission(result: (Boolean) -> Unit) {
         locationPermissionListener = result
-        if (checkSelfPermission(this, ACCESS_FINE_LOCATION) != PERMISSION_GRANTED) {
-            requestPermissions(this, arrayOf(ACCESS_FINE_LOCATION), LOCATION_REQUEST_CODE)
-        } else locationPermissionListener(true)
+        requestPermissionResult.launch(ACCESS_FINE_LOCATION)
     }
 
     /** Check status of location services and handle in lambda */
@@ -89,8 +78,9 @@ internal abstract class BaseLocationActivity : AppCompatActivity() {
                     if (prompt) when (exception.statusCode) {
                         // Check result in onActivityResult
                         RESOLUTION_REQUIRED -> try {
-                            val resolvable = exception as ResolvableApiException
-                            resolvable.startResolutionForResult(this, LOCATION_REQUEST_CODE)
+                            resolutionForResult.launch(
+                                IntentSenderRequest.Builder((exception as ResolvableApiException).resolution).build()
+                            )
                         } catch (ignored: IntentSender.SendIntentException) {
                         } catch (ignored: ClassCastException) {
                         } // Location settings are not available on device
