@@ -98,7 +98,6 @@ internal suspend fun Context.isLocationEnabled(): Boolean = suspendCancellableCo
                     continuation.resume(false)
                 }
             }
-
     } else {
         // Location Permission not granted, return False
         continuation.resume(false)
