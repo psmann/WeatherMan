@@ -5,13 +5,22 @@ import one.mann.weatherman.ui.common.models.Weather
 
 /* Created by Psmann. */
 
+/**
+ * @property weatherData: Weather data
+ * @property viewState: Current state of the view
+ */
 internal data class DetailUiModel(
-    val weatherData: List<Weather> = listOf(), // Weather data
-    val viewState: State = State.Idle // Current state of the view
+    val weatherData: List<Weather> = listOf(),
+    val viewState: State = State.Idle
 ) {
     sealed class State {
-        object Idle : State() // Idle state, no change
-        object Refreshing : State() // Set whether data is being refreshed or not
-        data class ShowError(val errorType: ErrorType) : State() // Pass error type to a Toast
+        // Idle state, no change
+        object Idle : State()
+
+        // Set whether data is being refreshed or not
+        object Refreshing : State()
+
+        // Pass error type to a Toast
+        data class ShowError(val errorType: ErrorType) : State()
     }
 }
