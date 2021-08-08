@@ -7,17 +7,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import one.mann.weatherman.WeatherManApp
 import one.mann.weatherman.api.openweathermap.isOvercast
 import one.mann.weatherman.common.ACTIVITY_BACKGROUND
-import one.mann.weatherman.common.ACTIVITY_BACK_REQUEST_CODE
 import one.mann.weatherman.common.DETAIL_BUTTON_CLICKED
 import one.mann.weatherman.common.PAGER_POSITION
 import one.mann.weatherman.databinding.FragmentCityBinding
 import one.mann.weatherman.ui.common.models.Weather
-import one.mann.weatherman.ui.common.util.*
+import one.mann.weatherman.ui.common.util.getGradient
+import one.mann.weatherman.ui.common.util.getViewModel
+import one.mann.weatherman.ui.common.util.loadIcon
 import one.mann.weatherman.ui.detail.DetailActivity
 import one.mann.weatherman.ui.main.MainUiModel.State.Loading
 import javax.inject.Inject
@@ -35,6 +37,10 @@ internal class CityFragment : Fragment() {
     private val binding: FragmentCityBinding get() = _binding!!
     private val detailIntent: Intent by lazy { Intent(context, DetailActivity::class.java) }
     private val mainViewModel: MainViewModel by lazy { requireActivity().getViewModel(viewModelFactory) }
+    private val startActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        // Reset detailButtonClicked after returning back to fragment
+        if (it.resultCode == RESULT_OK) detailButtonClicked = false
+    }
 
     companion object {
         @JvmStatic
@@ -50,7 +56,7 @@ internal class CityFragment : Fragment() {
             if (detailButtonClicked) {
                 position = it.getInt(PAGER_POSITION)
                 setupIntent(it.getInt(ACTIVITY_BACKGROUND))
-                startActivityForResult(detailIntent, ACTIVITY_BACK_REQUEST_CODE)
+                startActivityResult.launch(detailIntent)
             }
         }
     }
@@ -65,20 +71,14 @@ internal class CityFragment : Fragment() {
         return binding.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         injectDependencies()
         binding.cityDetailButton.setOnClickListener {
             detailButtonClicked = true
-            startActivityForResult(detailIntent, ACTIVITY_BACK_REQUEST_CODE)
+            startActivityResult.launch(detailIntent)
         }
         mainViewModel.uiModel.observe(viewLifecycleOwner, ::observeUiModel)
-    }
-
-    /** Reset detailButtonClicked after returning back to fragment */
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == ACTIVITY_BACK_REQUEST_CODE && resultCode == RESULT_OK) detailButtonClicked = false
     }
 
     /** Save ViewPager position and button click event state */
@@ -118,7 +118,9 @@ internal class CityFragment : Fragment() {
     }
 
     private fun setupIntent(backgroundId: Int) {
-        detailIntent.putExtra(PAGER_POSITION, position) // City to show details for
-        detailIntent.putExtra(ACTIVITY_BACKGROUND, backgroundId) // Background to be used in detail activity
+        // City to show details for
+        detailIntent.putExtra(PAGER_POSITION, position)
+        // Background to be used in detail activity
+        detailIntent.putExtra(ACTIVITY_BACKGROUND, backgroundId)
     }
 }

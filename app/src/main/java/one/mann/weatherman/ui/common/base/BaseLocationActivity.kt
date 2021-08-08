@@ -36,7 +36,7 @@ internal abstract class BaseLocationActivity : AppCompatActivity() {
     private val requestPermissionResult = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
         locationPermissionListener(it)
     }
-    private val resolutionForResult = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
+    private val resolutionResult = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
         when (it.resultCode) {
             RESULT_OK -> networkAndLocationListener(ENABLED)
             RESULT_CANCELED -> networkAndLocationListener(DISABLED)
@@ -76,9 +76,9 @@ internal abstract class BaseLocationActivity : AppCompatActivity() {
                 } catch (exception: ApiException) {
                     // If location settings are Off
                     if (prompt) when (exception.statusCode) {
-                        // Check result in onActivityResult
+                        // Prompt to enable location settings and check result in resolutionResult
                         RESOLUTION_REQUIRED -> try {
-                            resolutionForResult.launch(
+                            resolutionResult.launch(
                                 IntentSenderRequest.Builder((exception as ResolvableApiException).resolution).build()
                             )
                         } catch (ignored: IntentSender.SendIntentException) {
