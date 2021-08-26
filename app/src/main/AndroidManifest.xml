@@ -23,7 +23,8 @@
 
         <activity
             android:name=".ui.main.MainActivity"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            tools:ignore="IntentFilterExportedReceiver">
 
             <intent-filter>
 
