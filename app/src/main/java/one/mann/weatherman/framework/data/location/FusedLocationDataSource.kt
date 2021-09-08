@@ -40,6 +40,7 @@ internal class FusedLocationDataSource @Inject constructor(private val client: F
             }
         } // Check for last location if available else request for an update (drains battery)
         client.lastLocation.addOnSuccessListener {
+            @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") // Looper parameter can be null
             if (it != null) continuation.resume(
                 Location(
                     listOf(
@@ -47,7 +48,7 @@ internal class FusedLocationDataSource @Inject constructor(private val client: F
                         it.longitude.toFloat()
                     )
                 ).truncate()
-            ) // Looper parameter can be null
+            )
             else client.requestLocationUpdates(locationRequest, locationCallback, null)
         }
     }
