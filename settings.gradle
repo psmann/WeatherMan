@@ -1,8 +1,11 @@
 include ':app', ':interactors', ':domain'
 
+// Configuration for Gradle local build cache
 buildCache {
     local {
+        // Directory to use for caching
         directory = new File(rootDir, 'gradle-build-cache')
-        removeUnusedEntriesAfterDays = 7
+        // Clear cache every day
+        removeUnusedEntriesAfterDays = 1
     }
 }
