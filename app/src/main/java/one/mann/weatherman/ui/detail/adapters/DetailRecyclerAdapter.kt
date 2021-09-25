@@ -1,5 +1,6 @@
 package one.mann.weatherman.ui.detail.adapters
 
+import android.annotation.SuppressLint
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import one.mann.domain.logic.DEGREES
@@ -152,6 +153,7 @@ internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>()
 
     override fun getItemViewType(position: Int): Int = position
 
+    @SuppressLint("NotifyDataSetChanged") // Performance impact is minimal since only 1 item is always displayed
     fun update(weather: Weather) {
         this.weather = weather
         notifyDataSetChanged()

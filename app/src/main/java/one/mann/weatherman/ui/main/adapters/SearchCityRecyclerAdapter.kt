@@ -1,5 +1,6 @@
 package one.mann.weatherman.ui.main.adapters
 
+import android.annotation.SuppressLint
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -30,6 +31,7 @@ internal class SearchCityRecyclerAdapter(val onClick: (searchResult: CitySearchR
 
     override fun getItemCount(): Int = citySearchList.size
 
+    @SuppressLint("NotifyDataSetChanged") // Should not impact performance much
     fun update(searchList: List<CitySearchResult> = listOf()) {
         citySearchList = searchList
         notifyDataSetChanged()
