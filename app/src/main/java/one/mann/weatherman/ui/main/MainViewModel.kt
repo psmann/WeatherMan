@@ -74,10 +74,11 @@ internal class MainViewModel @Inject constructor(
     fun searchCity(query: String) {
         // Cancel previous job if any
         searchJob?.cancel()
-        // Reset list after every user input
-        _uiModel.value = uiModel.value?.copy(citySearchResult = listOf())
-        // Return if query is less than 3 characters long
-        if (query == "" || query.length < 3) return
+        // Reset list and return if query is less than 3 characters long
+        if (query == "" || query.length < 3) {
+            _uiModel.value = uiModel.value?.copy(citySearchResult = listOf())
+            return
+        }
         searchJob = launch {
             delay(625) // Debounce
             val citySearch = getCitySearch.invoke(query)
@@ -99,7 +100,7 @@ internal class MainViewModel @Inject constructor(
                     }
                 }
             }
-            _uiModel.value = _uiModel.value?.copy(citySearchResult = listOf(), viewState = Refreshing)
+            _uiModel.value = _uiModel.value?.copy(viewState = Refreshing)
             addCity.invoke(apiLocation)
             updateUI(ViewPagerUpdateType.ADD_ITEM)
         }
@@ -114,9 +115,9 @@ internal class MainViewModel @Inject constructor(
     private fun updateWeather(locationType: LocationType) {
         launch {
             _uiModel.value = _uiModel.value?.copy(viewState = Refreshing)
-            val weatherUpdated = updateWeather.invoke(locationType)
+            val isUpdatedFromNetwork = updateWeather.invoke(locationType)
             withContext(IO) {
-                if (weatherUpdated) settingsPrefs.edit { putLong(LAST_UPDATED_KEY, System.currentTimeMillis()) }
+                if (isUpdatedFromNetwork) settingsPrefs.edit { putLong(LAST_UPDATED_KEY, System.currentTimeMillis()) }
                 else settingsPrefs.edit { putLong(LAST_CHECKED_KEY, System.currentTimeMillis()) }
             }
         }

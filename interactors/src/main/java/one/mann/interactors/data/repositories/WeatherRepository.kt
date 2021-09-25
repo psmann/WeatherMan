@@ -71,63 +71,63 @@ class WeatherRepository @Inject constructor(
     /** Returns notification data */
     suspend fun readNotificationData(): NotificationData = dbData.getNotificationData()
 
-    /** Update weather from server if syncFromServer() is true, otherwise only update lastChecked value */
-    suspend fun updateAllData(locationType: LocationType): Boolean = coroutineScope {
-        if (syncFromServer()) {
-            val weathersFromDb = readAllWeather()
-            val units = async { prefsData.getUnits() }
-            val weathersForUpdate = weathersFromDb.mapIndexed { index, dbWeather ->
-                async {
-                    val location = if (index == 0 && locationType == LocationType.DEVICE) {
-                        deviceLocation.getLocation()
-                    } else Location(coordinates = listOf(dbWeather.city.coordinatesLat, dbWeather.city.coordinatesLong))
-                    val cityForUpdate = async {
-                        City(
-                            cityId = dbWeather.city.cityId,
-                            coordinatesLat = location.coordinates[0],
-                            coordinatesLong = location.coordinates[1],
-                            timezone = dbWeather.city.timezone,
-                            timeCreated = dbWeather.city.timeCreated
-                        )
-                    }
-                    val currentWeatherForUpdate = async {
-                        weatherData.getCurrentWeather(location).copy(
-                            weatherId = dbWeather.currentWeather.weatherId,
-                            units = units.await()
-                        )
-                    }
-                    val dailyForecastsFromApi = async { weatherData.getDailyForecasts(location) }
-                    val hourlyForecastsFromApi = async { weatherData.getHourlyForecasts(location) }
-                    val dailyForecastsForUpdate = async {
-                        dbWeather.dailyForecasts.mapIndexed { i, dbDailyForecast ->
-                            dailyForecastsFromApi.await()[i].copy(dailyId = dbDailyForecast.dailyId)
-                        }
-                    }
-                    val hourlyForecastsForUpdate = async {
-                        dbWeather.hourlyForecasts.mapIndexed { i, dbHourlyForecast ->
-                            hourlyForecastsFromApi.await()[i].copy(hourlyId = dbHourlyForecast.hourlyId)
-                        }
-                    }
-                    mapToDomainWeather(
-                        cityForUpdate.await(),
-                        currentWeatherForUpdate.await(),
-                        dailyForecastsForUpdate.await(),
-                        hourlyForecastsForUpdate.await()
+    /** Update weather from API if syncFromServer() is true, otherwise only update lastChecked value */
+    suspend fun tryApiDataSyncWithResult(locationType: LocationType): Boolean {
+        val isCooldownOver = checkSyncCooldown()
+        if (isCooldownOver) apiDataSync(locationType) else dbData.updateLastChecked(System.currentTimeMillis())
+        return isCooldownOver
+    }
+
+    /** Update weather from the network */
+    private suspend fun apiDataSync(locationType: LocationType) = coroutineScope {
+        val weathersFromDb = readAllWeather()
+        val units = async { prefsData.getUnits() }
+        val weathersForUpdate = weathersFromDb.mapIndexed { index, dbWeather ->
+            async {
+                val location = if (index == 0 && locationType == LocationType.DEVICE) {
+                    deviceLocation.getLocation()
+                } else Location(coordinates = listOf(dbWeather.city.coordinatesLat, dbWeather.city.coordinatesLong))
+                val cityForUpdate = async {
+                    City(
+                        cityId = dbWeather.city.cityId,
+                        coordinatesLat = location.coordinates[0],
+                        coordinatesLong = location.coordinates[1],
+                        timezone = dbWeather.city.timezone,
+                        timeCreated = dbWeather.city.timeCreated
                     )
                 }
-            }.awaitAll()
-            updateAllWeather(weathersForUpdate)
-            true
-        } else {
-            // If time out period isn't over then just update lastChecked
-            dbData.updateLastChecked(System.currentTimeMillis())
-            false
-        }
+                val currentWeatherForUpdate = async {
+                    weatherData.getCurrentWeather(location).copy(
+                        weatherId = dbWeather.currentWeather.weatherId,
+                        units = units.await()
+                    )
+                }
+                val dailyForecastsFromApi = async { weatherData.getDailyForecasts(location) }
+                val hourlyForecastsFromApi = async { weatherData.getHourlyForecasts(location) }
+                val dailyForecastsForUpdate = async {
+                    dbWeather.dailyForecasts.mapIndexed { i, dbDailyForecast ->
+                        dailyForecastsFromApi.await()[i].copy(dailyId = dbDailyForecast.dailyId)
+                    }
+                }
+                val hourlyForecastsForUpdate = async {
+                    dbWeather.hourlyForecasts.mapIndexed { i, dbHourlyForecast ->
+                        hourlyForecastsFromApi.await()[i].copy(hourlyId = dbHourlyForecast.hourlyId)
+                    }
+                }
+                mapToDomainWeather(
+                    cityForUpdate.await(),
+                    currentWeatherForUpdate.await(),
+                    dailyForecastsForUpdate.await(),
+                    hourlyForecastsForUpdate.await()
+                )
+            }
+        }.awaitAll()
+        updateAllWeather(weathersForUpdate)
     }
 
     /** Creates a new unique code for cityId */
     private fun generateCityId(): String = UUID.randomUUID().toString()
 
     /** Returns true if it has been longer than time-out period since last update */
-    private suspend fun syncFromServer(): Boolean = System.currentTimeMillis() - prefsData.getLastUpdated() > TIME_OUT
+    private suspend fun checkSyncCooldown(): Boolean = System.currentTimeMillis() - prefsData.getLastUpdated() > TIME_OUT
 }

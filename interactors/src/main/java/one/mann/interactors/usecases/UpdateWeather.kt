@@ -11,6 +11,6 @@ import javax.inject.Inject
 class UpdateWeather @Inject constructor(private val weatherRepository: WeatherRepository) {
 
     suspend fun invoke(locationType: LocationType): Boolean = withContext(Dispatchers.IO) {
-        weatherRepository.updateAllData(locationType)
+        weatherRepository.tryApiDataSyncWithResult(locationType)
     }
 }
