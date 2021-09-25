@@ -10,3 +10,4 @@
 /captures
 .externalNativeBuild
 /app/release/
+/gradle-build-cache/
