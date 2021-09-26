@@ -37,8 +37,7 @@ internal class SearchCityRecyclerAdapter(val onClick: (searchResult: CitySearchR
         notifyDataSetChanged()
     }
 
-    class CitySearchViewHolder(
-        itemView: View,
+    class CitySearchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding: ItemCitySearchBinding = ItemCitySearchBinding.bind(itemView)
-    ) : RecyclerView.ViewHolder(itemView)
+    }
 }
