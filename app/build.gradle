@@ -72,8 +72,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:18.0.0'
 
     // Dagger 2
-    implementation 'com.google.dagger:dagger:2.38.1'
-    kapt 'com.google.dagger:dagger-compiler:2.38.1'
+    implementation 'com.google.dagger:dagger:2.39'
+    kapt 'com.google.dagger:dagger-compiler:2.39'
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
