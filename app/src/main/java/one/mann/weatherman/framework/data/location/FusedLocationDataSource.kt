@@ -1,10 +1,13 @@
 package one.mann.weatherman.framework.data.location
 
 import android.annotation.SuppressLint
+import android.os.Handler
+import android.os.HandlerThread
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
+import kotlinx.coroutines.android.asCoroutineDispatcher
 import kotlinx.coroutines.suspendCancellableCoroutine
 import one.mann.domain.logic.truncate
 import one.mann.domain.models.location.Location
@@ -38,18 +41,10 @@ internal class FusedLocationDataSource @Inject constructor(private val client: F
                     )
                 }
             }
-        } // Check for last location if available else request for an update (drains battery)
-        client.lastLocation.addOnSuccessListener {
-            @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS") // Looper parameter can be null
-            if (it != null) continuation.resume(
-                Location(
-                    listOf(
-                        it.latitude.toFloat(),
-                        it.longitude.toFloat()
-                    )
-                ).truncate()
-            )
-            else client.requestLocationUpdates(locationRequest, locationCallback, null)
         }
+        // Handler thread for requestLocationUpdates() since it doesn't seem to run on current thread anymore
+        val handlerThread = HandlerThread("LocationUpdate-Thread").apply { start() }
+        Handler(handlerThread.looper).asCoroutineDispatcher()
+        client.requestLocationUpdates(locationRequest, locationCallback, handlerThread.looper)
     }
 }
