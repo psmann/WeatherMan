@@ -7,6 +7,8 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-feature android:name="android.hardware.location.gps" />
@@ -23,6 +25,7 @@
 
         <activity
             android:name=".ui.main.MainActivity"
+            android:exported="true"
             android:launchMode="singleTask"
             tools:ignore="IntentFilterExportedReceiver">
 
@@ -38,10 +41,12 @@
 
         <activity
             android:name=".ui.detail.DetailActivity"
+            android:exported="true"
             android:parentActivityName=".ui.main.MainActivity" />
 
         <activity
             android:name=".ui.settings.SettingsActivity"
+            android:exported="false"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".ui.main.MainActivity">
 
