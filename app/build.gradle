@@ -66,14 +66,14 @@ dependencies {
     implementation 'androidx.work:work-runtime-ktx:2.7.1'
 
     // Kotlin Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0-native-mt'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'
 
     // Google Play Services - Location
     implementation 'com.google.android.gms:play-services-location:19.0.1'
 
     // Dagger 2
-    implementation 'com.google.dagger:dagger:2.40.5'
-    kapt 'com.google.dagger:dagger-compiler:2.40.5'
+    implementation 'com.google.dagger:dagger:2.41'
+    kapt 'com.google.dagger:dagger-compiler:2.41'
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -91,5 +91,5 @@ dependencies {
     // Truth
     androidTestImplementation 'com.google.truth:truth:1.1.3'
     // Coroutine Test
-    androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0-native-mt'
+    androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0'
 }
