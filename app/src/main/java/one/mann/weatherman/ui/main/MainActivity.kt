@@ -14,7 +14,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.viewpager2.widget.ViewPager2.*
+import androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
+import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE
 import com.google.android.material.snackbar.Snackbar
 import one.mann.domain.logic.truncate
 import one.mann.domain.models.Direction
@@ -24,11 +25,13 @@ import one.mann.domain.models.ViewPagerUpdateType.*
 import one.mann.domain.models.location.Location
 import one.mann.weatherman.R
 import one.mann.weatherman.WeatherManApp
+import one.mann.weatherman.common.MAXIMUM_CITIES_ALLOWED
 import one.mann.weatherman.common.PAGER_COUNT
 import one.mann.weatherman.common.PAGER_POSITION
 import one.mann.weatherman.databinding.ActivityMainBinding
 import one.mann.weatherman.ui.common.base.BaseLocationActivity
-import one.mann.weatherman.ui.common.util.*
+import one.mann.weatherman.ui.common.util.getViewModel
+import one.mann.weatherman.ui.common.util.setSlideAnimation
 import one.mann.weatherman.ui.main.MainUiModel.State.*
 import one.mann.weatherman.ui.main.adapters.MainViewPagerAdapter
 import one.mann.weatherman.ui.main.adapters.SearchCityRecyclerAdapter
@@ -58,7 +61,7 @@ internal class MainActivity : BaseLocationActivity() {
         handleLocationPermission { initActivity(it) }
     }
 
-    /** Save ViewPager position and page count on configuration change */
+    /** Saves ViewPager position and page count on configuration change */
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt(PAGER_POSITION, binding.viewPager.currentItem)
@@ -173,7 +176,7 @@ internal class MainActivity : BaseLocationActivity() {
         }
     }
 
-    /** Handle ViewPager update scenarios */
+    /** Handles ViewPager update scenarios */
     private fun updateViewPager(pageCount: Int, updateType: ViewPagerUpdateType) = when (updateType) {
         // Just update pager data set
         SET_SIZE -> mainViewPagerAdapter.updatePages(pageCount)
@@ -199,12 +202,13 @@ internal class MainActivity : BaseLocationActivity() {
         setOnMenuItemClickListener { menuItem ->
             when (menuItem!!.itemId) {
                 // Add new city, limit is set to 10
-                R.id.menu_add_city -> if (binding.viewPager.adapter?.itemCount!! < 10) {
+                R.id.menu_add_city -> if (binding.viewPager.adapter?.itemCount!! < MAXIMUM_CITIES_ALLOWED) {
                     binding.itemSearchCityConstraintLayout.let {
                         it.root.visibility = View.VISIBLE
                         it.root.setSlideAnimation(Direction.LEFT)
                         it.citySearchView.requestFocus()
                         // Force show keyboard
+                        @Suppress("DEPRECATION") // Warning suppressed until suitable replacement is found
                         inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
                     }
                 } else toast(R.string.remove_a_city_before_adding)
@@ -215,7 +219,7 @@ internal class MainActivity : BaseLocationActivity() {
         }
     }
 
-    /** Hide searchView and clear query */
+    /** Hides searchView and clears query */
     private fun hideSearchView() = binding.itemSearchCityConstraintLayout.let {
         it.root.visibility = View.GONE
         it.citySearchView.clearFocus()
