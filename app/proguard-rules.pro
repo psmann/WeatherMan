@@ -20,7 +20,12 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--dontwarn org.conscrypt.**
+# DTO classes
 -keep class one.mann.weatherman.api.openweathermap.dto** { *; }
 -keep class one.mann.weatherman.api.teleport.dto** { *; }
 -keep class one.mann.weatherman.api.tomtom.dto** { *; }
+
+# OkHttp
+-dontwarn org.conscrypt.**
+-dontwarn org.bouncycastle.**
+-dontwarn org.openjsse.**
