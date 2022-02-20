@@ -10,12 +10,12 @@ import kotlin.coroutines.CoroutineContext
 internal abstract class BaseViewModel : ViewModel(), CoroutineScope {
 
     private val job: Job = SupervisorJob() // SupervisorJob doesn't get cancelled when a child coroutine crashes
-    var exceptionResponse: (String) -> Unit = {} // To handle response to a coroutine exception by implementing this
+    protected open val exceptionResponse: (String) -> Unit = {} // Handle response to coroutine exception
     private val exceptionHandler = CoroutineExceptionHandler { _, e -> exceptionResponse(e.message.toString()) }
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job + exceptionHandler
 
-    /** Make children call this implementation if overridden */
+    /** Super must be called if overridden */
     @CallSuper
     override fun onCleared() {
         job.cancel()

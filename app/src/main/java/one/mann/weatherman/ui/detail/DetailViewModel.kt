@@ -16,9 +16,9 @@ import one.mann.domain.models.location.LocationType.DB
 import one.mann.domain.models.location.LocationType.DEVICE
 import one.mann.interactors.usecases.GetAllWeather
 import one.mann.interactors.usecases.UpdateWeather
-import one.mann.weatherman.ui.common.base.BaseViewModel
 import one.mann.weatherman.common.LAST_CHECKED_KEY
 import one.mann.weatherman.common.LAST_UPDATED_KEY
+import one.mann.weatherman.ui.common.base.BaseViewModel
 import one.mann.weatherman.ui.common.util.mapToUiWeather
 import one.mann.weatherman.ui.detail.DetailUiModel.State.*
 import javax.inject.Inject
@@ -34,16 +34,16 @@ internal class DetailViewModel @Inject constructor(
     private val _uiModel = MutableLiveData<DetailUiModel>()
     val uiModel: LiveData<DetailUiModel>
         get() = _uiModel
+    override val exceptionResponse: (String) -> Unit = { error ->
+        // Show error and change the state back to idle
+        _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoResponse(error)))
+        _uiModel.value = _uiModel.value?.copy(viewState = Idle)
+    }
 
     init {
         _uiModel.value = DetailUiModel()
         updateUI()
         settingsPrefs.registerOnSharedPreferenceChangeListener(this)
-        exceptionResponse = { error ->
-            // Show error and change the state back to idle
-            _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoResponse(error)))
-            _uiModel.value = _uiModel.value?.copy(viewState = Idle)
-        }
     }
 
     fun handleRefreshing(response: LocationServicesResponse) = when (response) {
@@ -77,9 +77,8 @@ internal class DetailViewModel @Inject constructor(
     private fun updateUI() {
         launch {
             val data = withContext(IO) { getAllWeather.invoke().map { it.mapToUiWeather() } }
-
             _uiModel.value = _uiModel.value?.copy(
-                weatherData = if (data.isEmpty()) listOf() else data,
+                weatherData = data.ifEmpty { listOf() },
                 viewState = Idle
             )
         }

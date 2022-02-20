@@ -5,9 +5,12 @@ import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.work.*
-import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import one.mann.domain.logic.coordinatesInString
 import one.mann.domain.models.ErrorType.*
 import one.mann.domain.models.ViewPagerUpdateType
@@ -21,7 +24,7 @@ import one.mann.interactors.usecases.*
 import one.mann.weatherman.common.*
 import one.mann.weatherman.framework.service.workers.NotificationWorker
 import one.mann.weatherman.ui.common.base.BaseViewModel
-import one.mann.weatherman.ui.common.util.*
+import one.mann.weatherman.ui.common.util.mapToUiWeather
 import one.mann.weatherman.ui.main.MainUiModel.State.*
 import java.util.concurrent.TimeUnit.HOURS
 import java.util.concurrent.TimeUnit.MINUTES
@@ -42,7 +45,13 @@ internal class MainViewModel @Inject constructor(
 
     private val _uiModel = MutableLiveData<MainUiModel>()
     private var searchJob: Job? = null
-    val uiModel: LiveData<MainUiModel> get() = _uiModel
+    val uiModel: LiveData<MainUiModel>
+        get() = _uiModel
+    override val exceptionResponse: (String) -> Unit = { error ->
+        // Show error and change the state back to idle
+        _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoResponse(error)))
+        _uiModel.value = _uiModel.value?.copy(viewState = Idle)
+    }
 
     init {
         _uiModel.value = MainUiModel()
@@ -51,11 +60,6 @@ internal class MainViewModel @Inject constructor(
         workManager.getWorkInfosByTagLiveData(NOTIFICATION_WORKER_TAG).observeForever { updateUI() }
         enqueueNotificationWork()
         updateUI(ViewPagerUpdateType.SET_SIZE)
-        exceptionResponse = { error ->
-            // Show error and change the state back to idle
-            _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoResponse(error)))
-            _uiModel.value = _uiModel.value?.copy(viewState = Idle)
-        }
     }
 
     fun handleRefreshing(response: LocationServicesResponse, firstRun: Boolean) {
@@ -135,7 +139,7 @@ internal class MainViewModel @Inject constructor(
         launch {
             val data = withContext(IO) { getAllWeather.invoke().map { it.mapToUiWeather() } }
             _uiModel.value = _uiModel.value?.copy(
-                weatherData = if (data.isEmpty()) listOf() else data,
+                weatherData = data.ifEmpty { listOf() },
                 cityCount = data.size,
                 viewState = UpdateViewPager(updateViewPager)
             )
