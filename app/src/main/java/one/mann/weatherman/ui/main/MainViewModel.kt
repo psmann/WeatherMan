@@ -25,6 +25,7 @@ import one.mann.weatherman.common.*
 import one.mann.weatherman.framework.service.workers.NotificationWorker
 import one.mann.weatherman.ui.common.base.BaseViewModel
 import one.mann.weatherman.ui.common.util.mapToUiWeather
+import one.mann.weatherman.ui.common.util.setSingleEvent
 import one.mann.weatherman.ui.main.MainUiModel.State.*
 import java.util.concurrent.TimeUnit.HOURS
 import java.util.concurrent.TimeUnit.MINUTES
@@ -49,8 +50,7 @@ internal class MainViewModel @Inject constructor(
         get() = _uiModel
     override val exceptionResponse: (String) -> Unit = { error ->
         // Show error and change the state back to idle
-        _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoResponse(error)))
-        _uiModel.value = _uiModel.value?.copy(viewState = Idle)
+        _uiModel.setSingleEvent(_uiModel.value?.copy(viewState = ShowError(NoResponse(error))))
     }
 
     init {
@@ -64,15 +64,13 @@ internal class MainViewModel @Inject constructor(
 
     fun handleRefreshing(response: LocationServicesResponse, firstRun: Boolean) {
         when (response) {
-            NO_NETWORK -> _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoInternet))
+            NO_NETWORK -> _uiModel.setSingleEvent(_uiModel.value?.copy(viewState = ShowError(NoInternet)))
             ENABLED -> if (firstRun) addCity() else updateWeather(DEVICE)
             DISABLED -> if (firstRun) {
-                _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoGps))
+                _uiModel.setSingleEvent(_uiModel.value?.copy(viewState = ShowError(NoGps)))
             } else updateWeather(DB)
-            UNAVAILABLE -> _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoLocation))
+            UNAVAILABLE -> _uiModel.setSingleEvent(_uiModel.value?.copy(viewState = ShowError(NoLocation)))
         }
-        // Change state back to idle
-        _uiModel.value = _uiModel.value?.copy(viewState = Idle)
     }
 
     fun searchCity(query: String) {
@@ -98,8 +96,7 @@ internal class MainViewModel @Inject constructor(
                 // Check if the city already exists in the list
                 weatherData?.forEach { weather ->
                     if (weather.city.coordinates == coordinatesInString) {
-                        _uiModel.value = _uiModel.value?.copy(viewState = ShowError(CityAlreadyExists))
-                        _uiModel.value = _uiModel.value?.copy(viewState = Idle)
+                        _uiModel.setSingleEvent(_uiModel.value?.copy(viewState = ShowError(CityAlreadyExists)))
                         return@launch
                     }
                 }
@@ -138,13 +135,13 @@ internal class MainViewModel @Inject constructor(
     private fun updateUI(updateViewPager: ViewPagerUpdateType = ViewPagerUpdateType.NO_CHANGE) {
         launch {
             val data = withContext(IO) { getAllWeather.invoke().map { it.mapToUiWeather() } }
-            _uiModel.value = _uiModel.value?.copy(
-                weatherData = data.ifEmpty { listOf() },
-                cityCount = data.size,
-                viewState = UpdateViewPager(updateViewPager)
+            _uiModel.setSingleEvent(
+                _uiModel.value?.copy(
+                    weatherData = data.ifEmpty { listOf() },
+                    cityCount = data.size,
+                    viewState = UpdateViewPager(updateViewPager)
+                )
             )
-            // Change state back to idle
-            _uiModel.value = _uiModel.value?.copy(viewState = Idle)
         }
     }
 

@@ -20,6 +20,7 @@ import one.mann.weatherman.common.LAST_CHECKED_KEY
 import one.mann.weatherman.common.LAST_UPDATED_KEY
 import one.mann.weatherman.ui.common.base.BaseViewModel
 import one.mann.weatherman.ui.common.util.mapToUiWeather
+import one.mann.weatherman.ui.common.util.setSingleEvent
 import one.mann.weatherman.ui.detail.DetailUiModel.State.*
 import javax.inject.Inject
 
@@ -36,8 +37,7 @@ internal class DetailViewModel @Inject constructor(
         get() = _uiModel
     override val exceptionResponse: (String) -> Unit = { error ->
         // Show error and change the state back to idle
-        _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoResponse(error)))
-        _uiModel.value = _uiModel.value?.copy(viewState = Idle)
+        _uiModel.setSingleEvent(_uiModel.value?.copy(viewState = ShowError(NoResponse(error))))
     }
 
     init {
@@ -48,9 +48,7 @@ internal class DetailViewModel @Inject constructor(
 
     fun handleRefreshing(response: LocationServicesResponse) = when (response) {
         NO_NETWORK -> {
-            _uiModel.value = _uiModel.value?.copy(viewState = ShowError(NoInternet))
-            // Change state back to idle
-            _uiModel.value = _uiModel.value?.copy(viewState = Idle)
+            _uiModel.setSingleEvent(_uiModel.value?.copy(viewState = ShowError(NoInternet)))
         }
         ENABLED -> updateWeather(DEVICE)
         DISABLED -> updateWeather(DB)

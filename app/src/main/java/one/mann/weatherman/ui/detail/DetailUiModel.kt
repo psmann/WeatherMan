@@ -1,6 +1,7 @@
 package one.mann.weatherman.ui.detail
 
 import one.mann.domain.models.ErrorType
+import one.mann.weatherman.ui.common.base.BaseUiModelWithState
 import one.mann.weatherman.ui.common.models.Weather
 
 /* Created by Psmann. */
@@ -12,7 +13,10 @@ import one.mann.weatherman.ui.common.models.Weather
 internal data class DetailUiModel(
     val weatherData: List<Weather> = listOf(),
     val viewState: State = State.Idle
-) {
+) : BaseUiModelWithState<DetailUiModel> {
+
+    override fun resetState(): DetailUiModel = copy(viewState = State.Idle)
+
     sealed class State {
         // Idle state, no change
         object Idle : State()

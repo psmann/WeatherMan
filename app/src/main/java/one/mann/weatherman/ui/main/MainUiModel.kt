@@ -3,6 +3,7 @@ package one.mann.weatherman.ui.main
 import one.mann.domain.models.CitySearchResult
 import one.mann.domain.models.ErrorType
 import one.mann.domain.models.ViewPagerUpdateType
+import one.mann.weatherman.ui.common.base.BaseUiModelWithState
 import one.mann.weatherman.ui.common.models.Weather
 
 /* Created by Psmann. */
@@ -18,7 +19,10 @@ internal data class MainUiModel(
     val cityCount: Int = -1,
     val citySearchResult: List<CitySearchResult> = listOf(),
     val viewState: State = State.Loading
-) {
+) : BaseUiModelWithState<MainUiModel> {
+
+    override fun resetState(): MainUiModel = copy(viewState = State.Idle)
+
     sealed class State {
         // Idle state, no change
         object Idle : State()

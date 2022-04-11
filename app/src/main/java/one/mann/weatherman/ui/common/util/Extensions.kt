@@ -16,6 +16,7 @@ import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.common.api.ApiException
@@ -29,6 +30,7 @@ import one.mann.domain.models.Direction.UP
 import one.mann.weatherman.R
 import one.mann.weatherman.api.openweathermap.dayIcons
 import one.mann.weatherman.api.openweathermap.nightIcons
+import one.mann.weatherman.ui.common.base.BaseUiModelWithState
 import kotlin.coroutines.resume
 
 /* Created by Psmann. */
@@ -102,6 +104,12 @@ internal suspend fun Context.isLocationEnabled(): Boolean = suspendCancellableCo
         // Location Permission not granted, return False
         continuation.resume(false)
     }
+}
+
+/** Reset state to Idle after it is changed */
+internal fun <T : BaseUiModelWithState<T>> MutableLiveData<T>.setSingleEvent(uiModel: T?) {
+    this.value = uiModel
+    this.value = uiModel?.resetState()
 }
 
 ///** Set correct StatusBar and NavigationBar heights */
