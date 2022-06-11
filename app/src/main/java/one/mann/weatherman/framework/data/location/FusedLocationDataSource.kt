@@ -3,10 +3,7 @@ package one.mann.weatherman.framework.data.location
 import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.HandlerThread
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.*
 import kotlinx.coroutines.android.asCoroutineDispatcher
 import kotlinx.coroutines.suspendCancellableCoroutine
 import one.mann.domain.logic.truncate
@@ -24,7 +21,7 @@ internal class FusedLocationDataSource @Inject constructor(private val client: F
     @SuppressLint("MissingPermission") // Already being checked
     override suspend fun getLocation(): Location = suspendCancellableCoroutine { continuation ->
         val locationRequest = LocationRequest.create().apply {
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            priority = Priority.PRIORITY_HIGH_ACCURACY
             interval = 10 * 1000L
         }
         val locationCallback = object : LocationCallback() {

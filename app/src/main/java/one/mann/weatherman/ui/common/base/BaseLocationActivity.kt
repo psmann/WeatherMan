@@ -17,6 +17,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes.RESOLUTION_REQUIRED
 import com.google.android.gms.location.LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE
+import com.google.android.gms.location.Priority
 import one.mann.domain.models.location.LocationServicesResponse
 import one.mann.domain.models.location.LocationServicesResponse.*
 import one.mann.weatherman.ui.common.util.isConnected
@@ -30,7 +31,7 @@ internal abstract class BaseLocationActivity : AppCompatActivity() {
         private var locationPermissionListener: (Boolean) -> Unit = {} // Delegate function object to activity callback
         private var networkAndLocationListener: (LocationServicesResponse) -> Unit = {}
         private val locationRequestBuilder = LocationSettingsRequest.Builder()
-            .addLocationRequest(LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY))
+            .addLocationRequest(LocationRequest.create().setPriority(Priority.PRIORITY_HIGH_ACCURACY))
     }
 
     private val requestPermissionResult = registerForActivityResult(ActivityResultContracts.RequestPermission()) {

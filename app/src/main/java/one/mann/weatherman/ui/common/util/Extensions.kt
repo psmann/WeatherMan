@@ -23,6 +23,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.Priority
 import kotlinx.coroutines.suspendCancellableCoroutine
 import one.mann.domain.models.Direction
 import one.mann.domain.models.Direction.LEFT
@@ -85,7 +86,7 @@ internal fun View.setSlideAnimation(direction: Direction, animationDuration: Lon
 /** Check if location permission has been granted and location services are enabled or not */
 internal suspend fun Context.isLocationEnabled(): Boolean = suspendCancellableCoroutine { continuation ->
     val locationRequestBuilder = LocationSettingsRequest.Builder()
-        .addLocationRequest(LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY))
+        .addLocationRequest(LocationRequest.create().setPriority(Priority.PRIORITY_HIGH_ACCURACY))
 
     if (ContextCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
         LocationServices.getSettingsClient(this)
