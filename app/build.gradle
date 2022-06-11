@@ -39,9 +39,9 @@ dependencies {
 
     /** Android Framework */
     // AppCompat
-    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
     // Material design
-    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'com.google.android.material:material:1.6.1'
     // Constraint Layout
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     // SwipeRefresh Layout
@@ -49,7 +49,7 @@ dependencies {
     // Shared Preferences
     implementation 'androidx.preference:preference-ktx:1.2.0'
     // Kotlin framework extensions
-    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.core:core-ktx:1.8.0'
 
     /** Jetpack */
     // ViewModel
@@ -69,7 +69,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.2'
 
     // Google Play Services - Location
-    implementation 'com.google.android.gms:play-services-location:19.0.1'
+    implementation 'com.google.android.gms:play-services-location:20.0.0'
 
     // Dagger 2
     implementation 'com.google.dagger:dagger:2.42'
