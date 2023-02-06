@@ -8,9 +8,9 @@ buildscript {
 
     dependencies {
         // Gradle plugin
-        classpath 'com.android.tools.build:gradle:7.2.1'
+        classpath 'com.android.tools.build:gradle:7.4.1'
         // Kotlin plugin
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.0"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0"
     }
 }
 
@@ -18,6 +18,10 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+    }
+
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile) {
+        kotlinOptions.jvmTarget = JavaVersion.VERSION_11
     }
 }
 

@@ -3,14 +3,14 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 33
+    namespace 'one.mann.weatherman'
     buildFeatures.viewBinding = true
-    kotlinOptions.jvmTarget = "11"
 
     defaultConfig {
         applicationId "one.mann.weatherman"
         minSdkVersion 21
-        targetSdkVersion 32
+        targetSdkVersion 33
         versionCode 3
         versionName "1.0.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -31,17 +31,17 @@ android {
 }
 
 dependencies {
-    def lifecycle_version = '2.4.1'
-    def room_version = '2.4.2'
+    def lifecycle_version = '2.5.1'
+    def room_version = '2.5.0'
 
     // Modules
     implementation project(":interactors")
 
     /** Android Framework */
     // AppCompat
-    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.appcompat:appcompat:1.6.0'
     // Material design
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'com.google.android.material:material:1.8.0'
     // Constraint Layout
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     // SwipeRefresh Layout
@@ -49,7 +49,7 @@ dependencies {
     // Shared Preferences
     implementation 'androidx.preference:preference-ktx:1.2.0'
     // Kotlin framework extensions
-    implementation 'androidx.core:core-ktx:1.8.0'
+    implementation 'androidx.core:core-ktx:1.9.0'
 
     /** Jetpack */
     // ViewModel
@@ -66,30 +66,18 @@ dependencies {
     implementation 'androidx.work:work-runtime-ktx:2.7.1'
 
     // Kotlin Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
 
     // Google Play Services - Location
-    implementation 'com.google.android.gms:play-services-location:20.0.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
 
     // Dagger 2
-    implementation 'com.google.dagger:dagger:2.42'
-    kapt 'com.google.dagger:dagger-compiler:2.42'
+    implementation 'com.google.dagger:dagger:2.44.2'
+    kapt 'com.google.dagger:dagger-compiler:2.44.2'
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     // OkHttp
-    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
-
-    /** Testing APIs */
-    // JUnit
-    testImplementation 'junit:junit:4.13.2'
-    // Runner
-    androidTestImplementation 'androidx.test:runner:1.4.0'
-    // Espresso
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    // Truth
-    androidTestImplementation 'com.google.truth:truth:1.1.3'
-    // Coroutine Test
-    androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.3'
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
 }

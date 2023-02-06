@@ -1,17 +1,1 @@
 apply plugin: 'kotlin'
-
-compileKotlin {
-    kotlinOptions.jvmTarget = "11"
-}
-
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "11"
-}
-
-dependencies {
-    /** Testing APIs */
-    // JUnit
-    testImplementation 'junit:junit:4.13.2'
-    // Truth
-    testImplementation 'com.google.truth:truth:1.1.3'
-}
