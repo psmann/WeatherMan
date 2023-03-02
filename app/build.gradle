@@ -39,7 +39,7 @@ dependencies {
 
     /** Android Framework */
     // AppCompat
-    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     // Material design
     implementation 'com.google.android.material:material:1.8.0'
     // Constraint Layout
@@ -63,7 +63,7 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     // WorkManager
-    implementation 'androidx.work:work-runtime-ktx:2.7.1'
+    implementation 'androidx.work:work-runtime-ktx:2.8.0'
 
     // Kotlin Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
@@ -72,8 +72,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:21.0.1'
 
     // Dagger 2
-    implementation 'com.google.dagger:dagger:2.44.2'
-    kapt 'com.google.dagger:dagger-compiler:2.44.2'
+    implementation 'com.google.dagger:dagger:2.45'
+    kapt 'com.google.dagger:dagger-compiler:2.45'
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
