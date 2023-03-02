@@ -38,10 +38,10 @@ internal class DetailActivity : BaseLocationActivity() {
         handleLocationPermission { initActivity(it) }
     }
 
-    /** Pass RESULT_OK to be handled in CityFragment */
-    override fun onBackPressed() {
+    /** Passes RESULT_OK to be handled in CityFragment */
+    override fun onBackButtonPressed() {
         setResult(RESULT_OK)
-        super.onBackPressed()
+        super.onBackButtonPressed()
     }
 
     override fun injectDependencies() = WeatherManApp.appComponent.getSubComponent().injectDetailActivity(this)

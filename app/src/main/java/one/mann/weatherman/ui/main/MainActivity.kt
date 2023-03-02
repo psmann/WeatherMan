@@ -74,10 +74,10 @@ internal class MainActivity : BaseLocationActivity() {
         binding.viewPager.currentItem = savedInstanceState.getInt(PAGER_POSITION)
     }
 
-    override fun onBackPressed() = when {
+    override fun onBackButtonPressed() = when {
         binding.itemSearchCityConstraintLayout.root.visibility == View.VISIBLE -> hideSearchView()
         binding.viewPager.currentItem != 0 -> binding.viewPager.currentItem = 0
-        else -> super.onBackPressed()
+        else -> super.onBackButtonPressed()
     }
 
     override fun injectDependencies() = WeatherManApp.appComponent.getSubComponent().injectMainActivity(this)
