@@ -31,7 +31,7 @@ internal abstract class BaseLocationActivity : AppCompatActivity() {
         private var locationPermissionListener: (Boolean) -> Unit = {} // Delegate function object to activity callback
         private var networkAndLocationListener: (LocationServicesResponse) -> Unit = {}
         private val locationRequestBuilder = LocationSettingsRequest.Builder()
-            .addLocationRequest(LocationRequest.create().setPriority(Priority.PRIORITY_HIGH_ACCURACY))
+            .addLocationRequest(LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10 * 1000L).build())
     }
 
     private val requestPermissionResult = registerForActivityResult(ActivityResultContracts.RequestPermission()) {

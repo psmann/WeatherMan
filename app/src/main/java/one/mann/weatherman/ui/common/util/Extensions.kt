@@ -1,6 +1,7 @@
 package one.mann.weatherman.ui.common.util
 
 import android.Manifest.permission
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
@@ -37,6 +38,7 @@ import kotlin.coroutines.resume
 /* Created by Psmann. */
 
 /** Load vector resources directly for improved performance. Uses nightIcons after sunset, dayIcons used by default */
+@SuppressLint("DiscouragedApi") // Suppressed until a suitable replacement can be implemented
 internal fun ImageView.loadIcon(iconCode: Int, sunPosition: Float = 1f) {
     val uri = if (sunPosition in 0.0..1.0) dayIcons(iconCode) else nightIcons(iconCode)
     setImageResource(context.resources.getIdentifier(uri, "drawable", context.packageName))
@@ -86,7 +88,7 @@ internal fun View.setSlideAnimation(direction: Direction, animationDuration: Lon
 /** Check if location permission has been granted and location services are enabled or not */
 internal suspend fun Context.isLocationEnabled(): Boolean = suspendCancellableCoroutine { continuation ->
     val locationRequestBuilder = LocationSettingsRequest.Builder()
-        .addLocationRequest(LocationRequest.create().setPriority(Priority.PRIORITY_HIGH_ACCURACY))
+        .addLocationRequest(LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10 * 1000L).build())
 
     if (ContextCompat.checkSelfPermission(this, permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
         LocationServices.getSettingsClient(this)

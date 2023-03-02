@@ -20,10 +20,7 @@ internal class FusedLocationDataSource @Inject constructor(private val client: F
 
     @SuppressLint("MissingPermission") // Already being checked
     override suspend fun getLocation(): Location = suspendCancellableCoroutine { continuation ->
-        val locationRequest = LocationRequest.create().apply {
-            priority = Priority.PRIORITY_HIGH_ACCURACY
-            interval = 10 * 1000L
-        }
+        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10 * 1000L).build()
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 for (location in locationResult.locations) {
