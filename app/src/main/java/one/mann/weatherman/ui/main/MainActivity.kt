@@ -89,7 +89,7 @@ internal class MainActivity : BaseLocationActivity() {
             finish()
             return
         }
-        mainViewModel.uiModel.observe(::getLifecycle, ::observeUiModel)
+        mainViewModel.uiModel.observe(this, ::observeUiModel)
         binding.apply {
             // Set up the ViewPager
             viewPager.apply {

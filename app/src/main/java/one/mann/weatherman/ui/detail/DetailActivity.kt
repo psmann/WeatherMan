@@ -52,7 +52,7 @@ internal class DetailActivity : BaseLocationActivity() {
             finish()
             return
         }
-        detailViewModel.uiModel.observe(::getLifecycle, ::observeUiModel)
+        detailViewModel.uiModel.observe(this, ::observeUiModel)
         binding.apply {
             // Set up the Swipe Refresh Layout
             detailSwipeLayout.apply {
