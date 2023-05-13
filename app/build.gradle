@@ -32,7 +32,7 @@ android {
 
 dependencies {
     def lifecycle_version = '2.6.1'
-    def room_version = '2.6.0-alpha01' // required to resolve Kotlin metadata 0.6.0 error
+    def room_version = '2.6.0-alpha01' // Using alpha because 2.6 is required to fix Kotlin metadata 0.6.0 error
 
     // Modules
     implementation project(":interactors")
@@ -49,7 +49,7 @@ dependencies {
     // Shared Preferences
     implementation 'androidx.preference:preference-ktx:1.2.0'
     // Kotlin framework extensions
-    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.core:core-ktx:1.10.1'
 
     /** Jetpack */
     // ViewModel
@@ -66,7 +66,7 @@ dependencies {
     implementation 'androidx.work:work-runtime-ktx:2.8.1'
 
     // Kotlin Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.0'
 
     // Google Play Services - Location
     implementation 'com.google.android.gms:play-services-location:21.0.1'
