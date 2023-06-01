@@ -32,7 +32,7 @@ android {
 
 dependencies {
     def lifecycle_version = '2.6.1'
-    def room_version = '2.6.0-alpha01' // Using alpha because 2.6 is required to fix Kotlin metadata 0.6.0 error
+    def room_version = '2.5.1'
 
     // Modules
     implementation project(":interactors")
@@ -66,14 +66,14 @@ dependencies {
     implementation 'androidx.work:work-runtime-ktx:2.8.1'
 
     // Kotlin Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1'
 
     // Google Play Services - Location
     implementation 'com.google.android.gms:play-services-location:21.0.1'
 
     // Dagger 2
-    implementation 'com.google.dagger:dagger:2.46'
-    kapt 'com.google.dagger:dagger-compiler:2.46'
+    implementation 'com.google.dagger:dagger:2.46.1'
+    kapt 'com.google.dagger:dagger-compiler:2.46.1'
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
