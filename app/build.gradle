@@ -3,7 +3,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 33
     namespace 'one.mann.weatherman'
     buildFeatures.viewBinding = true
 
@@ -11,6 +10,7 @@ android {
         applicationId "one.mann.weatherman"
         minSdkVersion 21
         targetSdkVersion 33
+        compileSdk 33
         versionCode 4
         versionName "1.0.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
