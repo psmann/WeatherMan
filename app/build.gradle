@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.devtools.ksp'
 
 android {
     namespace 'one.mann.weatherman'
@@ -47,7 +48,7 @@ dependencies {
     // SwipeRefresh Layout
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     // Shared Preferences
-    implementation 'androidx.preference:preference-ktx:1.2.0'
+    implementation 'androidx.preference:preference-ktx:1.2.1'
     // Kotlin framework extensions
     implementation 'androidx.core:core-ktx:1.10.1'
 
@@ -60,7 +61,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
     // Room Persistence Library
     implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+    ksp "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     // WorkManager
     implementation 'androidx.work:work-runtime-ktx:2.8.1'
