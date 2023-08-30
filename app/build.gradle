@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.devtools.ksp'
 
 android {
@@ -73,8 +72,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:21.0.1'
 
     // Dagger 2
-    implementation 'com.google.dagger:dagger:2.47'
-    kapt 'com.google.dagger:dagger-compiler:2.47'
+    implementation 'com.google.dagger:dagger:2.48'
+    ksp 'com.google.dagger:dagger-compiler:2.48'
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
