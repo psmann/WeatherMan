@@ -37,27 +37,24 @@ dependencies {
     // Modules
     implementation project(":interactors")
 
-    /** Android Framework */
+    /** AndroidX Libraries */
     // AppCompat
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    // Material design
-    implementation 'com.google.android.material:material:1.9.0'
     // Constraint Layout
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     // SwipeRefresh Layout
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     // Shared Preferences
     implementation 'androidx.preference:preference-ktx:1.2.1'
-    // Kotlin framework extensions
+    // Kotlin Framework Extensions
     implementation 'androidx.core:core-ktx:1.10.1'
-
-    /** Jetpack */
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     // LiveData
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     // Lifecycle
-    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
+    //noinspection LifecycleAnnotationProcessorWithJava8 - Supressed misleading warning
+    ksp "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
     // Room Persistence Library
     implementation "androidx.room:room-runtime:$room_version"
     ksp "androidx.room:room-compiler:$room_version"
@@ -65,19 +62,23 @@ dependencies {
     // WorkManager
     implementation 'androidx.work:work-runtime-ktx:2.8.1'
 
+    // Material Design
+    implementation 'com.google.android.material:material:1.9.0'
+
+    // GMS Google Play Services - Location
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+
     // Kotlin Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
-
-    // Google Play Services - Location
-    implementation 'com.google.android.gms:play-services-location:21.0.1'
 
     // Dagger 2
     implementation 'com.google.dagger:dagger:2.48'
     ksp 'com.google.dagger:dagger-compiler:2.48'
 
+    // OkHttp
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    // OkHttp
-    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
 }
