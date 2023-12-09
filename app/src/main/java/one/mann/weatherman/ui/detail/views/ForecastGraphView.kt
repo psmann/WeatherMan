@@ -78,7 +78,7 @@ internal class ForecastGraphView @JvmOverloads constructor(context: Context, att
         super.onSizeChanged(w, h, oldw, oldh)
     }
 
-    override fun onDraw(canvas: Canvas?) {
-        canvas?.drawLines(coordinates, paintLine)
+    override fun onDraw(canvas: Canvas) {
+        canvas.drawLines(coordinates, paintLine)
     }
 }

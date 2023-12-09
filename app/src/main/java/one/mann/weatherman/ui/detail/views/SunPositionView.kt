@@ -92,8 +92,8 @@ internal class SunPositionView @JvmOverloads constructor(context: Context, attrs
         super.onSizeChanged(w, h, oldw, oldh)
     }
 
-    override fun onDraw(canvas: Canvas?) {
-        canvas?.drawPath(pathCurve, paintCurve)
-        if (displaySun) canvas?.drawBitmap(sunImage, pointX, pointY, paintBitmap)
+    override fun onDraw(canvas: Canvas) {
+        canvas.drawPath(pathCurve, paintCurve)
+        if (displaySun) canvas.drawBitmap(sunImage, pointX, pointY, paintBitmap)
     }
 }
