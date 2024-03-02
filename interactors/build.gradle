@@ -6,9 +6,9 @@ dependencies {
     api project(":domain")
 
     // Kotlin Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0'
 
     // Dagger 2
-    implementation 'com.google.dagger:dagger:2.49'
-    ksp 'com.google.dagger:dagger-compiler:2.49'
+    implementation 'com.google.dagger:dagger:2.51'
+    ksp 'com.google.dagger:dagger-compiler:2.51'
 }
