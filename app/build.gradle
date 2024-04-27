@@ -47,7 +47,7 @@ dependencies {
     // Shared Preferences
     implementation 'androidx.preference:preference-ktx:1.2.1'
     // Kotlin Framework Extensions
-    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.core:core-ktx:1.13.0'
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     // LiveData
@@ -72,13 +72,13 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0'
 
     // Dagger 2
-    implementation 'com.google.dagger:dagger:2.51'
-    ksp 'com.google.dagger:dagger-compiler:2.51'
+    implementation 'com.google.dagger:dagger:2.51.1'
+    ksp 'com.google.dagger:dagger-compiler:2.51.1'
 
     // OkHttp
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 
     // Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.10.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.10.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.11.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.11.0'
 }
