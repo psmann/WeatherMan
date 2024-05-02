@@ -47,7 +47,7 @@ dependencies {
     // Shared Preferences
     implementation 'androidx.preference:preference-ktx:1.2.1'
     // Kotlin Framework Extensions
-    implementation 'androidx.core:core-ktx:1.13.0'
+    implementation 'androidx.core:core-ktx:1.13.1'
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     // LiveData

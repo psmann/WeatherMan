@@ -1,4 +1,5 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
@@ -10,11 +11,11 @@ buildscript {
 
     dependencies {
         // Android Gradle Plugin
-        classpath 'com.android.tools.build:gradle:8.3.2'
+        classpath 'com.android.tools.build:gradle:8.4.0'
         // Kotlin Gradle Plugin
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.23"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.0-RC2"
         // Kotlin Symbol Processing Gradle Plugin
-        classpath "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:1.9.23-1.0.20"
+        classpath "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.0.0-RC2-1.0.20"
     }
 }
 
@@ -24,10 +25,8 @@ allprojects {
         mavenCentral()
     }
 
-    tasks.withType(KotlinCompile).tap {
-        configureEach {
-            kotlinOptions.jvmTarget = JavaVersion.VERSION_17
-        }
+    tasks.withType(KotlinJvmCompile).configureEach {
+        compilerOptions.jvmTarget = JvmTarget.JVM_17
     }
 }
 
