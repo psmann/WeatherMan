@@ -60,7 +60,7 @@ dependencies {
     ksp "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     // WorkManager
-    implementation 'androidx.work:work-runtime-ktx:2.9.0'
+    implementation 'androidx.work:work-runtime-ktx:2.9.1'
 
     // Material Design
     implementation 'com.google.android.material:material:1.12.0'
@@ -73,8 +73,8 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1'
 
     // Dagger 2
-    implementation 'com.google.dagger:dagger:2.51.1'
-    ksp 'com.google.dagger:dagger-compiler:2.51.1'
+    implementation 'com.google.dagger:dagger:2.52'
+    ksp 'com.google.dagger:dagger-compiler:2.52'
 
     // OkHttp
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'

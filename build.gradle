@@ -13,9 +13,9 @@ buildscript {
         // Android Gradle Plugin
         classpath 'com.android.tools.build:gradle:8.5.1'
         // Kotlin Gradle Plugin
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.0"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.10"
         // Kotlin Symbol Processing Gradle Plugin
-        classpath "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.0.0-1.0.21"
+        classpath "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:2.0.10-1.0.24"
     }
 }
 
