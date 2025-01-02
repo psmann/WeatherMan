@@ -89,8 +89,8 @@ internal abstract class BaseLocationActivity : AppCompatActivity() {
                             resolutionResult.launch(
                                 IntentSenderRequest.Builder((exception as ResolvableApiException).resolution).build()
                             )
-                        } catch (ignored: IntentSender.SendIntentException) {
-                        } catch (ignored: ClassCastException) {
+                        } catch (_: IntentSender.SendIntentException) {
+                        } catch (_: ClassCastException) {
                         } // Location settings are not available on device
                         SETTINGS_CHANGE_UNAVAILABLE -> networkAndLocationListener(UNAVAILABLE)
                     } else networkAndLocationListener(DISABLED)

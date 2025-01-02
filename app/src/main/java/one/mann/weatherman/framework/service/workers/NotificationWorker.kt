@@ -13,10 +13,10 @@ import javax.inject.Inject
 /* Created by Psmann. */
 
 internal class NotificationWorker(
-        private val updateWeather: UpdateWeather,
-        private val weatherNotification: WeatherNotification,
-        private val context: Context,
-        params: WorkerParameters
+    private val updateWeather: UpdateWeather,
+    private val weatherNotification: WeatherNotification,
+    private val context: Context,
+    params: WorkerParameters
 ) : CoroutineWorker(context, params) {
 
     /** Tasks are enqueued inside a single Worker because PeriodicWork doesn't allow chaining of Workers */
@@ -26,13 +26,13 @@ internal class NotificationWorker(
         // Show notification
         weatherNotification.show()
         Result.success()
-    } catch (e: Exception) {
+    } catch (_: Exception) {
         Result.failure()
     }
 
     class Factory @Inject constructor(
-            private val updateWeather: UpdateWeather,
-            private val weatherNotification: WeatherNotification
+        private val updateWeather: UpdateWeather,
+        private val weatherNotification: WeatherNotification
     ) : ChildWorkerFactory {
 
         override fun create(appContext: Context, params: WorkerParameters): CoroutineWorker {

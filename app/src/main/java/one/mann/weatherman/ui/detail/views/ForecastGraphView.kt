@@ -9,17 +9,20 @@ import androidx.core.view.marginRight
 
 /* Created by Psmann. */
 
-internal class ForecastGraphView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
-    : View(context, attrs, defStyleAttr) {
+internal class ForecastGraphView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : View(context, attrs, defStyleAttr) {
 
     companion object {
-        private const val alphaValue = 73 // Alpha for paintLine
-        private const val redValue = 255 // Red value for paintLine
-        private const val greenValue = 231 // Green value for paintLine
-        private const val blueValue = 231 // Blue value for paintLine
-        private const val lineWidth = 37f // Width of line
-        private const val bottomOffset = lineWidth // Bottom offset to remove cropping of line
-        private const val topOffset = lineWidth / 2 // Top offset to remove cropping of line
+        private const val ALPHA_VALUE = 73 // Alpha for paintLine
+        private const val RED_VALUE = 255 // Red value for paintLine
+        private const val GREEN_VALUE = 231 // Green value for paintLine
+        private const val BLUE_VALUE = 231 // Blue value for paintLine
+        private const val LINE_WIDTH = 37f // Width of line
+        private const val BOTTOM_OFFSET = LINE_WIDTH // Bottom offset to remove cropping of line
+        private const val TOP_OFFSET = LINE_WIDTH / 2 // Top offset to remove cropping of line
     }
 
     private val widthOffset by lazy { marginRight / resources.displayMetrics.density } // Right offset to fix graph width
@@ -37,35 +40,35 @@ internal class ForecastGraphView @JvmOverloads constructor(context: Context, att
         // Set up all the coordinates
         val min = points.minOrNull() ?: return // Minimum value in the list, return if null
         val max = points.maxOrNull() ?: return // Maximum value in the list, return if null
-        val heightGraph = height - bottomOffset // Height of the graph
+        val heightGraph = height - BOTTOM_OFFSET // Height of the graph
         val gap = max - min // Used as a metric to calculate percentages within its scope
         val line1StartX = left.toFloat() // startX coordinate of line 1
-        val line1StartY = (((max - points[0]) / gap) * heightGraph) + topOffset // startY coordinate of line 1
-        val line2StartY = (((max - points[1]) / gap) * heightGraph) + topOffset // startY coordinate of line 2
-        val line3StartY = (((max - points[2]) / gap) * heightGraph) + topOffset // startY coordinate of line 3
-        val line4StartY = (((max - points[3]) / gap) * heightGraph) + topOffset // startY coordinate of line 4
-        val line5StartY = (((max - points[4]) / gap) * heightGraph) + topOffset // startY coordinate of line 5
-        val line6StartY = (((max - points[5]) / gap) * heightGraph) + topOffset // startY coordinate of line 6
-        val line6EndY = (((max - points[6]) / gap) * heightGraph) + topOffset // endY coordinate of line 6
+        val line1StartY = (((max - points[0]) / gap) * heightGraph) + TOP_OFFSET // startY coordinate of line 1
+        val line2StartY = (((max - points[1]) / gap) * heightGraph) + TOP_OFFSET // startY coordinate of line 2
+        val line3StartY = (((max - points[2]) / gap) * heightGraph) + TOP_OFFSET // startY coordinate of line 3
+        val line4StartY = (((max - points[3]) / gap) * heightGraph) + TOP_OFFSET // startY coordinate of line 4
+        val line5StartY = (((max - points[4]) / gap) * heightGraph) + TOP_OFFSET // startY coordinate of line 5
+        val line6StartY = (((max - points[5]) / gap) * heightGraph) + TOP_OFFSET // startY coordinate of line 6
+        val line6EndY = (((max - points[6]) / gap) * heightGraph) + TOP_OFFSET // endY coordinate of line 6
         val percentX = (width - line1StartX - widthOffset) / 6 // Width of graph divided into 6 equal parts (startX for lines)
 
         // Add calculated coordinates to the array used for drawing
         coordinates = floatArrayOf(
-                line1StartX, line1StartY, percentX * 1 + lineWidth, line2StartY, // Line 1
-                percentX * 1 + lineWidth, line2StartY, percentX * 2 + lineWidth, line3StartY, // Line 2
-                percentX * 2 + lineWidth, line3StartY, percentX * 3 + lineWidth, line4StartY, // Line 3
-                percentX * 3 + lineWidth, line4StartY, percentX * 4 + lineWidth, line5StartY, // Line 4
-                percentX * 4 + lineWidth, line5StartY, percentX * 5 + lineWidth, line6StartY, // Line 5
-                percentX * 5 + lineWidth, line6StartY, percentX * 6 + widthOffset, line6EndY // Line 6
+            line1StartX, line1StartY, percentX * 1 + LINE_WIDTH, line2StartY, // Line 1
+            percentX * 1 + LINE_WIDTH, line2StartY, percentX * 2 + LINE_WIDTH, line3StartY, // Line 2
+            percentX * 2 + LINE_WIDTH, line3StartY, percentX * 3 + LINE_WIDTH, line4StartY, // Line 3
+            percentX * 3 + LINE_WIDTH, line4StartY, percentX * 4 + LINE_WIDTH, line5StartY, // Line 4
+            percentX * 4 + LINE_WIDTH, line5StartY, percentX * 5 + LINE_WIDTH, line6StartY, // Line 5
+            percentX * 5 + LINE_WIDTH, line6StartY, percentX * 6 + widthOffset, line6EndY // Line 6
         )
         setupPaint()
     }
 
     /** Set up attributes for paint */
     private fun setupPaint() {
-        paintLine.strokeWidth = lineWidth
+        paintLine.strokeWidth = LINE_WIDTH
         paintLine.strokeCap = Paint.Cap.ROUND
-        paintLine.setARGB(alphaValue, redValue, greenValue, blueValue)
+        paintLine.setARGB(ALPHA_VALUE, RED_VALUE, GREEN_VALUE, BLUE_VALUE)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

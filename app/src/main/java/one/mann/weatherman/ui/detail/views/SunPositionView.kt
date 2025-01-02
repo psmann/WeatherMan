@@ -9,17 +9,20 @@ import kotlin.math.pow
 
 /* Created by Psmann. */
 
-internal class SunPositionView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
-    : View(context, attrs, defStyleAttr) {
+internal class SunPositionView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
+) : View(context, attrs, defStyleAttr) {
 
     companion object {
-        private const val controlY = -37f // y control points 1 and 2 (y1 and y2) = height of curve
-        private const val offset = 46f // Fix extra image padding for file used
-        private const val horizontalPadding = 21f // Horizontal padding for image file used
-        private const val alphaValue = 165 // Alpha for paintCurve
-        private const val redValue = 255 // Red value for paintCurve
-        private const val greenValue = 175 // Green value for paintCurve
-        private const val blueValue = 75 // Blue value for paintCurve
+        private const val CONTROL_Y = -37f // y control points 1 and 2 (y1 and y2) = height of curve
+        private const val OFFSET = 46f // Fix extra image padding for file used
+        private const val HORIZONTAL_PADDING = 21f // Horizontal padding for image file used
+        private const val ALPHA_VALUE = 165 // Alpha for paintCurve
+        private const val RED_VALUE = 255 // Red value for paintCurve
+        private const val GREEN_VALUE = 175 // Green value for paintCurve
+        private const val BLUE_VALUE = 75 // Blue value for paintCurve
     }
 
     private val pathCurve = Path()
@@ -45,7 +48,7 @@ internal class SunPositionView @JvmOverloads constructor(context: Context, attrs
     /** Calculate coordinates and set-up the curve */
     private fun updateView() {
         // Set up coordinates
-        startX = pxToDip(left.toFloat()) + horizontalPadding
+        startX = pxToDip(left.toFloat()) + HORIZONTAL_PADDING
         endX = width - startX
         startEndY = height - pxToDip(top.toFloat())
         controlX1 = (endX + startX) * 0.25f // = one-fourth distance
@@ -54,7 +57,7 @@ internal class SunPositionView @JvmOverloads constructor(context: Context, attrs
         // Set up Cubic Bezier curve
         pathCurve.reset() // Reset previous path if any
         pathCurve.moveTo(startX, startEndY) // (x0, y0)
-        pathCurve.cubicTo(controlX1, controlY, controlX2, controlY, endX, startEndY) // (x1, y1, x2, y2, x3, y3)
+        pathCurve.cubicTo(controlX1, CONTROL_Y, controlX2, CONTROL_Y, endX, startEndY) // (x1, y1, x2, y2, x3, y3)
 
         // Calculate desired coordinates on the curve using formula:
         // X(t) = (1-t)^3 * X0 + 3*(1-t)^2 * t * X1 + 3*(1-t) * t^2 * X2 + t^3 * X3
@@ -62,9 +65,9 @@ internal class SunPositionView @JvmOverloads constructor(context: Context, attrs
         if (tValue in 0f..1f) {
             val k = 1 - tValue // constant calculated for brevity
             pointX = ((k.pow(3) * startX) + (3 * k.pow(2) * tValue * controlX1)
-                    + (3 * k * tValue.pow(2) * controlX2) + (tValue.pow(3) * endX)) - offset
-            pointY = ((k.pow(3) * startEndY) + (3 * k.pow(2) * tValue * controlY)
-                    + (3 * k * tValue.pow(2) * controlY) + (tValue.pow(3) * startEndY)) - offset
+                + (3 * k * tValue.pow(2) * controlX2) + (tValue.pow(3) * endX)) - OFFSET
+            pointY = ((k.pow(3) * startEndY) + (3 * k.pow(2) * tValue * CONTROL_Y)
+                + (3 * k * tValue.pow(2) * CONTROL_Y) + (tValue.pow(3) * startEndY)) - OFFSET
             // Colour transition according to amount of day light left. 0 = yellow; 100 = purple
             updatePaintColour((tValue * 100).toInt())
             displaySun = true
@@ -76,7 +79,7 @@ internal class SunPositionView @JvmOverloads constructor(context: Context, attrs
 
     /** Change colour of the graph */
     private fun updatePaintColour(change: Int = 125) {
-        paintCurve.setARGB(alphaValue, redValue - change, greenValue - change, blueValue + change)
+        paintCurve.setARGB(ALPHA_VALUE, RED_VALUE - change, GREEN_VALUE - change, BLUE_VALUE + change)
     }
 
     /** Convert pixels to density independent pixels */

@@ -38,7 +38,7 @@ import kotlin.coroutines.resume
 /* Created by Psmann. */
 
 /** Load vector resources directly for improved performance. Uses nightIcons after sunset, dayIcons used by default */
-@SuppressLint("DiscouragedApi") // Suppressed until a suitable replacement can be implemented
+//@SuppressLint("DiscouragedApi") // Suppressed until a suitable replacement can be implemented
 internal fun ImageView.loadIcon(iconCode: Int, sunPosition: Float = 1f) {
     val uri = if (sunPosition in 0.0..1.0) dayIcons(iconCode) else nightIcons(iconCode)
     setImageResource(context.resources.getIdentifier(uri, "drawable", context.packageName))
@@ -98,7 +98,7 @@ internal suspend fun Context.isLocationEnabled(): Boolean = suspendCancellableCo
                     // Location settings are On, return true
                     it.getResult(ApiException::class.java)
                     continuation.resume(true)
-                } catch (exception: ApiException) {
+                } catch (_: ApiException) {
                     // Location settings are Off, return false
                     continuation.resume(false)
                 }

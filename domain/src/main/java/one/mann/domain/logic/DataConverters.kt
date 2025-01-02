@@ -25,16 +25,23 @@ fun String.removeUnits(vararg units: String): String {
 
 /** Set units to Imperial or Metric when data is fetched from API */
 fun Float.setUnits(units: String, type: UnitsType): Float = when (type) {
-    TEMPERATURE -> String.format("%.1f", if (units == IMPERIAL) ((this * 1.8) + 32) else this).toFloat()
-    WIND -> String.format("%.1f", if (units == IMPERIAL) (this * 2.237) else (this * 3.6)).toFloat()
-    VISIBILITY -> String.format("%.1f", if (units == IMPERIAL) (this / 1609.344) else (this / 1000)).toFloat()
+    TEMPERATURE -> String.format(Locale.getDefault(), "%.1f", if (units == IMPERIAL) ((this * 1.8) + 32) else this)
+        .toFloat()
+    WIND -> String.format(Locale.getDefault(), "%.1f", if (units == IMPERIAL) (this * 2.237) else (this * 3.6))
+        .toFloat()
+    VISIBILITY -> String.format(Locale.getDefault(), "%.1f", if (units == IMPERIAL) (this / 1609.344) else (this / 1000))
+        .toFloat()
 }
 
 /** Change units to Imperial or Metric when changed from Settings */
 fun Float.changeUnits(units: String, type: UnitsType): Float = when (type) {
-    TEMPERATURE -> String.format("%.1f", if (units == IMPERIAL) ((this * 1.8) + 32) else (this - 32) * 0.556).toFloat()
-    WIND -> String.format("%.1f", if (units == IMPERIAL) (this / 1.609) else (this * 1.609)).toFloat()
-    VISIBILITY -> String.format("%.1f", if (units == IMPERIAL) (this / 1.609) else (this * 1.609)).toFloat()
+    TEMPERATURE -> String
+        .format(Locale.getDefault(), "%.1f", if (units == IMPERIAL) ((this * 1.8) + 32) else (this - 32) * 0.556)
+        .toFloat()
+    WIND -> String.format(Locale.getDefault(), "%.1f", if (units == IMPERIAL) (this / 1.609) else (this * 1.609))
+        .toFloat()
+    VISIBILITY -> String.format(Locale.getDefault(), "%.1f", if (units == IMPERIAL) (this / 1.609) else (this * 1.609))
+        .toFloat()
 }
 
 /** Round off variable to nearest integer value and return as a string */
@@ -43,13 +50,17 @@ fun Float.roundOff(): String = this.roundToInt().toString()
 /** Truncate location coordinates to 4 decimal places */
 fun Location.truncate(): Location = Location(
     listOf(
-        String.format("%.4f", coordinates[0]).toFloat(),
-        String.format("%.4f", coordinates[1]).toFloat()
+        String.format(Locale.getDefault(), "%.4f", coordinates[0]).toFloat(),
+        String.format(Locale.getDefault(), "%.4f", coordinates[1]).toFloat()
     )
 )
 
 /** Convert location coordinates into a truncated comma separated string */
-fun List<Float>.coordinatesInString(): String = String.format("%.4f", this[0]) + ", " + String.format("%.4f", this[1])
+fun List<Float>.coordinatesInString(): String {
+    return String.format(Locale.getDefault(), "%.4f", this[0]) +
+        ", " +
+        String.format(Locale.getDefault(), "%.4f", this[1])
+}
 
 /** Convert the country code into an emoji icon */
 fun countryCodeToEmoji(code: String): String {
@@ -119,5 +130,5 @@ fun feelsLike(temperature: Float, humidity: Int, wind: Float): Float {
         feelsLike = temperature + (0.33 * e) - (0.7 * wind) - 4
     }
     // Set precision to match current temperature and return
-    return String.format("%.1f", feelsLike).toFloat()
+    return String.format(Locale.getDefault(), "%.1f", feelsLike).toFloat()
 }

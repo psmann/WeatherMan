@@ -1,5 +1,6 @@
 package one.mann.weatherman.ui.notification
 
+import android.Manifest.*
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -7,8 +8,10 @@ import android.app.NotificationManager.IMPORTANCE_DEFAULT
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager.*
 import android.os.Build
 import android.widget.RemoteViews
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.TaskStackBuilder
@@ -38,6 +41,8 @@ internal class WeatherNotification @Inject constructor(
 
     /** Get weather data, set up custom layouts, create channel, build notification and display */
     suspend fun show() {
+        // Return if permission has not been granted
+        if (ActivityCompat.checkSelfPermission(context, permission.POST_NOTIFICATIONS) != PERMISSION_GRANTED) return
         val data = getNotificationData.invoke().mapToUiNotificationData()
         val currentTemp = data.currentTemp.removeUnits(DEGREES).toFloat().roundOff() + DEGREES
         // Notification layouts
