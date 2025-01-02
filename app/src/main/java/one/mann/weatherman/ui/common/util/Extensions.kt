@@ -1,7 +1,6 @@
 package one.mann.weatherman.ui.common.util
 
 import android.Manifest.permission
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
@@ -30,18 +29,14 @@ import one.mann.domain.models.Direction
 import one.mann.domain.models.Direction.LEFT
 import one.mann.domain.models.Direction.UP
 import one.mann.weatherman.R
-import one.mann.weatherman.api.openweathermap.dayIcons
-import one.mann.weatherman.api.openweathermap.nightIcons
 import one.mann.weatherman.ui.common.base.BaseUiModelWithState
 import kotlin.coroutines.resume
 
 /* Created by Psmann. */
 
 /** Load vector resources directly for improved performance. Uses nightIcons after sunset, dayIcons used by default */
-//@SuppressLint("DiscouragedApi") // Suppressed until a suitable replacement can be implemented
 internal fun ImageView.loadIcon(iconCode: Int, sunPosition: Float = 1f) {
-    val uri = if (sunPosition in 0.0..1.0) dayIcons(iconCode) else nightIcons(iconCode)
-    setImageResource(context.resources.getIdentifier(uri, "drawable", context.packageName))
+    setImageResource(getUri(iconCode, sunPosition))
 }
 
 /** Inflate ViewGroups with ViewHolders */
@@ -60,7 +55,7 @@ internal fun Context.isConnected(): Boolean {
                 else -> false
             }
         }
-        else activeNetworkInfo.run { return this?.isConnected ?: false }
+        else activeNetworkInfo.run { return this?.isConnected == true }
     }
 }
 

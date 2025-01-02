@@ -53,11 +53,7 @@ internal class WeatherNotification @Inject constructor(
             setTextViewText(R.id.notification_city_name_text_view, data.cityName)
             setTextViewText(R.id.notification_description_text_view, data.description)
             setTextViewText(R.id.notification_humidity_text_view, data.humidity)
-            setImageViewResource(
-                R.id.notification_icon_image_view, context.resources.getIdentifier(
-                    getUri(data.iconId, data.sunPosition), "drawable", context.packageName
-                )
-            )
+            setImageViewResource(R.id.notification_icon_image_view, getUri(data.iconId, data.sunPosition))
         }
         val notificationExpanded = RemoteViews(context.packageName, R.layout.notification_expanded).apply {
             setTextViewText(R.id.notification_current_temp_text_view, currentTemp)
@@ -66,40 +62,26 @@ internal class WeatherNotification @Inject constructor(
             setTextViewText(R.id.notification_city_name_text_view, data.cityName)
             setTextViewText(R.id.notification_description_text_view, data.description)
             setTextViewText(R.id.notification_humidity_text_view, data.humidity)
-            setImageViewResource(
-                R.id.notification_icon_image_view, context.resources.getIdentifier(
-                    getUri(data.iconId, data.sunPosition), "drawable", context.packageName
-                )
-            )
+            setImageViewResource(R.id.notification_icon_image_view, getUri(data.iconId, data.sunPosition))
             setTextViewText(R.id.notification_temp_forecast1_text_view, data.hour03Time)
             setTextViewText(R.id.notification_temp_forecast2_text_view, data.hour06Time)
             setTextViewText(R.id.notification_temp_forecast3_text_view, data.hour09Time)
             setTextViewText(R.id.notification_temp_forecast4_text_view, data.hour12Time)
             setTextViewText(R.id.notification_temp_forecast5_text_view, data.hour15Time)
             setImageViewResource(
-                R.id.notification_icon_forecast1_image_view, context.resources.getIdentifier(
-                    getUri(data.hour03IconId, data.hour03SunPosition), "drawable", context.packageName
-                )
+                R.id.notification_icon_forecast1_image_view, getUri(data.hour03IconId, data.hour03SunPosition)
             )
             setImageViewResource(
-                R.id.notification_icon_forecast2_image_view, context.resources.getIdentifier(
-                    getUri(data.hour06IconId, data.hour06SunPosition), "drawable", context.packageName
-                )
+                R.id.notification_icon_forecast2_image_view, getUri(data.hour06IconId, data.hour06SunPosition)
             )
             setImageViewResource(
-                R.id.notification_icon_forecast3_image_view, context.resources.getIdentifier(
-                    getUri(data.hour09IconId, data.hour09SunPosition), "drawable", context.packageName
-                )
+                R.id.notification_icon_forecast3_image_view, getUri(data.hour09IconId, data.hour09SunPosition)
             )
             setImageViewResource(
-                R.id.notification_icon_forecast4_image_view, context.resources.getIdentifier(
-                    getUri(data.hour12IconId, data.hour12SunPosition), "drawable", context.packageName
-                )
+                R.id.notification_icon_forecast4_image_view, getUri(data.hour12IconId, data.hour12SunPosition)
             )
             setImageViewResource(
-                R.id.notification_icon_forecast5_image_view, context.resources.getIdentifier(
-                    getUri(data.hour15IconId, data.hour15SunPosition), "drawable", context.packageName
-                )
+                R.id.notification_icon_forecast5_image_view, getUri(data.hour15IconId, data.hour15SunPosition)
             )
         }
         // Create notification channel if necessary
@@ -123,10 +105,10 @@ internal class WeatherNotification @Inject constructor(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?).run {
                 val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, IMPORTANCE_DEFAULT)
-                        .apply {
-                            this.description = context.getString(R.string.notification_channel_description)
-                            this.lockscreenVisibility = Notification.VISIBILITY_SECRET
-                        }
+                    .apply {
+                        this.description = context.getString(R.string.notification_channel_description)
+                        this.lockscreenVisibility = Notification.VISIBILITY_SECRET
+                    }
                 this?.createNotificationChannel(channel)
             }
         }
