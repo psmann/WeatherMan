@@ -41,7 +41,7 @@ dependencies {
     // AppCompat
     implementation 'androidx.appcompat:appcompat:1.7.0'
     // Constraint Layout
-    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     // SwipeRefresh Layout
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     // Shared Preferences
