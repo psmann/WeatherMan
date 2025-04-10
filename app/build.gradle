@@ -32,7 +32,7 @@ android {
 
 dependencies {
     def lifecycle_version = '2.8.7'
-    def room_version = '2.6.1'
+    def room_version = '2.7.0'
 
     // Modules
     implementation project(":interactors")
@@ -47,7 +47,7 @@ dependencies {
     // Shared Preferences
     implementation 'androidx.preference:preference-ktx:1.2.1'
     // Kotlin Framework Extensions
-    implementation 'androidx.core:core-ktx:1.15.0'
+    implementation 'androidx.core:core-ktx:1.16.0'
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
     // LiveData
@@ -69,11 +69,11 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:21.3.0'
 
     // Kotlin Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2'
 
     // Dagger 2
-    implementation 'com.google.dagger:dagger:2.55'
-    ksp 'com.google.dagger:dagger-compiler:2.55'
+    implementation 'com.google.dagger:dagger:2.56.1'
+    ksp 'com.google.dagger:dagger-compiler:2.56.1'
 
     // OkHttp
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
