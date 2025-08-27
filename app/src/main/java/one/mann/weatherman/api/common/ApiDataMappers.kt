@@ -2,7 +2,7 @@ package one.mann.weatherman.api.common
 
 import one.mann.domain.logic.countryCodeToEmoji
 import one.mann.domain.models.CitySearchResult
-import one.mann.weatherman.api.teleport.dto.Timezone
+import one.mann.weatherman.api.timezonedb.dto.Timezone
 import one.mann.weatherman.api.tomtom.dto.FuzzySearch
 import one.mann.domain.models.weather.CurrentWeather as DomainCurrentWeather
 import one.mann.domain.models.weather.DailyForecast as DomainDailyForecast
@@ -13,7 +13,7 @@ import one.mann.weatherman.api.openweathermap.dto.HourlyForecast as ApiHourlyFor
 
 /* Created by Psmann. */
 
-/** Map API OWM CurrentWeather to Domain, all parameters are nullable and are given default values */
+/** Map API OWM CurrentWeather DTO to domain model, all parameters are nullable and are given default values */
 internal fun ApiCurrentWeather.mapToDomain(): DomainCurrentWeather = DomainCurrentWeather(
     0,
     name ?: "Earth",
@@ -32,7 +32,7 @@ internal fun ApiCurrentWeather.mapToDomain(): DomainCurrentWeather = DomainCurre
     visibility ?: 0f
 )
 
-/** Map API OWM HourlyForecast to Domain, all parameters are nullable and are given default values */
+/** Map API OWM HourlyForecast DTO to domain model, all parameters are nullable and are given default values */
 internal fun ApiHourlyForecast.ListObject?.mapToDomain(): DomainHourlyForecast = DomainHourlyForecast(
     0,
     this?.dt?.times(1000) ?: 1000000000000,
@@ -40,7 +40,7 @@ internal fun ApiHourlyForecast.ListObject?.mapToDomain(): DomainHourlyForecast =
     this?.weather?.get(0)?.id ?: 0
 )
 
-/** Map API OWM DailyForecast to Domain, all parameters are nullable and are given default values */
+/** Map API OWM DailyForecast DTO to domain model, all parameters are nullable and are given default values */
 internal fun ApiDailyForecast.ListObject?.mapToDomain(): DomainDailyForecast = DomainDailyForecast(
     0,
     this?.dt?.times(1000) ?: 1000000000000,
@@ -49,13 +49,10 @@ internal fun ApiDailyForecast.ListObject?.mapToDomain(): DomainDailyForecast = D
     this?.weather?.get(0)?.id ?: 0
 )
 
-/** Map API Teleport Timezone to String to be used in Domain logic, parameter is nullable and is given a default value */
-internal fun Timezone?.mapToString(): String {
-    return this?.embedded1?.locationNearestCities?.get(0)?.embedded2?.locationNearestCity?.embedded3?.cityTimezone?.ianaName
-        ?: ""
-}
+/** Map API TimezoneDb DTO to String to be used in domain logic, parameter is nullable and is given a default value */
+internal fun Timezone?.mapToString(): String = this?.zoneName ?: ""
 
-/** Map API TomTom Search to Domain, all parameters are nullable and are given default values */
+/** Map API TomTom Search DTO to domain model, all parameters are nullable and are given default values */
 internal fun FuzzySearch.mapToDomain(): List<CitySearchResult> {
     val citySearchResultList = mutableListOf<CitySearchResult>()
 

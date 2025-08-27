@@ -22,7 +22,7 @@
 
 # DTO classes
 -keep class one.mann.weatherman.api.openweathermap.dto** { *; }
--keep class one.mann.weatherman.api.teleport.dto** { *; }
+-keep class one.mann.weatherman.api.timezonedb.dto** { *; }
 -keep class one.mann.weatherman.api.tomtom.dto** { *; }
 
 # OkHttp

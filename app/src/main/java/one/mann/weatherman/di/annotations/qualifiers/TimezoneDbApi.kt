@@ -6,4 +6,4 @@ import javax.inject.Qualifier
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-internal annotation class TeleportApi
+internal annotation class TimezoneDbApi

@@ -35,7 +35,7 @@ Code is written in Kotlin and uses coroutines to handle all asynchronous work.
   * [Google Play Services](https://developers.google.com/android/reference/com/google/android/gms/location/package-summary) - Device GPS location
   * [TomTom Search API](https://developer.tomtom.com/search-api) - City names and locations
   * [OpenWeatherMap API](https://openweathermap.org/api) - Weather information
-  * [Teleport Timezone API](https://developers.teleport.org/api/resources/Timezone/) - Time zones
+  * [TimezoneDb Timezone API](https://timezonedb.com/references/get-time-zone) - Time zones
 
 ## Getting Started
 

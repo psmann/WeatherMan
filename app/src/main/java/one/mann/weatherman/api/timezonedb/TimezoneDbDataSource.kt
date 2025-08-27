@@ -1,4 +1,4 @@
-package one.mann.weatherman.api.teleport
+package one.mann.weatherman.api.timezonedb
 
 import one.mann.domain.models.location.Location
 import one.mann.interactors.data.sources.api.TimezoneDataSource
@@ -7,19 +7,19 @@ import javax.inject.Inject
 
 /* Created by Psmann. */
 
-internal class TeleportTimezoneDataSource @Inject constructor(
-    private val teleportTimezoneService: TeleportTimezoneService
+internal class TimezoneDbDataSource @Inject constructor(
+    private val timezoneDbService: TimezoneDbService
 ) : TimezoneDataSource {
 
     override suspend fun getTimezone(location: Location): String {
-        return teleportTimezoneService.getTimezone(
+        return timezoneDbService.getTimezone(
             location.coordinates[0].toString(),
             location.coordinates[1].toString()
         ).mapToString()
     }
 
     override suspend fun getAllTimezone(locations: List<Location>): List<String> = locations.map {
-        teleportTimezoneService.getTimezone(
+        timezoneDbService.getTimezone(
             it.coordinates[0].toString(),
             it.coordinates[1].toString()
         ).mapToString()
