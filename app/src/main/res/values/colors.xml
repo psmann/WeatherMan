@@ -7,6 +7,9 @@
     <color name="highAlphaWhite">#47E0F7FA</color>
     <color name="highAlphaGrey">#79AAAAAA</color>
 
+    <!--Launcher colours-->
+    <color name="ic_launcher_background">#0091CF</color>
+
     <!--Background colours-->
     <color name="dayClearStart">#01579B</color>
     <color name="dayClearCenter">#03A9F4</color>
