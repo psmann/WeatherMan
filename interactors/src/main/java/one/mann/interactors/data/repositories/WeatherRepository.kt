@@ -36,7 +36,7 @@ class WeatherRepository @Inject constructor(
         val location = apiLocation ?: deviceLocation.getLocation() // Use device GPS location if null
         val timeCreated = System.currentTimeMillis()
         val units = async { prefsData.getUnits() }
-        val timezone = async { if (apiLocation != null) timezoneData.getTimezone(location) else "" }
+        val timezone = async { timezoneData.getTimezone(location) }
         val currentWeather = async { weatherData.getCurrentWeather(location).copy(units = units.await()) }
         val dailyForecasts = async { weatherData.getDailyForecasts(location) }
         val hourlyForecasts = async { weatherData.getHourlyForecasts(location) }

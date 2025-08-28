@@ -74,7 +74,7 @@ fun countryCodeToEmoji(code: String): String {
 private fun epochToFormat(time: Long, timezone: String, pattern: String): String {
     val format = SimpleDateFormat(pattern, Locale.getDefault())
 
-    format.timeZone = if (timezone == "") TimeZone.getDefault() else TimeZone.getTimeZone(timezone)
+    format.timeZone = TimeZone.getTimeZone(timezone)
 
     return format.format(Date(time)).toString()
 }
