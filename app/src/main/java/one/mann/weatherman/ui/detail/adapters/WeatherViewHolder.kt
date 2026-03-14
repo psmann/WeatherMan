@@ -1,6 +1,7 @@
 package one.mann.weatherman.ui.detail.adapters
 
 import android.view.View
+import androidx.compose.ui.platform.ComposeView
 import androidx.recyclerview.widget.RecyclerView
 import one.mann.weatherman.databinding.*
 
@@ -27,4 +28,6 @@ internal sealed class WeatherViewHolder(itemView: View) : RecyclerView.ViewHolde
     class DailyForecast(itemView: View) : WeatherViewHolder(itemView) {
         val binding: ItemWeatherForecastDailyBinding = ItemWeatherForecastDailyBinding.bind(itemView)
     }
+
+    class Celestial(val composeView: ComposeView) : WeatherViewHolder(composeView)
 }

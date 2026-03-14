@@ -1,11 +1,18 @@
 package one.mann.weatherman.ui.detail.adapters
 
 import android.annotation.SuppressLint
+import android.view.View
 import android.view.ViewGroup
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.recyclerview.widget.RecyclerView
 import one.mann.domain.logic.DEGREES
 import one.mann.domain.logic.removeUnits
 import one.mann.weatherman.R
+import one.mann.weatherman.ui.celestial.CelestialChart
+import one.mann.weatherman.ui.celestial.CelestialInfoSection
 import one.mann.weatherman.ui.common.models.Weather
 import one.mann.weatherman.ui.common.util.inflateView
 import one.mann.weatherman.ui.common.util.loadIcon
@@ -16,17 +23,26 @@ import one.mann.weatherman.ui.detail.adapters.WeatherViewHolder.*
 internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>() {
 
     companion object {
-        private const val VIEW_HOLDER_COUNT = 5
+        private const val VIEW_HOLDER_COUNT = 6
     }
 
     private var weather = Weather()
+    // 0 = SunPositionView, 1 = Azimuth graph, 2 = 24-hour graph
+    private var graphMode = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder = when (viewType) {
         0 -> Current(parent.inflateView(R.layout.item_weather_current))
         1 -> Conditions(parent.inflateView(R.layout.item_weather_conditions))
         2 -> SunCycle(parent.inflateView(R.layout.item_weather_sun_cycle))
         3 -> HourlyForecast(parent.inflateView(R.layout.item_weather_forecast_hourly))
-        else -> DailyForecast(parent.inflateView(R.layout.item_weather_forecast_daily))
+        4 -> DailyForecast(parent.inflateView(R.layout.item_weather_forecast_daily))
+        else -> Celestial(ComposeView(parent.context).apply {
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+        })
     }
 
     override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
@@ -60,6 +76,31 @@ internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>()
                 sunCycleSunriseResultTextView.text = weather.currentWeather.sunrise
                 sunCycleSunsetResultTextView.text = weather.currentWeather.sunset
                 sunCycleSunPositionView.setT(weather.currentWeather.sunPosition)
+                // Set up celestial chart ComposeView
+                sunCycleCelestialChartView.setViewCompositionStrategy(
+                    ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
+                )
+                // Apply current graph mode
+                fun applyGraphMode() {
+                    if (graphMode == 0) {
+                        sunCycleSunPositionView.visibility = View.VISIBLE
+                        sunCycleCelestialChartView.visibility = View.GONE
+                    } else {
+                        sunCycleSunPositionView.visibility = View.GONE
+                        sunCycleCelestialChartView.visibility = View.VISIBLE
+                        sunCycleCelestialChartView.setContent {
+                            MaterialTheme(colorScheme = darkColorScheme()) {
+                                CelestialChart(weather.celestialInfo, azimuthMode = graphMode == 1)
+                            }
+                        }
+                    }
+                }
+                applyGraphMode()
+                // Tap on graph container cycles: SunPosition → Azimuth → 24-hour → SunPosition
+                sunCycleGraphContainer.setOnClickListener {
+                    graphMode = (graphMode + 1) % 3
+                    applyGraphMode()
+                }
             }
             is HourlyForecast -> holder.binding.apply {
                 val forecastList = listOf(
@@ -145,6 +186,11 @@ internal class DetailRecyclerAdapter : RecyclerView.Adapter<WeatherViewHolder>()
                 forecastDaily5IconImageView.loadIcon(weather.dailyForecasts[4].forecastIconId)
                 forecastDaily6IconImageView.loadIcon(weather.dailyForecasts[5].forecastIconId)
                 forecastDaily7IconImageView.loadIcon(weather.dailyForecasts[6].forecastIconId)
+            }
+            is Celestial -> holder.composeView.setContent {
+                MaterialTheme(colorScheme = darkColorScheme()) {
+                    CelestialInfoSection(weather.celestialInfo)
+                }
             }
         }
     }

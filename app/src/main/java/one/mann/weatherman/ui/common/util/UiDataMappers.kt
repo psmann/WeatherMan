@@ -2,6 +2,7 @@ package one.mann.weatherman.ui.common.util
 
 import one.mann.domain.logic.*
 import one.mann.weatherman.ui.common.models.*
+import one.mann.domain.models.CelestialInfo as DomainCelestialInfo
 import one.mann.domain.models.NotificationData as DomainNotificationData
 import one.mann.domain.models.weather.Weather as DomainWeather
 
@@ -79,4 +80,75 @@ internal fun DomainNotificationData.mapToUiNotificationData(): NotificationData 
     epochToHour(hour15Time, ""),
     hour15IconId,
     hour15SunPosition
+)
+
+internal fun DomainCelestialInfo.mapToUiCelestialInfo(): CelestialInfo = CelestialInfo(
+    // Formatted display strings for Sun info card
+    sunAltitude = "%.2f°".format(sunAltDeg),
+    sunAzimuth = "%.2f° %s".format(sunAzDeg, azimuthDirection(sunAzDeg)),
+    sunRiseInfo = "${formatHours(sunRise)}  (%.2f°, %.2f° %s)".format(
+        sunRiseAlt,
+        sunRiseAz,
+        azimuthDirection(sunRiseAz)
+    ),
+    sunSetInfo = "${formatHours(sunSet)}  (%.2f°, %.2f° %s)".format(sunSetAlt, sunSetAz, azimuthDirection(sunSetAz)),
+    sunZenithInfo = "${formatHours(sunMeridian)}  (%.2f°, %.2f° %s)".format(
+        sunPeakAlt,
+        sunMeridianAz,
+        azimuthDirection(sunMeridianAz)
+    ),
+    sunNadirInfo = "${formatHours(sunNadirHour)}  (%.2f°, %.2f° %s)".format(
+        sunNadirAlt,
+        sunNadirAz,
+        azimuthDirection(sunNadirAz)
+    ),
+    // Formatted display strings for Moon info card
+    moonAltitude = "%.2f°".format(moonAltDeg),
+    moonAzimuth = "%.2f° %s".format(moonAzDeg, azimuthDirection(moonAzDeg)),
+    moonRiseInfo = "${formatHours(moonRise)}  (%.2f°, %.2f° %s)".format(
+        moonRiseAlt,
+        moonRiseAz,
+        azimuthDirection(moonRiseAz)
+    ),
+    moonSetInfo = "${formatHours(moonSet)}  (%.2f°, %.2f° %s)".format(
+        moonSetAlt,
+        moonSetAz,
+        azimuthDirection(moonSetAz)
+    ),
+    moonZenithInfo = "${formatHours(moonMeridian)}  (%.2f°, %.2f° %s)".format(
+        moonPeakAlt,
+        moonMeridianAz,
+        azimuthDirection(moonMeridianAz)
+    ),
+    moonNadirInfo = "${formatHours(moonNadirHour)}  (%.2f°, %.2f° %s)".format(
+        moonNadirAlt,
+        moonNadirAz,
+        azimuthDirection(moonNadirAz)
+    ),
+    moonPhase = moonPhaseName(moonAge),
+    moonAge = "%.1f days".format(moonAge),
+    moonIllumination = "%.1f%%".format(moonIllumination * 100),
+    // Pass raw values for chart rendering
+    sunAltDeg = sunAltDeg,
+    sunAzDeg = sunAzDeg,
+    moonAltDeg = moonAltDeg,
+    moonAzDeg = moonAzDeg,
+    sunRiseHour = sunRise,
+    sunSetHour = sunSet,
+    sunRiseAz = sunRiseAz,
+    sunSetAz = sunSetAz,
+    moonRiseHour = moonRise,
+    moonSetHour = moonSet,
+    moonRiseAz = moonRiseAz,
+    moonSetAz = moonSetAz,
+    moonAgeDays = moonAge,
+    moonIlluminationFraction = moonIllumination,
+    currentHourFraction = currentHourFraction,
+    sunMeridianHour = sunMeridian,
+    sunPeakAlt = sunPeakAlt,
+    sunNadirAlt = sunNadirAlt,
+    moonMeridianHour = moonMeridian,
+    moonPeakAlt = moonPeakAlt,
+    moonNadirAlt = moonNadirAlt,
+    isDaytime = isDaytime,
 )

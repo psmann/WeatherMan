@@ -12,7 +12,7 @@
         android:text="@string/sunrise"
         android:textColor="@android:color/white"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sun_cycle_sun_position_view" />
+        app:layout_constraintTop_toBottomOf="@+id/sun_cycle_graph_container" />
 
     <TextView
         android:id="@+id/sun_cycle_sunset_text_view"
@@ -22,7 +22,7 @@
         android:text="@string/sunset"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sun_cycle_sun_position_view" />
+        app:layout_constraintTop_toBottomOf="@+id/sun_cycle_graph_container" />
 
     <TextView
         android:id="@+id/sun_cycle_sunrise_result_text_view"
@@ -54,15 +54,28 @@
         app:layout_constraintStart_toEndOf="@+id/sun_cycle_sunrise_text_view"
         app:layout_constraintTop_toTopOf="@+id/sun_cycle_sunrise_text_view" />
 
-    <one.mann.weatherman.ui.detail.views.SunPositionView
-        android:id="@+id/sun_cycle_sun_position_view"
+    <FrameLayout
+        android:id="@+id/sun_cycle_graph_container"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <one.mann.weatherman.ui.detail.views.SunPositionView
+            android:id="@+id/sun_cycle_sun_position_view"
+            android:layout_width="match_parent"
+            android:layout_height="100dp" />
+
+        <androidx.compose.ui.platform.ComposeView
+            android:id="@+id/sun_cycle_celestial_chart_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,10 +15,12 @@ import one.mann.domain.models.location.LocationType
 import one.mann.domain.models.location.LocationType.DB
 import one.mann.domain.models.location.LocationType.DEVICE
 import one.mann.interactors.usecases.GetAllWeather
+import one.mann.interactors.usecases.GetCelestialInfo
 import one.mann.interactors.usecases.UpdateWeather
 import one.mann.weatherman.common.LAST_CHECKED_KEY
 import one.mann.weatherman.common.LAST_UPDATED_KEY
 import one.mann.weatherman.ui.common.base.BaseViewModel
+import one.mann.weatherman.ui.common.util.mapToUiCelestialInfo
 import one.mann.weatherman.ui.common.util.mapToUiWeather
 import one.mann.weatherman.ui.common.util.setSingleEvent
 import one.mann.weatherman.ui.detail.DetailUiModel.State.*
@@ -28,6 +30,7 @@ import javax.inject.Inject
 
 internal class DetailViewModel @Inject constructor(
     private val getAllWeather: GetAllWeather,
+    private val getCelestialInfo: GetCelestialInfo,
     private val updateWeather: UpdateWeather,
     private val settingsPrefs: SharedPreferences
 ) : BaseViewModel(), SharedPreferences.OnSharedPreferenceChangeListener {
@@ -74,7 +77,19 @@ internal class DetailViewModel @Inject constructor(
 
     private fun updateUI() {
         launch {
-            val data = withContext(IO) { getAllWeather.invoke().map { it.mapToUiWeather() } }
+            val data = withContext(IO) {
+                getAllWeather.invoke().map { domainWeather ->
+                    val celestial = getCelestialInfo.invoke(
+                        domainWeather.city.coordinatesLat,
+                        domainWeather.city.coordinatesLong,
+                        domainWeather.city.timezone,
+                        domainWeather.lastChecked
+                    )
+                    domainWeather.mapToUiWeather().copy(
+                        celestialInfo = celestial.mapToUiCelestialInfo()
+                    )
+                }
+            }
             _uiModel.value = _uiModel.value?.copy(
                 weatherData = data.ifEmpty { listOf() },
                 viewState = Idle
